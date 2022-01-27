@@ -20,27 +20,6 @@
  */
 
 /**
- * Enumeration ccs_at_scmd_e
- *
- * INTERNAL: Command Mesh Atomic Sub-command Enumeration
- *
- * Enumerates the command mesh atomic sub-command encodings.
- */
-#define CAVM_CCS_AT_SCMD_E_AT_ADD (8)
-#define CAVM_CCS_AT_SCMD_E_AT_CAS (0)
-#define CAVM_CCS_AT_SCMD_E_AT_CLR (9)
-#define CAVM_CCS_AT_SCMD_E_AT_DEC (3)
-#define CAVM_CCS_AT_SCMD_E_AT_EOR (0xa)
-#define CAVM_CCS_AT_SCMD_E_AT_INC (2)
-#define CAVM_CCS_AT_SCMD_E_AT_SET (0xb)
-#define CAVM_CCS_AT_SCMD_E_AT_SMAX (0xc)
-#define CAVM_CCS_AT_SCMD_E_AT_SMIN (0xd)
-#define CAVM_CCS_AT_SCMD_E_AT_STC (4)
-#define CAVM_CCS_AT_SCMD_E_AT_SWP (1)
-#define CAVM_CCS_AT_SCMD_E_AT_UMAX (0xe)
-#define CAVM_CCS_AT_SCMD_E_AT_UMIN (0xf)
-
-/**
  * Enumeration ccs_bar_e
  *
  * CCS Base Address Register Enumeration
@@ -48,51 +27,6 @@
  */
 #define CAVM_CCS_BAR_E_CCS_PF_BAR0 (0x87e087000000ll)
 #define CAVM_CCS_BAR_E_CCS_PF_BAR0_SIZE 0x200000ull
-
-/**
- * Enumeration ccs_cmd_e
- *
- * INTERNAL: Command Mesh Command Enumeration
- *
- * Enumerates the command mesh command encodings.
- */
-#define CAVM_CCS_CMD_E_CMD_AT (2)
-#define CAVM_CCS_CMD_E_CMD_BC (3)
-#define CAVM_CCS_CMD_E_CMD_DS (1)
-#define CAVM_CCS_CMD_E_CMD_FV (6)
-#define CAVM_CCS_CMD_E_CMD_IO (4)
-#define CAVM_CCS_CMD_E_CMD_IS (5)
-#define CAVM_CCS_CMD_E_CMD_NOP (0)
-
-/**
- * Enumeration ccs_ds_scmd_e
- *
- * INTERNAL: Command Mesh D-Stream Sub-command Enumeration
- *
- * Enumerates the command mesh d-stream sub-command encodings.
- */
-#define CAVM_CCS_DS_SCMD_E_DS_INV (4)
-#define CAVM_CCS_DS_SCMD_E_DS_INVI (0xc)
-#define CAVM_CCS_DS_SCMD_E_DS_LCK (2)
-#define CAVM_CCS_DS_SCMD_E_DS_LD (0)
-#define CAVM_CCS_DS_SCMD_E_DS_LTGI (8)
-#define CAVM_CCS_DS_SCMD_E_DS_ST (1)
-#define CAVM_CCS_DS_SCMD_E_DS_WBC (3)
-#define CAVM_CCS_DS_SCMD_E_DS_WBCI (0xb)
-#define CAVM_CCS_DS_SCMD_E_DS_WBI (7)
-#define CAVM_CCS_DS_SCMD_E_DS_WBII (0xf)
-
-/**
- * Enumeration ccs_is_scmd_e
- *
- * INTERNAL: Command Mesh I-Stream Sub-command Enumeration
- *
- * Enumerates the command mesh i-stream sub-command encodings.
- */
-#define CAVM_CCS_IS_SCMD_E_IS_INV (4)
-#define CAVM_CCS_IS_SCMD_E_IS_INVI (0xc)
-#define CAVM_CCS_IS_SCMD_E_IS_LD (0)
-#define CAVM_CCS_IS_SCMD_E_IS_LTGI (8)
 
 /**
  * Enumeration ccs_lmc_mode_e
@@ -105,49 +39,11 @@
 #define CAVM_CCS_LMC_MODE_E_STRIPE_3 (3)
 
 /**
- * Enumeration ccs_rid_e
- *
- * INTERNAL: CCS Mesh Routing ID Enumeration
- *
- * Enumerates the mesh sources and destinations in CCU()_TAD()_NXM_ERR[MS],
- * CCU()_TAD()_DAT_ERR[MS], and CCU()_TAD()_XBF_ERR[MS].
- */
-#define CAVM_CCS_RID_E_CLU0_PIC (2)
-#define CAVM_CCS_RID_E_CLU0_TAD0 (0)
-#define CAVM_CCS_RID_E_CLU0_TAD1 (1)
-#define CAVM_CCS_RID_E_CLU1_PIC (6)
-#define CAVM_CCS_RID_E_CLU1_TAD0 (4)
-#define CAVM_CCS_RID_E_CLU1_TAD1 (5)
-#define CAVM_CCS_RID_E_CLU2_PIC (0xa)
-#define CAVM_CCS_RID_E_CLU2_TAD0 (8)
-#define CAVM_CCS_RID_E_CLU2_TAD1 (9)
-#define CAVM_CCS_RID_E_CLU3_PIC (0xe)
-#define CAVM_CCS_RID_E_CLU3_TAD0 (0xc)
-#define CAVM_CCS_RID_E_CLU3_TAD1 (0xd)
-#define CAVM_CCS_RID_E_CLU4_PIC (0x12)
-#define CAVM_CCS_RID_E_CLU4_TAD0 (0x10)
-#define CAVM_CCS_RID_E_CLU4_TAD1 (0x11)
-#define CAVM_CCS_RID_E_CLU5_PIC (0x16)
-#define CAVM_CCS_RID_E_CLU5_TAD0 (0x14)
-#define CAVM_CCS_RID_E_CLU5_TAD1 (0x15)
-#define CAVM_CCS_RID_E_IOB0 (0x24)
-#define CAVM_CCS_RID_E_IOB1 (0x25)
-#define CAVM_CCS_RID_E_IOB2 (0x26)
-#define CAVM_CCS_RID_E_MCC0_MCI0 (0x28)
-#define CAVM_CCS_RID_E_MCC0_MCI1 (0x29)
-#define CAVM_CCS_RID_E_MCC1_MCI0 (0x2c)
-#define CAVM_CCS_RID_E_MCC1_MCI1 (0x2d)
-
-/**
  * Register (RSL) ccs_adr_ctl
  *
  * CCS Address Control Register
  * This register holds some of the information required for TAD selection and set
  * hashing. See also CCS_ADR_TDS().
- *
- * Internal:
- * The format of this register must remain constant for all chips that share an AP
- * implementation.
  */
 union cavm_ccs_adr_ctl
 {
@@ -224,10 +120,7 @@ union cavm_ccs_adr_mcsx
                                                                    * CCS_ADR_MCS(0)[EN] : 0x481249.
                                                                    * CCS_ADR_MCS(1)[EN] : 0x2.
                                                                    * CCS_ADR_MCS(2)[EN] : 0x4.
-                                                                   * CCS_ADR_MCS(3)[EN] : 0x8.
-
-                                                                 Internal:
-                                                                 Reset values from ccu_defs::CCS_ADR_MCS_REG_RST[n]. */
+                                                                   * CCS_ADR_MCS(3)[EN] : 0x8. */
         uint64_t reserved_0_7          : 8;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_7          : 8;
@@ -240,10 +133,7 @@ union cavm_ccs_adr_mcsx
                                                                    * CCS_ADR_MCS(0)[EN] : 0x481249.
                                                                    * CCS_ADR_MCS(1)[EN] : 0x2.
                                                                    * CCS_ADR_MCS(2)[EN] : 0x4.
-                                                                   * CCS_ADR_MCS(3)[EN] : 0x8.
-
-                                                                 Internal:
-                                                                 Reset values from ccu_defs::CCS_ADR_MCS_REG_RST[n]. */
+                                                                   * CCS_ADR_MCS(3)[EN] : 0x8. */
         uint64_t reserved_43_63        : 21;
 #endif /* Word 0 - End */
     } s;
@@ -271,9 +161,6 @@ static inline uint64_t CAVM_CCS_ADR_MCSX(uint64_t a)
  *
  * CCS Address TAD Select Registers
  * These registers hold information for TAD selection.
- * Internal:
- * The format and number of this register must remain constant for all chips that share
- * an AP implementation.
  */
 union cavm_ccs_adr_tdsx
 {
@@ -290,10 +177,7 @@ union cavm_ccs_adr_tdsx
 
                                                                  The reset values are different for each index as follows:
                                                                    * CCS_ADR_TDS(0)[EN] : 0x1601f725.
-                                                                   * CCS_ADR_TDS(1)[EN] : 0x3a03196e.
-
-                                                                 Internal:
-                                                                 Reset values from ccu_defs::CCS_ADR_TDS_REG_RST[n]. */
+                                                                   * CCS_ADR_TDS(1)[EN] : 0x3a03196e. */
         uint64_t reserved_0_7          : 8;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_7          : 8;
@@ -305,10 +189,7 @@ union cavm_ccs_adr_tdsx
 
                                                                  The reset values are different for each index as follows:
                                                                    * CCS_ADR_TDS(0)[EN] : 0x1601f725.
-                                                                   * CCS_ADR_TDS(1)[EN] : 0x3a03196e.
-
-                                                                 Internal:
-                                                                 Reset values from ccu_defs::CCS_ADR_TDS_REG_RST[n]. */
+                                                                   * CCS_ADR_TDS(1)[EN] : 0x3a03196e. */
         uint64_t reserved_43_63        : 21;
 #endif /* Word 0 - End */
     } s;
@@ -332,10 +213,7 @@ union cavm_ccs_adr_tdsx
                                                                    * CCS_ADR_TDS(4)[EN] : 0x991ce3c2.
                                                                    * CCS_ADR_TDS(5)[EN] : 0x243831a0.
                                                                    * CCS_ADR_TDS(6)[EN] : 0x49706240.
-                                                                   * CCS_ADR_TDS(7)[EN] : 0x85e133a5.
-
-                                                                 Internal:
-                                                                 Reset values from ccu_defs::CCS_ADR_TDS_REG_RST[n]. */
+                                                                   * CCS_ADR_TDS(7)[EN] : 0x85e133a5. */
         uint64_t reserved_0_7          : 8;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_7          : 8;
@@ -353,10 +231,7 @@ union cavm_ccs_adr_tdsx
                                                                    * CCS_ADR_TDS(4)[EN] : 0x991ce3c2.
                                                                    * CCS_ADR_TDS(5)[EN] : 0x243831a0.
                                                                    * CCS_ADR_TDS(6)[EN] : 0x49706240.
-                                                                   * CCS_ADR_TDS(7)[EN] : 0x85e133a5.
-
-                                                                 Internal:
-                                                                 Reset values from ccu_defs::CCS_ADR_TDS_REG_RST[n]. */
+                                                                   * CCS_ADR_TDS(7)[EN] : 0x85e133a5. */
         uint64_t reserved_43_63        : 21;
 #endif /* Word 0 - End */
     } cn98xx;
@@ -372,10 +247,7 @@ union cavm_ccs_adr_tdsx
 
                                                                  The reset values are different for each index as follows:
                                                                    * CCS_ADR_TDS(0)[EN] : 0x00000000.
-                                                                   * CCS_ADR_TDS(1)[EN] : 0x00000000.
-
-                                                                 Internal:
-                                                                 Reset values from ccu_defs::CCS_ADR_TDS_REG_RST[n]. */
+                                                                   * CCS_ADR_TDS(1)[EN] : 0x00000000. */
         uint64_t reserved_0_7          : 8;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_7          : 8;
@@ -387,10 +259,7 @@ union cavm_ccs_adr_tdsx
 
                                                                  The reset values are different for each index as follows:
                                                                    * CCS_ADR_TDS(0)[EN] : 0x00000000.
-                                                                   * CCS_ADR_TDS(1)[EN] : 0x00000000.
-
-                                                                 Internal:
-                                                                 Reset values from ccu_defs::CCS_ADR_TDS_REG_RST[n]. */
+                                                                   * CCS_ADR_TDS(1)[EN] : 0x00000000. */
         uint64_t reserved_43_63        : 21;
 #endif /* Word 0 - End */
     } cnf95xx;
@@ -718,16 +587,10 @@ union cavm_ccs_bcst_rsp
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
         uint64_t ena_clu               : 4;  /**< [  3:  0](R/W) Indicates which CCU cluster instance responds to CCU broadcast read/write
-                                                                 operations. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 This corresponds to the cluster number physically furthest from MRML. */
+                                                                 operations. For diagnostic use only. */
 #else /* Word 0 - Little Endian */
         uint64_t ena_clu               : 4;  /**< [  3:  0](R/W) Indicates which CCU cluster instance responds to CCU broadcast read/write
-                                                                 operations. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 This corresponds to the cluster number physically furthest from MRML. */
+                                                                 operations. For diagnostic use only. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
@@ -739,16 +602,10 @@ union cavm_ccs_bcst_rsp
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
         uint64_t ena_clu               : 4;  /**< [  3:  0](RAZ) Indicates which CCU cluster instance responds to CCU broadcast read/write
-                                                                 operations. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 This corresponds to the cluster number physically furthest from MRML. */
+                                                                 operations. For diagnostic use only. */
 #else /* Word 0 - Little Endian */
         uint64_t ena_clu               : 4;  /**< [  3:  0](RAZ) Indicates which CCU cluster instance responds to CCU broadcast read/write
-                                                                 operations. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 This corresponds to the cluster number physically furthest from MRML. */
+                                                                 operations. For diagnostic use only. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } cnf95xx;
@@ -786,51 +643,15 @@ union cavm_ccs_ccpi_ctl
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_8_63         : 56;
-        uint64_t inv_mode              : 2;  /**< [  7:  6](RAZ) Reserved.
-                                                                 Internal:
-                                                                 Describes how aggressive to be when waiting for local invalidates before sending
-                                                                 CCPI responses which act like commits at the remote. 0x0 = Conservative mode,
-                                                                 waits until all local invalidates have been sent and their IAKs received. 0x1 =
-                                                                 Moderate mode, waits until all local invalidates have been sent, but not for
-                                                                 their IAKs. 0x2 = Aggressive mode, does not wait for local invalidates to begin
-                                                                 their processing. */
-        uint64_t cas_fdx               : 1;  /**< [  5:  5](RAZ) Reserved.
-                                                                 Internal:
-                                                                 When set, STC/CAS operations performed at the home will immediately bring the
-                                                                 block exclusive into the home. Default operation is to first request the block
-                                                                 shared and only invalidate the remote if the compare succeeds. */
-        uint64_t rldd_psha             : 1;  /**< [  4:  4](RAZ) Reserved.
-                                                                 Internal:
-                                                                 When set, RLDD is assumed to return a shared response (PRXS). Default operation
-                                                                 assumes an exclusive response (PRXE). Note that an incorrect assumption only
-                                                                 causes an extra tag write to be done upon receiving the response. */
-        uint64_t enaoci                : 4;  /**< [  3:  0](RAZ) Reserved.
-                                                                 Internal:
-                                                                 Enable CCPI processing (one bit per node_id). When [ENAOCI]=0x0, no CCPI
-                                                                 processing is expected. */
+        uint64_t inv_mode              : 2;  /**< [  7:  6](RAZ) Reserved. */
+        uint64_t cas_fdx               : 1;  /**< [  5:  5](RAZ) Reserved. */
+        uint64_t rldd_psha             : 1;  /**< [  4:  4](RAZ) Reserved. */
+        uint64_t enaoci                : 4;  /**< [  3:  0](RAZ) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t enaoci                : 4;  /**< [  3:  0](RAZ) Reserved.
-                                                                 Internal:
-                                                                 Enable CCPI processing (one bit per node_id). When [ENAOCI]=0x0, no CCPI
-                                                                 processing is expected. */
-        uint64_t rldd_psha             : 1;  /**< [  4:  4](RAZ) Reserved.
-                                                                 Internal:
-                                                                 When set, RLDD is assumed to return a shared response (PRXS). Default operation
-                                                                 assumes an exclusive response (PRXE). Note that an incorrect assumption only
-                                                                 causes an extra tag write to be done upon receiving the response. */
-        uint64_t cas_fdx               : 1;  /**< [  5:  5](RAZ) Reserved.
-                                                                 Internal:
-                                                                 When set, STC/CAS operations performed at the home will immediately bring the
-                                                                 block exclusive into the home. Default operation is to first request the block
-                                                                 shared and only invalidate the remote if the compare succeeds. */
-        uint64_t inv_mode              : 2;  /**< [  7:  6](RAZ) Reserved.
-                                                                 Internal:
-                                                                 Describes how aggressive to be when waiting for local invalidates before sending
-                                                                 CCPI responses which act like commits at the remote. 0x0 = Conservative mode,
-                                                                 waits until all local invalidates have been sent and their IAKs received. 0x1 =
-                                                                 Moderate mode, waits until all local invalidates have been sent, but not for
-                                                                 their IAKs. 0x2 = Aggressive mode, does not wait for local invalidates to begin
-                                                                 their processing. */
+        uint64_t enaoci                : 4;  /**< [  3:  0](RAZ) Reserved. */
+        uint64_t rldd_psha             : 1;  /**< [  4:  4](RAZ) Reserved. */
+        uint64_t cas_fdx               : 1;  /**< [  5:  5](RAZ) Reserved. */
+        uint64_t inv_mode              : 2;  /**< [  7:  6](RAZ) Reserved. */
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } s;
@@ -1203,47 +1024,6 @@ static inline uint64_t CAVM_CCS_QUICK_HUGE_FUNC(void)
 #define arguments_CAVM_CCS_QUICK_HUGE -1,-1,-1,-1
 
 /**
- * Register (RSL) ccs_scratch
- *
- * INTERNAL: CCS General Purpose Scratch Register
- *
- * These registers are only reset by hardware during chip cold reset. The values of the CSR
- * fields in these registers do not change during chip warm or soft resets.
- */
-union cavm_ccs_scratch
-{
-    uint64_t u;
-    struct cavm_ccs_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t scratch               : 8;  /**< [  7:  0](R/W) General purpose scratch register. */
-#else /* Word 0 - Little Endian */
-        uint64_t scratch               : 8;  /**< [  7:  0](R/W) General purpose scratch register. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ccs_scratch_s cn; */
-};
-typedef union cavm_ccs_scratch cavm_ccs_scratch_t;
-
-#define CAVM_CCS_SCRATCH CAVM_CCS_SCRATCH_FUNC()
-static inline uint64_t CAVM_CCS_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CCS_SCRATCH_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e087100008ll;
-    __cavm_csr_fatal("CCS_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CCS_SCRATCH cavm_ccs_scratch_t
-#define bustype_CAVM_CCS_SCRATCH CSR_TYPE_RSL
-#define basename_CAVM_CCS_SCRATCH "CCS_SCRATCH"
-#define device_bar_CAVM_CCS_SCRATCH 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CCS_SCRATCH 0
-#define arguments_CAVM_CCS_SCRATCH -1,-1,-1,-1
-
-/**
  * Register (RSL) ccs_tad_const
  *
  * CCS TAD Constants Register
@@ -1335,21 +1115,9 @@ union cavm_ccs_tad_ctl
         uint64_t exrq2                 : 5;  /**< [ 34: 30](R/W) Extra LFBs to reserve for locally generated, priority two requests. None are
                                                                  reserved for functional correctness. This is the priority used by the IOB for
                                                                  high-priority requests to the TAD. */
-        uint64_t exrrq                 : 5;  /**< [ 29: 25](RAZ) Reserved.
-                                                                 Internal:
-                                                                 For CCPI enabled chips only. Extra LFBs to reserve for remote CCPI requests
-                                                                 beyond the one required for CCPI protocol functional correctness. Ignored if
-                                                                 CCS_CCPI_CTL[ENAOCI] = 0. */
-        uint64_t exfwd                 : 5;  /**< [ 24: 20](RAZ) Reserved.
-                                                                 Internal:
-                                                                 For CCPI enabled chips only. Extra LFBs to reserve for Fxxx CCPI commands beyond
-                                                                 the one required for CCPI protocol functional correctness. Ignored if
-                                                                 CCS_CCPI_CTL[ENAOCI] = 0. */
-        uint64_t exvic                 : 5;  /**< [ 19: 15](RAZ) Reserved.
-                                                                 Internal:
-                                                                 For CCPI enabled chips only. Extra LFBs to reserve for VICx CCPI commands beyond
-                                                                 the one required for CCPI protocol functional correctness. Ignored if
-                                                                 CCS_CCPI_CTL[ENAOCI] = 0. */
+        uint64_t exrrq                 : 5;  /**< [ 29: 25](RAZ) Reserved. */
+        uint64_t exfwd                 : 5;  /**< [ 24: 20](RAZ) Reserved. */
+        uint64_t exvic                 : 5;  /**< [ 19: 15](RAZ) Reserved. */
         uint64_t exlvc                 : 5;  /**< [ 14: 10](R/W) Extra LFBs to reserve for VICx IOB commands beyond the one required for functional
                                                                  correctness. Must be \>= (CCS_TAD_CTL[MAXLFB] - 21). */
         uint64_t mccwr_thresh          : 5;  /**< [  9:  5](R/W) MCC write threshold. When the number of LFBs with MCC writes waiting for
@@ -1369,21 +1137,9 @@ union cavm_ccs_tad_ctl
                                                                  CCS_TAD_CTL[DISADRWBFL] for address based MCC write priority increase. */
         uint64_t exlvc                 : 5;  /**< [ 14: 10](R/W) Extra LFBs to reserve for VICx IOB commands beyond the one required for functional
                                                                  correctness. Must be \>= (CCS_TAD_CTL[MAXLFB] - 21). */
-        uint64_t exvic                 : 5;  /**< [ 19: 15](RAZ) Reserved.
-                                                                 Internal:
-                                                                 For CCPI enabled chips only. Extra LFBs to reserve for VICx CCPI commands beyond
-                                                                 the one required for CCPI protocol functional correctness. Ignored if
-                                                                 CCS_CCPI_CTL[ENAOCI] = 0. */
-        uint64_t exfwd                 : 5;  /**< [ 24: 20](RAZ) Reserved.
-                                                                 Internal:
-                                                                 For CCPI enabled chips only. Extra LFBs to reserve for Fxxx CCPI commands beyond
-                                                                 the one required for CCPI protocol functional correctness. Ignored if
-                                                                 CCS_CCPI_CTL[ENAOCI] = 0. */
-        uint64_t exrrq                 : 5;  /**< [ 29: 25](RAZ) Reserved.
-                                                                 Internal:
-                                                                 For CCPI enabled chips only. Extra LFBs to reserve for remote CCPI requests
-                                                                 beyond the one required for CCPI protocol functional correctness. Ignored if
-                                                                 CCS_CCPI_CTL[ENAOCI] = 0. */
+        uint64_t exvic                 : 5;  /**< [ 19: 15](RAZ) Reserved. */
+        uint64_t exfwd                 : 5;  /**< [ 24: 20](RAZ) Reserved. */
+        uint64_t exrrq                 : 5;  /**< [ 29: 25](RAZ) Reserved. */
         uint64_t exrq2                 : 5;  /**< [ 34: 30](R/W) Extra LFBs to reserve for locally generated, priority two requests. None are
                                                                  reserved for functional correctness. This is the priority used by the IOB for
                                                                  high-priority requests to the TAD. */

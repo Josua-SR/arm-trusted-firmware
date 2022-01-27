@@ -337,44 +337,6 @@ static inline uint64_t CAVM_BTS_DAC_CLK_CTL_FUNC(void)
 #define arguments_CAVM_BTS_DAC_CLK_CTL -1,-1,-1,-1
 
 /**
- * Register (RSL) bts_eco
- *
- * INTERNAL: BTS ECO Register
- *
- * An ECO CSR.
- */
-union cavm_bts_eco
-{
-    uint64_t u;
-    struct cavm_bts_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_bts_eco_s cn; */
-};
-typedef union cavm_bts_eco cavm_bts_eco_t;
-
-#define CAVM_BTS_ECO CAVM_BTS_ECO_FUNC()
-static inline uint64_t CAVM_BTS_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BTS_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e012000090ll;
-    __cavm_csr_fatal("BTS_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_BTS_ECO cavm_bts_eco_t
-#define bustype_CAVM_BTS_ECO CSR_TYPE_RSL
-#define basename_CAVM_BTS_ECO "BTS_ECO"
-#define device_bar_CAVM_BTS_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_BTS_ECO 0
-#define arguments_CAVM_BTS_ECO -1,-1,-1,-1
-
-/**
  * Register (RSL) bts_ext_ref#_div_cfg0
  *
  * BTS External Reference (0..2) Divider Configuration 0 Register
@@ -1439,10 +1401,6 @@ static inline uint64_t CAVM_BTS_PDBFN_DIV_CFG1_FUNC(void)
  *   1. Optionally set  [ALT_REF_CLK_SEL], [REF_CLK_SEL], [CLKF], and [PS_EN].
  *   2. Set [EN].
  *   3. Wait 25uS before using the PLL clock out
- *
- * Internal:
- * The BTS PLL does not support at speed pulses (pll_scan_mode) outs of the PLL are
- * actually muxed with sclk during scan.  SCLK PLL can be used for this testing.
  */
 union cavm_bts_pll_ctl
 {
@@ -1460,10 +1418,7 @@ union cavm_bts_pll_ctl
                                                                  0x1 = GPIO clock input. 30.72 MHz (BTS_BFN_CLK).
                                                                  0x2 = 100 MHz reference clock.
 
-                                                                 Do not change these during operation.
-
-                                                                 Internal:
-                                                                 0x0 = 122.88 MHz (alternate reference clock selected by [ALT_REF_CLK_SEL]). */
+                                                                 Do not change these during operation. */
         uint64_t reserved_21_27        : 7;
         uint64_t ps_en                 : 3;  /**< [ 20: 18](R/W) PLL postscalar divide ratio. Determines the network clock speed.
                                                                  0x0 = Divide BTS PLL by 1.
@@ -1516,10 +1471,7 @@ union cavm_bts_pll_ctl
                                                                  0x1 = GPIO clock input. 30.72 MHz (BTS_BFN_CLK).
                                                                  0x2 = 100 MHz reference clock.
 
-                                                                 Do not change these during operation.
-
-                                                                 Internal:
-                                                                 0x0 = 122.88 MHz (alternate reference clock selected by [ALT_REF_CLK_SEL]). */
+                                                                 Do not change these during operation. */
         uint64_t reserved_30_31        : 2;
         uint64_t pll_bypass            : 1;  /**< [ 32: 32](R/W) Set to 1 to bypass PLL. In PLL bypass mode, the PLL clock out is BTS_BFN_CLK (30.72 MHz). */
         uint64_t reserved_33_34        : 2;
@@ -1541,10 +1493,7 @@ union cavm_bts_pll_ctl
                                                                  0x1 = GPIO clock input. 30.72 MHz (BTS_BFN_CLK).
                                                                  0x2 = 100 MHz reference clock.
 
-                                                                 Do not change these during operation.
-
-                                                                 Internal:
-                                                                 0x0 = 122.88 MHz (alternate reference clock selected by [ALT_REF_CLK_SEL]). */
+                                                                 Do not change these during operation. */
         uint64_t reserved_26_27        : 2;
         uint64_t reserved_21_25        : 5;
         uint64_t ps_en                 : 3;  /**< [ 20: 18](R/W) PLL postscalar divide ratio. Determines the network clock speed.
@@ -1599,10 +1548,7 @@ union cavm_bts_pll_ctl
                                                                  0x1 = GPIO clock input. 30.72 MHz (BTS_BFN_CLK).
                                                                  0x2 = 100 MHz reference clock.
 
-                                                                 Do not change these during operation.
-
-                                                                 Internal:
-                                                                 0x0 = 122.88 MHz (alternate reference clock selected by [ALT_REF_CLK_SEL]). */
+                                                                 Do not change these during operation. */
         uint64_t reserved_30_31        : 2;
         uint64_t pll_bypass            : 1;  /**< [ 32: 32](R/W) Set to 1 to bypass PLL. In PLL bypass mode, the PLL clock out is BTS_BFN_CLK (30.72 MHz). */
         uint64_t reserved_33_34        : 2;

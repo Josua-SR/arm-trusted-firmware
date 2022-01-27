@@ -304,11 +304,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  0x4 = 16QAM.
                                                                  0x6 = 64QAM.
                                                                  0x8 = 256QAM.
-                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xf = Reserved.
-
-                                                                 Internal:
-                                                                 0xa specifies 1024QAM, but this mode is not supported by
-                                                                 the channel deinterleaver. */
+                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xf = Reserved. */
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should be assigned a unique ID. The task ID will be
                                                                  included in the output to correctly identify the output for each task. */
 #else /* Word 0 - Little Endian */
@@ -320,11 +316,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  0x4 = 16QAM.
                                                                  0x6 = 64QAM.
                                                                  0x8 = 256QAM.
-                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xf = Reserved.
-
-                                                                 Internal:
-                                                                 0xa specifies 1024QAM, but this mode is not supported by
-                                                                 the channel deinterleaver. */
+                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xf = Reserved. */
         uint64_t num_layers            : 3;  /**< [ 22: 20] Number of layers the transport block is mapped to. Must be either 1 or
                                                                  2. */
         uint64_t reserved_23_31        : 9;
@@ -388,18 +380,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  the calculated CRC is masked with [CRC_MASK]. */
         uint64_t symb_byte_align       : 2;  /**< [119:118] When 0x1, each [MOD_ORDER] bits of reencoded output are mapped to one
                                                                  byte, with the (8-[MOD_ORDER]) most significant bits padded with zeros.
-                                                                 When 0x0, the reencoded output bits are packed with no extra padding.
-
-                                                                 Internal:
-                                                                 Values of 0x2 and 0x3 are applicable only to 1024QAM.
-                                                                 When 0x2, from each 10 bits mapped to one symbol, the even bits
-                                                                 are mapped to the first byte and the odd bits are mapped to the
-                                                                 next byte.  The data bits are mapped in little endian format, and
-                                                                 the 3 MSB bits are set to 0.
-                                                                 When 0x3, from each 10 bits mapped to one symbol, the first 5 bits
-                                                                 are mapped to the first byte and the next 5 bits are mapped to the
-                                                                 next byte.  The data bits are mapped in little endian format, and
-                                                                 the 3 MSB bits are set to 0. */
+                                                                 When 0x0, the reencoded output bits are packed with no extra padding. */
         uint64_t reenc_size            : 18; /**< [117:100] The reencoded output size, in bits, after rate matching. The maximum
                                                                  size is 186624. */
         uint64_t reenc_byte_order      : 2;  /**< [ 99: 98] Byte order for the reencoded output data.  See Baseband PHY (BPHY):
@@ -483,18 +464,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  size is 186624. */
         uint64_t symb_byte_align       : 2;  /**< [119:118] When 0x1, each [MOD_ORDER] bits of reencoded output are mapped to one
                                                                  byte, with the (8-[MOD_ORDER]) most significant bits padded with zeros.
-                                                                 When 0x0, the reencoded output bits are packed with no extra padding.
-
-                                                                 Internal:
-                                                                 Values of 0x2 and 0x3 are applicable only to 1024QAM.
-                                                                 When 0x2, from each 10 bits mapped to one symbol, the even bits
-                                                                 are mapped to the first byte and the odd bits are mapped to the
-                                                                 next byte.  The data bits are mapped in little endian format, and
-                                                                 the 3 MSB bits are set to 0.
-                                                                 When 0x3, from each 10 bits mapped to one symbol, the first 5 bits
-                                                                 are mapped to the first byte and the next 5 bits are mapped to the
-                                                                 next byte.  The data bits are mapped in little endian format, and
-                                                                 the 3 MSB bits are set to 0. */
+                                                                 When 0x0, the reencoded output bits are packed with no extra padding. */
         uint64_t crc_mask_en           : 1;  /**< [120:120] When 0, no CRC mask is applied on the calculated CRC.  When 1,
                                                                  the calculated CRC is masked with [CRC_MASK]. */
         uint64_t reserved_121_127      : 7;
@@ -507,84 +477,29 @@ union cavm_vdec_lte_task_cfg_s
         uint64_t reserved_152_191      : 40;
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
-        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 The number of initial REs to be discarded in the remaining
-                                                                 symbols after the first [SKIP_OFFSET1_NUM_SYM] symbols (including
-                                                                 tagged LLRs marked with the value 0x80).  The actual number of
-                                                                 LLRs that are discarded in each symbol is [DEINT_SKIP_OFFSET2] *
-                                                                 [MOD_ORDER]. */
-        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 The number of initial REs to be discarded in the first
-                                                                 [SKIP_OFFSET1_NUM_SYM] symbols (including tagged LLRs marked
-                                                                 with the value 0x80).  The actual number of LLRs that are
-                                                                 discarded in each symbol is [DEINT_SKIP_OFFSET1] * [MOD_ORDER]. */
-        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 Indicates the number of OFDM symbols for which the
-                                                                 [DEINT_SKIP_OFFSET1] parameter applies. */
+        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved. */
+        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved. */
+        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved. */
         uint64_t reserved_198_207      : 10;
         uint64_t ch_deint_offset       : 5;  /**< [197:193] Number of REs to be discarded across all threads from the
                                                                  beginning of the channel deinterleaver (excluding RI LLRs
                                                                  that are marked with the value 0x80).  The actual number of
-                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER].
-
-                                                                 Internal:
-                                                                 Applicable only to time-first mode. */
-        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0.
-                                                                 Internal:
-                                                                 Frequency-first mode is no longer needed for this block,
-                                                                 but the logic is still present.
-                                                                 When 0, time-first mode is enabled, and multi-threaded DMA must
-                                                                 be used.  When 1, frequency-first mode is enabled, and a
-                                                                 sequential DMA per symbol, or a 2D DMA across all symbols is used. */
+                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER]. */
+        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0. */
 #else /* Word 3 - Little Endian */
-        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0.
-                                                                 Internal:
-                                                                 Frequency-first mode is no longer needed for this block,
-                                                                 but the logic is still present.
-                                                                 When 0, time-first mode is enabled, and multi-threaded DMA must
-                                                                 be used.  When 1, frequency-first mode is enabled, and a
-                                                                 sequential DMA per symbol, or a 2D DMA across all symbols is used. */
+        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0. */
         uint64_t ch_deint_offset       : 5;  /**< [197:193] Number of REs to be discarded across all threads from the
                                                                  beginning of the channel deinterleaver (excluding RI LLRs
                                                                  that are marked with the value 0x80).  The actual number of
-                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER].
-
-                                                                 Internal:
-                                                                 Applicable only to time-first mode. */
+                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER]. */
         uint64_t reserved_198_207      : 10;
-        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 Indicates the number of OFDM symbols for which the
-                                                                 [DEINT_SKIP_OFFSET1] parameter applies. */
-        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 The number of initial REs to be discarded in the first
-                                                                 [SKIP_OFFSET1_NUM_SYM] symbols (including tagged LLRs marked
-                                                                 with the value 0x80).  The actual number of LLRs that are
-                                                                 discarded in each symbol is [DEINT_SKIP_OFFSET1] * [MOD_ORDER]. */
-        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 The number of initial REs to be discarded in the remaining
-                                                                 symbols after the first [SKIP_OFFSET1_NUM_SYM] symbols (including
-                                                                 tagged LLRs marked with the value 0x80).  The actual number of
-                                                                 LLRs that are discarded in each symbol is [DEINT_SKIP_OFFSET2] *
-                                                                 [MOD_ORDER]. */
+        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved. */
+        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved. */
+        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved. */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t num_rd_dma_wrds_per_sym : 16;/**< [319:304] Number of 128-bit words of DMA input per OFDM symbol.
-                                                                 This is the same as the number of words per thread.
-
-                                                                 Internal:
-                                                                 In frequency-first mode, this is the same as [NUM_RD_WRDS] / [TOTAL_NUM_SYM]. */
+                                                                 This is the same as the number of words per thread. */
         uint64_t num_wr1_wrds          : 16; /**< [303:288] Number of 64-bit words this task will output on write DMA port 1.
                                                                  Note that port 1 is used for writing the reencoded output and this
                                                                  field must be set to zero if [REENC_ENA]=0. */
@@ -597,10 +512,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  Note that port 1 is used for writing the reencoded output and this
                                                                  field must be set to zero if [REENC_ENA]=0. */
         uint64_t num_rd_dma_wrds_per_sym : 16;/**< [319:304] Number of 128-bit words of DMA input per OFDM symbol.
-                                                                 This is the same as the number of words per thread.
-
-                                                                 Internal:
-                                                                 In frequency-first mode, this is the same as [NUM_RD_WRDS] / [TOTAL_NUM_SYM]. */
+                                                                 This is the same as the number of words per thread. */
 #endif /* Word 4 - End */
     } s;
     /* struct cavm_vdec_lte_task_cfg_s_s cn9; */
@@ -669,11 +581,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  0x4 = 16QAM.
                                                                  0x6 = 64QAM.
                                                                  0x8 = 256QAM.
-                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xF = Reserved.
-
-                                                                 Internal:
-                                                                 0xA specifies 1024QAM, but this mode is not supported by
-                                                                 the channel deinterleaver. */
+                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xF = Reserved. */
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should be assigned a unique ID. The task ID will be
                                                                  included in the output to correctly identify the output for each task. */
 #else /* Word 0 - Little Endian */
@@ -685,11 +593,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  0x4 = 16QAM.
                                                                  0x6 = 64QAM.
                                                                  0x8 = 256QAM.
-                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xF = Reserved.
-
-                                                                 Internal:
-                                                                 0xA specifies 1024QAM, but this mode is not supported by
-                                                                 the channel deinterleaver. */
+                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xF = Reserved. */
         uint64_t num_layers            : 3;  /**< [ 22: 20] Number of layers the transport block is mapped to. Must be either 0x1 or 0x2. */
         uint64_t reserved_23_31        : 9;
         uint64_t byps_ch_deint         : 1;  /**< [ 32: 32] When set, the task will bypass channel deinterleaving. */
@@ -752,18 +656,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  the calculated CRC is masked with [CRC_MASK]. */
         uint64_t symb_byte_align       : 2;  /**< [119:118] When 0x1, each [MOD_ORDER] bits of reencoded output are mapped to one
                                                                  byte, with the (8 - [MOD_ORDER]) most significant bits padded with zeros.
-                                                                 When 0x0, the reencoded output bits are packed with no extra padding.
-
-                                                                 Internal:
-                                                                 Values of 0x2 and 0x3 are applicable only to 1024QAM.
-                                                                 When 0x2, from each 10 bits mapped to one symbol, the even bits
-                                                                 are mapped to the first byte and the odd bits are mapped to the
-                                                                 next byte.  The data bits are mapped in little endian format, and
-                                                                 the 3 MSB bits are set to 0.
-                                                                 When 0x3, from each 10 bits mapped to one symbol, the first 5 bits
-                                                                 are mapped to the first byte and the next 5 bits are mapped to the
-                                                                 next byte.  The data bits are mapped in little endian format, and
-                                                                 the 3 MSB bits are set to 0. */
+                                                                 When 0x0, the reencoded output bits are packed with no extra padding. */
         uint64_t reenc_size            : 18; /**< [117:100] The reencoded output size, in bits, after rate matching. The maximum
                                                                  size is 0x3CC00. */
         uint64_t reenc_byte_order      : 2;  /**< [ 99: 98] Byte order for the reencoded output data.  See Baseband PHY (BPHY):
@@ -847,18 +740,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  size is 0x3CC00. */
         uint64_t symb_byte_align       : 2;  /**< [119:118] When 0x1, each [MOD_ORDER] bits of reencoded output are mapped to one
                                                                  byte, with the (8 - [MOD_ORDER]) most significant bits padded with zeros.
-                                                                 When 0x0, the reencoded output bits are packed with no extra padding.
-
-                                                                 Internal:
-                                                                 Values of 0x2 and 0x3 are applicable only to 1024QAM.
-                                                                 When 0x2, from each 10 bits mapped to one symbol, the even bits
-                                                                 are mapped to the first byte and the odd bits are mapped to the
-                                                                 next byte.  The data bits are mapped in little endian format, and
-                                                                 the 3 MSB bits are set to 0.
-                                                                 When 0x3, from each 10 bits mapped to one symbol, the first 5 bits
-                                                                 are mapped to the first byte and the next 5 bits are mapped to the
-                                                                 next byte.  The data bits are mapped in little endian format, and
-                                                                 the 3 MSB bits are set to 0. */
+                                                                 When 0x0, the reencoded output bits are packed with no extra padding. */
         uint64_t crc_mask_en           : 1;  /**< [120:120] When 0, no CRC mask is applied on the calculated CRC.  When 1,
                                                                  the calculated CRC is masked with [CRC_MASK]. */
         uint64_t reserved_121_127      : 7;
@@ -871,84 +753,29 @@ union cavm_vdec_lte_task_cfg_s
         uint64_t reserved_152_191      : 40;
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
-        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 The number of initial REs to be discarded in the remaining
-                                                                 symbols after the first [SKIP_OFFSET1_NUM_SYM] symbols (including
-                                                                 tagged LLRs marked with the value 0x80).  The actual number of
-                                                                 LLRs that are discarded in each symbol is [DEINT_SKIP_OFFSET2] *
-                                                                 [MOD_ORDER]. */
-        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 The number of initial REs to be discarded in the first
-                                                                 [SKIP_OFFSET1_NUM_SYM] symbols (including tagged LLRs marked
-                                                                 with the value 0x80).  The actual number of LLRs that are
-                                                                 discarded in each symbol is [DEINT_SKIP_OFFSET1] * [MOD_ORDER]. */
-        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 Indicates the number of OFDM symbols for which the
-                                                                 [DEINT_SKIP_OFFSET1] parameter applies. */
+        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved. */
+        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved. */
+        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved. */
         uint64_t reserved_198_207      : 10;
         uint64_t ch_deint_offset       : 5;  /**< [197:193] Number of REs to be discarded across all threads from the
                                                                  beginning of the channel deinterleaver (excluding RI LLRs
                                                                  that are marked with the value 0x80).  The actual number of
-                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER].
-
-                                                                 Internal:
-                                                                 Applicable only to time-first mode. */
-        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0.
-                                                                 Internal:
-                                                                 Frequency-first mode is no longer needed for this block,
-                                                                 but the logic is still present.
-                                                                 When 0, time-first mode is enabled, and multi-threaded DMA must
-                                                                 be used.  When 1, frequency-first mode is enabled, and a
-                                                                 sequential DMA per symbol, or a 2D DMA across all symbols is used. */
+                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER]. */
+        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0. */
 #else /* Word 3 - Little Endian */
-        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0.
-                                                                 Internal:
-                                                                 Frequency-first mode is no longer needed for this block,
-                                                                 but the logic is still present.
-                                                                 When 0, time-first mode is enabled, and multi-threaded DMA must
-                                                                 be used.  When 1, frequency-first mode is enabled, and a
-                                                                 sequential DMA per symbol, or a 2D DMA across all symbols is used. */
+        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0. */
         uint64_t ch_deint_offset       : 5;  /**< [197:193] Number of REs to be discarded across all threads from the
                                                                  beginning of the channel deinterleaver (excluding RI LLRs
                                                                  that are marked with the value 0x80).  The actual number of
-                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER].
-
-                                                                 Internal:
-                                                                 Applicable only to time-first mode. */
+                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER]. */
         uint64_t reserved_198_207      : 10;
-        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 Indicates the number of OFDM symbols for which the
-                                                                 [DEINT_SKIP_OFFSET1] parameter applies. */
-        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 The number of initial REs to be discarded in the first
-                                                                 [SKIP_OFFSET1_NUM_SYM] symbols (including tagged LLRs marked
-                                                                 with the value 0x80).  The actual number of LLRs that are
-                                                                 discarded in each symbol is [DEINT_SKIP_OFFSET1] * [MOD_ORDER]. */
-        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved.
-                                                                 Internal:
-                                                                 Applicable only to frequency-first mode.
-                                                                 The number of initial REs to be discarded in the remaining
-                                                                 symbols after the first [SKIP_OFFSET1_NUM_SYM] symbols (including
-                                                                 tagged LLRs marked with the value 0x80).  The actual number of
-                                                                 LLRs that are discarded in each symbol is [DEINT_SKIP_OFFSET2] *
-                                                                 [MOD_ORDER]. */
+        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved. */
+        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved. */
+        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved. */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t num_rd_dma_wrds_per_sym : 16;/**< [319:304] Number of 128-bit words of DMA input per OFDM symbol.
-                                                                 This is the same as the number of words per thread.
-
-                                                                 Internal:
-                                                                 In frequency-first mode, this is the same as [NUM_RD_WRDS] / [TOTAL_NUM_SYM]. */
+                                                                 This is the same as the number of words per thread. */
         uint64_t num_wr1_wrds          : 16; /**< [303:288] Number of 64-bit words this task will output on write DMA port 1.
                                                                  Note that port 1 is used for writing the reencoded output and this
                                                                  field must be set to zero if [REENC_ENA] = 0. */
@@ -961,10 +788,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  Note that port 1 is used for writing the reencoded output and this
                                                                  field must be set to zero if [REENC_ENA] = 0. */
         uint64_t num_rd_dma_wrds_per_sym : 16;/**< [319:304] Number of 128-bit words of DMA input per OFDM symbol.
-                                                                 This is the same as the number of words per thread.
-
-                                                                 Internal:
-                                                                 In frequency-first mode, this is the same as [NUM_RD_WRDS] / [TOTAL_NUM_SYM]. */
+                                                                 This is the same as the number of words per thread. */
 #endif /* Word 4 - End */
     } cnf95xxp2;
     /* struct cavm_vdec_lte_task_cfg_s_cnf95xxp2 f95o; */
@@ -1020,48 +844,6 @@ static inline uint64_t CAVM_VDECX_CONTROL(uint64_t a)
 #define basename_CAVM_VDECX_CONTROL(a) "VDECX_CONTROL"
 #define busnum_CAVM_VDECX_CONTROL(a) (a)
 #define arguments_CAVM_VDECX_CONTROL(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) vdec#_eco
- *
- * INTERNAL: VDEC ECO Register
- */
-union cavm_vdecx_eco
-{
-    uint64_t u;
-    struct cavm_vdecx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_vdecx_eco_s cn; */
-};
-typedef union cavm_vdecx_eco cavm_vdecx_eco_t;
-
-static inline uint64_t CAVM_VDECX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_VDECX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043700008ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043700008ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043700008ll + 0x8000ll * ((a) & 0x1);
-    __cavm_csr_fatal("VDECX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_VDECX_ECO(a) cavm_vdecx_eco_t
-#define bustype_CAVM_VDECX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_VDECX_ECO(a) "VDECX_ECO"
-#define busnum_CAVM_VDECX_ECO(a) (a)
-#define arguments_CAVM_VDECX_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) vdec#_error_enable0
@@ -1275,46 +1057,6 @@ static inline uint64_t CAVM_VDECX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b)
 #define basename_CAVM_VDECX_HAB_JCFG2_RAMX_DATA(a,b) "VDECX_HAB_JCFG2_RAMX_DATA"
 #define busnum_CAVM_VDECX_HAB_JCFG2_RAMX_DATA(a,b) (a)
 #define arguments_CAVM_VDECX_HAB_JCFG2_RAMX_DATA(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) vdec#_scratch
- *
- * INTERNAL: Scratch Register
- *
- * Scratch register.
- */
-union cavm_vdecx_scratch
-{
-    uint64_t u;
-    struct cavm_vdecx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_vdecx_scratch_s cn; */
-};
-typedef union cavm_vdecx_scratch cavm_vdecx_scratch_t;
-
-static inline uint64_t CAVM_VDECX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_VDECX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043700080ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043700080ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043700080ll + 0x8000ll * ((a) & 0x1);
-    __cavm_csr_fatal("VDECX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_VDECX_SCRATCH(a) cavm_vdecx_scratch_t
-#define bustype_CAVM_VDECX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_VDECX_SCRATCH(a) "VDECX_SCRATCH"
-#define busnum_CAVM_VDECX_SCRATCH(a) (a)
-#define arguments_CAVM_VDECX_SCRATCH(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) vdec#_status
@@ -1557,46 +1299,6 @@ static inline uint64_t CAVM_VDECX_TC_CONFIG_ERR_FLAGS_REG(uint64_t a)
 #define arguments_CAVM_VDECX_TC_CONFIG_ERR_FLAGS_REG(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) vdec#_tc_config_reg#
- *
- * INTERNAL: TC Task Config Registers
- *
- * TC task config registers.
- */
-union cavm_vdecx_tc_config_regx
-{
-    uint64_t u;
-    struct cavm_vdecx_tc_config_regx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_vdecx_tc_config_regx_s cn; */
-};
-typedef union cavm_vdecx_tc_config_regx cavm_vdecx_tc_config_regx_t;
-
-static inline uint64_t CAVM_VDECX_TC_CONFIG_REGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_VDECX_TC_CONFIG_REGX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=12)))
-        return 0x87e043701400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=12)))
-        return 0x87e043701400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=12)))
-        return 0x87e043701400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
-    __cavm_csr_fatal("VDECX_TC_CONFIG_REGX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_VDECX_TC_CONFIG_REGX(a,b) cavm_vdecx_tc_config_regx_t
-#define bustype_CAVM_VDECX_TC_CONFIG_REGX(a,b) CSR_TYPE_RSL
-#define basename_CAVM_VDECX_TC_CONFIG_REGX(a,b) "VDECX_TC_CONFIG_REGX"
-#define busnum_CAVM_VDECX_TC_CONFIG_REGX(a,b) (a)
-#define arguments_CAVM_VDECX_TC_CONFIG_REGX(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) vdec#_tc_control_reg
  *
  * VDEC Internal Control Register
@@ -1609,16 +1311,8 @@ union cavm_vdecx_tc_control_reg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
-        uint64_t single_task_chnl_en   : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 This bit is reserved because the tc1820 only has one channel mode now.
-                                                                 When set to 1, the core will wait until idle before starting the next
-                                                                 task when changing channel mode. */
-        uint64_t single_task_phy_en    : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 This bit is reserved because the tc1820 only has one PHY mode now.
-                                                                 When set to 1, the core will wait until idle before starting the next
-                                                                 task when changing PHY mode. */
+        uint64_t single_task_chnl_en   : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t single_task_phy_en    : 1;  /**< [  3:  3](R/W) Reserved. */
         uint64_t single_task_en        : 1;  /**< [  2:  2](R/W) When set to 1, the core will always wait until idle before starting
                                                                  the next task. */
         uint64_t cfg_chk_dis           : 1;  /**< [  1:  1](R/W) When set to 1, disables config checks. Tasks with invalid
@@ -1630,61 +1324,12 @@ union cavm_vdecx_tc_control_reg
                                                                  configurations will still be processed. */
         uint64_t single_task_en        : 1;  /**< [  2:  2](R/W) When set to 1, the core will always wait until idle before starting
                                                                  the next task. */
-        uint64_t single_task_phy_en    : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 This bit is reserved because the tc1820 only has one PHY mode now.
-                                                                 When set to 1, the core will wait until idle before starting the next
-                                                                 task when changing PHY mode. */
-        uint64_t single_task_chnl_en   : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 This bit is reserved because the tc1820 only has one channel mode now.
-                                                                 When set to 1, the core will wait until idle before starting the next
-                                                                 task when changing channel mode. */
+        uint64_t single_task_phy_en    : 1;  /**< [  3:  3](R/W) Reserved. */
+        uint64_t single_task_chnl_en   : 1;  /**< [  4:  4](R/W) Reserved. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_vdecx_tc_control_reg_s cn9; */
-    /* struct cavm_vdecx_tc_control_reg_s cnf95xxp1; */
-    struct cavm_vdecx_tc_control_reg_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_5_63         : 59;
-        uint64_t single_task_chnl_en   : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 This bit is reserved because the decoder core only has one channel mode now.
-                                                                 When set to 1, the core will wait until idle before starting the next
-                                                                 task when changing channel mode. */
-        uint64_t single_task_phy_en    : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 This bit is reserved because the decoder core only has one PHY mode now.
-                                                                 When set to 1, the core will wait until idle before starting the next
-                                                                 task when changing PHY mode. */
-        uint64_t single_task_en        : 1;  /**< [  2:  2](R/W) When set to 1, the core will always wait until idle before starting
-                                                                 the next task. */
-        uint64_t cfg_chk_dis           : 1;  /**< [  1:  1](R/W) When set to 1, disables config checks. Tasks with invalid
-                                                                 configurations will still be processed. */
-        uint64_t clk_gate_dis          : 1;  /**< [  0:  0](R/W) When set to 1, disables clock gating. */
-#else /* Word 0 - Little Endian */
-        uint64_t clk_gate_dis          : 1;  /**< [  0:  0](R/W) When set to 1, disables clock gating. */
-        uint64_t cfg_chk_dis           : 1;  /**< [  1:  1](R/W) When set to 1, disables config checks. Tasks with invalid
-                                                                 configurations will still be processed. */
-        uint64_t single_task_en        : 1;  /**< [  2:  2](R/W) When set to 1, the core will always wait until idle before starting
-                                                                 the next task. */
-        uint64_t single_task_phy_en    : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 This bit is reserved because the decoder core only has one PHY mode now.
-                                                                 When set to 1, the core will wait until idle before starting the next
-                                                                 task when changing PHY mode. */
-        uint64_t single_task_chnl_en   : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 This bit is reserved because the decoder core only has one channel mode now.
-                                                                 When set to 1, the core will wait until idle before starting the next
-                                                                 task when changing channel mode. */
-        uint64_t reserved_5_63         : 59;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_vdecx_tc_control_reg_cnf95xxp2 f95o; */
-    /* struct cavm_vdecx_tc_control_reg_cnf95xxp2 loki; */
+    /* struct cavm_vdecx_tc_control_reg_s cn; */
 };
 typedef union cavm_vdecx_tc_control_reg cavm_vdecx_tc_control_reg_t;
 
@@ -1868,101 +1513,6 @@ static inline uint64_t CAVM_VDECX_TC_MAIN_RESET_REG(uint64_t a)
 #define arguments_CAVM_VDECX_TC_MAIN_RESET_REG(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) vdec#_tc_main_start_reg
- *
- * INTERNAL: TC Start Register
- *
- * TC start register.
- */
-union cavm_vdecx_tc_main_start_reg
-{
-    uint64_t u;
-    struct cavm_vdecx_tc_main_start_reg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t start                 : 1;  /**< [  0:  0](R/W/H) Start bit. */
-#else /* Word 0 - Little Endian */
-        uint64_t start                 : 1;  /**< [  0:  0](R/W/H) Start bit. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_vdecx_tc_main_start_reg_s cn; */
-};
-typedef union cavm_vdecx_tc_main_start_reg cavm_vdecx_tc_main_start_reg_t;
-
-static inline uint64_t CAVM_VDECX_TC_MAIN_START_REG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_VDECX_TC_MAIN_START_REG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043701008ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043701008ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043701008ll + 0x8000ll * ((a) & 0x1);
-    __cavm_csr_fatal("VDECX_TC_MAIN_START_REG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_VDECX_TC_MAIN_START_REG(a) cavm_vdecx_tc_main_start_reg_t
-#define bustype_CAVM_VDECX_TC_MAIN_START_REG(a) CSR_TYPE_RSL
-#define basename_CAVM_VDECX_TC_MAIN_START_REG(a) "VDECX_TC_MAIN_START_REG"
-#define busnum_CAVM_VDECX_TC_MAIN_START_REG(a) (a)
-#define arguments_CAVM_VDECX_TC_MAIN_START_REG(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) vdec#_tc_mon_reg#
- *
- * INTERNAL: VDEC Monitoring Registers
- */
-union cavm_vdecx_tc_mon_regx
-{
-    uint64_t u;
-    struct cavm_vdecx_tc_mon_regx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO) Output bus monitoring values. */
-#else /* Word 0 - Little Endian */
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO) Output bus monitoring values. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_vdecx_tc_mon_regx_s cn9; */
-    /* struct cavm_vdecx_tc_mon_regx_s cnf95xxp1; */
-    struct cavm_vdecx_tc_mon_regx_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO/H) Output bus monitoring values. */
-#else /* Word 0 - Little Endian */
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO/H) Output bus monitoring values. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_vdecx_tc_mon_regx_cnf95xxp2 f95o; */
-    /* struct cavm_vdecx_tc_mon_regx_cnf95xxp2 loki; */
-};
-typedef union cavm_vdecx_tc_mon_regx cavm_vdecx_tc_mon_regx_t;
-
-static inline uint64_t CAVM_VDECX_TC_MON_REGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_VDECX_TC_MON_REGX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043701300ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x87e043701300ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e043701300ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    __cavm_csr_fatal("VDECX_TC_MON_REGX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_VDECX_TC_MON_REGX(a,b) cavm_vdecx_tc_mon_regx_t
-#define bustype_CAVM_VDECX_TC_MON_REGX(a,b) CSR_TYPE_RSL
-#define basename_CAVM_VDECX_TC_MON_REGX(a,b) "VDECX_TC_MON_REGX"
-#define busnum_CAVM_VDECX_TC_MON_REGX(a,b) (a)
-#define arguments_CAVM_VDECX_TC_MON_REGX(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) vdec#_tc_status0_reg
  *
  * VDEC Internal Status 0 Register
@@ -1974,17 +1524,13 @@ union cavm_vdecx_tc_status0_reg
     struct cavm_vdecx_tc_status0_reg_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t core_stat             : 32; /**< [ 63: 32](RO) reserved.
-                                                                 Internal:
-                                                                 Undocumented, core-dependent status bits. */
+        uint64_t core_stat             : 32; /**< [ 63: 32](RO) reserved. */
         uint64_t reserved_1_31         : 31;
         uint64_t idle                  : 1;  /**< [  0:  0](R/W) Idle status bit. */
 #else /* Word 0 - Little Endian */
         uint64_t idle                  : 1;  /**< [  0:  0](R/W) Idle status bit. */
         uint64_t reserved_1_31         : 31;
-        uint64_t core_stat             : 32; /**< [ 63: 32](RO) reserved.
-                                                                 Internal:
-                                                                 Undocumented, core-dependent status bits. */
+        uint64_t core_stat             : 32; /**< [ 63: 32](RO) reserved. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_vdecx_tc_status0_reg_s cn9; */
@@ -1992,17 +1538,13 @@ union cavm_vdecx_tc_status0_reg
     struct cavm_vdecx_tc_status0_reg_cnf95xxp2
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Undocumented, core-dependent status bits. */
+        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved. */
         uint64_t reserved_1_31         : 31;
         uint64_t idle                  : 1;  /**< [  0:  0](RO/H) Idle status bit. */
 #else /* Word 0 - Little Endian */
         uint64_t idle                  : 1;  /**< [  0:  0](RO/H) Idle status bit. */
         uint64_t reserved_1_31         : 31;
-        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Undocumented, core-dependent status bits. */
+        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_vdecx_tc_status0_reg_cnf95xxp2 f95o; */
@@ -2027,49 +1569,5 @@ static inline uint64_t CAVM_VDECX_TC_STATUS0_REG(uint64_t a)
 #define basename_CAVM_VDECX_TC_STATUS0_REG(a) "VDECX_TC_STATUS0_REG"
 #define busnum_CAVM_VDECX_TC_STATUS0_REG(a) (a)
 #define arguments_CAVM_VDECX_TC_STATUS0_REG(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) vdec#_tc_status1_reg
- *
- * INTERNAL: TC Status 1 Register
- *
- * Internal:
- * There's no register implemented in the TC core, but removing this
- * from the CSR file might change the csr_bridge RTL.
- */
-union cavm_vdecx_tc_status1_reg
-{
-    uint64_t u;
-    struct cavm_vdecx_tc_status1_reg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t core_stat             : 64; /**< [ 63:  0](RO) Internal:
-                                                                 Undocumented, core-dependent status bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t core_stat             : 64; /**< [ 63:  0](RO) Internal:
-                                                                 Undocumented, core-dependent status bits. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_vdecx_tc_status1_reg_s cn; */
-};
-typedef union cavm_vdecx_tc_status1_reg cavm_vdecx_tc_status1_reg_t;
-
-static inline uint64_t CAVM_VDECX_TC_STATUS1_REG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_VDECX_TC_STATUS1_REG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043701028ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043701028ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043701028ll + 0x8000ll * ((a) & 0x1);
-    __cavm_csr_fatal("VDECX_TC_STATUS1_REG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_VDECX_TC_STATUS1_REG(a) cavm_vdecx_tc_status1_reg_t
-#define bustype_CAVM_VDECX_TC_STATUS1_REG(a) CSR_TYPE_RSL
-#define basename_CAVM_VDECX_TC_STATUS1_REG(a) "VDECX_TC_STATUS1_REG"
-#define busnum_CAVM_VDECX_TC_STATUS1_REG(a) (a)
-#define arguments_CAVM_VDECX_TC_STATUS1_REG(a) (a),-1,-1,-1
 
 #endif /* __CAVM_CSRS_VDEC_H__ */

@@ -42,74 +42,6 @@
 #define CAVM_NDF_INT_VEC_E_NCB_RAS (1)
 
 /**
- * Register (NCB) ndf_bt_pg_info
- *
- * INTERNAL: NAND Flash Page Information Register
- *
- * This register provides the page size and the number of column-plus-row address-cycle
- * information. Software writes to this register during a boot operation from a NAND flash
- * device.
- *
- * Additionally, software also writes the multiplier value for timing parameters that is used
- * during the boot process, in the SET_TM_PARAM command. The multiplier value is used only by the
- * boot-load state machine during boot operations. Boot DMA operations do not use this value.
- *
- * Sixty-four-bit operations must be used to access this register.
- */
-union cavm_ndf_bt_pg_info
-{
-    uint64_t u;
-    struct cavm_ndf_bt_pg_info_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_11_63        : 53;
-        uint64_t t_mult                : 4;  /**< [ 10:  7](R/W) The boot-time TIM_MULT field of the SET_TM_PARAM command. */
-        uint64_t adr_cyc               : 4;  /**< [  6:  3](R/W) Number of column-address cycles. Legal values are 0x3 - 0x8. Values written to this field
-                                                                 smaller than 0x3 are converted to 0x3; values larger than 0x8 are converted to 0x8. */
-        uint64_t size                  : 3;  /**< [  2:  0](R/W) Number of bytes per page in the NAND flash device = 2^SIZE+1 * 256.
-                                                                 0x0 = 512 bytes/page.
-                                                                 0x1 = 1 KB/page.
-                                                                 0x2 = 2 KB/page.
-                                                                 0x3 = 4 KB/page.
-                                                                 0x4 = 8 KB/page.
-                                                                 0x5 = 16 KB/page.
-                                                                 0x6 = 32 KB/page.
-                                                                 0x7 = 64 KB/page. */
-#else /* Word 0 - Little Endian */
-        uint64_t size                  : 3;  /**< [  2:  0](R/W) Number of bytes per page in the NAND flash device = 2^SIZE+1 * 256.
-                                                                 0x0 = 512 bytes/page.
-                                                                 0x1 = 1 KB/page.
-                                                                 0x2 = 2 KB/page.
-                                                                 0x3 = 4 KB/page.
-                                                                 0x4 = 8 KB/page.
-                                                                 0x5 = 16 KB/page.
-                                                                 0x6 = 32 KB/page.
-                                                                 0x7 = 64 KB/page. */
-        uint64_t adr_cyc               : 4;  /**< [  6:  3](R/W) Number of column-address cycles. Legal values are 0x3 - 0x8. Values written to this field
-                                                                 smaller than 0x3 are converted to 0x3; values larger than 0x8 are converted to 0x8. */
-        uint64_t t_mult                : 4;  /**< [ 10:  7](R/W) The boot-time TIM_MULT field of the SET_TM_PARAM command. */
-        uint64_t reserved_11_63        : 53;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ndf_bt_pg_info_s cn; */
-};
-typedef union cavm_ndf_bt_pg_info cavm_ndf_bt_pg_info_t;
-
-#define CAVM_NDF_BT_PG_INFO CAVM_NDF_BT_PG_INFO_FUNC()
-static inline uint64_t CAVM_NDF_BT_PG_INFO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NDF_BT_PG_INFO_FUNC(void)
-{
-    return 0x808000000018ll;
-}
-
-#define typedef_CAVM_NDF_BT_PG_INFO cavm_ndf_bt_pg_info_t
-#define bustype_CAVM_NDF_BT_PG_INFO CSR_TYPE_NCB
-#define basename_CAVM_NDF_BT_PG_INFO "NDF_BT_PG_INFO"
-#define device_bar_CAVM_NDF_BT_PG_INFO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NDF_BT_PG_INFO 0
-#define arguments_CAVM_NDF_BT_PG_INFO -1,-1,-1,-1
-
-/**
  * Register (NCB) ndf_cmd
  *
  * NAND Flash Command Register
@@ -511,42 +443,6 @@ static inline uint64_t CAVM_NDF_ECC_CNT_FUNC(void)
 #define device_bar_CAVM_NDF_ECC_CNT 0x0 /* PF_BAR0 */
 #define busnum_CAVM_NDF_ECC_CNT 0
 #define arguments_CAVM_NDF_ECC_CNT -1,-1,-1,-1
-
-/**
- * Register (NCB) ndf_eco
- *
- * INTERNAL: NAND Flash ECO Register
- */
-union cavm_ndf_eco
-{
-    uint64_t u;
-    struct cavm_ndf_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) ECO flops. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) ECO flops. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ndf_eco_s cn; */
-};
-typedef union cavm_ndf_eco cavm_ndf_eco_t;
-
-#define CAVM_NDF_ECO CAVM_NDF_ECO_FUNC()
-static inline uint64_t CAVM_NDF_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NDF_ECO_FUNC(void)
-{
-    return 0x808000000078ll;
-}
-
-#define typedef_CAVM_NDF_ECO cavm_ndf_eco_t
-#define bustype_CAVM_NDF_ECO CSR_TYPE_NCB
-#define basename_CAVM_NDF_ECO "NDF_ECO"
-#define device_bar_CAVM_NDF_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NDF_ECO 0
-#define arguments_CAVM_NDF_ECO -1,-1,-1,-1
 
 /**
  * Register (NCB) ndf_int
@@ -1023,21 +919,8 @@ union cavm_ndf_misc
                                                                  until [RD_DONE] is set to 1.
 
                                                                  This bit is cleared on any NDF_CMD software write command. */
-        uint64_t bt_dma                : 1;  /**< [  3:  3](R/W) Boot-time DMA enable. Reserved.
-                                                                 Internal:
-                                                                 When set to 1, boot-time DMA is enabled. This indicates to the NAND
-                                                                 flash boot-control state machine that boot DMA read operations can begin. Software should
-                                                                 set this bit to 1 after loading the NDF_CMD queue. Hardware sets the bit to 0 when boot
-                                                                 DMA command execution is complete. If chip-enable 0 is not a NAND flash device, this bit
-                                                                 is permanently 0 with software write operations ignored.
-                                                                 When [BT_DIS] = 1, this bit is 0. */
-        uint64_t bt_dis                : 1;  /**< [  2:  2](R/W) Boot disable. Typically set to 1.
-                                                                 Internal:
-                                                                 When the boot operation is over, software must set this field to 1, which
-                                                                 causes the boot-control state machines to sleep.
-                                                                 This bit indicates to the NAND flash boot-control state machine that boot operation has
-                                                                 ended. When this bit changes from 0 -\> 1, the NDF_CMD queue is emptied as a side effect.
-                                                                 This bit must never be set when booting from NAND flash and region zero is enabled. */
+        uint64_t bt_dma                : 1;  /**< [  3:  3](R/W) Boot-time DMA enable. Reserved. */
+        uint64_t bt_dis                : 1;  /**< [  2:  2](R/W) Boot disable. Typically set to 1. */
         uint64_t ex_dis                : 1;  /**< [  1:  1](R/W) Execution disable. When set to 1, this bit stops command execution after completing the
                                                                  execution of all commands currently in the NDF_CMD queue. Once command execution has
                                                                  stopped and then new commands are loaded into the NDF_CMD queue, command execution does
@@ -1059,21 +942,8 @@ union cavm_ndf_misc
                                                                  not resume while this bit is 1.
 
                                                                  When this bit is set to 0, execution resumes if the NDF_CMD queue is not empty. */
-        uint64_t bt_dis                : 1;  /**< [  2:  2](R/W) Boot disable. Typically set to 1.
-                                                                 Internal:
-                                                                 When the boot operation is over, software must set this field to 1, which
-                                                                 causes the boot-control state machines to sleep.
-                                                                 This bit indicates to the NAND flash boot-control state machine that boot operation has
-                                                                 ended. When this bit changes from 0 -\> 1, the NDF_CMD queue is emptied as a side effect.
-                                                                 This bit must never be set when booting from NAND flash and region zero is enabled. */
-        uint64_t bt_dma                : 1;  /**< [  3:  3](R/W) Boot-time DMA enable. Reserved.
-                                                                 Internal:
-                                                                 When set to 1, boot-time DMA is enabled. This indicates to the NAND
-                                                                 flash boot-control state machine that boot DMA read operations can begin. Software should
-                                                                 set this bit to 1 after loading the NDF_CMD queue. Hardware sets the bit to 0 when boot
-                                                                 DMA command execution is complete. If chip-enable 0 is not a NAND flash device, this bit
-                                                                 is permanently 0 with software write operations ignored.
-                                                                 When [BT_DIS] = 1, this bit is 0. */
+        uint64_t bt_dis                : 1;  /**< [  2:  2](R/W) Boot disable. Typically set to 1. */
+        uint64_t bt_dma                : 1;  /**< [  3:  3](R/W) Boot-time DMA enable. Reserved. */
         uint64_t rd_cmd                : 1;  /**< [  4:  4](R/W) Read command. When set to 1, the hardware reads the contents of the NDF_CMD queue eight
                                                                  bytes at a time and places the data into NDF_CMD. Software should first read [RD_VAL] to see
                                                                  if the next eight bytes from the NDF_CMD queue are available in NDF_CMD.

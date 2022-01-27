@@ -328,9 +328,6 @@ static inline uint64_t CAVM_RASX_ERR00ADDR(uint64_t a)
  * RAS Error Record 00 Control Register
  * This per-record register contains enables bits for the node that writes to this record.
  * See the individual per-record CSRs for the record-specific values of each field.
- *
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err00ctlr
 {
@@ -686,20 +683,14 @@ union cavm_rasx_err00fr
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
                                                                  overwritten. If the counter overflows, RAS()_ERR\<n\>STATUS[OF] is set to 1.
 
-                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0. */
         uint64_t dui                   : 2;  /**< [ 17: 16](SRO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature separately.  See [FI].
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t rp                    : 1;  /**< [ 15: 15](SRO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
@@ -707,20 +698,14 @@ union cavm_rasx_err00fr
 
                                                                  If [CEC] = 0x0, this bit is 0.
 
-                                                                 For CNXXXX no CEC in any records, always 0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0. */
         uint64_t cec                   : 3;  /**< [ 14: 12](SRO) Indicates a standard correctable error counter mechanism in CDC_ERR()_MISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in CDC_ERR()_MISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in CDC_ERR()_MISC0\<47:32\>.
                                                                  _ All other values are reserved.
 
-                                                                 For CNXXXX no CEC in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0x0. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](SRO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -730,10 +715,7 @@ union cavm_rasx_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t ue                    : 2;  /**< [  9:  8](SRO) Uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -742,26 +724,17 @@ union cavm_rasx_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t fi                    : 2;  /**< [  7:  6](SRO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ui                    : 2;  /**< [  5:  4](SRO) Uncorrected error recovery interrupt.
                                                                  0x0 = Does not support feature. See [FI].
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](SRO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -775,19 +748,13 @@ union cavm_rasx_err00fr
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 2;  /**< [  1:  0](SRO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](SRO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -801,18 +768,12 @@ union cavm_rasx_err00fr
                                                                  0x0 = Does not support feature. See [FI].
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](SRO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](SRO) Uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -821,10 +782,7 @@ union cavm_rasx_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](SRO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -834,20 +792,14 @@ union cavm_rasx_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cec                   : 3;  /**< [ 14: 12](SRO) Indicates a standard correctable error counter mechanism in CDC_ERR()_MISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in CDC_ERR()_MISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in CDC_ERR()_MISC0\<47:32\>.
                                                                  _ All other values are reserved.
 
-                                                                 For CNXXXX no CEC in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0x0. */
         uint64_t rp                    : 1;  /**< [ 15: 15](SRO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
@@ -855,20 +807,14 @@ union cavm_rasx_err00fr
 
                                                                  If [CEC] = 0x0, this bit is 0.
 
-                                                                 For CNXXXX no CEC in any records, always 0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0. */
         uint64_t dui                   : 2;  /**< [ 17: 16](SRO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature separately.  See [FI].
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ceo                   : 2;  /**< [ 19: 18](SRO) Corrected error overwrite. Indicates the behavior when a second corrected error
                                                                  is detected after a first corrected error has been recorded by the node.
                                                                  0x0 = Count corrected error if a counter is implemented. Keep the previous error
@@ -878,10 +824,7 @@ union cavm_rasx_err00fr
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
                                                                  overwritten. If the counter overflows, RAS()_ERR\<n\>STATUS[OF] is set to 1.
 
-                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0. */
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } s;
@@ -900,20 +843,14 @@ union cavm_rasx_err00fr
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
                                                                  overwritten. If the counter overflows, RAS()_ERR\<n\>STATUS[OF] is set to 1.
 
-                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0. */
         uint64_t dui                   : 2;  /**< [ 17: 16](SRO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature separately.  See [FI].
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t rp                    : 1;  /**< [ 15: 15](SRO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
@@ -921,20 +858,14 @@ union cavm_rasx_err00fr
 
                                                                  If [CEC] = 0x0, this bit is 0.
 
-                                                                 For CNXXXX no CEC in any records, always 0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0. */
         uint64_t cec                   : 3;  /**< [ 14: 12](SRO) Indicates a standard correctable error counter mechanism in CDC_ERR()_MISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in CDC_ERR()_MISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in CDC_ERR()_MISC0\<47:32\>.
                                                                  _ All other values are reserved.
 
-                                                                 For CNXXXX no CEC in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0x0. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](SRO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -944,10 +875,7 @@ union cavm_rasx_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t ue                    : 2;  /**< [  9:  8](SRO) Uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -956,26 +884,17 @@ union cavm_rasx_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t fi                    : 2;  /**< [  7:  6](SRO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ui                    : 2;  /**< [  5:  4](SRO) Uncorrected error recovery interrupt.
                                                                  0x0 = Does not support feature. See [FI].
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](SRO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -989,19 +908,13 @@ union cavm_rasx_err00fr
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 2;  /**< [  1:  0](SRO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](SRO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -1015,18 +928,12 @@ union cavm_rasx_err00fr
                                                                  0x0 = Does not support feature. See [FI].
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](SRO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](SRO) Uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -1035,10 +942,7 @@ union cavm_rasx_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](SRO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -1048,20 +952,14 @@ union cavm_rasx_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cec                   : 3;  /**< [ 14: 12](SRO) Indicates a standard correctable error counter mechanism in CDC_ERR()_MISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in CDC_ERR()_MISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in CDC_ERR()_MISC0\<47:32\>.
                                                                  _ All other values are reserved.
 
-                                                                 For CNXXXX no CEC in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0x0. */
         uint64_t rp                    : 1;  /**< [ 15: 15](SRO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
@@ -1069,20 +967,14 @@ union cavm_rasx_err00fr
 
                                                                  If [CEC] = 0x0, this bit is 0.
 
-                                                                 For CNXXXX no CEC in any records, always 0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0. */
         uint64_t dui                   : 2;  /**< [ 17: 16](SRO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature separately.  See [FI].
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ceo                   : 2;  /**< [ 19: 18](SRO) Corrected error overwrite. Indicates the behavior when a second corrected error
                                                                  is detected after a first corrected error has been recorded by the node.
                                                                  0x0 = Count corrected error if a counter is implemented. Keep the previous error
@@ -1092,10 +984,7 @@ union cavm_rasx_err00fr
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
                                                                  overwritten. If the counter overflows, RAS()_ERR\<n\>STATUS[OF] is set to 1.
 
-                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0. */
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -1877,8 +1766,6 @@ static inline uint64_t CAVM_RASX_ERR01CTLR(uint64_t a)
  *
  * RAS Error Record 01 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err01fr
 {
@@ -2405,8 +2292,6 @@ static inline uint64_t CAVM_RASX_ERR02CTLR(uint64_t a)
  *
  * RAS Error Record 02 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err02fr
 {
@@ -2933,8 +2818,6 @@ static inline uint64_t CAVM_RASX_ERR03CTLR(uint64_t a)
  *
  * RAS Error Record 03 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err03fr
 {
@@ -3461,8 +3344,6 @@ static inline uint64_t CAVM_RASX_ERR04CTLR(uint64_t a)
  *
  * RAS Error Record 04 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err04fr
 {
@@ -3989,8 +3870,6 @@ static inline uint64_t CAVM_RASX_ERR05CTLR(uint64_t a)
  *
  * RAS Error Record 05 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err05fr
 {
@@ -4517,8 +4396,6 @@ static inline uint64_t CAVM_RASX_ERR06CTLR(uint64_t a)
  *
  * RAS Error Record 06 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err06fr
 {
@@ -5041,8 +4918,6 @@ static inline uint64_t CAVM_RASX_ERR07CTLR(uint64_t a)
  *
  * RAS Error Record 07 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err07fr
 {
@@ -5567,8 +5442,6 @@ static inline uint64_t CAVM_RASX_ERR08CTLR(uint64_t a)
  *
  * RAS Error Record 08 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err08fr
 {
@@ -6093,8 +5966,6 @@ static inline uint64_t CAVM_RASX_ERR09CTLR(uint64_t a)
  *
  * RAS Error Record 09 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err09fr
 {
@@ -6619,8 +6490,6 @@ static inline uint64_t CAVM_RASX_ERR10CTLR(uint64_t a)
  *
  * RAS Error Record 10 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err10fr
 {
@@ -7143,8 +7012,6 @@ static inline uint64_t CAVM_RASX_ERR11CTLR(uint64_t a)
  *
  * RAS Error Record 11 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err11fr
 {
@@ -7667,8 +7534,6 @@ static inline uint64_t CAVM_RASX_ERR12CTLR(uint64_t a)
  *
  * RAS Error Record 12 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err12fr
 {
@@ -8203,8 +8068,6 @@ static inline uint64_t CAVM_RASX_ERR13CTLR(uint64_t a)
  *
  * RAS Error Record 13 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err13fr
 {
@@ -8711,8 +8574,6 @@ static inline uint64_t CAVM_RASX_ERR14CTLR(uint64_t a)
  *
  * RAS Error Record 14 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err14fr
 {
@@ -9237,8 +9098,6 @@ static inline uint64_t CAVM_RASX_ERR15CTLR(uint64_t a)
  *
  * RAS Error Record 15 Feature Register
  * See RAS()_ERR00FR.
- * Internal:
- * If adding/removing records, update RAS()_ERRDEVID[NUM].
  */
 union cavm_rasx_err15fr
 {
@@ -9991,10 +9850,7 @@ union cavm_rasx_errirqsr
                                                                  0 = Error recovery interrupt write not in progress.
                                                                  1 = Error recovery interrupt write in progress.
 
-                                                                 In CNXXXX, reads same as [FHI].
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 In CNXXXX, reads same as [FHI]. */
         uint64_t fhierr                : 1;  /**< [  1:  1](SRO) Fault handling interrupt error.
                                                                  0 = Fault handling interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -10004,17 +9860,11 @@ union cavm_rasx_errirqsr
                                                                  In CNXXXX, always 0. */
         uint64_t fhi                   : 1;  /**< [  0:  0](SRO/H) Fault handling interrupt write in progress.
                                                                  0 = Fault handling interrupt write not in progress.
-                                                                 1 = Fault handling interrupt write in progress.
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 1 = Fault handling interrupt write in progress. */
 #else /* Word 0 - Little Endian */
         uint64_t fhi                   : 1;  /**< [  0:  0](SRO/H) Fault handling interrupt write in progress.
                                                                  0 = Fault handling interrupt write not in progress.
-                                                                 1 = Fault handling interrupt write in progress.
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 1 = Fault handling interrupt write in progress. */
         uint64_t fhierr                : 1;  /**< [  1:  1](SRO) Fault handling interrupt error.
                                                                  0 = Fault handling interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -10026,10 +9876,7 @@ union cavm_rasx_errirqsr
                                                                  0 = Error recovery interrupt write not in progress.
                                                                  1 = Error recovery interrupt write in progress.
 
-                                                                 In CNXXXX, reads same as [FHI].
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 In CNXXXX, reads same as [FHI]. */
         uint64_t erierr                : 1;  /**< [  3:  3](SRO) Error recovery interrupt error.
                                                                  0 = Error recovery interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -10081,15 +9928,9 @@ union cavm_rasx_pidr0
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
-        uint32_t part_0                : 8;  /**< [  7:  0](RO) Part number \<7:0\>.  Indicates PCC_PIDR_PARTNUM0_E::RAS.
-
-                                                                 Internal:
-                                                                 This value needs to change when used in different blocks. */
+        uint32_t part_0                : 8;  /**< [  7:  0](RO) Part number \<7:0\>.  Indicates PCC_PIDR_PARTNUM0_E::RAS. */
 #else /* Word 0 - Little Endian */
-        uint32_t part_0                : 8;  /**< [  7:  0](RO) Part number \<7:0\>.  Indicates PCC_PIDR_PARTNUM0_E::RAS.
-
-                                                                 Internal:
-                                                                 This value needs to change when used in different blocks. */
+        uint32_t part_0                : 8;  /**< [  7:  0](RO) Part number \<7:0\>.  Indicates PCC_PIDR_PARTNUM0_E::RAS. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;

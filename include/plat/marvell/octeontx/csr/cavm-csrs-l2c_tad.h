@@ -118,12 +118,7 @@ union cavm_l2c_tadx_err
         uint64_t rddisoci              : 1;  /**< [ 61: 61](RO/H) Logged information is for a L2C_TAD()_INT_W1C[RDDISOCI] error. */
         uint64_t wrdisoci              : 1;  /**< [ 60: 60](RO/H) Logged information is for a L2C_TAD()_INT_W1C[WRDISOCI] error. */
         uint64_t nonsec                : 1;  /**< [ 59: 59](RO/H) Nonsecure (NS) bit of request causing error. */
-        uint64_t cmd                   : 8;  /**< [ 58: 51](RO/H) Encoding of XMC or CCPI command causing error.
-                                                                 Internal:
-                                                                 If CMD\<7\>==1, use XMC_CMD_E to
-                                                                 decode CMD\<6:0\>. If CMD\<7:5\>==0, use OCI_MREQ_CMD_E to decode CMD\<4:0\>. If CMD\<7:5\>==1,
-                                                                 use OCI_MFWD_CMD_E to decode CMD\<4:0\>. If CMD\<7:5\>==2, use OCI_MRSP_CMD_E to decode
-                                                                 CMD\<4:0\>. */
+        uint64_t cmd                   : 8;  /**< [ 58: 51](RO/H) Encoding of XMC or CCPI command causing error. */
         uint64_t source                : 7;  /**< [ 50: 44](RO/H) XMC source of request causing error. If [SOURCE]\<6\>==0, then [SOURCE]\<5:0\> is
                                                                  PPID, else [SOURCE]\<3:0\> is BUSID of the IOB which made the request. If
                                                                  [CMD]\<7\>==0, this field is unpredictable. */
@@ -145,12 +140,7 @@ union cavm_l2c_tadx_err
         uint64_t source                : 7;  /**< [ 50: 44](RO/H) XMC source of request causing error. If [SOURCE]\<6\>==0, then [SOURCE]\<5:0\> is
                                                                  PPID, else [SOURCE]\<3:0\> is BUSID of the IOB which made the request. If
                                                                  [CMD]\<7\>==0, this field is unpredictable. */
-        uint64_t cmd                   : 8;  /**< [ 58: 51](RO/H) Encoding of XMC or CCPI command causing error.
-                                                                 Internal:
-                                                                 If CMD\<7\>==1, use XMC_CMD_E to
-                                                                 decode CMD\<6:0\>. If CMD\<7:5\>==0, use OCI_MREQ_CMD_E to decode CMD\<4:0\>. If CMD\<7:5\>==1,
-                                                                 use OCI_MFWD_CMD_E to decode CMD\<4:0\>. If CMD\<7:5\>==2, use OCI_MRSP_CMD_E to decode
-                                                                 CMD\<4:0\>. */
+        uint64_t cmd                   : 8;  /**< [ 58: 51](RO/H) Encoding of XMC or CCPI command causing error. */
         uint64_t nonsec                : 1;  /**< [ 59: 59](RO/H) Nonsecure (NS) bit of request causing error. */
         uint64_t wrdisoci              : 1;  /**< [ 60: 60](RO/H) Logged information is for a L2C_TAD()_INT_W1C[WRDISOCI] error. */
         uint64_t rddisoci              : 1;  /**< [ 61: 61](RO/H) Logged information is for a L2C_TAD()_INT_W1C[RDDISOCI] error. */
@@ -1598,12 +1588,7 @@ union cavm_l2c_tadx_timeout
                                                                  original LFB. */
         uint64_t reserved_57_61        : 5;
         uint64_t lfbnum                : 5;  /**< [ 56: 52](RO/H) The LFB number of the entry that timed out, and have its info captures in this register. */
-        uint64_t cmd                   : 8;  /**< [ 51: 44](RO/H) Encoding of XMC or CCPI command causing error.
-                                                                 Internal:
-                                                                 If CMD\<7\>==1, use XMC_CMD_E to decode CMD\<6:0\>. If CMD\<7:5\>==0, use
-                                                                 OCI_MREQ_CMD_E to
-                                                                 decode CMD\<4:0\>. If CMD\<7:5\>==1, use OCI_MFWD_CMD_E to decode CMD\<4:0\>. If CMD\<7:5\>==2,
-                                                                 use OCI_MRSP_CMD_E to decode CMD\<4:0\>. */
+        uint64_t cmd                   : 8;  /**< [ 51: 44](RO/H) Encoding of XMC or CCPI command causing error. */
         uint64_t reserved_42_43        : 2;
         uint64_t node                  : 2;  /**< [ 41: 40](RO/H) Home node of the address causing the error. Similar to [ADDR] below, this can be the
                                                                  request address (if [INFOLFB] is set), else it is the replacement address (if [INFOLFB] is
@@ -1627,12 +1612,7 @@ union cavm_l2c_tadx_timeout
                                                                  request address (if [INFOLFB] is set), else it is the replacement address (if [INFOLFB] is
                                                                  clear & [INFOVAB] is set). */
         uint64_t reserved_42_43        : 2;
-        uint64_t cmd                   : 8;  /**< [ 51: 44](RO/H) Encoding of XMC or CCPI command causing error.
-                                                                 Internal:
-                                                                 If CMD\<7\>==1, use XMC_CMD_E to decode CMD\<6:0\>. If CMD\<7:5\>==0, use
-                                                                 OCI_MREQ_CMD_E to
-                                                                 decode CMD\<4:0\>. If CMD\<7:5\>==1, use OCI_MFWD_CMD_E to decode CMD\<4:0\>. If CMD\<7:5\>==2,
-                                                                 use OCI_MRSP_CMD_E to decode CMD\<4:0\>. */
+        uint64_t cmd                   : 8;  /**< [ 51: 44](RO/H) Encoding of XMC or CCPI command causing error. */
         uint64_t lfbnum                : 5;  /**< [ 56: 52](RO/H) The LFB number of the entry that timed out, and have its info captures in this register. */
         uint64_t reserved_57_61        : 5;
         uint64_t infovab               : 1;  /**< [ 62: 62](RO/H) Logged address information is for the VAB (replacement). If both this and

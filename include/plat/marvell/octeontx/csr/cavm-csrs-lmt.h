@@ -32,19 +32,11 @@ union cavm_lmt_lf_lmtcancel
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t data                  : 64; /**< [ 63:  0](WO) This register's address is used to perform an AP LMTCANCEL operation. This is
                                                                  only used by code executing on AP cores and has no function when accessed by
-                                                                 other entities.
-
-                                                                 Internal:
-                                                                 LMTLINE and LMTCANCEL addresses are consumed by APs and never received by
-                                                                 RVU. See also RVU_BLOCK_ADDR_E::LMT. */
+                                                                 other entities. */
 #else /* Word 0 - Little Endian */
         uint64_t data                  : 64; /**< [ 63:  0](WO) This register's address is used to perform an AP LMTCANCEL operation. This is
                                                                  only used by code executing on AP cores and has no function when accessed by
-                                                                 other entities.
-
-                                                                 Internal:
-                                                                 LMTLINE and LMTCANCEL addresses are consumed by APs and never received by
-                                                                 RVU. See also RVU_BLOCK_ADDR_E::LMT. */
+                                                                 other entities. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_lmt_lf_lmtcancel_s cn; */
@@ -80,19 +72,11 @@ union cavm_lmt_lf_lmtlinex
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t data                  : 64; /**< [ 63:  0](WO) This register's address is the 128-byte LMTLINE used to form LMTST
                                                                  operations. This is only used by code executing on AP cores and has no function
-                                                                 when accessed by other entities.
-
-                                                                 Internal:
-                                                                 LMTLINE and LMTCANCEL addresses are consumed by APs and never received by
-                                                                 RVU. See also RVU_BLOCK_ADDR_E::LMT. */
+                                                                 when accessed by other entities. */
 #else /* Word 0 - Little Endian */
         uint64_t data                  : 64; /**< [ 63:  0](WO) This register's address is the 128-byte LMTLINE used to form LMTST
                                                                  operations. This is only used by code executing on AP cores and has no function
-                                                                 when accessed by other entities.
-
-                                                                 Internal:
-                                                                 LMTLINE and LMTCANCEL addresses are consumed by APs and never received by
-                                                                 RVU. See also RVU_BLOCK_ADDR_E::LMT. */
+                                                                 when accessed by other entities. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_lmt_lf_lmtlinex_s cn; */

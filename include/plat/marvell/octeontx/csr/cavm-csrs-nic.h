@@ -40,9 +40,6 @@
  * NIC Channel Number Enumeration
  * Enumerates the receive and transmit channels, and values of NIC_CQE_RX_S[CHAN].
  * NIC only uses the subset of this enumeration that is enumerated by NIC_CHAN_IDX_E.
- *
- * Internal:
- * P2X/X2P channel enumeration for t81, t83, ...
  */
 #define CAVM_NIC_CHAN_E_BGXX_LMACX_CHX(a,b,c) (0x800 + 0x100 * (a) + 0x10 * (b) + (c))
 #define CAVM_NIC_CHAN_E_DPI_CHX(a) (0x400 + (a))
@@ -293,10 +290,6 @@
  * NIC LMAC Enumeration
  * Enumerates the index of NIC_PF_LMAC()_CFG, NIC_PF_LMAC()_CFG2, NIC_PF_LMAC()_SW_XOFF
  * and NIC_PF_LMAC()_CREDIT.
- *
- * Internal:
- * Also enumerates the index of NIC_PF_SW_SYNC_PIPE()_CQ_CNTS and
- * NIC_PF_SW_SYNC_PIPE()_PKT_CNTS.
  */
 #define CAVM_NIC_LMAC_E_BGXX_LMACX(a,b) (0 + 4 * (a) + (b))
 #define CAVM_NIC_LMAC_E_LBKX_CN81XX(a) (9 + (a))
@@ -433,20 +426,6 @@
  *
  * NIC VNIC Receive Statistics Enumeration
  * Enumerates the index of NIC_PF_VNIC()_RX_STAT() and NIC_VNIC()_RX_STAT().
- * Internal:
- * INTERNAL: The following were defined for Octeon but are not included here:
- * RX_FRAG - Number of non-dropped packets with length \< minimum and FCS error
- * RX_UNDERSZ - Number of non-dropped packets with length \< minimum and no FCS error.
- * RX_JABBER - Number of non-dropped packets with length \> maximum and FCS error.
- * RX_OVERSZ - Number of non-dropped packets with length \> maximum and no FCS error.
- * RX_H1TO63 - Number of non-dropped 1 to 63 byte packets. Includes any timestamps, RX headers
- * and excludes FCS.
- * RX_H64TO127 - Number of non-dropped 64 to 127 byte packets.
- * RX_H128TO255 - Number of non-dropped 128 to 255 byte packets.
- * RX_H256TO511 - Number of non-dropped 256 to 511 byte packets.
- * RX_H512TO1023 - Number of non-dropped 512 to 1023 byte packets.
- * RX_H1024TO1518 - Number of non-dropped 1024 to 1518 byte packets.
- * RX_H1519 - Number of non-dropped 1519 byte and above packets.
  */
 #define CAVM_NIC_STAT_VNIC_RX_E_RX_BCAST (2)
 #define CAVM_NIC_STAT_VNIC_RX_E_RX_DRP_BCAST (0xa)
@@ -648,44 +627,22 @@ union cavm_nic_cqe_rx_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t rss_tag               : 32; /**< [191:160] Computed RSS tag value. This field is zero when [RSS_ALG] == NIC_RSS_ALG_E::NONE (0). */
         uint64_t vlan_tci              : 16; /**< [159:144] Stripped VLAN tag control information. Unpredictable when [VV_GONE] and [VS_GONE] are
-                                                                 clear.  Field is stored in LE byte order.
-
-                                                                 Internal:
-                                                                 Hardware zeros when unpredictable, though software must not rely on this. */
+                                                                 clear.  Field is stored in LE byte order. */
         uint64_t vvptr                 : 8;  /**< [143:136] Pointer to first VLAN. If [VV] set, [VV_GONE] clear, the first byte of the first VLAN's
                                                                  Ethertype. If [VV] set, [VV_GONE] set, the first byte after the stripped VLAN.
-                                                                 Unpredictable if [VV] clear.
-
-                                                                 Internal:
-                                                                 Hardware zeros when unpredictable, though software
-                                                                 must not rely on this. */
+                                                                 Unpredictable if [VV] clear. */
         uint64_t vsptr                 : 8;  /**< [135:128] Pointer to second VLAN. If [VS] set, [VS_GONE] clear, the first byte of the second VLAN's
                                                                  Ethertype. If [VS] set, [VS_GONE] set, the first byte after the stripped VLAN.
-                                                                 Unpredictable if [VS] clear.
-
-                                                                 Internal:
-                                                                 Hardware zeros when unpredictable, though software
-                                                                 must not rely on this. */
+                                                                 Unpredictable if [VS] clear. */
 #else /* Word 2 - Little Endian */
         uint64_t vsptr                 : 8;  /**< [135:128] Pointer to second VLAN. If [VS] set, [VS_GONE] clear, the first byte of the second VLAN's
                                                                  Ethertype. If [VS] set, [VS_GONE] set, the first byte after the stripped VLAN.
-                                                                 Unpredictable if [VS] clear.
-
-                                                                 Internal:
-                                                                 Hardware zeros when unpredictable, though software
-                                                                 must not rely on this. */
+                                                                 Unpredictable if [VS] clear. */
         uint64_t vvptr                 : 8;  /**< [143:136] Pointer to first VLAN. If [VV] set, [VV_GONE] clear, the first byte of the first VLAN's
                                                                  Ethertype. If [VV] set, [VV_GONE] set, the first byte after the stripped VLAN.
-                                                                 Unpredictable if [VV] clear.
-
-                                                                 Internal:
-                                                                 Hardware zeros when unpredictable, though software
-                                                                 must not rely on this. */
+                                                                 Unpredictable if [VV] clear. */
         uint64_t vlan_tci              : 16; /**< [159:144] Stripped VLAN tag control information. Unpredictable when [VV_GONE] and [VS_GONE] are
-                                                                 clear.  Field is stored in LE byte order.
-
-                                                                 Internal:
-                                                                 Hardware zeros when unpredictable, though software must not rely on this. */
+                                                                 clear.  Field is stored in LE byte order. */
         uint64_t rss_tag               : 32; /**< [191:160] Computed RSS tag value. This field is zero when [RSS_ALG] == NIC_RSS_ALG_E::NONE (0). */
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
@@ -693,18 +650,10 @@ union cavm_nic_cqe_rx_s
         uint64_t rbsz2                 : 16; /**< [239:224] Size of RB 4. */
         uint64_t rbsz1                 : 16; /**< [223:208] Size of RB 2. */
         uint64_t rbsz0                 : 16; /**< [207:192] Size of RB 0. Number of bytes written to the first RB, or hardware 0x0 and software
-                                                                 reserved if none written to this RB.
-
-                                                                 Internal:
-                                                                 Fields are laid out so that on a litte-
-                                                                 endian machine a uint16_t array can hit all 12 RBSZs. */
+                                                                 reserved if none written to this RB. */
 #else /* Word 3 - Little Endian */
         uint64_t rbsz0                 : 16; /**< [207:192] Size of RB 0. Number of bytes written to the first RB, or hardware 0x0 and software
-                                                                 reserved if none written to this RB.
-
-                                                                 Internal:
-                                                                 Fields are laid out so that on a litte-
-                                                                 endian machine a uint16_t array can hit all 12 RBSZs. */
+                                                                 reserved if none written to this RB. */
         uint64_t rbsz1                 : 16; /**< [223:208] Size of RB 2. */
         uint64_t rbsz2                 : 16; /**< [239:224] Size of RB 4. */
         uint64_t rbsz3                 : 16; /**< [255:240] Size of RB 6. */
@@ -1251,9 +1200,6 @@ union cavm_nic_send_imm_s
  *
  * NIC_SEND_MEM_S subdescriptors must precede all NIC_SEND_GATHER_S and NIC_SEND_IMM_S
  * subdescriptors in the send descriptor.
- *
- * Internal:
- * This constraint simplifies NIC_SEND_MEM_S handling for TSO.
  */
 union cavm_nic_send_mem_s
 {
@@ -1271,21 +1217,11 @@ union cavm_nic_send_mem_s
         uint64_t reserved_32_52        : 21;
         uint64_t offset                : 32; /**< [ 31:  0] Adder offset. Constant value to add or subtract or set. If the count being modified is to
                                                                  represent the true packet size, then the offset would represent the CRC and pad bytes
-                                                                 appended to the packet.
-
-                                                                 Internal:
-                                                                 Note IOB hardware has a special encoding for atomic
-                                                                 increment/decrement, therefore a change of +/- one is twice as IOB bandwidth efficient as
-                                                                 adding/subtracting other values. */
+                                                                 appended to the packet. */
 #else /* Word 0 - Little Endian */
         uint64_t offset                : 32; /**< [ 31:  0] Adder offset. Constant value to add or subtract or set. If the count being modified is to
                                                                  represent the true packet size, then the offset would represent the CRC and pad bytes
-                                                                 appended to the packet.
-
-                                                                 Internal:
-                                                                 Note IOB hardware has a special encoding for atomic
-                                                                 increment/decrement, therefore a change of +/- one is twice as IOB bandwidth efficient as
-                                                                 adding/subtracting other values. */
+                                                                 appended to the packet. */
         uint64_t reserved_32_52        : 21;
         uint64_t wmem                  : 1;  /**< [ 53: 53] Wait for memory operation to be committed before posting to the CQ, e.g. when
                                                                  NIC_SEND_HDR_S[PNC] is set. When clear, the memory operation may complete after the CQE is
@@ -1312,9 +1248,6 @@ union cavm_nic_send_mem_s
  * NIC Memory BIST 0 Status Register
  * This register reports memory BIST status. Each bit corresponds to a different RAM; 0 = pass, 1
  * = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC0_FLIP0.
  */
 union cavm_nic_pf_bist0_status
 {
@@ -1572,13 +1505,9 @@ union cavm_nic_pf_cfg
                                                                  corrupting the operation of other VFs. When clear, writes to all CQ, SQ and RBDR ring
                                                                  pointers (head, tail, debug) are ignored (WI). When set, writing to the ring
                                                                  pointers is enabled. */
-        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable NIC block.
-                                                                 Internal:
-                                                                 Used to enable conditional SCLK. */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable NIC block. */
 #else /* Word 0 - Little Endian */
-        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable NIC block.
-                                                                 Internal:
-                                                                 Used to enable conditional SCLK. */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable NIC block. */
         uint64_t test_mode             : 1;  /**< [  1:  1](R/W) Enable test mode. Must be clear during normal operation in order to prevent a VF from
                                                                  corrupting the operation of other VFs. When clear, writes to all CQ, SQ and RBDR ring
                                                                  pointers (head, tail, debug) are ignored (WI). When set, writing to the ring
@@ -1709,14 +1638,7 @@ union cavm_nic_pf_chanx_credit
                                                                  is 9212 bytes (9216 minus 4 byte FCS), then [CC_UNIT_CNT] should be \< (12288 - 9212)/16 =
                                                                  192.
 
-                                                                 For LBK LMACs, the recommended configuration is [CC_ENABLE] = 1 and [CC_UNIT_CNT] = 512.
-
-                                                                 Internal:
-                                                                 LBK value allows for 80 Gbps loopback data rate with 800ns round trip latency:
-
-                                                                 _ Minimum LBK in-flight data = 80*800 = 64Kbits = 512 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = min + MTU. */
+                                                                 For LBK LMACs, the recommended configuration is [CC_ENABLE] = 1 and [CC_UNIT_CNT] = 512. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) Channel-credit packet count. This value, plus 1, represents the maximum outstanding
                                                                  aggregate packet count for this LMAC. Note that this 10-bit field represents a signed
                                                                  value that decrements towards zero as credits are used. Packets are not allowed to flow
@@ -1750,14 +1672,7 @@ union cavm_nic_pf_chanx_credit
                                                                  is 9212 bytes (9216 minus 4 byte FCS), then [CC_UNIT_CNT] should be \< (12288 - 9212)/16 =
                                                                  192.
 
-                                                                 For LBK LMACs, the recommended configuration is [CC_ENABLE] = 1 and [CC_UNIT_CNT] = 512.
-
-                                                                 Internal:
-                                                                 LBK value allows for 80 Gbps loopback data rate with 800ns round trip latency:
-
-                                                                 _ Minimum LBK in-flight data = 80*800 = 64Kbits = 512 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = min + MTU. */
+                                                                 For LBK LMACs, the recommended configuration is [CC_ENABLE] = 1 and [CC_UNIT_CNT] = 512. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn83xx;
@@ -2233,154 +2148,6 @@ static inline uint64_t CAVM_NIC_PF_CQM_CFG_FUNC(void)
 #define arguments_CAVM_NIC_PF_CQM_CFG -1,-1,-1,-1
 
 /**
- * Register (NCB) nic_pf_cqm_test
- *
- * INTERNAL: NIC CQM Test Register
- */
-union cavm_nic_pf_cqm_test
-{
-    uint64_t u;
-    struct cavm_nic_pf_cqm_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = cqe_gnt_cont: Stall grant to REB for continuation cache lines of a CQE.
-                                                                 \<62\> = cqe_gnt_first: Stall grant to REB & SEB for first cache line of a CQE.
-                                                                 \<61\> = cqe_req: Stall CQE write requests from REB & SEB.
-                                                                 \<60\> = intr: Stall CQ interrupts to CSI. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = cqe_gnt_cont: Stall grant to REB for continuation cache lines of a CQE.
-                                                                 \<62\> = cqe_gnt_first: Stall grant to REB & SEB for first cache line of a CQE.
-                                                                 \<61\> = cqe_req: Stall CQE write requests from REB & SEB.
-                                                                 \<60\> = intr: Stall CQ interrupts to CSI. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_cqm_test_s cn; */
-};
-typedef union cavm_nic_pf_cqm_test cavm_nic_pf_cqm_test_t;
-
-#define CAVM_NIC_PF_CQM_TEST CAVM_NIC_PF_CQM_TEST_FUNC()
-static inline uint64_t CAVM_NIC_PF_CQM_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_CQM_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x8430000000d0ll;
-    __cavm_csr_fatal("NIC_PF_CQM_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_CQM_TEST cavm_nic_pf_cqm_test_t
-#define bustype_CAVM_NIC_PF_CQM_TEST CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_CQM_TEST "NIC_PF_CQM_TEST"
-#define device_bar_CAVM_NIC_PF_CQM_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_CQM_TEST 0
-#define arguments_CAVM_NIC_PF_CQM_TEST -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_csi_test
- *
- * INTERNAL: NIC CSI Test Register
- */
-union cavm_nic_pf_csi_test
-{
-    uint64_t u;
-    struct cavm_nic_pf_csi_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = pib_stall. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = pib_stall. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_csi_test_s cn; */
-};
-typedef union cavm_nic_pf_csi_test cavm_nic_pf_csi_test_t;
-
-#define CAVM_NIC_PF_CSI_TEST CAVM_NIC_PF_CSI_TEST_FUNC()
-static inline uint64_t CAVM_NIC_PF_CSI_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_CSI_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x8430000000f0ll;
-    __cavm_csr_fatal("NIC_PF_CSI_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_CSI_TEST cavm_nic_pf_csi_test_t
-#define bustype_CAVM_NIC_PF_CSI_TEST CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_CSI_TEST "NIC_PF_CSI_TEST"
-#define device_bar_CAVM_NIC_PF_CSI_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_CSI_TEST 0
-#define arguments_CAVM_NIC_PF_CSI_TEST -1,-1,-1,-1
-
-/**
  * Register (NCB) nic_pf_ecc0_cdis
  *
  * NIC Memory ECC 0 Correction Disable Register
@@ -2393,165 +2160,18 @@ union cavm_nic_pf_ecc0_cdis
     struct cavm_nic_pf_ecc0_cdis_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.core.reb.nic_reb_core.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.core.reb.nic_reb_core.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<29:20\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<19:10\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<9:0\>  = nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.core.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.core.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.core.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.core.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.core.csi.bcast.bcast_mem_mem. */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.core.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.core.cqm.cin.cq.cq_mem. */
+        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories. */
+        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories. */
+        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories. */
+        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.core.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.core.cqm.cin.cq.cq_mem. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.core.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.core.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.core.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.core.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.core.csi.bcast.bcast_mem_mem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.core.reb.nic_reb_core.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.core.reb.nic_reb_core.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<29:20\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<19:10\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<9:0\>  = nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
+        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories. */
+        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories. */
+        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories. */
+        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc0_cdis_s cn8; */
-    /* struct cavm_nic_pf_ecc0_cdis_s cn81xx; */
-    struct cavm_nic_pf_ecc0_cdis_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.nic_l1.reb.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.nic_l1.reb.bp_fifo.memory.
-                                                                   \<29\>  = nic_l.nic_l1.reb.pknd_fifo.memory.
-                                                                   \<28\>  = nic_l.nic_l1.reb.hdrs_fifo.memory.
-                                                                   \<27\>  = nic_l.nic_l1.reb.qpset_cqonly_resp_fifo.memory.
-                                                                   \<26\>  = nic_l.nic_l1.reb.qpset_resp_fifo.memory.
-                                                                   \<25:18\> = Reserved.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.nic_l2.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.nic_l2.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.nic_l2.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.nic_l2.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.nic_l2.csi.bcast.bcast_mem_mem. */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.nic_l2.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.nic_l2.cqm.cin.cq.cq_mem. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.nic_l2.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.nic_l2.cqm.cin.cq.cq_mem. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.nic_l2.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.nic_l2.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.nic_l2.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.nic_l2.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.nic_l2.csi.bcast.bcast_mem_mem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.nic_l1.reb.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.nic_l1.reb.bp_fifo.memory.
-                                                                   \<29\>  = nic_l.nic_l1.reb.pknd_fifo.memory.
-                                                                   \<28\>  = nic_l.nic_l1.reb.hdrs_fifo.memory.
-                                                                   \<27\>  = nic_l.nic_l1.reb.qpset_cqonly_resp_fifo.memory.
-                                                                   \<26\>  = nic_l.nic_l1.reb.qpset_resp_fifo.memory.
-                                                                   \<25:18\> = Reserved.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc0_cdis_s cn; */
 };
 typedef union cavm_nic_pf_ecc0_cdis cavm_nic_pf_ecc0_cdis_t;
 
@@ -2663,9 +2283,6 @@ static inline uint64_t CAVM_NIC_PF_ECC0_DBE_ENA_W1S_FUNC(void)
  * NIC ECC 0 Double-bit Error Interrupt Register
  * Reports double-bit errors detected in internal RAM. Each bit corresponds to a different RAM: 0
  * = pass, 1 = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC0_FLIP0.
  */
 union cavm_nic_pf_ecc0_dbe_int
 {
@@ -2760,165 +2377,18 @@ union cavm_nic_pf_ecc0_flip0
     struct cavm_nic_pf_ecc0_flip0_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.core.reb.nic_reb_core.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.core.reb.nic_reb_core.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<29:20\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<19:10\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<9:0\>  = nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.core.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.core.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.core.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.core.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.core.csi.bcast.bcast_mem_mem. */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.core.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.core.cqm.cin.cq.cq_mem. */
+        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories. */
+        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories. */
+        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories. */
+        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.core.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.core.cqm.cin.cq.cq_mem. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.core.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.core.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.core.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.core.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.core.csi.bcast.bcast_mem_mem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.core.reb.nic_reb_core.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.core.reb.nic_reb_core.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<29:20\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<19:10\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<9:0\>  = nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
+        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories. */
+        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories. */
+        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories. */
+        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc0_flip0_s cn8; */
-    /* struct cavm_nic_pf_ecc0_flip0_s cn81xx; */
-    struct cavm_nic_pf_ecc0_flip0_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.nic_l1.reb.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.nic_l1.reb.bp_fifo.memory.
-                                                                   \<29\>  = nic_l.nic_l1.reb.pknd_fifo.memory.
-                                                                   \<28\>  = nic_l.nic_l1.reb.hdrs_fifo.memory.
-                                                                   \<27\>  = nic_l.nic_l1.reb.qpset_cqonly_resp_fifo.memory.
-                                                                   \<26\>  = nic_l.nic_l1.reb.qpset_resp_fifo.memory.
-                                                                   \<25:18\> = Reserved.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.nic_l2.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.nic_l2.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.nic_l2.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.nic_l2.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.nic_l2.csi.bcast.bcast_mem_mem. */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.nic_l2.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.nic_l2.cqm.cin.cq.cq_mem. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.nic_l2.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.nic_l2.cqm.cin.cq.cq_mem. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.nic_l2.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.nic_l2.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.nic_l2.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.nic_l2.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.nic_l2.csi.bcast.bcast_mem_mem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.nic_l1.reb.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.nic_l1.reb.bp_fifo.memory.
-                                                                   \<29\>  = nic_l.nic_l1.reb.pknd_fifo.memory.
-                                                                   \<28\>  = nic_l.nic_l1.reb.hdrs_fifo.memory.
-                                                                   \<27\>  = nic_l.nic_l1.reb.qpset_cqonly_resp_fifo.memory.
-                                                                   \<26\>  = nic_l.nic_l1.reb.qpset_resp_fifo.memory.
-                                                                   \<25:18\> = Reserved.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc0_flip0_s cn; */
 };
 typedef union cavm_nic_pf_ecc0_flip0 cavm_nic_pf_ecc0_flip0_t;
 
@@ -2951,165 +2421,18 @@ union cavm_nic_pf_ecc0_flip1
     struct cavm_nic_pf_ecc0_flip1_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.core.reb.nic_reb_core.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.core.reb.nic_reb_core.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<29:20\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<19:10\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<9:0\>  = nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.core.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.core.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.core.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.core.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.core.csi.bcast.bcast_mem_mem. */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.core.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.core.cqm.cin.cq.cq_mem. */
+        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories. */
+        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories. */
+        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories. */
+        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.core.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.core.cqm.cin.cq.cq_mem. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.core.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.core.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.core.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.core.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.core.csi.bcast.bcast_mem_mem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.core.reb.nic_reb_core.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.core.reb.nic_reb_core.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<29:20\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<19:10\>  =
-                                                                 nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<9:0\>  = nic_l.core.reb.nic_reb_core.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
+        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories. */
+        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories. */
+        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories. */
+        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc0_flip1_s cn8; */
-    /* struct cavm_nic_pf_ecc0_flip1_s cn81xx; */
-    struct cavm_nic_pf_ecc0_flip1_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.nic_l1.reb.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.nic_l1.reb.bp_fifo.memory.
-                                                                   \<29\>  = nic_l.nic_l1.reb.pknd_fifo.memory.
-                                                                   \<28\>  = nic_l.nic_l1.reb.hdrs_fifo.memory.
-                                                                   \<27\>  = nic_l.nic_l1.reb.qpset_cqonly_resp_fifo.memory.
-                                                                   \<26\>  = nic_l.nic_l1.reb.qpset_resp_fifo.memory.
-                                                                   \<25:18\> = Reserved.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.nic_l2.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.nic_l2.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.nic_l2.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.nic_l2.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.nic_l2.csi.bcast.bcast_mem_mem. */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.nic_l2.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.nic_l2.cqm.cin.cq.cq_mem. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 8;  /**< [  7:  0](R/W) Syndrome flip for group 0 block 0 memories.
-                                                                 Internal:
-                                                                 CQM memories:
-                                                                   \<7:2\> = Reserved.
-                                                                   \<1\>   = nic_l.nic_l2.cqm.cin.cq_timer.cq_timer_mem.
-                                                                   \<0\>   = nic_l.nic_l2.cqm.cin.cq.cq_mem. */
-        uint64_t blk1                  : 8;  /**< [ 15:  8](R/W) Syndrome flip for group 0 block 1 memories.
-                                                                 Internal:
-                                                                 CSI memories:
-                                                                   \<7:0\> = Reserved.
-                                                                   \<4\>   = nic_l.nic_l2.csi.rpi.vfi.int_mem_mem.
-                                                                   \<3\>   = nic_l.nic_l2.csi.rpi.msix_pmem.
-                                                                   \<2\>   = nic_l.nic_l2.csi.rpi.msix_vmem.
-                                                                   \<1\>   = nic_l.nic_l2.csi.mbox.mbox_mem_mem.
-                                                                   \<0\>   = nic_l.nic_l2.csi.bcast.bcast_mem_mem. */
-        uint64_t blk2                  : 16; /**< [ 31: 16](R/W) Syndrome flip for group 0 block 2 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<15:0\> = Reserved. */
-        uint64_t blk3                  : 32; /**< [ 63: 32](R/W) Syndrome flip for group 0 block 3 memories.
-                                                                 Internal:
-                                                                 REB memories:
-                                                                   \<31\>  =
-                                                                 nic_l.nic_l1.reb.nic_reb_stdn_buffer.nic_reb_fifo_256x128.nic_reb_fifo
-                                                                 mem_256x128.
-                                                                   \<30\>  = nic_l.nic_l1.reb.bp_fifo.memory.
-                                                                   \<29\>  = nic_l.nic_l1.reb.pknd_fifo.memory.
-                                                                   \<28\>  = nic_l.nic_l1.reb.hdrs_fifo.memory.
-                                                                   \<27\>  = nic_l.nic_l1.reb.qpset_cqonly_resp_fifo.memory.
-                                                                   \<26\>  = nic_l.nic_l1.reb.qpset_resp_fifo.memory.
-                                                                   \<25:18\> = Reserved.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_cq_pi
-                                                                 peline.cq_main_body_fifo.nic_reb_fifo_16x128.nic_reb_fifomem_16x128.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_ncx_f
-                                                                 ifo.nic_reb_fifo_no_rd_lat.nic_reb_fifo.nic_reb_fifomem.
-                                                                   \<17:0\>  = All memories in "pipeline" blocks aliased together
-                                                                 nic_l.nic_l1.reb.reb_pipeline{7..0}.nic_reb_data_proc.nic_reb_datap
-                                                                 ath_fifo.nic_reb_fifo_bulk.nic_reb_fifomem. */
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc0_flip1_s cn; */
 };
 typedef union cavm_nic_pf_ecc0_flip1 cavm_nic_pf_ecc0_flip1_t;
 
@@ -3221,9 +2544,6 @@ static inline uint64_t CAVM_NIC_PF_ECC0_SBE_ENA_W1S_FUNC(void)
  * NIC ECC 0 Single-bit Error Interrupt Register
  * Reports single-bit errors detected in internal RAM. Each bit corresponds to a different RAM: 0
  * = pass, 1 = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC0_FLIP0.
  */
 union cavm_nic_pf_ecc0_sbe_int
 {
@@ -3318,130 +2638,15 @@ union cavm_nic_pf_ecc1_cdis
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.core.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox16.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.core.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:20\> = Reserved.
-                                                                   \<19:17\> = nic_l.core.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.core.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.core.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.core.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.core.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.core.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:20\> = Reserved.
-                                                                   \<19:17\> = nic_l.core.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.core.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.core.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.core.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.core.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.core.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.core.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox16.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.core.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.status1_regs. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories. */
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc1_cdis_s cn8; */
-    /* struct cavm_nic_pf_ecc1_cdis_s cn81xx; */
-    struct cavm_nic_pf_ecc1_cdis_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.nic_l2.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox64.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.nic_l2.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:21\> = Reserved.
-                                                                   \<20\> = nic_l.nic_l2.nic_reb_x2p.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<19:17\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.nic_l2.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:21\> = Reserved.
-                                                                   \<20\> = nic_l.nic_l2.nic_reb_x2p.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<19:17\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.nic_l2.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.nic_l2.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox64.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.nic_l2.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc1_cdis_s cn; */
 };
 typedef union cavm_nic_pf_ecc1_cdis cavm_nic_pf_ecc1_cdis_t;
 
@@ -3549,9 +2754,6 @@ static inline uint64_t CAVM_NIC_PF_ECC1_DBE_ENA_W1S_FUNC(void)
  * NIC ECC 1 Double-bit Error Interrupt Register
  * Reports double-bit errors detected in internal RAM. Each bit corresponds to a different RAM: 0
  * = pass, 1 = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC1_FLIP0.
  */
 union cavm_nic_pf_ecc1_dbe_int
 {
@@ -3642,130 +2844,15 @@ union cavm_nic_pf_ecc1_flip0
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.core.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox16.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.core.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:20\> = Reserved.
-                                                                   \<19:17\> = nic_l.core.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.core.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.core.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.core.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.core.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.core.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:20\> = Reserved.
-                                                                   \<19:17\> = nic_l.core.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.core.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.core.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.core.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.core.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.core.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.core.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox16.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.core.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.status1_regs. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories. */
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc1_flip0_s cn8; */
-    /* struct cavm_nic_pf_ecc1_flip0_s cn81xx; */
-    struct cavm_nic_pf_ecc1_flip0_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.nic_l2.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox64.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.nic_l2.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:21\> = Reserved.
-                                                                   \<20\> = nic_l.nic_l2.nic_reb_x2p.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<19:17\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.nic_l2.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:21\> = Reserved.
-                                                                   \<20\> = nic_l.nic_l2.nic_reb_x2p.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<19:17\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.nic_l2.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.nic_l2.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox64.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.nic_l2.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc1_flip0_s cn; */
 };
 typedef union cavm_nic_pf_ecc1_flip0 cavm_nic_pf_ecc1_flip0_t;
 
@@ -3798,130 +2885,15 @@ union cavm_nic_pf_ecc1_flip1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.core.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox16.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.core.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:20\> = Reserved.
-                                                                   \<19:17\> = nic_l.core.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.core.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.core.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.core.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.core.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.core.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:20\> = Reserved.
-                                                                   \<19:17\> = nic_l.core.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.core.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.core.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.core.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.core.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.core.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.core.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.core.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.core.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox16.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.core.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.core.rrm.nic_rrm_rbdr_wrap.status1_regs. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories. */
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc1_flip1_s cn8; */
-    /* struct cavm_nic_pf_ecc1_flip1_s cn81xx; */
-    struct cavm_nic_pf_ecc1_flip1_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.nic_l2.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox64.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.nic_l2.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:21\> = Reserved.
-                                                                   \<20\> = nic_l.nic_l2.nic_reb_x2p.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<19:17\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.nic_l2.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 1 block 0 memories.
-                                                                 Internal:
-                                                                 RQM memories:
-                                                                   \<23:21\> = Reserved.
-                                                                   \<20\> = nic_l.nic_l2.nic_reb_x2p.nic_reb_resp_fifo.data_fifo.nic_reb_fifomem.
-                                                                   \<19:17\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.mcam_wrap.mram_ecc.loop{2..0}.mem
-                                                                   \<16\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_mpi_cfg_regs.
-                                                                   \<15\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.pf_qs_rq_cfg_regs.
-                                                                   \<14\> = nic_l.nic_l2.rqm.nic_rqm_rq_wrap.qs_rq_gen_cfg_regs.
-                                                                   \<13:11\> = nic_l.nic_l2.rqm.nic_rqm_stat_wrap.nic_rqm_stat_r_mod_w.r_mod_w_regs_{2..0}.
-                                                                   \<10\> = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_chan_bp_cfg_regs.
-                                                                   \<9\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_bp_cfg_regs.
-                                                                   \<8\>  = nic_l.nic_l2.rqm.nic_rqm_bp_wrap.pf_qs_rq_drop_cfg_regs.
-                                                                   \<7:3\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.vnic_rss_key{4..0}_regs.
-                                                                   \<2\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_chan_rx_cfg_regs.
-                                                                   \<1\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_rssi_rq_regs.
-                                                                   \<0\>  = nic_l.nic_l2.rqm.nic_rqm_rss_wrap.nic_pf_cpi_cfg_regs. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 1 block 1 memories.
-                                                                 Internal:
-                                                                 RRM memories:
-                                                                   \<15:7\> = Reserved.
-                                                                   \<6\> = nic_l.nic_l2.rrm.nic_rrm_ptrcache.nic_rrm_ptrfifox64.nic_rrm_ptrmem.
-                                                                   \<5\> = nic_l.nic_l2.rrm.nic_rrm_ncx_rsp_fifo.nic_rrm_fifo_512x86.nic_rrm_fifomem_512x86.
-                                                                   \<4\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_shadow_regs.
-                                                                   \<3\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.nic_rrm_r_mod_w_block.r_mod_w_regs.
-                                                                   \<2\> = Reserved.
-                                                                   \<1\> = Reserved.
-                                                                   \<0\> = nic_l.nic_l2.rrm.nic_rrm_rbdr_wrap.status1_regs. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc1_flip1_s cn; */
 };
 typedef union cavm_nic_pf_ecc1_flip1 cavm_nic_pf_ecc1_flip1_t;
 
@@ -4029,9 +3001,6 @@ static inline uint64_t CAVM_NIC_PF_ECC1_SBE_ENA_W1S_FUNC(void)
  * NIC ECC 1 Single-bit Error Interrupt Register
  * Reports single-bit errors detected in internal RAM. Each bit corresponds to a different RAM: 0
  * = pass, 1 = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC1_FLIP0.
  */
 union cavm_nic_pf_ecc1_sbe_int
 {
@@ -4122,51 +3091,9 @@ union cavm_nic_pf_ecc2_cdis
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_50_63        : 14;
-        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories.
-                                                                 Internal:
-                                                                 SEB memories.
-                                                                 \<49:22\> = Reserved.
-                                                                 \<21\>    = nic.nic_u.nic_u1.seb.mem.dmem.tso_crc.
-                                                                 \<20\>    = nic.nic_u.nic_u1.seb.mem.dmem.simm.
-                                                                 \<19\>    = nic.nic_u.nic_u1.seb.mem.dmem.sgth.
-                                                                 \<18\>    = nic.nic_u.nic_u1.seb.mem.dmem.dsze.
-                                                                 \<17\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_data.
-                                                                 \<16\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_be
-                                                                 \<15\>    = nic.nic_u.nic_u1.seb.mem.imem.crc_drf.
-                                                                 \<14\>    = nic.nic_u.nic_u1.seb.mem.imem.smem_drf.
-                                                                 \<13\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw0_drf.
-                                                                 \<12\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw1_drf.
-                                                                 \<11\>    = nic.nic_u.nic_u1.seb.ctx.eod_drf.
-                                                                 \<10\>    = nic.nic_u.nic_u1.seb.ctx.gctx_drf.
-                                                                 \<9:8\>   = nic.nic_u.nic_u1.seb.smc.smem_cq_context{1..0}.smem_cq_ctx.
-                                                                 \<7\>     = nic.nic_u.nic_u1.seb.smc.smem_cq_stdn.
-                                                                 \<6\>     = nic.nic_u.nic_u1.seb.ncx_intf.sgth_cmd.
-                                                                 \<5:4\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.tx_fifo.
-                                                                 \<3:2\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_sop_hdr.
-                                                                 \<1:0\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_eop_hdr. */
+        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories.
-                                                                 Internal:
-                                                                 SEB memories.
-                                                                 \<49:22\> = Reserved.
-                                                                 \<21\>    = nic.nic_u.nic_u1.seb.mem.dmem.tso_crc.
-                                                                 \<20\>    = nic.nic_u.nic_u1.seb.mem.dmem.simm.
-                                                                 \<19\>    = nic.nic_u.nic_u1.seb.mem.dmem.sgth.
-                                                                 \<18\>    = nic.nic_u.nic_u1.seb.mem.dmem.dsze.
-                                                                 \<17\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_data.
-                                                                 \<16\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_be
-                                                                 \<15\>    = nic.nic_u.nic_u1.seb.mem.imem.crc_drf.
-                                                                 \<14\>    = nic.nic_u.nic_u1.seb.mem.imem.smem_drf.
-                                                                 \<13\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw0_drf.
-                                                                 \<12\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw1_drf.
-                                                                 \<11\>    = nic.nic_u.nic_u1.seb.ctx.eod_drf.
-                                                                 \<10\>    = nic.nic_u.nic_u1.seb.ctx.gctx_drf.
-                                                                 \<9:8\>   = nic.nic_u.nic_u1.seb.smc.smem_cq_context{1..0}.smem_cq_ctx.
-                                                                 \<7\>     = nic.nic_u.nic_u1.seb.smc.smem_cq_stdn.
-                                                                 \<6\>     = nic.nic_u.nic_u1.seb.ncx_intf.sgth_cmd.
-                                                                 \<5:4\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.tx_fifo.
-                                                                 \<3:2\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_sop_hdr.
-                                                                 \<1:0\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_eop_hdr. */
+        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories. */
         uint64_t reserved_50_63        : 14;
 #endif /* Word 0 - End */
     } s;
@@ -4274,9 +3201,6 @@ static inline uint64_t CAVM_NIC_PF_ECC2_DBE_ENA_W1S_FUNC(void)
  * NIC ECC 2 Double-bit Error Interrupt Register
  * Reports double-bit errors detected in internal RAM. Each bit corresponds to a different RAM: 0
  * = pass, 1 = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC2_FLIP0.
  */
 union cavm_nic_pf_ecc2_dbe_int
 {
@@ -4363,51 +3287,9 @@ union cavm_nic_pf_ecc2_flip0
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_50_63        : 14;
-        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories.
-                                                                 Internal:
-                                                                 SEB memories.
-                                                                 \<49:22\> = Reserved.
-                                                                 \<21\>    = nic.nic_u.nic_u1.seb.mem.dmem.tso_crc.
-                                                                 \<20\>    = nic.nic_u.nic_u1.seb.mem.dmem.simm.
-                                                                 \<19\>    = nic.nic_u.nic_u1.seb.mem.dmem.sgth.
-                                                                 \<18\>    = nic.nic_u.nic_u1.seb.mem.dmem.dsze.
-                                                                 \<17\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_data.
-                                                                 \<16\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_be
-                                                                 \<15\>    = nic.nic_u.nic_u1.seb.mem.imem.crc_drf.
-                                                                 \<14\>    = nic.nic_u.nic_u1.seb.mem.imem.smem_drf.
-                                                                 \<13\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw0_drf.
-                                                                 \<12\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw1_drf.
-                                                                 \<11\>    = nic.nic_u.nic_u1.seb.ctx.eod_drf.
-                                                                 \<10\>    = nic.nic_u.nic_u1.seb.ctx.gctx_drf.
-                                                                 \<9:8\>   = nic.nic_u.nic_u1.seb.smc.smem_cq_context{1..0}.smem_cq_ctx.
-                                                                 \<7\>     = nic.nic_u.nic_u1.seb.smc.smem_cq_stdn.
-                                                                 \<6\>     = nic.nic_u.nic_u1.seb.ncx_intf.sgth_cmd.
-                                                                 \<5:4\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.tx_fifo.
-                                                                 \<3:2\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_sop_hdr.
-                                                                 \<1:0\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_eop_hdr. */
+        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories.
-                                                                 Internal:
-                                                                 SEB memories.
-                                                                 \<49:22\> = Reserved.
-                                                                 \<21\>    = nic.nic_u.nic_u1.seb.mem.dmem.tso_crc.
-                                                                 \<20\>    = nic.nic_u.nic_u1.seb.mem.dmem.simm.
-                                                                 \<19\>    = nic.nic_u.nic_u1.seb.mem.dmem.sgth.
-                                                                 \<18\>    = nic.nic_u.nic_u1.seb.mem.dmem.dsze.
-                                                                 \<17\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_data.
-                                                                 \<16\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_be
-                                                                 \<15\>    = nic.nic_u.nic_u1.seb.mem.imem.crc_drf.
-                                                                 \<14\>    = nic.nic_u.nic_u1.seb.mem.imem.smem_drf.
-                                                                 \<13\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw0_drf.
-                                                                 \<12\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw1_drf.
-                                                                 \<11\>    = nic.nic_u.nic_u1.seb.ctx.eod_drf.
-                                                                 \<10\>    = nic.nic_u.nic_u1.seb.ctx.gctx_drf.
-                                                                 \<9:8\>   = nic.nic_u.nic_u1.seb.smc.smem_cq_context{1..0}.smem_cq_ctx.
-                                                                 \<7\>     = nic.nic_u.nic_u1.seb.smc.smem_cq_stdn.
-                                                                 \<6\>     = nic.nic_u.nic_u1.seb.ncx_intf.sgth_cmd.
-                                                                 \<5:4\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.tx_fifo.
-                                                                 \<3:2\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_sop_hdr.
-                                                                 \<1:0\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_eop_hdr. */
+        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories. */
         uint64_t reserved_50_63        : 14;
 #endif /* Word 0 - End */
     } s;
@@ -4444,51 +3326,9 @@ union cavm_nic_pf_ecc2_flip1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_50_63        : 14;
-        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories.
-                                                                 Internal:
-                                                                 SEB memories.
-                                                                 \<49:22\> = Reserved.
-                                                                 \<21\>    = nic.nic_u.nic_u1.seb.mem.dmem.tso_crc.
-                                                                 \<20\>    = nic.nic_u.nic_u1.seb.mem.dmem.simm.
-                                                                 \<19\>    = nic.nic_u.nic_u1.seb.mem.dmem.sgth.
-                                                                 \<18\>    = nic.nic_u.nic_u1.seb.mem.dmem.dsze.
-                                                                 \<17\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_data.
-                                                                 \<16\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_be
-                                                                 \<15\>    = nic.nic_u.nic_u1.seb.mem.imem.crc_drf.
-                                                                 \<14\>    = nic.nic_u.nic_u1.seb.mem.imem.smem_drf.
-                                                                 \<13\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw0_drf.
-                                                                 \<12\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw1_drf.
-                                                                 \<11\>    = nic.nic_u.nic_u1.seb.ctx.eod_drf.
-                                                                 \<10\>    = nic.nic_u.nic_u1.seb.ctx.gctx_drf.
-                                                                 \<9:8\>   = nic.nic_u.nic_u1.seb.smc.smem_cq_context{1..0}.smem_cq_ctx.
-                                                                 \<7\>     = nic.nic_u.nic_u1.seb.smc.smem_cq_stdn.
-                                                                 \<6\>     = nic.nic_u.nic_u1.seb.ncx_intf.sgth_cmd.
-                                                                 \<5:4\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.tx_fifo.
-                                                                 \<3:2\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_sop_hdr.
-                                                                 \<1:0\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_eop_hdr. */
+        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories.
-                                                                 Internal:
-                                                                 SEB memories.
-                                                                 \<49:22\> = Reserved.
-                                                                 \<21\>    = nic.nic_u.nic_u1.seb.mem.dmem.tso_crc.
-                                                                 \<20\>    = nic.nic_u.nic_u1.seb.mem.dmem.simm.
-                                                                 \<19\>    = nic.nic_u.nic_u1.seb.mem.dmem.sgth.
-                                                                 \<18\>    = nic.nic_u.nic_u1.seb.mem.dmem.dsze.
-                                                                 \<17\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_data.
-                                                                 \<16\>    = nic.nic_u.nic_u1.seb.mem.dmem.lock_be
-                                                                 \<15\>    = nic.nic_u.nic_u1.seb.mem.imem.crc_drf.
-                                                                 \<14\>    = nic.nic_u.nic_u1.seb.mem.imem.smem_drf.
-                                                                 \<13\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw0_drf.
-                                                                 \<12\>    = nic.nic_u.nic_u1.seb.ctx.lctx_dw1_drf.
-                                                                 \<11\>    = nic.nic_u.nic_u1.seb.ctx.eod_drf.
-                                                                 \<10\>    = nic.nic_u.nic_u1.seb.ctx.gctx_drf.
-                                                                 \<9:8\>   = nic.nic_u.nic_u1.seb.smc.smem_cq_context{1..0}.smem_cq_ctx.
-                                                                 \<7\>     = nic.nic_u.nic_u1.seb.smc.smem_cq_stdn.
-                                                                 \<6\>     = nic.nic_u.nic_u1.seb.ncx_intf.sgth_cmd.
-                                                                 \<5:4\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.tx_fifo.
-                                                                 \<3:2\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_sop_hdr.
-                                                                 \<1:0\>   = nic.nic_u.nic_u1.seb.p2x_intf.tx_fifo_mem{1..0}.p2x_eop_hdr. */
+        uint64_t blk0                  : 50; /**< [ 49:  0](R/W) Syndrome flip for group 2 block 0 memories. */
         uint64_t reserved_50_63        : 14;
 #endif /* Word 0 - End */
     } s;
@@ -4596,9 +3436,6 @@ static inline uint64_t CAVM_NIC_PF_ECC2_SBE_ENA_W1S_FUNC(void)
  * NIC ECC 2 Single-bit Error Interrupt Register
  * Reports single-bit errors detected in internal RAM. Each bit corresponds to a different RAM: 0
  * = pass, 1 = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC2_FLIP0.
  */
 union cavm_nic_pf_ecc2_sbe_int
 {
@@ -4685,158 +3522,15 @@ union cavm_nic_pf_ecc3_cdis
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:12\> = Reserved.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:12\> = Reserved.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories. */
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc3_cdis_s cn8; */
-    /* struct cavm_nic_pf_ecc3_cdis_s cn81xx; */
-    struct cavm_nic_pf_ecc3_cdis_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:13\> = Reserved.
-                                                                   \<12\> = nic.nic_u.nic_u1.sqm.mqm.mdmem2_mem.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:13\> = Reserved.
-                                                                   \<12\> = nic.nic_u.nic_u1.sqm.mqm.mdmem2_mem.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc3_cdis_s cn; */
 };
 typedef union cavm_nic_pf_ecc3_cdis cavm_nic_pf_ecc3_cdis_t;
 
@@ -4944,9 +3638,6 @@ static inline uint64_t CAVM_NIC_PF_ECC3_DBE_ENA_W1S_FUNC(void)
  * NIC ECC 3 Double-bit Error Interrupt Register
  * Reports double-bit errors detected in internal RAM. Each bit corresponds to a different RAM: 0
  * = pass, 1 = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC3_FLIP0.
  */
 union cavm_nic_pf_ecc3_dbe_int
 {
@@ -5037,158 +3728,15 @@ union cavm_nic_pf_ecc3_flip0
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:12\> = Reserved.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:12\> = Reserved.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories. */
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc3_flip0_s cn8; */
-    /* struct cavm_nic_pf_ecc3_flip0_s cn81xx; */
-    struct cavm_nic_pf_ecc3_flip0_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:13\> = Reserved.
-                                                                   \<12\> = nic.nic_u.nic_u1.sqm.mqm.mdmem2_mem.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:13\> = Reserved.
-                                                                   \<12\> = nic.nic_u.nic_u1.sqm.mqm.mdmem2_mem.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc3_flip0_s cn; */
 };
 typedef union cavm_nic_pf_ecc3_flip0 cavm_nic_pf_ecc3_flip0_t;
 
@@ -5221,158 +3769,15 @@ union cavm_nic_pf_ecc3_flip1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:12\> = Reserved.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:12\> = Reserved.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
+        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories. */
+        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories. */
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nic_pf_ecc3_flip1_s cn8; */
-    /* struct cavm_nic_pf_ecc3_flip1_s cn81xx; */
-    struct cavm_nic_pf_ecc3_flip1_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:13\> = Reserved.
-                                                                   \<12\> = nic.nic_u.nic_u1.sqm.mqm.mdmem2_mem.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-#else /* Word 0 - Little Endian */
-        uint64_t blk0                  : 24; /**< [ 23:  0](R/W) Syndrome flip for group 3 block 0 memories.
-                                                                 Internal:
-                                                                 SPS memories:
-
-                                                                   \<23:18\> = Reserved
-                                                                   \<17\> = nic.nic_u.nic_u2.sps.sqm_intf.mem.sqcfgmem.
-                                                                   \<16\> = nic.nic_u.nic_u2.sps.tl3.mem.tl4_stsmem.
-                                                                   \<15:10\> = Reserved
-                                                                   \<9\>  = nic.nic_u.nic_u2.sps.tl3.mem.pirmem.
-                                                                   \<8\>  = nic.nic_u.nic_u2.sps.tl3.mem.rtmem.
-                                                                   \<7\>  = nic.nic_u.nic_u2.sps.tl3.mem.tl3_stsmem.
-                                                                   \<6\>  = nic.nic_u.nic_u2.sps.tl3.mem.stdmem.
-                                                                   \<5\>  = nic.nic_u.nic_u2.sps.tl3.mem.ccdtmem.
-                                                                   \<4\>  = nic.nic_u.nic_u2.sps.tl3.mem.lcdtmem.
-                                                                   \<3\>  = Reserved
-                                                                   \<2\>  = nic.nic_u.nic_u2.sps.tl2.mem.rtmem.
-                                                                   \<1\>  = nic.nic_u.nic_u2.sps.tl2.mem.stsmem.
-                                                                   \<0\>  = nic.nic_u.nic_u2.sps.tl2.mem.stdmem. */
-        uint64_t blk1                  : 16; /**< [ 39: 24](R/W) Syndrome flip for group 3 block 1 memories.
-                                                                 Internal:
-                                                                 SQM memories:
-                                                                   \<15:13\> = Reserved.
-                                                                   \<12\> = nic.nic_u.nic_u1.sqm.mqm.mdmem2_mem.
-                                                                   \<11\> = nic.nic_u.nic_u1.sqm.dse.send.tsopn_mem.
-                                                                   \<10\> = nic.nic_u.nic_u1.sqm.dpe.arb.sq_arb_mem_mem.
-                                                                   \<9\>  = nic.nic_u.nic_u1.sqm.ctl.sq.sq_mem_mem.
-                                                                   \<8\>  = nic.nic_u.nic_u1.sqm.ctl.sq.qs_mem.
-                                                                   \<7\>  = Reserved.
-                                                                   \<6\>  = nic.nic_u.nic_u1.sqm.ctl.vnic.vnic_mem_mem.
-                                                                   \<5\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.dpe_blk.fetch_op_fifo_dpr.
-                                                                   \<4\>  = nic.nic_u.nic_u1.sqm.dpe.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<3\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.dse_blk.fetch_op_fifo_dpr.
-                                                                   \<2\>  = nic.nic_u.nic_u1.sqm.dse.fetch.fetch.fetch_data_fifo_dpr.
-                                                                   \<1\>  = nic.nic_u.nic_u1.sqm.mqm.qsmem_mem.
-                                                                   \<0\>  = nic.nic_u.nic_u1.sqm.mqm.mdmem_mem. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_nic_pf_ecc3_flip1_s cn; */
 };
 typedef union cavm_nic_pf_ecc3_flip1 cavm_nic_pf_ecc3_flip1_t;
 
@@ -5480,9 +3885,6 @@ static inline uint64_t CAVM_NIC_PF_ECC3_SBE_ENA_W1S_FUNC(void)
  * NIC ECC 3 Single-bit Error Interrupt Register
  * Reports single-bit errors detected in internal RAM. Each bit corresponds to a different RAM: 0
  * = pass, 1 = fail.
- *
- * Internal:
- * Bits in each field are enumerated by NIC_PF_ECC3_FLIP0.
  */
 union cavm_nic_pf_ecc3_sbe_int
 {
@@ -5561,246 +3963,6 @@ static inline uint64_t CAVM_NIC_PF_ECC3_SBE_INT_W1S_FUNC(void)
 #define arguments_CAVM_NIC_PF_ECC3_SBE_INT_W1S -1,-1,-1,-1
 
 /**
- * Register (NCB) nic_pf_eco0
- *
- * INTERNAL: ECO 0 Register
- */
-union cavm_nic_pf_eco0
-{
-    uint64_t u;
-    struct cavm_nic_pf_eco0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_eco0_s cn; */
-};
-typedef union cavm_nic_pf_eco0 cavm_nic_pf_eco0_t;
-
-#define CAVM_NIC_PF_ECO0 CAVM_NIC_PF_ECO0_FUNC()
-static inline uint64_t CAVM_NIC_PF_ECO0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_ECO0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000003000ll;
-    __cavm_csr_fatal("NIC_PF_ECO0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_ECO0 cavm_nic_pf_eco0_t
-#define bustype_CAVM_NIC_PF_ECO0 CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_ECO0 "NIC_PF_ECO0"
-#define device_bar_CAVM_NIC_PF_ECO0 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_ECO0 0
-#define arguments_CAVM_NIC_PF_ECO0 -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_eco1
- *
- * INTERNAL: ECO 1 Register
- */
-union cavm_nic_pf_eco1
-{
-    uint64_t u;
-    struct cavm_nic_pf_eco1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_eco1_s cn; */
-};
-typedef union cavm_nic_pf_eco1 cavm_nic_pf_eco1_t;
-
-#define CAVM_NIC_PF_ECO1 CAVM_NIC_PF_ECO1_FUNC()
-static inline uint64_t CAVM_NIC_PF_ECO1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_ECO1_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000003010ll;
-    __cavm_csr_fatal("NIC_PF_ECO1", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_ECO1 cavm_nic_pf_eco1_t
-#define bustype_CAVM_NIC_PF_ECO1 CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_ECO1 "NIC_PF_ECO1"
-#define device_bar_CAVM_NIC_PF_ECO1 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_ECO1 0
-#define arguments_CAVM_NIC_PF_ECO1 -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_eco2
- *
- * INTERNAL: ECO 2 Register
- */
-union cavm_nic_pf_eco2
-{
-    uint64_t u;
-    struct cavm_nic_pf_eco2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_eco2_s cn; */
-};
-typedef union cavm_nic_pf_eco2 cavm_nic_pf_eco2_t;
-
-#define CAVM_NIC_PF_ECO2 CAVM_NIC_PF_ECO2_FUNC()
-static inline uint64_t CAVM_NIC_PF_ECO2_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_ECO2_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000003020ll;
-    __cavm_csr_fatal("NIC_PF_ECO2", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_ECO2 cavm_nic_pf_eco2_t
-#define bustype_CAVM_NIC_PF_ECO2 CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_ECO2 "NIC_PF_ECO2"
-#define device_bar_CAVM_NIC_PF_ECO2 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_ECO2 0
-#define arguments_CAVM_NIC_PF_ECO2 -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_eco3
- *
- * INTERNAL: ECO 3 Register
- */
-union cavm_nic_pf_eco3
-{
-    uint64_t u;
-    struct cavm_nic_pf_eco3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_eco3_s cn; */
-};
-typedef union cavm_nic_pf_eco3 cavm_nic_pf_eco3_t;
-
-#define CAVM_NIC_PF_ECO3 CAVM_NIC_PF_ECO3_FUNC()
-static inline uint64_t CAVM_NIC_PF_ECO3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_ECO3_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000003030ll;
-    __cavm_csr_fatal("NIC_PF_ECO3", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_ECO3 cavm_nic_pf_eco3_t
-#define bustype_CAVM_NIC_PF_ECO3 CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_ECO3 "NIC_PF_ECO3"
-#define device_bar_CAVM_NIC_PF_ECO3 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_ECO3 0
-#define arguments_CAVM_NIC_PF_ECO3 -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_eco4
- *
- * INTERNAL: ECO 4 Register
- */
-union cavm_nic_pf_eco4
-{
-    uint64_t u;
-    struct cavm_nic_pf_eco4_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_eco4_s cn; */
-};
-typedef union cavm_nic_pf_eco4 cavm_nic_pf_eco4_t;
-
-#define CAVM_NIC_PF_ECO4 CAVM_NIC_PF_ECO4_FUNC()
-static inline uint64_t CAVM_NIC_PF_ECO4_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_ECO4_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000003040ll;
-    __cavm_csr_fatal("NIC_PF_ECO4", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_ECO4 cavm_nic_pf_eco4_t
-#define bustype_CAVM_NIC_PF_ECO4 CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_ECO4 "NIC_PF_ECO4"
-#define device_bar_CAVM_NIC_PF_ECO4 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_ECO4 0
-#define arguments_CAVM_NIC_PF_ECO4 -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_eco5
- *
- * INTERNAL: ECO 5 Register
- */
-union cavm_nic_pf_eco5
-{
-    uint64_t u;
-    struct cavm_nic_pf_eco5_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_eco5_s cn; */
-};
-typedef union cavm_nic_pf_eco5 cavm_nic_pf_eco5_t;
-
-#define CAVM_NIC_PF_ECO5 CAVM_NIC_PF_ECO5_FUNC()
-static inline uint64_t CAVM_NIC_PF_ECO5_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_ECO5_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000003050ll;
-    __cavm_csr_fatal("NIC_PF_ECO5", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_ECO5 cavm_nic_pf_eco5_t
-#define bustype_CAVM_NIC_PF_ECO5 CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_ECO5 "NIC_PF_ECO5"
-#define device_bar_CAVM_NIC_PF_ECO5 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_ECO5 0
-#define arguments_CAVM_NIC_PF_ECO5 -1,-1,-1,-1
-
-/**
  * Register (NCB) nic_pf_int_timer_cfg
  *
  * NIC Interrupt-Timer Configuration Register
@@ -5855,13 +4017,9 @@ union cavm_nic_pf_intfx_bp_cfg
         uint64_t bp_ena                : 1;  /**< [ 63: 63](R/W) This bit is used to enable the BP bus for this interface. */
         uint64_t reserved_5_62         : 58;
         uint64_t bp_type               : 1;  /**< [  4:  4](RO/H) Specifies backpressure type: 0=BGX, 1=LBK. */
-        uint64_t bp_id                 : 4;  /**< [  3:  0](RO/H) Backpressure block ID for the NIC receive interface. Enumerated by NIC_INTF_BLOCK_E.
-                                                                 Internal:
-                                                                 Specifies upper 4 bits of X2P channel ID. */
+        uint64_t bp_id                 : 4;  /**< [  3:  0](RO/H) Backpressure block ID for the NIC receive interface. Enumerated by NIC_INTF_BLOCK_E. */
 #else /* Word 0 - Little Endian */
-        uint64_t bp_id                 : 4;  /**< [  3:  0](RO/H) Backpressure block ID for the NIC receive interface. Enumerated by NIC_INTF_BLOCK_E.
-                                                                 Internal:
-                                                                 Specifies upper 4 bits of X2P channel ID. */
+        uint64_t bp_id                 : 4;  /**< [  3:  0](RO/H) Backpressure block ID for the NIC receive interface. Enumerated by NIC_INTF_BLOCK_E. */
         uint64_t bp_type               : 1;  /**< [  4:  4](RO/H) Specifies backpressure type: 0=BGX, 1=LBK. */
         uint64_t reserved_5_62         : 58;
         uint64_t bp_ena                : 1;  /**< [ 63: 63](R/W) This bit is used to enable the BP bus for this interface. */
@@ -6167,14 +4325,7 @@ union cavm_nic_pf_lmacx_credit
                                                                  is 9212 bytes (9216 minus 4 byte FCS), then [CC_UNIT_CNT] should be \< (12288 - 9212)/16 =
                                                                  192.
 
-                                                                 For LBK LMACs, the recommended configuration is [CC_ENABLE] = 1 and [CC_UNIT_CNT] = 512.
-
-                                                                 Internal:
-                                                                 LBK value allows for 80 Gbps loopback data rate with 800ns round trip latency:
-
-                                                                 _ Minimum LBK in-flight data = 80*800 = 64Kbits = 512 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = min + MTU. */
+                                                                 For LBK LMACs, the recommended configuration is [CC_ENABLE] = 1 and [CC_UNIT_CNT] = 512. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) Channel-credit packet count. This value, plus 1, represents the maximum outstanding
                                                                  aggregate packet count for this LMAC. Note that this 10-bit field represents a signed
                                                                  value that decrements towards zero as credits are used. Packets are not allowed to flow
@@ -6208,14 +4359,7 @@ union cavm_nic_pf_lmacx_credit
                                                                  is 9212 bytes (9216 minus 4 byte FCS), then [CC_UNIT_CNT] should be \< (12288 - 9212)/16 =
                                                                  192.
 
-                                                                 For LBK LMACs, the recommended configuration is [CC_ENABLE] = 1 and [CC_UNIT_CNT] = 512.
-
-                                                                 Internal:
-                                                                 LBK value allows for 80 Gbps loopback data rate with 800ns round trip latency:
-
-                                                                 _ Minimum LBK in-flight data = 80*800 = 64Kbits = 512 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = min + MTU. */
+                                                                 For LBK LMACs, the recommended configuration is [CC_ENABLE] = 1 and [CC_UNIT_CNT] = 512. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn83xx;
@@ -7433,9 +5577,7 @@ union cavm_nic_pf_qsx_rqx_cfg
     struct cavm_nic_pf_qsx_rqx_cfg_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t tcp_off               : 1;  /**< [ 63: 63](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - Overrides NIC_QS()_RQ()_CFG[TCP_ENA]. */
+        uint64_t tcp_off               : 1;  /**< [ 63: 63](R/W) Reserved. */
         uint64_t reserved_29_62        : 34;
         uint64_t strip_pre_l2          : 1;  /**< [ 28: 28](R/W) All bytes that come before the SA/DA of the L2 Layer are stripped not saved in the RBDR buffer. */
         uint64_t caching               : 2;  /**< [ 27: 26](R/W) Select the style of write to the L2C.
@@ -7473,18 +5615,14 @@ union cavm_nic_pf_qsx_rqx_cfg
                                                                  cache blocks are not allocated. */
         uint64_t strip_pre_l2          : 1;  /**< [ 28: 28](R/W) All bytes that come before the SA/DA of the L2 Layer are stripped not saved in the RBDR buffer. */
         uint64_t reserved_29_62        : 34;
-        uint64_t tcp_off               : 1;  /**< [ 63: 63](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - Overrides NIC_QS()_RQ()_CFG[TCP_ENA]. */
+        uint64_t tcp_off               : 1;  /**< [ 63: 63](R/W) Reserved. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_nic_pf_qsx_rqx_cfg_s cn8; */
     struct cavm_nic_pf_qsx_rqx_cfg_cn81xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t tcp_off               : 1;  /**< [ 63: 63](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - Overrides NIC_QS()_RQ()_CFG[TCP_ENA]. */
+        uint64_t tcp_off               : 1;  /**< [ 63: 63](R/W) Reserved. */
         uint64_t reserved_29_62        : 34;
         uint64_t strip_pre_l2          : 1;  /**< [ 28: 28](R/W) All bytes that come before the SA/DA of the L2 Layer are stripped not saved in the RBDR buffer. */
         uint64_t caching               : 2;  /**< [ 27: 26](R/W) Select the style of write to the L2C.
@@ -7522,9 +5660,7 @@ union cavm_nic_pf_qsx_rqx_cfg
                                                                  cache blocks are not allocated. */
         uint64_t strip_pre_l2          : 1;  /**< [ 28: 28](R/W) All bytes that come before the SA/DA of the L2 Layer are stripped not saved in the RBDR buffer. */
         uint64_t reserved_29_62        : 34;
-        uint64_t tcp_off               : 1;  /**< [ 63: 63](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - Overrides NIC_QS()_RQ()_CFG[TCP_ENA]. */
+        uint64_t tcp_off               : 1;  /**< [ 63: 63](R/W) Reserved. */
 #endif /* Word 0 - End */
     } cn81xx;
     /* struct cavm_nic_pf_qsx_rqx_cfg_s cn83xx; */
@@ -7898,80 +6034,6 @@ static inline uint64_t CAVM_NIC_PF_QSX_SQX_STATX(uint64_t a, uint64_t b, uint64_
 #define arguments_CAVM_NIC_PF_QSX_SQX_STATX(a,b,c) (a),(b),(c),-1
 
 /**
- * Register (NCB) nic_pf_rqm_test
- *
- * INTERNAL: NIC RQM Test Register
- */
-union cavm_nic_pf_rqm_test
-{
-    uint64_t u;
-    struct cavm_nic_pf_rqm_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = rqm_drop_intr_stall.
-                                                                 \<61\> = reb1_cq_stall.
-                                                                 \<60\> = reb0_cq_stall. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = rqm_drop_intr_stall.
-                                                                 \<61\> = reb1_cq_stall.
-                                                                 \<60\> = reb0_cq_stall. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_rqm_test_s cn; */
-};
-typedef union cavm_nic_pf_rqm_test cavm_nic_pf_rqm_test_t;
-
-#define CAVM_NIC_PF_RQM_TEST CAVM_NIC_PF_RQM_TEST_FUNC()
-static inline uint64_t CAVM_NIC_PF_RQM_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_RQM_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000000098ll;
-    __cavm_csr_fatal("NIC_PF_RQM_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_RQM_TEST cavm_nic_pf_rqm_test_t
-#define bustype_CAVM_NIC_PF_RQM_TEST CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_RQM_TEST "NIC_PF_RQM_TEST"
-#define device_bar_CAVM_NIC_PF_RQM_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_RQM_TEST 0
-#define arguments_CAVM_NIC_PF_RQM_TEST -1,-1,-1,-1
-
-/**
  * Register (NCB) nic_pf_rrm_avg_cfg
  *
  * NIC PF RBDR-Averaging Configuration Register
@@ -8074,80 +6136,6 @@ static inline uint64_t CAVM_NIC_PF_RRM_CFG_FUNC(void)
 #define device_bar_CAVM_NIC_PF_RRM_CFG 0x0 /* PF_BAR0 */
 #define busnum_CAVM_NIC_PF_RRM_CFG 0
 #define arguments_CAVM_NIC_PF_RRM_CFG -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_rrm_test
- *
- * INTERNAL: NIC RRM Test Register
- */
-union cavm_nic_pf_rrm_test
-{
-    uint64_t u;
-    struct cavm_nic_pf_rrm_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = rrm_ncb_req_stall.
-                                                                 \<61\> = rrm_ncb_rsp_stall.
-                                                                 \<60\> = rrm_intr_fifo. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = rrm_ncb_req_stall.
-                                                                 \<61\> = rrm_ncb_rsp_stall.
-                                                                 \<60\> = rrm_intr_fifo. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_rrm_test_s cn; */
-};
-typedef union cavm_nic_pf_rrm_test cavm_nic_pf_rrm_test_t;
-
-#define CAVM_NIC_PF_RRM_TEST CAVM_NIC_PF_RRM_TEST_FUNC()
-static inline uint64_t CAVM_NIC_PF_RRM_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_RRM_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000000090ll;
-    __cavm_csr_fatal("NIC_PF_RRM_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_RRM_TEST cavm_nic_pf_rrm_test_t
-#define bustype_CAVM_NIC_PF_RRM_TEST CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_RRM_TEST "NIC_PF_RRM_TEST"
-#define device_bar_CAVM_NIC_PF_RRM_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_RRM_TEST 0
-#define arguments_CAVM_NIC_PF_RRM_TEST -1,-1,-1,-1
 
 /**
  * Register (NCB) nic_pf_rssi#_rq
@@ -8262,8 +6250,6 @@ static inline uint64_t CAVM_NIC_PF_RX_BP_STATEX(uint64_t a)
  * Register (NCB) nic_pf_rx_bpid_state#
  *
  * NIC Backpressure ID State Registers
- * Internal:
- * Renamed from NIC_PF_RBDR_BP_STATE() in 88XX.
  */
 union cavm_nic_pf_rx_bpid_statex
 {
@@ -8343,8 +6329,6 @@ static inline uint64_t CAVM_NIC_PF_RX_CFG_FUNC(void)
  * Register (NCB) nic_pf_rx_chan_bp_dis#
  *
  * NIC Receive Channel Backpressure Disable Registers
- * Internal:
- * Renamed from NIC_PF_INTF()_BP_DIS() in 88XX.
  */
 union cavm_nic_pf_rx_chan_bp_disx
 {
@@ -8384,8 +6368,6 @@ static inline uint64_t CAVM_NIC_PF_RX_CHAN_BP_DISX(uint64_t a)
  * Register (NCB) nic_pf_rx_chan_bp_sw#
  *
  * NIC Receive Channel Backpressure Software Force Registers
- * Internal:
- * Renamed from NIC_PF_INTF()_BP_SW() in 88XX.
  */
 union cavm_nic_pf_rx_chan_bp_swx
 {
@@ -8611,50 +6593,6 @@ static inline uint64_t CAVM_NIC_PF_RX_NVGRE_PROT_DEF_FUNC(void)
 #define arguments_CAVM_NIC_PF_RX_NVGRE_PROT_DEF -1,-1,-1,-1
 
 /**
- * Register (NCB) nic_pf_rx_rocev2_def
- *
- * INTERNAL: NIC Receive RoCEv2 Control Register
- *
- * This register defines and enables RoCE version 2 parsing.
- * Internal:
- * Unused register.
- */
-union cavm_nic_pf_rx_rocev2_def
-{
-    uint64_t u;
-    struct cavm_nic_pf_rx_rocev2_def_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ena                   : 1;  /**< [ 63: 63](R/W) Enables the detection of RoCEv2 headers. */
-        uint64_t reserved_16_62        : 47;
-        uint64_t udp_port_num          : 16; /**< [ 15:  0](R/W) UDP destination port number that indicates a RoCEv2 header. */
-#else /* Word 0 - Little Endian */
-        uint64_t udp_port_num          : 16; /**< [ 15:  0](R/W) UDP destination port number that indicates a RoCEv2 header. */
-        uint64_t reserved_16_62        : 47;
-        uint64_t ena                   : 1;  /**< [ 63: 63](R/W) Enables the detection of RoCEv2 headers. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_rx_rocev2_def_s cn; */
-};
-typedef union cavm_nic_pf_rx_rocev2_def cavm_nic_pf_rx_rocev2_def_t;
-
-#define CAVM_NIC_PF_RX_ROCEV2_DEF CAVM_NIC_PF_RX_ROCEV2_DEF_FUNC()
-static inline uint64_t CAVM_NIC_PF_RX_ROCEV2_DEF_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_RX_ROCEV2_DEF_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x8430000005c0ll;
-    __cavm_csr_fatal("NIC_PF_RX_ROCEV2_DEF", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_RX_ROCEV2_DEF cavm_nic_pf_rx_rocev2_def_t
-#define bustype_CAVM_NIC_PF_RX_ROCEV2_DEF CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_RX_ROCEV2_DEF "NIC_PF_RX_ROCEV2_DEF"
-#define device_bar_CAVM_NIC_PF_RX_ROCEV2_DEF 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_RX_ROCEV2_DEF 0
-#define arguments_CAVM_NIC_PF_RX_ROCEV2_DEF -1,-1,-1,-1
-
-/**
  * Register (NCB) nic_pf_rx_vxlan_def#
  *
  * NIC Receive VXLAN Control Register
@@ -8783,10 +6721,7 @@ union cavm_nic_pf_rx_wrr_cfgx
                                                                  slot does not match an active interface, then
                                                                  data is processed in a round-robin fashion. Default setting does not match any receive
                                                                  interface, so all slots default to RR arbitration.
-                                                                 Enumerated by NIC_INTF_BLOCK_E.
-
-                                                                 Internal:
-                                                                 Specifies upper 4 bits of X2P channel ID. */
+                                                                 Enumerated by NIC_INTF_BLOCK_E. */
 #else /* Word 0 - Little Endian */
         uint64_t slot0                 : 4;  /**< [  3:  0](R/W) NIC RX supports a WRR prioritizing of traffic received from the different receive interfaces.
                                                                  when there is over subscription to the NCB drain.
@@ -8794,10 +6729,7 @@ union cavm_nic_pf_rx_wrr_cfgx
                                                                  slot does not match an active interface, then
                                                                  data is processed in a round-robin fashion. Default setting does not match any receive
                                                                  interface, so all slots default to RR arbitration.
-                                                                 Enumerated by NIC_INTF_BLOCK_E.
-
-                                                                 Internal:
-                                                                 Specifies upper 4 bits of X2P channel ID. */
+                                                                 Enumerated by NIC_INTF_BLOCK_E. */
         uint64_t slot1                 : 4;  /**< [  7:  4](R/W) See [SLOT0]. */
         uint64_t slot2                 : 4;  /**< [ 11:  8](R/W) See [SLOT0]. */
         uint64_t slot3                 : 4;  /**< [ 15: 12](R/W) See [SLOT0]. */
@@ -8833,90 +6765,6 @@ static inline uint64_t CAVM_NIC_PF_RX_WRR_CFGX(uint64_t a)
 #define device_bar_CAVM_NIC_PF_RX_WRR_CFGX(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_NIC_PF_RX_WRR_CFGX(a) (a)
 #define arguments_CAVM_NIC_PF_RX_WRR_CFGX(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_seb_test
- *
- * INTERNAL: NIC SEB Test Register
- */
-union cavm_nic_pf_seb_test
-{
-    uint64_t u;
-    struct cavm_nic_pf_seb_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = seb_interface_1_stall.
-                                                                 \<61\> = seb_interface_0_stall.
-                                                                 \<60\> = seb_fifo_stall. */
-        uint64_t reserved_25_59        : 35;
-        uint64_t timeout_tick_test     : 1;  /**< [ 24: 24](R/W) Enable timeout testing. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once the bit is set, it reduces the number of co-processor cycles from 1024
-                                                                 cycles to 1 co-processor cycle corresponding to the
-                                                                 NIC_PF_INTF()_SEND_CFG[TSTMP_WD_PERIOD]. */
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t timeout_tick_test     : 1;  /**< [ 24: 24](R/W) Enable timeout testing. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once the bit is set, it reduces the number of co-processor cycles from 1024
-                                                                 cycles to 1 co-processor cycle corresponding to the
-                                                                 NIC_PF_INTF()_SEND_CFG[TSTMP_WD_PERIOD]. */
-        uint64_t reserved_25_59        : 35;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = seb_interface_1_stall.
-                                                                 \<61\> = seb_interface_0_stall.
-                                                                 \<60\> = seb_fifo_stall. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_seb_test_s cn; */
-};
-typedef union cavm_nic_pf_seb_test cavm_nic_pf_seb_test_t;
-
-#define CAVM_NIC_PF_SEB_TEST CAVM_NIC_PF_SEB_TEST_FUNC()
-static inline uint64_t CAVM_NIC_PF_SEB_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_SEB_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x8430000000e0ll;
-    __cavm_csr_fatal("NIC_PF_SEB_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_SEB_TEST cavm_nic_pf_seb_test_t
-#define bustype_CAVM_NIC_PF_SEB_TEST CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_SEB_TEST "NIC_PF_SEB_TEST"
-#define device_bar_CAVM_NIC_PF_SEB_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_SEB_TEST 0
-#define arguments_CAVM_NIC_PF_SEB_TEST -1,-1,-1,-1
 
 /**
  * Register (NCB) nic_pf_send_cfg
@@ -9014,154 +6862,6 @@ static inline uint64_t CAVM_NIC_PF_SOFT_RESET_FUNC(void)
 #define arguments_CAVM_NIC_PF_SOFT_RESET -1,-1,-1,-1
 
 /**
- * Register (NCB) nic_pf_sqm_test1
- *
- * INTERNAL: NIC SQM Test 1 Register
- */
-union cavm_nic_pf_sqm_test1
-{
-    uint64_t u;
-    struct cavm_nic_pf_sqm_test1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = sq_vnic_stat_stall.
-                                                                 \<61\> = sq_door_stall.
-                                                                 \<60\> = sq_int_set_fifo_stall. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = sq_vnic_stat_stall.
-                                                                 \<61\> = sq_door_stall.
-                                                                 \<60\> = sq_int_set_fifo_stall. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_sqm_test1_s cn; */
-};
-typedef union cavm_nic_pf_sqm_test1 cavm_nic_pf_sqm_test1_t;
-
-#define CAVM_NIC_PF_SQM_TEST1 CAVM_NIC_PF_SQM_TEST1_FUNC()
-static inline uint64_t CAVM_NIC_PF_SQM_TEST1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_SQM_TEST1_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000000100ll;
-    __cavm_csr_fatal("NIC_PF_SQM_TEST1", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_SQM_TEST1 cavm_nic_pf_sqm_test1_t
-#define bustype_CAVM_NIC_PF_SQM_TEST1 CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_SQM_TEST1 "NIC_PF_SQM_TEST1"
-#define device_bar_CAVM_NIC_PF_SQM_TEST1 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_SQM_TEST1 0
-#define arguments_CAVM_NIC_PF_SQM_TEST1 -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_sqm_test2
- *
- * INTERNAL: NIC SQM Test 2 Register
- */
-union cavm_nic_pf_sqm_test2
-{
-    uint64_t u;
-    struct cavm_nic_pf_sqm_test2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = mqm_fill_ack_stall.
-                                                                 \<62\> = mqm_send_cmd_stall.
-                                                                 \<61\> = mqm_sch_req_stall.
-                                                                 \<60\> = mqm_mdq_update_stall. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = bp_cfg3.
-                                                                   \<21:20\> = bp_cfg2.
-                                                                   \<19:18\> = bp_cfg1.
-                                                                   \<17:16\> = bp_cfg0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = mqm_fill_ack_stall.
-                                                                 \<62\> = mqm_send_cmd_stall.
-                                                                 \<61\> = mqm_sch_req_stall.
-                                                                 \<60\> = mqm_mdq_update_stall. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_sqm_test2_s cn; */
-};
-typedef union cavm_nic_pf_sqm_test2 cavm_nic_pf_sqm_test2_t;
-
-#define CAVM_NIC_PF_SQM_TEST2 CAVM_NIC_PF_SQM_TEST2_FUNC()
-static inline uint64_t CAVM_NIC_PF_SQM_TEST2_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_SQM_TEST2_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x843000000108ll;
-    __cavm_csr_fatal("NIC_PF_SQM_TEST2", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_SQM_TEST2 cavm_nic_pf_sqm_test2_t
-#define bustype_CAVM_NIC_PF_SQM_TEST2 CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_SQM_TEST2 "NIC_PF_SQM_TEST2"
-#define device_bar_CAVM_NIC_PF_SQM_TEST2 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_SQM_TEST2 0
-#define arguments_CAVM_NIC_PF_SQM_TEST2 -1,-1,-1,-1
-
-/**
  * Register (NCB) nic_pf_status
  *
  * NIC General Status Register
@@ -9173,35 +6873,9 @@ union cavm_nic_pf_status
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_10_63        : 54;
-        uint64_t blk_busy              : 10; /**< [  9:  0](RO/H) If nonzero, block is not ready for configuration.
-                                                                 Internal:
-                                                                 Each bit corresponds to a
-                                                                 subblock:
-                                                                 \<9\> = Reserved.
-                                                                 \<8\> = Reserved.
-                                                                 \<7\> = nic_sqm.
-                                                                 \<6\> = nic_sps.
-                                                                 \<5\> = nic_seb.
-                                                                 \<4\> = nic_rrm.
-                                                                 \<3\> = nic_rqm.
-                                                                 \<2\> = nic_reb.
-                                                                 \<1\> = nic_csi.
-                                                                 \<0\> = nic_cqm. */
+        uint64_t blk_busy              : 10; /**< [  9:  0](RO/H) If nonzero, block is not ready for configuration. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk_busy              : 10; /**< [  9:  0](RO/H) If nonzero, block is not ready for configuration.
-                                                                 Internal:
-                                                                 Each bit corresponds to a
-                                                                 subblock:
-                                                                 \<9\> = Reserved.
-                                                                 \<8\> = Reserved.
-                                                                 \<7\> = nic_sqm.
-                                                                 \<6\> = nic_sps.
-                                                                 \<5\> = nic_seb.
-                                                                 \<4\> = nic_rrm.
-                                                                 \<3\> = nic_rqm.
-                                                                 \<2\> = nic_reb.
-                                                                 \<1\> = nic_csi.
-                                                                 \<0\> = nic_cqm. */
+        uint64_t blk_busy              : 10; /**< [  9:  0](RO/H) If nonzero, block is not ready for configuration. */
         uint64_t reserved_10_63        : 54;
 #endif /* Word 0 - End */
     } s;
@@ -9224,90 +6898,6 @@ static inline uint64_t CAVM_NIC_PF_STATUS_FUNC(void)
 #define device_bar_CAVM_NIC_PF_STATUS 0x0 /* PF_BAR0 */
 #define busnum_CAVM_NIC_PF_STATUS 0
 #define arguments_CAVM_NIC_PF_STATUS -1,-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_sw_sync_pipe#_cq_cnts
- *
- * INTERNAL: NIC Software Sync Pipline CQ Counter Registers
- *
- * For diagnostic use only for debug of the  NIC_PF_SW_SYNC_RX[SW_RX_SYNC] function. Index
- * enumerated by NIC_LMAC_E.
- */
-union cavm_nic_pf_sw_sync_pipex_cq_cnts
-{
-    uint64_t u;
-    struct cavm_nic_pf_sw_sync_pipex_cq_cnts_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t out_cnt               : 32; /**< [ 63: 32](RO/H) Running count at output of machine. */
-        uint64_t in_cnt                : 32; /**< [ 31:  0](RO/H) Running count at input of machine. */
-#else /* Word 0 - Little Endian */
-        uint64_t in_cnt                : 32; /**< [ 31:  0](RO/H) Running count at input of machine. */
-        uint64_t out_cnt               : 32; /**< [ 63: 32](RO/H) Running count at output of machine. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_sw_sync_pipex_cq_cnts_s cn; */
-};
-typedef union cavm_nic_pf_sw_sync_pipex_cq_cnts cavm_nic_pf_sw_sync_pipex_cq_cnts_t;
-
-static inline uint64_t CAVM_NIC_PF_SW_SYNC_PIPEX_CQ_CNTS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_SW_SYNC_PIPEX_CQ_CNTS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=9))
-        return 0x843000490300ll + 8ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=17))
-        return 0x843000490300ll + 8ll * ((a) & 0x1f);
-    __cavm_csr_fatal("NIC_PF_SW_SYNC_PIPEX_CQ_CNTS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_SW_SYNC_PIPEX_CQ_CNTS(a) cavm_nic_pf_sw_sync_pipex_cq_cnts_t
-#define bustype_CAVM_NIC_PF_SW_SYNC_PIPEX_CQ_CNTS(a) CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_SW_SYNC_PIPEX_CQ_CNTS(a) "NIC_PF_SW_SYNC_PIPEX_CQ_CNTS"
-#define device_bar_CAVM_NIC_PF_SW_SYNC_PIPEX_CQ_CNTS(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_SW_SYNC_PIPEX_CQ_CNTS(a) (a)
-#define arguments_CAVM_NIC_PF_SW_SYNC_PIPEX_CQ_CNTS(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) nic_pf_sw_sync_pipe#_pkt_cnts
- *
- * INTERNAL: NIC Software Sync Pipeline Packet Counter Registers
- *
- * For diagnostic use only for debug of the  NIC_PF_SW_SYNC_RX[SW_RX_SYNC] function. Index
- * enumerated by NIC_LMAC_E.
- */
-union cavm_nic_pf_sw_sync_pipex_pkt_cnts
-{
-    uint64_t u;
-    struct cavm_nic_pf_sw_sync_pipex_pkt_cnts_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t out_cnt               : 32; /**< [ 63: 32](RO/H) Running count at output of machine. */
-        uint64_t in_cnt                : 32; /**< [ 31:  0](RO/H) Running count at input of machine. */
-#else /* Word 0 - Little Endian */
-        uint64_t in_cnt                : 32; /**< [ 31:  0](RO/H) Running count at input of machine. */
-        uint64_t out_cnt               : 32; /**< [ 63: 32](RO/H) Running count at output of machine. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nic_pf_sw_sync_pipex_pkt_cnts_s cn; */
-};
-typedef union cavm_nic_pf_sw_sync_pipex_pkt_cnts cavm_nic_pf_sw_sync_pipex_pkt_cnts_t;
-
-static inline uint64_t CAVM_NIC_PF_SW_SYNC_PIPEX_PKT_CNTS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIC_PF_SW_SYNC_PIPEX_PKT_CNTS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=9))
-        return 0x843000490200ll + 8ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=17))
-        return 0x843000490200ll + 8ll * ((a) & 0x1f);
-    __cavm_csr_fatal("NIC_PF_SW_SYNC_PIPEX_PKT_CNTS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIC_PF_SW_SYNC_PIPEX_PKT_CNTS(a) cavm_nic_pf_sw_sync_pipex_pkt_cnts_t
-#define bustype_CAVM_NIC_PF_SW_SYNC_PIPEX_PKT_CNTS(a) CSR_TYPE_NCB
-#define basename_CAVM_NIC_PF_SW_SYNC_PIPEX_PKT_CNTS(a) "NIC_PF_SW_SYNC_PIPEX_PKT_CNTS"
-#define device_bar_CAVM_NIC_PF_SW_SYNC_PIPEX_PKT_CNTS(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NIC_PF_SW_SYNC_PIPEX_PKT_CNTS(a) (a)
-#define arguments_CAVM_NIC_PF_SW_SYNC_PIPEX_PKT_CNTS(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) nic_pf_sw_sync_rx
@@ -11389,13 +8979,9 @@ union cavm_nic_qsx_rqx_cfg
         uint64_t ena                   : 1;  /**< [  1:  1](R/W) Enable RQ. Writing a 1 to this bit enables the RQ. Writing a 0 gracefully disables the RQ.
                                                                  Software can poll this bit for a 0 to determine if all hardware processing for this RQ has
                                                                  stopped. */
-        uint64_t tcp_ena               : 1;  /**< [  0:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - TCP reassembly enable. */
+        uint64_t tcp_ena               : 1;  /**< [  0:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t tcp_ena               : 1;  /**< [  0:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - TCP reassembly enable. */
+        uint64_t tcp_ena               : 1;  /**< [  0:  0](R/W) Reserved. */
         uint64_t ena                   : 1;  /**< [  1:  1](R/W) Enable RQ. Writing a 1 to this bit enables the RQ. Writing a 0 gracefully disables the RQ.
                                                                  Software can poll this bit for a 0 to determine if all hardware processing for this RQ has
                                                                  stopped. */
@@ -11492,12 +9078,7 @@ union cavm_nic_qsx_rq_gen_cfg
                                                                  header split into a separate RBDR buffer. */
         uint64_t cq_hdr_copy           : 1;  /**< [ 18: 18](R/W) If set, the header is copied into the CQE as well as existing in the packet buffer. The
                                                                  hardware will copy all defined headers. */
-        uint64_t max_tcp_reass         : 2;  /**< [ 17: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - Maximum TCP reassembled packet:
-                                                                 0x0 = 64Kbytes.
-                                                                 0x1 = 256Kbytes.
-                                                                 0x2-0x3 = Reserved. */
+        uint64_t max_tcp_reass         : 2;  /**< [ 17: 16](R/W) Reserved. */
         uint64_t cq_pkt_size           : 8;  /**< [ 15:  8](R/W) Packet size in bytes. If a packet is smaller than this
                                                                  value, the entire packet is sent to the CQ buffer and no RB is used. Maximum number of
                                                                  bytes is 249, to allow for up to 7 byte alignment pad. */
@@ -11511,12 +9092,7 @@ union cavm_nic_qsx_rq_gen_cfg
         uint64_t cq_pkt_size           : 8;  /**< [ 15:  8](R/W) Packet size in bytes. If a packet is smaller than this
                                                                  value, the entire packet is sent to the CQ buffer and no RB is used. Maximum number of
                                                                  bytes is 249, to allow for up to 7 byte alignment pad. */
-        uint64_t max_tcp_reass         : 2;  /**< [ 17: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - Maximum TCP reassembled packet:
-                                                                 0x0 = 64Kbytes.
-                                                                 0x1 = 256Kbytes.
-                                                                 0x2-0x3 = Reserved. */
+        uint64_t max_tcp_reass         : 2;  /**< [ 17: 16](R/W) Reserved. */
         uint64_t cq_hdr_copy           : 1;  /**< [ 18: 18](R/W) If set, the header is copied into the CQE as well as existing in the packet buffer. The
                                                                  hardware will copy all defined headers. */
         uint64_t splt_hdr_ena          : 1;  /**< [ 19: 19](R/W) When set, any packet with a valid header stack down to the end of the L4 layer has its
@@ -11559,12 +9135,7 @@ union cavm_nic_qsx_rq_gen_cfg
                                                                  header split into a separate RBDR buffer. */
         uint64_t cq_hdr_copy           : 1;  /**< [ 18: 18](R/W) If set, the header is copied into the CQE as well as existing in the packet buffer. The
                                                                  hardware will copy all defined headers. */
-        uint64_t max_tcp_reass         : 2;  /**< [ 17: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - Maximum TCP reassembled packet:
-                                                                 0x0 = 64Kbytes.
-                                                                 0x1 = 256Kbytes.
-                                                                 0x2-0x3 = Reserved. */
+        uint64_t max_tcp_reass         : 2;  /**< [ 17: 16](R/W) Reserved. */
         uint64_t cq_pkt_size           : 8;  /**< [ 15:  8](R/W) Packet size in bytes. If a packet is smaller than this
                                                                  value, the entire packet is sent to the CQ buffer and no RB is used. Maximum number of
                                                                  bytes is 249, to allow for up to 7 byte alignment pad. */
@@ -11578,12 +9149,7 @@ union cavm_nic_qsx_rq_gen_cfg
         uint64_t cq_pkt_size           : 8;  /**< [ 15:  8](R/W) Packet size in bytes. If a packet is smaller than this
                                                                  value, the entire packet is sent to the CQ buffer and no RB is used. Maximum number of
                                                                  bytes is 249, to allow for up to 7 byte alignment pad. */
-        uint64_t max_tcp_reass         : 2;  /**< [ 17: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved for future use - Maximum TCP reassembled packet:
-                                                                 0x0 = 64Kbytes.
-                                                                 0x1 = 256Kbytes.
-                                                                 0x2-0x3 = Reserved. */
+        uint64_t max_tcp_reass         : 2;  /**< [ 17: 16](R/W) Reserved. */
         uint64_t cq_hdr_copy           : 1;  /**< [ 18: 18](R/W) If set, the header is copied into the CQE as well as existing in the packet buffer. The
                                                                  hardware will copy all defined headers. */
         uint64_t splt_hdr_ena          : 1;  /**< [ 19: 19](R/W) When set, any packet with a valid header stack down to the end of the L4 layer has its
@@ -12882,11 +10448,7 @@ union cavm_nic_vnicx_rss_cfg
         uint64_t rss_tun_vxlan         : 1;  /**< [  9:  9](R/W) Enable VXLAN tunnel support. */
         uint64_t rss_l4_bidi           : 1;  /**< [  8:  8](R/W) Enable bidirectional flow symmetry RSS for the L4 TCP/UDP RSS layer. */
         uint64_t rss_l3_bidi           : 1;  /**< [  7:  7](R/W) Enable bidirectional flow symmetry RSS for the L3 IPV4, IPV6 RSS layer. */
-        uint64_t rss_roce              : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 Unused field. Old definition:
-                                                                 Enable ROCE delivery, potentially resulting in setting NIC_CQE_RX_S[RSS_ALG] =
-                                                                 NIC_RSS_ALG_E::ROCE. */
+        uint64_t rss_roce              : 1;  /**< [  6:  6](R/W) Reserved. */
         uint64_t rss_l4etc             : 1;  /**< [  5:  5](R/W) Enable L4 extended RSS hashing, including GRE, potentially resulting in setting
                                                                  NIC_CQE_RX_S[RSS_ALG] = NIC_RSS_ALG_E::GRE_IP or NIC_RSS_ALG_E::INNER_GRE_IP. */
         uint64_t rss_udp               : 1;  /**< [  4:  4](R/W) Enable IP RSS hashing, potentially resulting in setting NIC_CQE_RX_S[RSS_ALG] =
@@ -12910,11 +10472,7 @@ union cavm_nic_vnicx_rss_cfg
                                                                  NIC_RSS_ALG_E::UDP_IP. */
         uint64_t rss_l4etc             : 1;  /**< [  5:  5](R/W) Enable L4 extended RSS hashing, including GRE, potentially resulting in setting
                                                                  NIC_CQE_RX_S[RSS_ALG] = NIC_RSS_ALG_E::GRE_IP or NIC_RSS_ALG_E::INNER_GRE_IP. */
-        uint64_t rss_roce              : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 Unused field. Old definition:
-                                                                 Enable ROCE delivery, potentially resulting in setting NIC_CQE_RX_S[RSS_ALG] =
-                                                                 NIC_RSS_ALG_E::ROCE. */
+        uint64_t rss_roce              : 1;  /**< [  6:  6](R/W) Reserved. */
         uint64_t rss_l3_bidi           : 1;  /**< [  7:  7](R/W) Enable bidirectional flow symmetry RSS for the L3 IPV4, IPV6 RSS layer. */
         uint64_t rss_l4_bidi           : 1;  /**< [  8:  8](R/W) Enable bidirectional flow symmetry RSS for the L4 TCP/UDP RSS layer. */
         uint64_t rss_tun_vxlan         : 1;  /**< [  9:  9](R/W) Enable VXLAN tunnel support. */

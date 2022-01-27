@@ -20,59 +20,6 @@
  */
 
 /**
- * Enumeration inv_cmd_e
- *
- * INTERNAL: INV Command Enumeration
- *
- * Enumerates the different INV command encodings.
- */
-#define CAVM_INV_CMD_E_ALLEX (0xc)
-#define CAVM_INV_CMD_E_ASIDE1 (0xd)
-#define CAVM_INV_CMD_E_GBLSYNC (0xf)
-#define CAVM_INV_CMD_E_IALLU (9)
-#define CAVM_INV_CMD_E_INV (8)
-#define CAVM_INV_CMD_E_IPAS2E1 (7)
-#define CAVM_INV_CMD_E_IVAU (4)
-#define CAVM_INV_CMD_E_NOP (0)
-#define CAVM_INV_CMD_E_SEV (0xe)
-#define CAVM_INV_CMD_E_VAAE1 (6)
-#define CAVM_INV_CMD_E_VAEX (5)
-#define CAVM_INV_CMD_E_VMALLE1 (0xa)
-#define CAVM_INV_CMD_E_VMALLS12 (0xb)
-
-/**
- * Enumeration ioc_cmd_e
- *
- * INTERNAL: IOC Command Enumeration
- *
- * Enumerates the different IOC command encodings.
- */
-#define CAVM_IOC_CMD_E_ADDR (6)
-#define CAVM_IOC_CMD_E_IAADD (0xc)
-#define CAVM_IOC_CMD_E_IACAS (0xa)
-#define CAVM_IOC_CMD_E_IACLR (0xd)
-#define CAVM_IOC_CMD_E_IASET (0xe)
-#define CAVM_IOC_CMD_E_IASWP (0xb)
-#define CAVM_IOC_CMD_E_IDLE (0)
-#define CAVM_IOC_CMD_E_LMTST (3)
-#define CAVM_IOC_CMD_E_LOAD (2)
-#define CAVM_IOC_CMD_E_SLILD (8)
-#define CAVM_IOC_CMD_E_SLIST (7)
-#define CAVM_IOC_CMD_E_STORE (1)
-#define CAVM_IOC_CMD_E_STOREP (9)
-
-/**
- * Enumeration ior_cmd_e
- *
- * INTERNAL: IOR Command Enumeration
- *
- * Enumerates the different IOR command encodings.
- */
-#define CAVM_IOR_CMD_E_DATA (1)
-#define CAVM_IOR_CMD_E_IDLE (0)
-#define CAVM_IOR_CMD_E_SLIRSP (3)
-
-/**
  * Enumeration l2c_bar_e
  *
  * L2C Base Address Register Enumeration
@@ -179,213 +126,6 @@
 #define CAVM_L2C_TAG_ERRPRIO_E_SBE (2)
 
 /**
- * Enumeration oci_ireq_cmd_e
- *
- * INTERNAL: OCI IREQ Command Enumeration
- */
-#define CAVM_OCI_IREQ_CMD_E_IAADD (0x10)
-#define CAVM_OCI_IREQ_CMD_E_IACAS (0x15)
-#define CAVM_OCI_IREQ_CMD_E_IACLR (0x12)
-#define CAVM_OCI_IREQ_CMD_E_IASET (0x13)
-#define CAVM_OCI_IREQ_CMD_E_IASWP (0x14)
-#define CAVM_OCI_IREQ_CMD_E_IDLE (0x1f)
-#define CAVM_OCI_IREQ_CMD_E_IOBADDR (6)
-#define CAVM_OCI_IREQ_CMD_E_IOBADDRA (7)
-#define CAVM_OCI_IREQ_CMD_E_IOBLD (0)
-#define CAVM_OCI_IREQ_CMD_E_IOBST (2)
-#define CAVM_OCI_IREQ_CMD_E_IOBSTA (3)
-#define CAVM_OCI_IREQ_CMD_E_IOBSTP (4)
-#define CAVM_OCI_IREQ_CMD_E_IOBSTPA (5)
-#define CAVM_OCI_IREQ_CMD_E_LMTST (8)
-#define CAVM_OCI_IREQ_CMD_E_LMTSTA (9)
-#define CAVM_OCI_IREQ_CMD_E_SLILD (0x1c)
-#define CAVM_OCI_IREQ_CMD_E_SLIST (0x1d)
-
-/**
- * Enumeration oci_irsp_cmd_e
- *
- * INTERNAL: OCI IRSP Command Enumeration
- */
-#define CAVM_OCI_IRSP_CMD_E_IDLE (0x1f)
-#define CAVM_OCI_IRSP_CMD_E_IOBACK (1)
-#define CAVM_OCI_IRSP_CMD_E_IOBRSP (0)
-#define CAVM_OCI_IRSP_CMD_E_SLIRSP (2)
-
-/**
- * Enumeration oci_mfwd_cmd_e
- *
- * INTERNAL: OCI MFWD Command Enumeration
- */
-#define CAVM_OCI_MFWD_CMD_E_FEVX_EH (0xb)
-#define CAVM_OCI_MFWD_CMD_E_FEVX_OH (0xc)
-#define CAVM_OCI_MFWD_CMD_E_FLDRO_E (0)
-#define CAVM_OCI_MFWD_CMD_E_FLDRO_O (1)
-#define CAVM_OCI_MFWD_CMD_E_FLDRS_E (2)
-#define CAVM_OCI_MFWD_CMD_E_FLDRS_EH (4)
-#define CAVM_OCI_MFWD_CMD_E_FLDRS_O (3)
-#define CAVM_OCI_MFWD_CMD_E_FLDRS_OH (5)
-#define CAVM_OCI_MFWD_CMD_E_FLDT_E (6)
-#define CAVM_OCI_MFWD_CMD_E_FLDX_E (7)
-#define CAVM_OCI_MFWD_CMD_E_FLDX_EH (9)
-#define CAVM_OCI_MFWD_CMD_E_FLDX_O (8)
-#define CAVM_OCI_MFWD_CMD_E_FLDX_OH (0xa)
-#define CAVM_OCI_MFWD_CMD_E_IDLE (0x1f)
-#define CAVM_OCI_MFWD_CMD_E_SINV (0xd)
-#define CAVM_OCI_MFWD_CMD_E_SINV_H (0xe)
-
-/**
- * Enumeration oci_mreq_cmd_e
- *
- * INTERNAL: OCI MREQ Command Enumeration
- */
-#define CAVM_OCI_MREQ_CMD_E_GINV (0x14)
-#define CAVM_OCI_MREQ_CMD_E_GSYNC (0x18)
-#define CAVM_OCI_MREQ_CMD_E_IDLE (0x1f)
-#define CAVM_OCI_MREQ_CMD_E_RADD (0xd)
-#define CAVM_OCI_MREQ_CMD_E_RC2D_O (6)
-#define CAVM_OCI_MREQ_CMD_E_RC2D_S (7)
-#define CAVM_OCI_MREQ_CMD_E_RCAS (0x13)
-#define CAVM_OCI_MREQ_CMD_E_RCAS_O (0x15)
-#define CAVM_OCI_MREQ_CMD_E_RCAS_S (0x16)
-#define CAVM_OCI_MREQ_CMD_E_RCLR (0x12)
-#define CAVM_OCI_MREQ_CMD_E_RDEC (0xf)
-#define CAVM_OCI_MREQ_CMD_E_REOR (0xb)
-#define CAVM_OCI_MREQ_CMD_E_RINC (0xe)
-#define CAVM_OCI_MREQ_CMD_E_RLDD (0)
-#define CAVM_OCI_MREQ_CMD_E_RLDI (1)
-#define CAVM_OCI_MREQ_CMD_E_RLDT (2)
-#define CAVM_OCI_MREQ_CMD_E_RLDWB (4)
-#define CAVM_OCI_MREQ_CMD_E_RLDX (5)
-#define CAVM_OCI_MREQ_CMD_E_RLDY (3)
-#define CAVM_OCI_MREQ_CMD_E_RSET (0x11)
-#define CAVM_OCI_MREQ_CMD_E_RSMAX (0x1b)
-#define CAVM_OCI_MREQ_CMD_E_RSMIN (0x1c)
-#define CAVM_OCI_MREQ_CMD_E_RSTC (0x17)
-#define CAVM_OCI_MREQ_CMD_E_RSTC_O (0x19)
-#define CAVM_OCI_MREQ_CMD_E_RSTC_S (0x1a)
-#define CAVM_OCI_MREQ_CMD_E_RSTP (0xa)
-#define CAVM_OCI_MREQ_CMD_E_RSTT (8)
-#define CAVM_OCI_MREQ_CMD_E_RSTY (9)
-#define CAVM_OCI_MREQ_CMD_E_RSWP (0x10)
-#define CAVM_OCI_MREQ_CMD_E_RUMAX (0x1d)
-#define CAVM_OCI_MREQ_CMD_E_RUMIN (0x1e)
-
-/**
- * Enumeration oci_mrsp_cmd_e
- *
- * INTERNAL: OCI MRSP Command Enumeration
- */
-#define CAVM_OCI_MRSP_CMD_E_GSDN (0x18)
-#define CAVM_OCI_MRSP_CMD_E_HAKD (4)
-#define CAVM_OCI_MRSP_CMD_E_HAKI (6)
-#define CAVM_OCI_MRSP_CMD_E_HAKN_S (5)
-#define CAVM_OCI_MRSP_CMD_E_HAKS (7)
-#define CAVM_OCI_MRSP_CMD_E_HAKV (8)
-#define CAVM_OCI_MRSP_CMD_E_IDLE (0x1f)
-#define CAVM_OCI_MRSP_CMD_E_P2DF (0xd)
-#define CAVM_OCI_MRSP_CMD_E_PACK (0xc)
-#define CAVM_OCI_MRSP_CMD_E_PATM (0xb)
-#define CAVM_OCI_MRSP_CMD_E_PEMD (0xa)
-#define CAVM_OCI_MRSP_CMD_E_PSHA (9)
-#define CAVM_OCI_MRSP_CMD_E_VICC (1)
-#define CAVM_OCI_MRSP_CMD_E_VICD (0)
-#define CAVM_OCI_MRSP_CMD_E_VICDHI (3)
-#define CAVM_OCI_MRSP_CMD_E_VICS (2)
-
-/**
- * Enumeration rsc_cmd_e
- *
- * INTERNAL: RSC Command Enumeration
- *
- * Enumerates the different RSC command encodings.
- */
-#define CAVM_RSC_CMD_E_FLDN (3)
-#define CAVM_RSC_CMD_E_GSDN (2)
-#define CAVM_RSC_CMD_E_IACK (5)
-#define CAVM_RSC_CMD_E_IFDN (1)
-#define CAVM_RSC_CMD_E_NOP (0)
-#define CAVM_RSC_CMD_E_SCDN (6)
-#define CAVM_RSC_CMD_E_SCFL (7)
-#define CAVM_RSC_CMD_E_STDN (4)
-
-/**
- * Enumeration xmc_cmd_e
- *
- * INTERNAL: XMC Command Enumeration
- *
- * Enumerates the different XMC command encodings.
- */
-#define CAVM_XMC_CMD_E_AADD (0x28)
-#define CAVM_XMC_CMD_E_ACAS (0x26)
-#define CAVM_XMC_CMD_E_ACLR (0x29)
-#define CAVM_XMC_CMD_E_ADEC (0x25)
-#define CAVM_XMC_CMD_E_AEOR (0x2a)
-#define CAVM_XMC_CMD_E_AINC (0x24)
-#define CAVM_XMC_CMD_E_ALLEX (0x3c)
-#define CAVM_XMC_CMD_E_ASET (0x2b)
-#define CAVM_XMC_CMD_E_ASIDE1 (0x3d)
-#define CAVM_XMC_CMD_E_ASMAX (0x2c)
-#define CAVM_XMC_CMD_E_ASMIN (0x2d)
-#define CAVM_XMC_CMD_E_ASWP (0x27)
-#define CAVM_XMC_CMD_E_AUMAX (0x2e)
-#define CAVM_XMC_CMD_E_AUMIN (0x2f)
-#define CAVM_XMC_CMD_E_DWB (5)
-#define CAVM_XMC_CMD_E_GBLSYNC (0x3f)
-#define CAVM_XMC_CMD_E_IAADD (0x68)
-#define CAVM_XMC_CMD_E_IACAS (0x66)
-#define CAVM_XMC_CMD_E_IACLR (0x69)
-#define CAVM_XMC_CMD_E_IALLU (0x39)
-#define CAVM_XMC_CMD_E_IASET (0x6b)
-#define CAVM_XMC_CMD_E_IASWP (0x67)
-#define CAVM_XMC_CMD_E_INVL2 (0x1c)
-#define CAVM_XMC_CMD_E_IOBADDR (0x43)
-#define CAVM_XMC_CMD_E_IOBADDRA (0x53)
-#define CAVM_XMC_CMD_E_IOBLD (0x40)
-#define CAVM_XMC_CMD_E_IOBST (0x41)
-#define CAVM_XMC_CMD_E_IOBSTA (0x51)
-#define CAVM_XMC_CMD_E_IOBSTP (0x42)
-#define CAVM_XMC_CMD_E_IOBSTPA (0x52)
-#define CAVM_XMC_CMD_E_IPAS2E1 (0x37)
-#define CAVM_XMC_CMD_E_IVAU (0x34)
-#define CAVM_XMC_CMD_E_LCKL2 (0x1f)
-#define CAVM_XMC_CMD_E_LDD (8)
-#define CAVM_XMC_CMD_E_LDDT (0xc)
-#define CAVM_XMC_CMD_E_LDE (0xb)
-#define CAVM_XMC_CMD_E_LDI (2)
-#define CAVM_XMC_CMD_E_LDP (7)
-#define CAVM_XMC_CMD_E_LDT (1)
-#define CAVM_XMC_CMD_E_LDWB (0xd)
-#define CAVM_XMC_CMD_E_LDY (6)
-#define CAVM_XMC_CMD_E_LMTST (0x45)
-#define CAVM_XMC_CMD_E_LMTSTA (0x55)
-#define CAVM_XMC_CMD_E_LTGL2I (0x19)
-#define CAVM_XMC_CMD_E_NOP (0)
-#define CAVM_XMC_CMD_E_PL2 (3)
-#define CAVM_XMC_CMD_E_PL2T (0x16)
-#define CAVM_XMC_CMD_E_PS2 (0xa)
-#define CAVM_XMC_CMD_E_PS2T (0x17)
-#define CAVM_XMC_CMD_E_PSL1 (9)
-#define CAVM_XMC_CMD_E_RPL2 (4)
-#define CAVM_XMC_CMD_E_RSTP (0xf)
-#define CAVM_XMC_CMD_E_SEV (0x3e)
-#define CAVM_XMC_CMD_E_STC (0x13)
-#define CAVM_XMC_CMD_E_STF (0x10)
-#define CAVM_XMC_CMD_E_STFIL1 (0x14)
-#define CAVM_XMC_CMD_E_STGL2I (0x1a)
-#define CAVM_XMC_CMD_E_STP (0x12)
-#define CAVM_XMC_CMD_E_STT (0x11)
-#define CAVM_XMC_CMD_E_STTIL1 (0x15)
-#define CAVM_XMC_CMD_E_STY (0xe)
-#define CAVM_XMC_CMD_E_VAAE1 (0x36)
-#define CAVM_XMC_CMD_E_VAEX (0x35)
-#define CAVM_XMC_CMD_E_VMALLE1 (0x3a)
-#define CAVM_XMC_CMD_E_VMALLS12 (0x3b)
-#define CAVM_XMC_CMD_E_WBIL2 (0x1d)
-#define CAVM_XMC_CMD_E_WBIL2I (0x18)
-#define CAVM_XMC_CMD_E_WBL2 (0x1e)
-#define CAVM_XMC_CMD_E_WBL2I (0x1b)
-
-/**
  * Register (RSL) l2c_asc_region#_attr
  *
  * L2C Address Space Control Region Attributes Registers
@@ -400,16 +140,10 @@ union cavm_l2c_asc_regionx_attr
         uint64_t s_en                  : 1;  /**< [  1:  1](R/W) Enables secure access to region.
                                                                  Undefined if both [S_EN] and [NS_EN] are set for the same region. */
         uint64_t ns_en                 : 1;  /**< [  0:  0](R/W) Enables nonsecure access to region.
-                                                                 Undefined if both [S_EN] and [NS_EN] are set for the same region.
-
-                                                                 Internal:
-                                                                 See also DFA_ASC_REGION()_ATTR[NS_EN]. */
+                                                                 Undefined if both [S_EN] and [NS_EN] are set for the same region. */
 #else /* Word 0 - Little Endian */
         uint64_t ns_en                 : 1;  /**< [  0:  0](R/W) Enables nonsecure access to region.
-                                                                 Undefined if both [S_EN] and [NS_EN] are set for the same region.
-
-                                                                 Internal:
-                                                                 See also DFA_ASC_REGION()_ATTR[NS_EN]. */
+                                                                 Undefined if both [S_EN] and [NS_EN] are set for the same region. */
         uint64_t s_en                  : 1;  /**< [  1:  1](R/W) Enables secure access to region.
                                                                  Undefined if both [S_EN] and [NS_EN] are set for the same region. */
         uint64_t reserved_2_63         : 62;
@@ -552,10 +286,7 @@ union cavm_l2c_ctl
                                                                  For optimal performance set to
                                                                  10 * (DDR-clock period/core-clock period) - 1.
                                                                  To disable set to 0. All other values are reserved. */
-        uint64_t disdwb                : 1;  /**< [  5:  5](R/W) Suppresses DWB and INVL2 commands, effectively turning them into NOPs.
-                                                                 Internal:
-                                                                 The real behavior is DWB and INVL2 commands are forced to look like STGL2I commands with
-                                                                 DISSTGL2I set. */
+        uint64_t disdwb                : 1;  /**< [  5:  5](R/W) Suppresses DWB and INVL2 commands, effectively turning them into NOPs. */
         uint64_t disgsyncto            : 1;  /**< [  4:  4](R/W) Disable global sync timeout. */
         uint64_t disldwb               : 1;  /**< [  3:  3](R/W) Suppresses the DWB functionality of any received LDWB, effectively turning them into LDTs. */
         uint64_t dissblkdty            : 1;  /**< [  2:  2](R/W) Disable bandwidth optimization between L2 and LMC and MOB which only transfers modified
@@ -571,10 +302,7 @@ union cavm_l2c_ctl
                                                                  DISSBLKDTY or operation is undefined. */
         uint64_t disldwb               : 1;  /**< [  3:  3](R/W) Suppresses the DWB functionality of any received LDWB, effectively turning them into LDTs. */
         uint64_t disgsyncto            : 1;  /**< [  4:  4](R/W) Disable global sync timeout. */
-        uint64_t disdwb                : 1;  /**< [  5:  5](R/W) Suppresses DWB and INVL2 commands, effectively turning them into NOPs.
-                                                                 Internal:
-                                                                 The real behavior is DWB and INVL2 commands are forced to look like STGL2I commands with
-                                                                 DISSTGL2I set. */
+        uint64_t disdwb                : 1;  /**< [  5:  5](R/W) Suppresses DWB and INVL2 commands, effectively turning them into NOPs. */
         uint64_t rdf_cnt               : 8;  /**< [ 13:  6](R/W) Defines the sample point of the LMC response data in the DDR-clock/core-clock crossing.
                                                                  For optimal performance set to
                                                                  10 * (DDR-clock period/core-clock period) - 1.
@@ -699,9 +427,7 @@ union cavm_l2c_oci_ctl
         uint64_t lock_local_cas        : 1;  /**< [ 29: 29](RO) Reserved. */
         uint64_t lock_local_stc        : 1;  /**< [ 28: 28](RO) Reserved. */
         uint64_t lock_local_pp         : 1;  /**< [ 27: 27](RO) Reserved. */
-        uint64_t lngtolen              : 5;  /**< [ 26: 22](R/W) Reserved.
-                                                                 Internal:
-                                                                 This only controls the GSYNC timeout in the L2C_CBCs in non-OCI chips. */
+        uint64_t lngtolen              : 5;  /**< [ 26: 22](R/W) Reserved. */
         uint64_t shtolen               : 5;  /**< [ 21: 17](RO) Reserved. */
         uint64_t shtoioen              : 1;  /**< [ 16: 16](RO) Reserved. */
         uint64_t shtoen                : 3;  /**< [ 15: 13](RO) Reserved. */
@@ -725,9 +451,7 @@ union cavm_l2c_oci_ctl
         uint64_t shtoen                : 3;  /**< [ 15: 13](RO) Reserved. */
         uint64_t shtoioen              : 1;  /**< [ 16: 16](RO) Reserved. */
         uint64_t shtolen               : 5;  /**< [ 21: 17](RO) Reserved. */
-        uint64_t lngtolen              : 5;  /**< [ 26: 22](R/W) Reserved.
-                                                                 Internal:
-                                                                 This only controls the GSYNC timeout in the L2C_CBCs in non-OCI chips. */
+        uint64_t lngtolen              : 5;  /**< [ 26: 22](R/W) Reserved. */
         uint64_t lock_local_pp         : 1;  /**< [ 27: 27](RO) Reserved. */
         uint64_t lock_local_stc        : 1;  /**< [ 28: 28](RO) Reserved. */
         uint64_t lock_local_cas        : 1;  /**< [ 29: 29](RO) Reserved. */

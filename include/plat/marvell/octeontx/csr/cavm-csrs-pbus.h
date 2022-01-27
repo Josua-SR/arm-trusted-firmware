@@ -413,42 +413,6 @@ static inline uint64_t CAVM_PBUS_DMA_TIMX(uint64_t a)
 #define arguments_CAVM_PBUS_DMA_TIMX(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) pbus_eco
- *
- * INTERNAL: PBUS ECO Register
- */
-union cavm_pbus_eco
-{
-    uint64_t u;
-    struct cavm_pbus_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) ECO flops. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) ECO flops. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pbus_eco_s cn; */
-};
-typedef union cavm_pbus_eco cavm_pbus_eco_t;
-
-#define CAVM_PBUS_ECO CAVM_PBUS_ECO_FUNC()
-static inline uint64_t CAVM_PBUS_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_ECO_FUNC(void)
-{
-    return 0x87e0010001f8ll;
-}
-
-#define typedef_CAVM_PBUS_ECO cavm_pbus_eco_t
-#define bustype_CAVM_PBUS_ECO CSR_TYPE_RSL
-#define basename_CAVM_PBUS_ECO "PBUS_ECO"
-#define device_bar_CAVM_PBUS_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PBUS_ECO 0
-#define arguments_CAVM_PBUS_ECO -1,-1,-1,-1
-
-/**
  * Register (RSL) pbus_int
  *
  * PBUS Interupt Register

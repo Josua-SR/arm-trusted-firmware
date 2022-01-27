@@ -201,21 +201,13 @@ union cavm_ddf_inst_find_s
                                                                  and based on the rules described there an interrupt may occur. */
         uint64_t qwords                : 8;  /**< [ 15:  8] Number of 8-byte quadwords in request. Must be 1-16. If less than the size of
                                                                  this structure then structure elements described here are not interpreted from
-                                                                 memory and behave as if zero.
-
-                                                                 Internal:
-                                                                 In hardware, push/pop zeros for (QWORDS..15) into the
-                                                                 instruction queue.  As VQs are virtualized, DDF must not hang on invalid instructions. */
+                                                                 memory and behave as if zero. */
         uint64_t op                    : 8;  /**< [  7:  0] Operation to perform. Enumerated by DDF_OP_E. */
 #else /* Word 0 - Little Endian */
         uint64_t op                    : 8;  /**< [  7:  0] Operation to perform. Enumerated by DDF_OP_E. */
         uint64_t qwords                : 8;  /**< [ 15:  8] Number of 8-byte quadwords in request. Must be 1-16. If less than the size of
                                                                  this structure then structure elements described here are not interpreted from
-                                                                 memory and behave as if zero.
-
-                                                                 Internal:
-                                                                 In hardware, push/pop zeros for (QWORDS..15) into the
-                                                                 instruction queue.  As VQs are virtualized, DDF must not hang on invalid instructions. */
+                                                                 memory and behave as if zero. */
         uint64_t doneint               : 1;  /**< [ 16: 16] Done interrupt.
                                                                  0 = No interrupts related to this instruction.
                                                                  1 = When the instruction completes, DDF()_VQ()_DONE[DONE] will be incremented,
@@ -308,20 +300,14 @@ union cavm_ddf_inst_find_s
                                                                  visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:49\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<48\> for forward compatibility. */
 #else /* Word 3 - Little Endian */
         uint64_t wq_ptr                : 64; /**< [255:192] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that DDF submits
                                                                  work to SSO after all context, output data, and result write operations are
                                                                  visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:49\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<48\> for forward compatibility. */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t reserved_288_319      : 32;
@@ -372,11 +358,7 @@ union cavm_ddf_inst_find_s
                                                                  The total size of a filter, e.g. (2^[NBUCKP2]) * 4 * 2^[NESTSZP2]) cannot be
                                                                  larger than 512 bytes. Reserved values default to 0x1.
 
-                                                                 The size of a bucket, e.g. 4 * (2^[NESTSZP2]) cannot be larger than 128 bytes.
-
-                                                                 Internal:
-                                                                 This means a 32-byte SHA256 cannot have any payload (software must use separate
-                                                                 table). Limiting to 32 byte nests means all 4 nests fit in a cache line. */
+                                                                 The size of a bucket, e.g. 4 * (2^[NESTSZP2]) cannot be larger than 128 bytes. */
         uint64_t reserved_371          : 1;
         uint64_t nbuckp2               : 3;  /**< [370:368] Number of buckets per filter as a power-of-2.
                                                                    0x0 = 1 bucket/filter.
@@ -429,11 +411,7 @@ union cavm_ddf_inst_find_s
                                                                  The total size of a filter, e.g. (2^[NBUCKP2]) * 4 * 2^[NESTSZP2]) cannot be
                                                                  larger than 512 bytes. Reserved values default to 0x1.
 
-                                                                 The size of a bucket, e.g. 4 * (2^[NESTSZP2]) cannot be larger than 128 bytes.
-
-                                                                 Internal:
-                                                                 This means a 32-byte SHA256 cannot have any payload (software must use separate
-                                                                 table). Limiting to 32 byte nests means all 4 nests fit in a cache line. */
+                                                                 The size of a bucket, e.g. 4 * (2^[NESTSZP2]) cannot be larger than 128 bytes. */
         uint64_t hdrszp2               : 3;  /**< [377:375] Size of a single-way's filter header as power-of-2.
                                                                     0x0 = Reserved. (Hardware treats as 0x1).
                                                                     0x1 = 2 bytes.
@@ -573,10 +551,7 @@ union cavm_ddf_inst_match_s
                                                                  0x13 = 20 bytes.
                                                                  0x17 = 24 bytes.
                                                                  _ ...
-                                                                 0x3F = 64 bytes.
-
-                                                                 Internal:
-                                                                 Must support non-power-of-2. */
+                                                                 0x3F = 64 bytes. */
         uint64_t reserved_23_39        : 17;
         uint64_t multm                 : 1;  /**< [ 22: 22] Multiple matches, applies to DDF_INST_MATCH_S::MATCH_SET,MATCH_INS,MATCH_DEL.
 
@@ -628,10 +603,7 @@ union cavm_ddf_inst_match_s
                                                                  0x13 = 20 bytes.
                                                                  0x17 = 24 bytes.
                                                                  _ ...
-                                                                 0x3F = 64 bytes.
-
-                                                                 Internal:
-                                                                 Must support non-power-of-2. */
+                                                                 0x3F = 64 bytes. */
         uint64_t nrec                  : 16; /**< [ 63: 48] Number of records to compare.
                                                                  Typically the same as the number of records in a record block.
                                                                  If 0x0, compare nothing and return DDF_COMP_E::NO_RB. */
@@ -774,10 +746,7 @@ union cavm_ddf_inst_match_s
                                                                  0x13 = 20 bytes.
                                                                  0x17 = 24 bytes.
                                                                  _ ...
-                                                                 0x3F = 64 bytes.
-
-                                                                 Internal:
-                                                                 Must support non-power-of-2. */
+                                                                 0x3F = 64 bytes. */
         uint64_t reserved_32_39        : 8;
         uint64_t reserved_23_31        : 9;
         uint64_t multm                 : 1;  /**< [ 22: 22] Multiple matches, applies to DDF_INST_MATCH_S::MATCH_SET,MATCH_INS,MATCH_DEL.
@@ -831,10 +800,7 @@ union cavm_ddf_inst_match_s
                                                                  0x13 = 20 bytes.
                                                                  0x17 = 24 bytes.
                                                                  _ ...
-                                                                 0x3F = 64 bytes.
-
-                                                                 Internal:
-                                                                 Must support non-power-of-2. */
+                                                                 0x3F = 64 bytes. */
         uint64_t nrec                  : 16; /**< [ 63: 48] Number of records to compare.
                                                                  Typically the same as the number of records in a record block.
                                                                  If 0x0, compare nothing and return DDF_COMP_E::NO_RB. */
@@ -977,10 +943,6 @@ union cavm_ddf_inst_match_s
  *
  * This structure is stored in memory as little-endian unless DDF()_PF_Q()_CTL[INST_BE]
  * is set.
- *
- * Internal:
- * When DDF_INST_FIND_S[RR] is set it can use a full-cacheline write with fewer than
- * a cache-lines worth of NCB data ticks.
  */
 union cavm_ddf_res_find_s
 {
@@ -1162,10 +1124,6 @@ union cavm_ddf_res_find_s
  *
  * This structure is stored in memory as little-endian unless DDF()_PF_Q()_CTL[INST_BE]
  * is set.
- *
- * Internal:
- * When DDF_INST_MATCH_S[RR] is set it can use a full-cacheline write with fewer than
- * a cache-lines worth of NCB data ticks.
  */
 union cavm_ddf_res_match_s
 {
@@ -1341,171 +1299,6 @@ union cavm_ddf_res_match_s
 };
 
 /**
- * Register (NCB) ddf#_cqm_core_obs0
- *
- * INTERNAL: DDF CQM Core Observability Debug Register
- */
-union cavm_ddfx_cqm_core_obs0
-{
-    uint64_t u;
-    struct cavm_ddfx_cqm_core_obs0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t instfif7_cnt          : 8;  /**< [ 63: 56](RO/H) Number of instruction words prefetched for group 7. */
-        uint64_t instfif6_cnt          : 8;  /**< [ 55: 48](RO/H) Number of instruction words prefetched for group 6. */
-        uint64_t instfif5_cnt          : 8;  /**< [ 47: 40](RO/H) Number of instruction words prefetched for group 5. */
-        uint64_t instfif4_cnt          : 8;  /**< [ 39: 32](RO/H) Number of instruction words prefetched for group 4. */
-        uint64_t instfif3_cnt          : 8;  /**< [ 31: 24](RO/H) Number of instruction words prefetched for group 3. */
-        uint64_t instfif2_cnt          : 8;  /**< [ 23: 16](RO/H) Number of instruction words prefetched for group 2. */
-        uint64_t instfif1_cnt          : 8;  /**< [ 15:  8](RO/H) Number of instruction words prefetched for group 1. */
-        uint64_t instfif0_cnt          : 8;  /**< [  7:  0](RO/H) Number of instruction words prefetched for group 0. */
-#else /* Word 0 - Little Endian */
-        uint64_t instfif0_cnt          : 8;  /**< [  7:  0](RO/H) Number of instruction words prefetched for group 0. */
-        uint64_t instfif1_cnt          : 8;  /**< [ 15:  8](RO/H) Number of instruction words prefetched for group 1. */
-        uint64_t instfif2_cnt          : 8;  /**< [ 23: 16](RO/H) Number of instruction words prefetched for group 2. */
-        uint64_t instfif3_cnt          : 8;  /**< [ 31: 24](RO/H) Number of instruction words prefetched for group 3. */
-        uint64_t instfif4_cnt          : 8;  /**< [ 39: 32](RO/H) Number of instruction words prefetched for group 4. */
-        uint64_t instfif5_cnt          : 8;  /**< [ 47: 40](RO/H) Number of instruction words prefetched for group 5. */
-        uint64_t instfif6_cnt          : 8;  /**< [ 55: 48](RO/H) Number of instruction words prefetched for group 6. */
-        uint64_t instfif7_cnt          : 8;  /**< [ 63: 56](RO/H) Number of instruction words prefetched for group 7. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_cqm_core_obs0_s cn; */
-};
-typedef union cavm_ddfx_cqm_core_obs0 cavm_ddfx_cqm_core_obs0_t;
-
-static inline uint64_t CAVM_DDFX_CQM_CORE_OBS0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_CQM_CORE_OBS0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x8090000001a0ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_CQM_CORE_OBS0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_CQM_CORE_OBS0(a) cavm_ddfx_cqm_core_obs0_t
-#define bustype_CAVM_DDFX_CQM_CORE_OBS0(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_CQM_CORE_OBS0(a) "DDFX_CQM_CORE_OBS0"
-#define device_bar_CAVM_DDFX_CQM_CORE_OBS0(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_CQM_CORE_OBS0(a) (a)
-#define arguments_CAVM_DDFX_CQM_CORE_OBS0(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_cqm_core_obs1
- *
- * INTERNAL: DDF CQM Core Observability Debug Register
- */
-union cavm_ddfx_cqm_core_obs1
-{
-    uint64_t u;
-    struct cavm_ddfx_cqm_core_obs1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_50_63        : 14;
-        uint64_t ncbi_ptr_req          : 1;  /**< [ 49: 49](RO/H) CQM_CORE is waiting to issue an NCBI Request for instruction pointer fetch */
-        uint64_t ncbi_req_rdy          : 1;  /**< [ 48: 48](RO/H) CQM_CORE is waiting to issue an NCBI Request for instruction fetch */
-        uint64_t grp_rdy_hi_pri        : 8;  /**< [ 47: 40](RO/H) If set the corresponding group has high priority queues waiting to fetch
-                                                                 instructions. */
-        uint64_t grp_rdy_lo_pri        : 8;  /**< [ 39: 32](RO/H) If set the corresponding group has low priority queues waiting to fetch */
-        uint64_t vqfif7_cnt            : 4;  /**< [ 31: 28](RO/H) Number of instructions getting prefetched for group 7. */
-        uint64_t vqfif6_cnt            : 4;  /**< [ 27: 24](RO/H) Number of instructions getting prefetched for group 6. */
-        uint64_t vqfif5_cnt            : 4;  /**< [ 23: 20](RO/H) Number of instructions getting prefetched for group 5. */
-        uint64_t vqfif4_cnt            : 4;  /**< [ 19: 16](RO/H) Number of instructions getting prefetched for group 4. */
-        uint64_t vqfif3_cnt            : 4;  /**< [ 15: 12](RO/H) Number of instructions getting prefetched for group 3. */
-        uint64_t vqfif2_cnt            : 4;  /**< [ 11:  8](RO/H) Number of instructions getting prefetched for group 2. */
-        uint64_t vqfif1_cnt            : 4;  /**< [  7:  4](RO/H) Number of instructions getting prefetched for group 1. */
-        uint64_t vqfif0_cnt            : 4;  /**< [  3:  0](RO/H) Number of instructions getting prefetched for group 0. */
-#else /* Word 0 - Little Endian */
-        uint64_t vqfif0_cnt            : 4;  /**< [  3:  0](RO/H) Number of instructions getting prefetched for group 0. */
-        uint64_t vqfif1_cnt            : 4;  /**< [  7:  4](RO/H) Number of instructions getting prefetched for group 1. */
-        uint64_t vqfif2_cnt            : 4;  /**< [ 11:  8](RO/H) Number of instructions getting prefetched for group 2. */
-        uint64_t vqfif3_cnt            : 4;  /**< [ 15: 12](RO/H) Number of instructions getting prefetched for group 3. */
-        uint64_t vqfif4_cnt            : 4;  /**< [ 19: 16](RO/H) Number of instructions getting prefetched for group 4. */
-        uint64_t vqfif5_cnt            : 4;  /**< [ 23: 20](RO/H) Number of instructions getting prefetched for group 5. */
-        uint64_t vqfif6_cnt            : 4;  /**< [ 27: 24](RO/H) Number of instructions getting prefetched for group 6. */
-        uint64_t vqfif7_cnt            : 4;  /**< [ 31: 28](RO/H) Number of instructions getting prefetched for group 7. */
-        uint64_t grp_rdy_lo_pri        : 8;  /**< [ 39: 32](RO/H) If set the corresponding group has low priority queues waiting to fetch */
-        uint64_t grp_rdy_hi_pri        : 8;  /**< [ 47: 40](RO/H) If set the corresponding group has high priority queues waiting to fetch
-                                                                 instructions. */
-        uint64_t ncbi_req_rdy          : 1;  /**< [ 48: 48](RO/H) CQM_CORE is waiting to issue an NCBI Request for instruction fetch */
-        uint64_t ncbi_ptr_req          : 1;  /**< [ 49: 49](RO/H) CQM_CORE is waiting to issue an NCBI Request for instruction pointer fetch */
-        uint64_t reserved_50_63        : 14;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_cqm_core_obs1_s cn; */
-};
-typedef union cavm_ddfx_cqm_core_obs1 cavm_ddfx_cqm_core_obs1_t;
-
-static inline uint64_t CAVM_DDFX_CQM_CORE_OBS1(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_CQM_CORE_OBS1(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x8090000001a8ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_CQM_CORE_OBS1", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_CQM_CORE_OBS1(a) cavm_ddfx_cqm_core_obs1_t
-#define bustype_CAVM_DDFX_CQM_CORE_OBS1(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_CQM_CORE_OBS1(a) "DDFX_CQM_CORE_OBS1"
-#define device_bar_CAVM_DDFX_CQM_CORE_OBS1(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_CQM_CORE_OBS1(a) (a)
-#define arguments_CAVM_DDFX_CQM_CORE_OBS1(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_ncbi_obs
- *
- * INTERNAL: DDF NCBI Observability Debug Register
- */
-union cavm_ddfx_ncbi_obs
-{
-    uint64_t u;
-    struct cavm_ddfx_ncbi_obs_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t datfif_cnt            : 8;  /**< [ 39: 32](RO/H) Number of pending data cycles to be sent to NCBI. */
-        uint64_t cmdfif_cnt            : 8;  /**< [ 31: 24](RO/H) Number of pending commands to be sent to NCBI. */
-        uint64_t reserved_22_23        : 2;
-        uint64_t csr_rsp_dat           : 1;  /**< [ 21: 21](RO/H) CSR Response data available to be sent to NCBI.                                            . */
-        uint64_t csr_rsp_val           : 1;  /**< [ 20: 20](RO/H) CSR Response available to be sent to NCBI. */
-        uint64_t csr_cc_req            : 4;  /**< [ 19: 16](RO/H) Transfer cycles requested for CSR responses. */
-        uint64_t res_cc_req            : 4;  /**< [ 15: 12](RO/H) Transfer cycles requested for result structure stores. */
-        uint64_t ifc_cc_req            : 4;  /**< [ 11:  8](RO/H) Transfer cycles requested for instruction fetches. */
-        uint64_t eng_cc_req            : 4;  /**< [  7:  4](RO/H) Transfer cycles requested from the engines. */
-        uint64_t cdei_cc_left          : 4;  /**< [  3:  0](RO/H) Transfer cycles remaining to complete receiving transaction from DDF_NCBI input. */
-#else /* Word 0 - Little Endian */
-        uint64_t cdei_cc_left          : 4;  /**< [  3:  0](RO/H) Transfer cycles remaining to complete receiving transaction from DDF_NCBI input. */
-        uint64_t eng_cc_req            : 4;  /**< [  7:  4](RO/H) Transfer cycles requested from the engines. */
-        uint64_t ifc_cc_req            : 4;  /**< [ 11:  8](RO/H) Transfer cycles requested for instruction fetches. */
-        uint64_t res_cc_req            : 4;  /**< [ 15: 12](RO/H) Transfer cycles requested for result structure stores. */
-        uint64_t csr_cc_req            : 4;  /**< [ 19: 16](RO/H) Transfer cycles requested for CSR responses. */
-        uint64_t csr_rsp_val           : 1;  /**< [ 20: 20](RO/H) CSR Response available to be sent to NCBI. */
-        uint64_t csr_rsp_dat           : 1;  /**< [ 21: 21](RO/H) CSR Response data available to be sent to NCBI.                                            . */
-        uint64_t reserved_22_23        : 2;
-        uint64_t cmdfif_cnt            : 8;  /**< [ 31: 24](RO/H) Number of pending commands to be sent to NCBI. */
-        uint64_t datfif_cnt            : 8;  /**< [ 39: 32](RO/H) Number of pending data cycles to be sent to NCBI. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_ncbi_obs_s cn; */
-};
-typedef union cavm_ddfx_ncbi_obs cavm_ddfx_ncbi_obs_t;
-
-static inline uint64_t CAVM_DDFX_NCBI_OBS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_NCBI_OBS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000190ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_NCBI_OBS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_NCBI_OBS(a) cavm_ddfx_ncbi_obs_t
-#define bustype_CAVM_DDFX_NCBI_OBS(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_NCBI_OBS(a) "DDFX_NCBI_OBS"
-#define device_bar_CAVM_DDFX_NCBI_OBS(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_NCBI_OBS(a) (a)
-#define arguments_CAVM_DDFX_NCBI_OBS(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) ddf#_pf_active_cycles_pc
  *
  * DDF PF Active Cycles Register
@@ -1516,13 +1309,9 @@ union cavm_ddfx_pf_active_cycles_pc
     struct cavm_ddfx_pf_active_cycles_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t act_cyc               : 64; /**< [ 63:  0](RO/H) Counts every coprocessor-clock cycle that the conditional clocks are active.
-                                                                 Internal:
-                                                                 Includes CDE internal or any engine clock being enabled. */
+        uint64_t act_cyc               : 64; /**< [ 63:  0](RO/H) Counts every coprocessor-clock cycle that the conditional clocks are active. */
 #else /* Word 0 - Little Endian */
-        uint64_t act_cyc               : 64; /**< [ 63:  0](RO/H) Counts every coprocessor-clock cycle that the conditional clocks are active.
-                                                                 Internal:
-                                                                 Includes CDE internal or any engine clock being enabled. */
+        uint64_t act_cyc               : 64; /**< [ 63:  0](RO/H) Counts every coprocessor-clock cycle that the conditional clocks are active. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_ddfx_pf_active_cycles_pc_s cn; */
@@ -1582,156 +1371,6 @@ static inline uint64_t CAVM_DDFX_PF_BIST_STATUS(uint64_t a)
 #define device_bar_CAVM_DDFX_PF_BIST_STATUS(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_DDFX_PF_BIST_STATUS(a) (a)
 #define arguments_CAVM_DDFX_PF_BIST_STATUS(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_bp_test
- *
- * INTERNAL: DDF PF Backpressure Test Register
- */
-union cavm_ddfx_pf_bp_test
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = NCBI requests.
-                                                                 \<62\> = Instruction prefetching.
-                                                                 \<61\> = GMID RAM access arbitration.
-                                                                 \<60\> = Reserved. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = NCBI requests.
-                                                                 \<62\> = Instruction prefetching.
-                                                                 \<61\> = GMID RAM access arbitration.
-                                                                 \<60\> = Reserved. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_bp_test_s cn; */
-};
-typedef union cavm_ddfx_pf_bp_test cavm_ddfx_pf_bp_test_t;
-
-static inline uint64_t CAVM_DDFX_PF_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000180ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_BP_TEST(a) cavm_ddfx_pf_bp_test_t
-#define bustype_CAVM_DDFX_PF_BP_TEST(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_BP_TEST(a) "DDFX_PF_BP_TEST"
-#define device_bar_CAVM_DDFX_PF_BP_TEST(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_BP_TEST(a) (a)
-#define arguments_CAVM_DDFX_PF_BP_TEST(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_bp_test0
- *
- * INTERNAL: DDF Backpressure Test Register 0
- */
-union cavm_ddfx_pf_bp_test0
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_bp_test0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 5;  /**< [ 63: 59](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = LD/ST State machine Back Pressure.
-                                                                 \<62\> = DREQ aribter enable.
-                                                                 \<61\> = dmem arbiter enable.
-                                                                 \<60\> = Line release arbiter enable.
-                                                                 \<59\> = CAM arbiter enable. */
-        uint64_t reserved_26_58        : 33;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<25:23\> = BP_CFG4.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<25:23\> = BP_CFG4.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_26_58        : 33;
-        uint64_t enable                : 5;  /**< [ 63: 59](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = LD/ST State machine Back Pressure.
-                                                                 \<62\> = DREQ aribter enable.
-                                                                 \<61\> = dmem arbiter enable.
-                                                                 \<60\> = Line release arbiter enable.
-                                                                 \<59\> = CAM arbiter enable. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_bp_test0_s cn; */
-};
-typedef union cavm_ddfx_pf_bp_test0 cavm_ddfx_pf_bp_test0_t;
-
-static inline uint64_t CAVM_DDFX_PF_BP_TEST0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_BP_TEST0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809008001200ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_BP_TEST0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_BP_TEST0(a) cavm_ddfx_pf_bp_test0_t
-#define bustype_CAVM_DDFX_PF_BP_TEST0(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_BP_TEST0(a) "DDFX_PF_BP_TEST0"
-#define device_bar_CAVM_DDFX_PF_BP_TEST0(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_BP_TEST0(a) (a)
-#define arguments_CAVM_DDFX_PF_BP_TEST0(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) ddf#_pf_cac_miss_pc
@@ -1821,14 +1460,9 @@ union cavm_ddfx_pf_ctl
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_12_63        : 52;
-        uint64_t fault_dis             : 1;  /**< [ 11: 11](R/W) Disable LD/ST fault detection. For diagnostic use only.
-                                                                 Internal:
-                                                                 To override fault consequences. */
+        uint64_t fault_dis             : 1;  /**< [ 11: 11](R/W) Disable LD/ST fault detection. For diagnostic use only. */
         uint64_t stdn_sync_dis         : 1;  /**< [ 10: 10](R/W) Disable gating of result store on receipt of all NCB store-done's associated with cache
-                                                                 flushes.  For diagnostic use only.
-
-                                                                 Internal:
-                                                                 To override stdn_sync halts. */
+                                                                 flushes.  For diagnostic use only. */
         uint64_t cacgang_disable       : 1;  /**< [  9:  9](R/W) Disable LRU gang list. For diagnostic use only. */
         uint64_t cacfree_thrsh         : 2;  /**< [  8:  7](R/W) Minimum number of cache entries to keep available for new instructions, equals 2^[3+CACFREE_THRSH]. */
         uint64_t eng_disable           : 4;  /**< [  6:  3](R/W) Set to disable individual filter and record engines. Bit 0 for fproc0, bit 1 for fproc1,
@@ -1847,13 +1481,8 @@ union cavm_ddfx_pf_ctl
         uint64_t cacfree_thrsh         : 2;  /**< [  8:  7](R/W) Minimum number of cache entries to keep available for new instructions, equals 2^[3+CACFREE_THRSH]. */
         uint64_t cacgang_disable       : 1;  /**< [  9:  9](R/W) Disable LRU gang list. For diagnostic use only. */
         uint64_t stdn_sync_dis         : 1;  /**< [ 10: 10](R/W) Disable gating of result store on receipt of all NCB store-done's associated with cache
-                                                                 flushes.  For diagnostic use only.
-
-                                                                 Internal:
-                                                                 To override stdn_sync halts. */
-        uint64_t fault_dis             : 1;  /**< [ 11: 11](R/W) Disable LD/ST fault detection. For diagnostic use only.
-                                                                 Internal:
-                                                                 To override fault consequences. */
+                                                                 flushes.  For diagnostic use only. */
+        uint64_t fault_dis             : 1;  /**< [ 11: 11](R/W) Disable LD/ST fault detection. For diagnostic use only. */
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } s;
@@ -2319,45 +1948,6 @@ static inline uint64_t CAVM_DDFX_PF_ECC0_INT_W1S(uint64_t a)
 #define arguments_CAVM_DDFX_PF_ECC0_INT_W1S(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) ddf#_pf_eco
- *
- * INTERNAL: DDF PF ECO Register
- */
-union cavm_ddfx_pf_eco
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_eco_s cn; */
-};
-typedef union cavm_ddfx_pf_eco cavm_ddfx_pf_eco_t;
-
-static inline uint64_t CAVM_DDFX_PF_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000140ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_ECO(a) cavm_ddfx_pf_eco_t
-#define bustype_CAVM_DDFX_PF_ECO(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_ECO(a) "DDFX_PF_ECO"
-#define device_bar_CAVM_DDFX_PF_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_ECO(a) (a)
-#define arguments_CAVM_DDFX_PF_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) ddf#_pf_inst_latency_pc
  *
  * DDF PF Instruction Latency Counter Register
@@ -2714,304 +2304,6 @@ static inline uint64_t CAVM_DDFX_PF_MSIX_VECX_CTL(uint64_t a, uint64_t b)
 #define device_bar_CAVM_DDFX_PF_MSIX_VECX_CTL(a,b) 0x4 /* PF_BAR4 */
 #define busnum_CAVM_DDFX_PF_MSIX_VECX_CTL(a,b) (a)
 #define arguments_CAVM_DDFX_PF_MSIX_VECX_CTL(a,b) (a),(b),-1,-1
-
-/**
- * Register (NCB) ddf#_pf_noint0_ena_w1c
- *
- * INTERNAL: DDF Unused Interrupt Enable Clear Registers
- *
- * This register clears interrupt enable bits.
- */
-union cavm_ddfx_pf_noint0_ena_w1c
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_noint0_ena_w1c_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t noint0                : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for DDF(0)_PF_NOINT0_INT[NOINT0]. */
-#else /* Word 0 - Little Endian */
-        uint64_t noint0                : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for DDF(0)_PF_NOINT0_INT[NOINT0]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_noint0_ena_w1c_s cn; */
-};
-typedef union cavm_ddfx_pf_noint0_ena_w1c cavm_ddfx_pf_noint0_ena_w1c_t;
-
-static inline uint64_t CAVM_DDFX_PF_NOINT0_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_NOINT0_ENA_W1C(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000540ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_NOINT0_ENA_W1C", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_NOINT0_ENA_W1C(a) cavm_ddfx_pf_noint0_ena_w1c_t
-#define bustype_CAVM_DDFX_PF_NOINT0_ENA_W1C(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_NOINT0_ENA_W1C(a) "DDFX_PF_NOINT0_ENA_W1C"
-#define device_bar_CAVM_DDFX_PF_NOINT0_ENA_W1C(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_NOINT0_ENA_W1C(a) (a)
-#define arguments_CAVM_DDFX_PF_NOINT0_ENA_W1C(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_noint0_ena_w1s
- *
- * INTERNAL: DDF Unused Interrupt Enable Set Registers
- *
- * This register sets interrupt enable bits.
- */
-union cavm_ddfx_pf_noint0_ena_w1s
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_noint0_ena_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t noint0                : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for DDF(0)_PF_NOINT0_INT[NOINT0]. */
-#else /* Word 0 - Little Endian */
-        uint64_t noint0                : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for DDF(0)_PF_NOINT0_INT[NOINT0]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_noint0_ena_w1s_s cn; */
-};
-typedef union cavm_ddfx_pf_noint0_ena_w1s cavm_ddfx_pf_noint0_ena_w1s_t;
-
-static inline uint64_t CAVM_DDFX_PF_NOINT0_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_NOINT0_ENA_W1S(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000560ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_NOINT0_ENA_W1S", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_NOINT0_ENA_W1S(a) cavm_ddfx_pf_noint0_ena_w1s_t
-#define bustype_CAVM_DDFX_PF_NOINT0_ENA_W1S(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_NOINT0_ENA_W1S(a) "DDFX_PF_NOINT0_ENA_W1S"
-#define device_bar_CAVM_DDFX_PF_NOINT0_ENA_W1S(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_NOINT0_ENA_W1S(a) (a)
-#define arguments_CAVM_DDFX_PF_NOINT0_ENA_W1S(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_noint0_int
- *
- * INTERNAL: DDF Unused Interrupt Registers
- *
- * Internal:
- * This register exists only to aid alignment with CDE interrupts.
- */
-union cavm_ddfx_pf_noint0_int
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_noint0_int_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t noint0                : 64; /**< [ 63:  0](R/W1C/H) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t noint0                : 64; /**< [ 63:  0](R/W1C/H) Reserved. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_noint0_int_s cn; */
-};
-typedef union cavm_ddfx_pf_noint0_int cavm_ddfx_pf_noint0_int_t;
-
-static inline uint64_t CAVM_DDFX_PF_NOINT0_INT(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_NOINT0_INT(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000500ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_NOINT0_INT", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_NOINT0_INT(a) cavm_ddfx_pf_noint0_int_t
-#define bustype_CAVM_DDFX_PF_NOINT0_INT(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_NOINT0_INT(a) "DDFX_PF_NOINT0_INT"
-#define device_bar_CAVM_DDFX_PF_NOINT0_INT(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_NOINT0_INT(a) (a)
-#define arguments_CAVM_DDFX_PF_NOINT0_INT(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_noint0_int_w1s
- *
- * INTERNAL: DDF Unused Interrupt Set Registers
- *
- * This register sets interrupt bits.
- */
-union cavm_ddfx_pf_noint0_int_w1s
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_noint0_int_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t noint0                : 64; /**< [ 63:  0](R/W1S/H) Reads or sets DDF(0)_PF_NOINT0_INT[NOINT0]. */
-#else /* Word 0 - Little Endian */
-        uint64_t noint0                : 64; /**< [ 63:  0](R/W1S/H) Reads or sets DDF(0)_PF_NOINT0_INT[NOINT0]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_noint0_int_w1s_s cn; */
-};
-typedef union cavm_ddfx_pf_noint0_int_w1s cavm_ddfx_pf_noint0_int_w1s_t;
-
-static inline uint64_t CAVM_DDFX_PF_NOINT0_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_NOINT0_INT_W1S(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000520ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_NOINT0_INT_W1S", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_NOINT0_INT_W1S(a) cavm_ddfx_pf_noint0_int_w1s_t
-#define bustype_CAVM_DDFX_PF_NOINT0_INT_W1S(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_NOINT0_INT_W1S(a) "DDFX_PF_NOINT0_INT_W1S"
-#define device_bar_CAVM_DDFX_PF_NOINT0_INT_W1S(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_NOINT0_INT_W1S(a) (a)
-#define arguments_CAVM_DDFX_PF_NOINT0_INT_W1S(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_noint1_ena_w1c
- *
- * INTERNAL: DDF Unused Interrupt Enable Clear Registers
- *
- * This register clears interrupt enable bits.
- */
-union cavm_ddfx_pf_noint1_ena_w1c
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_noint1_ena_w1c_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t noint1                : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for DDF(0)_PF_NOINT1_INT[NOINT1]. */
-#else /* Word 0 - Little Endian */
-        uint64_t noint1                : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for DDF(0)_PF_NOINT1_INT[NOINT1]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_noint1_ena_w1c_s cn; */
-};
-typedef union cavm_ddfx_pf_noint1_ena_w1c cavm_ddfx_pf_noint1_ena_w1c_t;
-
-static inline uint64_t CAVM_DDFX_PF_NOINT1_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_NOINT1_ENA_W1C(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x8090000005a0ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_NOINT1_ENA_W1C", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_NOINT1_ENA_W1C(a) cavm_ddfx_pf_noint1_ena_w1c_t
-#define bustype_CAVM_DDFX_PF_NOINT1_ENA_W1C(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_NOINT1_ENA_W1C(a) "DDFX_PF_NOINT1_ENA_W1C"
-#define device_bar_CAVM_DDFX_PF_NOINT1_ENA_W1C(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_NOINT1_ENA_W1C(a) (a)
-#define arguments_CAVM_DDFX_PF_NOINT1_ENA_W1C(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_noint1_ena_w1s
- *
- * INTERNAL: DDF Unused Interrupt Enable Set Registers
- *
- * This register sets interrupt enable bits.
- */
-union cavm_ddfx_pf_noint1_ena_w1s
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_noint1_ena_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t noint1                : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for DDF(0)_PF_NOINT1_INT[NOINT1]. */
-#else /* Word 0 - Little Endian */
-        uint64_t noint1                : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for DDF(0)_PF_NOINT1_INT[NOINT1]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_noint1_ena_w1s_s cn; */
-};
-typedef union cavm_ddfx_pf_noint1_ena_w1s cavm_ddfx_pf_noint1_ena_w1s_t;
-
-static inline uint64_t CAVM_DDFX_PF_NOINT1_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_NOINT1_ENA_W1S(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x8090000005b0ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_NOINT1_ENA_W1S", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_NOINT1_ENA_W1S(a) cavm_ddfx_pf_noint1_ena_w1s_t
-#define bustype_CAVM_DDFX_PF_NOINT1_ENA_W1S(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_NOINT1_ENA_W1S(a) "DDFX_PF_NOINT1_ENA_W1S"
-#define device_bar_CAVM_DDFX_PF_NOINT1_ENA_W1S(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_NOINT1_ENA_W1S(a) (a)
-#define arguments_CAVM_DDFX_PF_NOINT1_ENA_W1S(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_noint1_int
- *
- * INTERNAL: DDF Unused Interrupt Registers
- *
- * Internal:
- * This register exists only to aid alignment with CDE interrupts.
- */
-union cavm_ddfx_pf_noint1_int
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_noint1_int_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t noint1                : 64; /**< [ 63:  0](R/W1C/H) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t noint1                : 64; /**< [ 63:  0](R/W1C/H) Reserved. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_noint1_int_s cn; */
-};
-typedef union cavm_ddfx_pf_noint1_int cavm_ddfx_pf_noint1_int_t;
-
-static inline uint64_t CAVM_DDFX_PF_NOINT1_INT(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_NOINT1_INT(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000580ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_NOINT1_INT", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_NOINT1_INT(a) cavm_ddfx_pf_noint1_int_t
-#define bustype_CAVM_DDFX_PF_NOINT1_INT(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_NOINT1_INT(a) "DDFX_PF_NOINT1_INT"
-#define device_bar_CAVM_DDFX_PF_NOINT1_INT(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_NOINT1_INT(a) (a)
-#define arguments_CAVM_DDFX_PF_NOINT1_INT(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) ddf#_pf_noint1_int_w1s
- *
- * INTERNAL: DDF Unused Interrupt Set Registers
- *
- * This register sets interrupt bits.
- */
-union cavm_ddfx_pf_noint1_int_w1s
-{
-    uint64_t u;
-    struct cavm_ddfx_pf_noint1_int_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t noint1                : 64; /**< [ 63:  0](R/W1S/H) Reads or sets DDF(0)_PF_NOINT1_INT[NOINT1]. */
-#else /* Word 0 - Little Endian */
-        uint64_t noint1                : 64; /**< [ 63:  0](R/W1S/H) Reads or sets DDF(0)_PF_NOINT1_INT[NOINT1]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ddfx_pf_noint1_int_w1s_s cn; */
-};
-typedef union cavm_ddfx_pf_noint1_int_w1s cavm_ddfx_pf_noint1_int_w1s_t;
-
-static inline uint64_t CAVM_DDFX_PF_NOINT1_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DDFX_PF_NOINT1_INT_W1S(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
-        return 0x809000000590ll + 0ll * ((a) & 0x0);
-    __cavm_csr_fatal("DDFX_PF_NOINT1_INT_W1S", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DDFX_PF_NOINT1_INT_W1S(a) cavm_ddfx_pf_noint1_int_w1s_t
-#define bustype_CAVM_DDFX_PF_NOINT1_INT_W1S(a) CSR_TYPE_NCB
-#define basename_CAVM_DDFX_PF_NOINT1_INT_W1S(a) "DDFX_PF_NOINT1_INT_W1S"
-#define device_bar_CAVM_DDFX_PF_NOINT1_INT_W1S(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DDFX_PF_NOINT1_INT_W1S(a) (a)
-#define arguments_CAVM_DDFX_PF_NOINT1_INT_W1S(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) ddf#_pf_q#_ctl

@@ -86,10 +86,7 @@ union cavm_cde_inst_s
 
                                                                  Bits \<3:0\> must be zero; address must be 16-byte aligned.  Bits \<63:49\> are
                                                                  ignored by hardware; software should use a sign-extended bit \<48\> for forward
-                                                                 compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<3:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 compatibility. */
 #else /* Word 1 - Little Endian */
         uint64_t res_addr              : 64; /**< [127: 64] Result IOVA.
                                                                  If nonzero, specifies where to write CDE_RES_S.
@@ -97,10 +94,7 @@ union cavm_cde_inst_s
 
                                                                  Bits \<3:0\> must be zero; address must be 16-byte aligned.  Bits \<63:49\> are
                                                                  ignored by hardware; software should use a sign-extended bit \<48\> for forward
-                                                                 compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<3:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 compatibility. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t reserved_172_191      : 20;
@@ -125,20 +119,14 @@ union cavm_cde_inst_s
                                                                  visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:49\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<48\> for forward compatibility. */
 #else /* Word 3 - Little Endian */
         uint64_t wq_ptr                : 64; /**< [255:192] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that CDE submits
                                                                  work to SSO after all context, output data, and result write operations are
                                                                  visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:49\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<48\> for forward compatibility. */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t ei0                   : 64; /**< [319:256] Defined by engines. */
@@ -227,10 +215,7 @@ union cavm_cde_inst_s
 
                                                                  Bits \<3:0\> must be zero; address must be 16-byte aligned.  Bits \<63:49\> are
                                                                  ignored by hardware; software should use a sign-extended bit \<48\> for forward
-                                                                 compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<3:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 compatibility. */
 #else /* Word 1 - Little Endian */
         uint64_t res_addr              : 64; /**< [127: 64] Result IOVA.
                                                                  If nonzero, specifies where to write CDE_RES_S.
@@ -238,10 +223,7 @@ union cavm_cde_inst_s
 
                                                                  Bits \<3:0\> must be zero; address must be 16-byte aligned.  Bits \<63:49\> are
                                                                  ignored by hardware; software should use a sign-extended bit \<48\> for forward
-                                                                 compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<3:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 compatibility. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t reserved_172_191      : 20;
@@ -266,20 +248,14 @@ union cavm_cde_inst_s
                                                                  visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:49\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<48\> for forward compatibility. */
 #else /* Word 3 - Little Endian */
         uint64_t wq_ptr                : 64; /**< [255:192] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that CDE submits
                                                                  work to SSO after all context, output data, and result write operations are
                                                                  visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:49\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<48\> for forward compatibility. */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t ei0                   : 64; /**< [319:256] Defined by engines. */
@@ -398,171 +374,6 @@ union cavm_cde_res_s
 };
 
 /**
- * Register (NCB) cde#_cqm_core_obs0
- *
- * INTERNAL: CDE CQM Core Observability Debug Register
- */
-union cavm_cdex_cqm_core_obs0
-{
-    uint64_t u;
-    struct cavm_cdex_cqm_core_obs0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t instfif7_cnt          : 8;  /**< [ 63: 56](RO/H) Number of instruction words prefetched for group 7. */
-        uint64_t instfif6_cnt          : 8;  /**< [ 55: 48](RO/H) Number of instruction words prefetched for group 6. */
-        uint64_t instfif5_cnt          : 8;  /**< [ 47: 40](RO/H) Number of instruction words prefetched for group 5. */
-        uint64_t instfif4_cnt          : 8;  /**< [ 39: 32](RO/H) Number of instruction words prefetched for group 4. */
-        uint64_t instfif3_cnt          : 8;  /**< [ 31: 24](RO/H) Number of instruction words prefetched for group 3. */
-        uint64_t instfif2_cnt          : 8;  /**< [ 23: 16](RO/H) Number of instruction words prefetched for group 2. */
-        uint64_t instfif1_cnt          : 8;  /**< [ 15:  8](RO/H) Number of instruction words prefetched for group 1. */
-        uint64_t instfif0_cnt          : 8;  /**< [  7:  0](RO/H) Number of instruction words prefetched for group 0. */
-#else /* Word 0 - Little Endian */
-        uint64_t instfif0_cnt          : 8;  /**< [  7:  0](RO/H) Number of instruction words prefetched for group 0. */
-        uint64_t instfif1_cnt          : 8;  /**< [ 15:  8](RO/H) Number of instruction words prefetched for group 1. */
-        uint64_t instfif2_cnt          : 8;  /**< [ 23: 16](RO/H) Number of instruction words prefetched for group 2. */
-        uint64_t instfif3_cnt          : 8;  /**< [ 31: 24](RO/H) Number of instruction words prefetched for group 3. */
-        uint64_t instfif4_cnt          : 8;  /**< [ 39: 32](RO/H) Number of instruction words prefetched for group 4. */
-        uint64_t instfif5_cnt          : 8;  /**< [ 47: 40](RO/H) Number of instruction words prefetched for group 5. */
-        uint64_t instfif6_cnt          : 8;  /**< [ 55: 48](RO/H) Number of instruction words prefetched for group 6. */
-        uint64_t instfif7_cnt          : 8;  /**< [ 63: 56](RO/H) Number of instruction words prefetched for group 7. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cdex_cqm_core_obs0_s cn; */
-};
-typedef union cavm_cdex_cqm_core_obs0 cavm_cdex_cqm_core_obs0_t;
-
-static inline uint64_t CAVM_CDEX_CQM_CORE_OBS0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CDEX_CQM_CORE_OBS0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
-        return 0x80c0000001a0ll + 0x1000000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("CDEX_CQM_CORE_OBS0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CDEX_CQM_CORE_OBS0(a) cavm_cdex_cqm_core_obs0_t
-#define bustype_CAVM_CDEX_CQM_CORE_OBS0(a) CSR_TYPE_NCB
-#define basename_CAVM_CDEX_CQM_CORE_OBS0(a) "CDEX_CQM_CORE_OBS0"
-#define device_bar_CAVM_CDEX_CQM_CORE_OBS0(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CDEX_CQM_CORE_OBS0(a) (a)
-#define arguments_CAVM_CDEX_CQM_CORE_OBS0(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) cde#_cqm_core_obs1
- *
- * INTERNAL: CDE CQM Core Observability Debug Register
- */
-union cavm_cdex_cqm_core_obs1
-{
-    uint64_t u;
-    struct cavm_cdex_cqm_core_obs1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_50_63        : 14;
-        uint64_t ncbi_ptr_req          : 1;  /**< [ 49: 49](RO/H) CQM_CORE is waiting to issue an NCBI Request for instruction pointer fetch */
-        uint64_t ncbi_req_rdy          : 1;  /**< [ 48: 48](RO/H) CQM_CORE is waiting to issue an NCBI Request for instruction fetch */
-        uint64_t grp_rdy_hi_pri        : 8;  /**< [ 47: 40](RO/H) If set the corresponding group has high priority queues waiting to fetch
-                                                                 instructions. */
-        uint64_t grp_rdy_lo_pri        : 8;  /**< [ 39: 32](RO/H) If set the corresponding group has low priority queues waiting to fetch */
-        uint64_t vqfif7_cnt            : 4;  /**< [ 31: 28](RO/H) Number of instructions getting prefetched for group 7. */
-        uint64_t vqfif6_cnt            : 4;  /**< [ 27: 24](RO/H) Number of instructions getting prefetched for group 6. */
-        uint64_t vqfif5_cnt            : 4;  /**< [ 23: 20](RO/H) Number of instructions getting prefetched for group 5. */
-        uint64_t vqfif4_cnt            : 4;  /**< [ 19: 16](RO/H) Number of instructions getting prefetched for group 4. */
-        uint64_t vqfif3_cnt            : 4;  /**< [ 15: 12](RO/H) Number of instructions getting prefetched for group 3. */
-        uint64_t vqfif2_cnt            : 4;  /**< [ 11:  8](RO/H) Number of instructions getting prefetched for group 2. */
-        uint64_t vqfif1_cnt            : 4;  /**< [  7:  4](RO/H) Number of instructions getting prefetched for group 1. */
-        uint64_t vqfif0_cnt            : 4;  /**< [  3:  0](RO/H) Number of instructions getting prefetched for group 0. */
-#else /* Word 0 - Little Endian */
-        uint64_t vqfif0_cnt            : 4;  /**< [  3:  0](RO/H) Number of instructions getting prefetched for group 0. */
-        uint64_t vqfif1_cnt            : 4;  /**< [  7:  4](RO/H) Number of instructions getting prefetched for group 1. */
-        uint64_t vqfif2_cnt            : 4;  /**< [ 11:  8](RO/H) Number of instructions getting prefetched for group 2. */
-        uint64_t vqfif3_cnt            : 4;  /**< [ 15: 12](RO/H) Number of instructions getting prefetched for group 3. */
-        uint64_t vqfif4_cnt            : 4;  /**< [ 19: 16](RO/H) Number of instructions getting prefetched for group 4. */
-        uint64_t vqfif5_cnt            : 4;  /**< [ 23: 20](RO/H) Number of instructions getting prefetched for group 5. */
-        uint64_t vqfif6_cnt            : 4;  /**< [ 27: 24](RO/H) Number of instructions getting prefetched for group 6. */
-        uint64_t vqfif7_cnt            : 4;  /**< [ 31: 28](RO/H) Number of instructions getting prefetched for group 7. */
-        uint64_t grp_rdy_lo_pri        : 8;  /**< [ 39: 32](RO/H) If set the corresponding group has low priority queues waiting to fetch */
-        uint64_t grp_rdy_hi_pri        : 8;  /**< [ 47: 40](RO/H) If set the corresponding group has high priority queues waiting to fetch
-                                                                 instructions. */
-        uint64_t ncbi_req_rdy          : 1;  /**< [ 48: 48](RO/H) CQM_CORE is waiting to issue an NCBI Request for instruction fetch */
-        uint64_t ncbi_ptr_req          : 1;  /**< [ 49: 49](RO/H) CQM_CORE is waiting to issue an NCBI Request for instruction pointer fetch */
-        uint64_t reserved_50_63        : 14;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cdex_cqm_core_obs1_s cn; */
-};
-typedef union cavm_cdex_cqm_core_obs1 cavm_cdex_cqm_core_obs1_t;
-
-static inline uint64_t CAVM_CDEX_CQM_CORE_OBS1(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CDEX_CQM_CORE_OBS1(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
-        return 0x80c0000001a8ll + 0x1000000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("CDEX_CQM_CORE_OBS1", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CDEX_CQM_CORE_OBS1(a) cavm_cdex_cqm_core_obs1_t
-#define bustype_CAVM_CDEX_CQM_CORE_OBS1(a) CSR_TYPE_NCB
-#define basename_CAVM_CDEX_CQM_CORE_OBS1(a) "CDEX_CQM_CORE_OBS1"
-#define device_bar_CAVM_CDEX_CQM_CORE_OBS1(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CDEX_CQM_CORE_OBS1(a) (a)
-#define arguments_CAVM_CDEX_CQM_CORE_OBS1(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) cde#_ncbi_obs
- *
- * INTERNAL: CDE NCBI Observability Debug Register
- */
-union cavm_cdex_ncbi_obs
-{
-    uint64_t u;
-    struct cavm_cdex_ncbi_obs_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t datfif_cnt            : 8;  /**< [ 39: 32](RO/H) Number of pending data cycles to be sent to NCBI. */
-        uint64_t cmdfif_cnt            : 8;  /**< [ 31: 24](RO/H) Number of pending commands to be sent to NCBI. */
-        uint64_t reserved_22_23        : 2;
-        uint64_t csr_rsp_dat           : 1;  /**< [ 21: 21](RO/H) CSR Response data available to be sent to NCBI.                                            . */
-        uint64_t csr_rsp_val           : 1;  /**< [ 20: 20](RO/H) CSR Response available to be sent to NCBI. */
-        uint64_t csr_cc_req            : 4;  /**< [ 19: 16](RO/H) Transfer cycles requested for CSR responses. */
-        uint64_t res_cc_req            : 4;  /**< [ 15: 12](RO/H) Transfer cycles requested for result structure stores. */
-        uint64_t ifc_cc_req            : 4;  /**< [ 11:  8](RO/H) Transfer cycles requested for instruction fetches. */
-        uint64_t eng_cc_req            : 4;  /**< [  7:  4](RO/H) Transfer cycles requested from the engines. */
-        uint64_t cdei_cc_left          : 4;  /**< [  3:  0](RO/H) Transfer cycles remaining to complete receiving transaction from CDE_NCBI input. */
-#else /* Word 0 - Little Endian */
-        uint64_t cdei_cc_left          : 4;  /**< [  3:  0](RO/H) Transfer cycles remaining to complete receiving transaction from CDE_NCBI input. */
-        uint64_t eng_cc_req            : 4;  /**< [  7:  4](RO/H) Transfer cycles requested from the engines. */
-        uint64_t ifc_cc_req            : 4;  /**< [ 11:  8](RO/H) Transfer cycles requested for instruction fetches. */
-        uint64_t res_cc_req            : 4;  /**< [ 15: 12](RO/H) Transfer cycles requested for result structure stores. */
-        uint64_t csr_cc_req            : 4;  /**< [ 19: 16](RO/H) Transfer cycles requested for CSR responses. */
-        uint64_t csr_rsp_val           : 1;  /**< [ 20: 20](RO/H) CSR Response available to be sent to NCBI. */
-        uint64_t csr_rsp_dat           : 1;  /**< [ 21: 21](RO/H) CSR Response data available to be sent to NCBI.                                            . */
-        uint64_t reserved_22_23        : 2;
-        uint64_t cmdfif_cnt            : 8;  /**< [ 31: 24](RO/H) Number of pending commands to be sent to NCBI. */
-        uint64_t datfif_cnt            : 8;  /**< [ 39: 32](RO/H) Number of pending data cycles to be sent to NCBI. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cdex_ncbi_obs_s cn; */
-};
-typedef union cavm_cdex_ncbi_obs cavm_cdex_ncbi_obs_t;
-
-static inline uint64_t CAVM_CDEX_NCBI_OBS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CDEX_NCBI_OBS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
-        return 0x80c000000190ll + 0x1000000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("CDEX_NCBI_OBS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CDEX_NCBI_OBS(a) cavm_cdex_ncbi_obs_t
-#define bustype_CAVM_CDEX_NCBI_OBS(a) CSR_TYPE_NCB
-#define basename_CAVM_CDEX_NCBI_OBS(a) "CDEX_NCBI_OBS"
-#define device_bar_CAVM_CDEX_NCBI_OBS(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CDEX_NCBI_OBS(a) (a)
-#define arguments_CAVM_CDEX_NCBI_OBS(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) cde#_pf_active_cycles_pc
  *
  * CDE PF Active Cycles Register
@@ -573,13 +384,9 @@ union cavm_cdex_pf_active_cycles_pc
     struct cavm_cdex_pf_active_cycles_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t act_cyc               : 64; /**< [ 63:  0](RO/H) Counts every coprocessor-clock cycle that the conditional clocks are active.
-                                                                 Internal:
-                                                                 Includes CDE internal or any engine clock being enabled. */
+        uint64_t act_cyc               : 64; /**< [ 63:  0](RO/H) Counts every coprocessor-clock cycle that the conditional clocks are active. */
 #else /* Word 0 - Little Endian */
-        uint64_t act_cyc               : 64; /**< [ 63:  0](RO/H) Counts every coprocessor-clock cycle that the conditional clocks are active.
-                                                                 Internal:
-                                                                 Includes CDE internal or any engine clock being enabled. */
+        uint64_t act_cyc               : 64; /**< [ 63:  0](RO/H) Counts every coprocessor-clock cycle that the conditional clocks are active. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_cdex_pf_active_cycles_pc_s cn; */
@@ -600,79 +407,6 @@ static inline uint64_t CAVM_CDEX_PF_ACTIVE_CYCLES_PC(uint64_t a)
 #define device_bar_CAVM_CDEX_PF_ACTIVE_CYCLES_PC(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_CDEX_PF_ACTIVE_CYCLES_PC(a) (a)
 #define arguments_CAVM_CDEX_PF_ACTIVE_CYCLES_PC(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) cde#_pf_bp_test
- *
- * INTERNAL: CDE PF Backpressure Test Register
- */
-union cavm_cdex_pf_bp_test
-{
-    uint64_t u;
-    struct cavm_cdex_pf_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = NCBI requests.
-                                                                 \<62\> = Instruction prefetching.
-                                                                 \<61\> = GMID RAM access arbitration.
-                                                                 \<60\> = Reserved. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = NCBI requests.
-                                                                 \<62\> = Instruction prefetching.
-                                                                 \<61\> = GMID RAM access arbitration.
-                                                                 \<60\> = Reserved. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cdex_pf_bp_test_s cn; */
-};
-typedef union cavm_cdex_pf_bp_test cavm_cdex_pf_bp_test_t;
-
-static inline uint64_t CAVM_CDEX_PF_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CDEX_PF_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
-        return 0x80c000000180ll + 0x1000000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("CDEX_PF_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CDEX_PF_BP_TEST(a) cavm_cdex_pf_bp_test_t
-#define bustype_CAVM_CDEX_PF_BP_TEST(a) CSR_TYPE_NCB
-#define basename_CAVM_CDEX_PF_BP_TEST(a) "CDEX_PF_BP_TEST"
-#define device_bar_CAVM_CDEX_PF_BP_TEST(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CDEX_PF_BP_TEST(a) (a)
-#define arguments_CAVM_CDEX_PF_BP_TEST(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) cde#_pf_diag
@@ -717,45 +451,6 @@ static inline uint64_t CAVM_CDEX_PF_DIAG(uint64_t a)
 #define device_bar_CAVM_CDEX_PF_DIAG(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_CDEX_PF_DIAG(a) (a)
 #define arguments_CAVM_CDEX_PF_DIAG(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) cde#_pf_eco
- *
- * INTERNAL: CDE PF ECO Register
- */
-union cavm_cdex_pf_eco
-{
-    uint64_t u;
-    struct cavm_cdex_pf_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cdex_pf_eco_s cn; */
-};
-typedef union cavm_cdex_pf_eco cavm_cdex_pf_eco_t;
-
-static inline uint64_t CAVM_CDEX_PF_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CDEX_PF_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
-        return 0x80c000000140ll + 0x1000000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("CDEX_PF_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CDEX_PF_ECO(a) cavm_cdex_pf_eco_t
-#define bustype_CAVM_CDEX_PF_ECO(a) CSR_TYPE_NCB
-#define basename_CAVM_CDEX_PF_ECO(a) "CDEX_PF_ECO"
-#define device_bar_CAVM_CDEX_PF_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CDEX_PF_ECO(a) (a)
-#define arguments_CAVM_CDEX_PF_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) cde#_pf_inst_latency_pc
@@ -1354,17 +1049,9 @@ union cavm_cdex_pf_qx_gmctl
                                                                  Stream 0x0 corresponds to the PF, and VFs start at 0x1.
 
                                                                  Reset such that VF0/index 0 is 0x1, VF1/index 1 is 0x2, etc. */
-        uint64_t gmid                  : 16; /**< [ 15:  0](RO) Reserved.
-                                                                 Internal:
-                                                                 Guest machine identifier. The GMID to send to FPA for all
-                                                                 buffer free, or to SSO for all submit work operations initiated by this queue.
-                                                                 Must be nonzero or FPA/SSO will drop requests; see FPA_PF_MAP() and SSO_PF_MAP(). */
+        uint64_t gmid                  : 16; /**< [ 15:  0](RO) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t gmid                  : 16; /**< [ 15:  0](RO) Reserved.
-                                                                 Internal:
-                                                                 Guest machine identifier. The GMID to send to FPA for all
-                                                                 buffer free, or to SSO for all submit work operations initiated by this queue.
-                                                                 Must be nonzero or FPA/SSO will drop requests; see FPA_PF_MAP() and SSO_PF_MAP(). */
+        uint64_t gmid                  : 16; /**< [ 15:  0](RO) Reserved. */
         uint64_t strm                  : 8;  /**< [ 23: 16](R/W) Low 8 bits of the SMMU stream identifier to use when issuing requests.
 
                                                                  Stream 0x0 corresponds to the PF, and VFs start at 0x1.

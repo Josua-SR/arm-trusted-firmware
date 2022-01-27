@@ -150,9 +150,7 @@ union cavm_l2c_cbcx_int_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[GSYNCTO]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[IOWRDISOCI]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[IORDDISOCI]. */
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[MIBDBE]. */
@@ -168,9 +166,7 @@ union cavm_l2c_cbcx_int_ena_w1c
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[MIBDBE]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[IORDDISOCI]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[IOWRDISOCI]. */
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for L2C_CBC(0)_INT_W1C[GSYNCTO]. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } s;
@@ -180,9 +176,7 @@ union cavm_l2c_cbcx_int_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[GSYNCTO]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[IOWRDISOCI]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[IORDDISOCI]. */
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[MIBDBE]. */
@@ -198,9 +192,7 @@ union cavm_l2c_cbcx_int_ena_w1c
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[MIBDBE]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[IORDDISOCI]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[IOWRDISOCI]. */
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for L2C_CBC(0..1)_INT_W1C[GSYNCTO]. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cn83xx;
@@ -237,9 +229,7 @@ union cavm_l2c_cbcx_int_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[GSYNCTO]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[IOWRDISOCI]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[IORDDISOCI]. */
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[MIBDBE]. */
@@ -255,9 +245,7 @@ union cavm_l2c_cbcx_int_ena_w1s
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[MIBDBE]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[IORDDISOCI]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[IOWRDISOCI]. */
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for L2C_CBC(0)_INT_W1C[GSYNCTO]. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } s;
@@ -267,9 +255,7 @@ union cavm_l2c_cbcx_int_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[GSYNCTO]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[IOWRDISOCI]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[IORDDISOCI]. */
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[MIBDBE]. */
@@ -285,9 +271,7 @@ union cavm_l2c_cbcx_int_ena_w1s
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[MIBDBE]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[IORDDISOCI]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[IOWRDISOCI]. */
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for L2C_CBC(0..1)_INT_W1C[GSYNCTO]. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cn83xx;
@@ -324,9 +308,7 @@ union cavm_l2c_cbcx_int_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Global sync timeout. Should never assert, for diagnostic use only.
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Global sync timeout. Should never assert, for diagnostic use only. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1C/H) Illegal I/O write operation to a remote node with L2C_OCI_CTL[ENAOCI][node]
                                                                  clear. See L2C_CBC()_IODISOCIERR for logged information. This interrupt applies
                                                                  to IOBST, IOBSTP, IOBADDR, IASET, IACLR, IAADD, IASWP, IACAS, and LMTST XMC
@@ -372,9 +354,7 @@ union cavm_l2c_cbcx_int_w1c
                                                                  commands.
                                                                  During normal hardware operation, an indication of a software failure and may be
                                                                  considered fatal. */
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Global sync timeout. Should never assert, for diagnostic use only.
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1C/H) Global sync timeout. Should never assert, for diagnostic use only. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } s;
@@ -412,9 +392,7 @@ union cavm_l2c_cbcx_int_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[GSYNCTO]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[IOWRDISOCI]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[IORDDISOCI]. */
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[MIBDBE]. */
@@ -430,9 +408,7 @@ union cavm_l2c_cbcx_int_w1s
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[MIBDBE]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[IORDDISOCI]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[IOWRDISOCI]. */
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets L2C_CBC(0)_INT_W1C[GSYNCTO]. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } s;
@@ -442,9 +418,7 @@ union cavm_l2c_cbcx_int_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[GSYNCTO]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[IOWRDISOCI]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[IORDDISOCI]. */
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[MIBDBE]. */
@@ -460,9 +434,7 @@ union cavm_l2c_cbcx_int_w1s
         uint64_t mibdbe                : 1;  /**< [  5:  5](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[MIBDBE]. */
         uint64_t iorddisoci            : 1;  /**< [  6:  6](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[IORDDISOCI]. */
         uint64_t iowrdisoci            : 1;  /**< [  7:  7](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[IOWRDISOCI]. */
-        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[GSYNCTO].
-                                                                 Internal:
-                                                                 The CBC global sync timeout only, so not an OCI timeout. */
+        uint64_t gsyncto               : 1;  /**< [  8:  8](R/W1S/H) Reads or sets L2C_CBC(0..1)_INT_W1C[GSYNCTO]. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cn83xx;
@@ -618,9 +590,7 @@ union cavm_l2c_cbcx_iodisocierr
         uint64_t iorddisoci            : 1;  /**< [ 63: 63](RO/H) Logged information is for a IORDDISOCI error. */
         uint64_t iowrdisoci            : 1;  /**< [ 62: 62](RO/H) Logged information is for a IOWRDISOCI error. */
         uint64_t reserved_59_61        : 3;
-        uint64_t cmd                   : 7;  /**< [ 58: 52](RO/H) Encoding of XMC command.
-                                                                 Internal:
-                                                                 Enumerated by XMC_CMD_E. */
+        uint64_t cmd                   : 7;  /**< [ 58: 52](RO/H) Encoding of XMC command. */
         uint64_t ppvid                 : 6;  /**< [ 51: 46](RO/H) CMB source PPVID. */
         uint64_t node                  : 2;  /**< [ 45: 44](RO/H) Destination node ID. */
         uint64_t did                   : 8;  /**< [ 43: 36](RO/H) Destination device ID. */
@@ -630,9 +600,7 @@ union cavm_l2c_cbcx_iodisocierr
         uint64_t did                   : 8;  /**< [ 43: 36](RO/H) Destination device ID. */
         uint64_t node                  : 2;  /**< [ 45: 44](RO/H) Destination node ID. */
         uint64_t ppvid                 : 6;  /**< [ 51: 46](RO/H) CMB source PPVID. */
-        uint64_t cmd                   : 7;  /**< [ 58: 52](RO/H) Encoding of XMC command.
-                                                                 Internal:
-                                                                 Enumerated by XMC_CMD_E. */
+        uint64_t cmd                   : 7;  /**< [ 58: 52](RO/H) Encoding of XMC command. */
         uint64_t reserved_59_61        : 3;
         uint64_t iowrdisoci            : 1;  /**< [ 62: 62](RO/H) Logged information is for a IOWRDISOCI error. */
         uint64_t iorddisoci            : 1;  /**< [ 63: 63](RO/H) Logged information is for a IORDDISOCI error. */
@@ -1037,50 +1005,6 @@ static inline uint64_t CAVM_L2C_CBCX_RSDERR(uint64_t a)
 #define device_bar_CAVM_L2C_CBCX_RSDERR(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_L2C_CBCX_RSDERR(a) (a)
 #define arguments_CAVM_L2C_CBCX_RSDERR(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) l2c_cbc#_scratch
- *
- * INTERNAL: L2C CBC General Purpose Scratch Register
- *
- * These registers are only reset by hardware during chip cold reset. The values of the CSR
- * fields in these registers do not change during chip warm or soft resets.
- */
-union cavm_l2c_cbcx_scratch
-{
-    uint64_t u;
-    struct cavm_l2c_cbcx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t scratch               : 7;  /**< [  7:  1](R/W) General purpose scratch register. */
-        uint64_t invdly                : 1;  /**< [  0:  0](R/W) Delays all invalidates for 9 cycles after a broadcast invalidate. */
-#else /* Word 0 - Little Endian */
-        uint64_t invdly                : 1;  /**< [  0:  0](R/W) Delays all invalidates for 9 cycles after a broadcast invalidate. */
-        uint64_t scratch               : 7;  /**< [  7:  1](R/W) General purpose scratch register. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_l2c_cbcx_scratch_s cn; */
-};
-typedef union cavm_l2c_cbcx_scratch cavm_l2c_cbcx_scratch_t;
-
-static inline uint64_t CAVM_L2C_CBCX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_L2C_CBCX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
-        return 0x87e0580d0000ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
-        return 0x87e0580d0000ll + 0x1000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("L2C_CBCX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_L2C_CBCX_SCRATCH(a) cavm_l2c_cbcx_scratch_t
-#define bustype_CAVM_L2C_CBCX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_L2C_CBCX_SCRATCH(a) "L2C_CBCX_SCRATCH"
-#define device_bar_CAVM_L2C_CBCX_SCRATCH(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_L2C_CBCX_SCRATCH(a) (a)
-#define arguments_CAVM_L2C_CBCX_SCRATCH(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) l2c_cbc#_xmc#_pfc

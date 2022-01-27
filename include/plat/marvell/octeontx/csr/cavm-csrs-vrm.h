@@ -167,45 +167,6 @@ static inline uint64_t CAVM_VRMX_DEVICE_STATUS(uint64_t a)
 #define arguments_CAVM_VRMX_DEVICE_STATUS(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) vrm#_eco
- *
- * INTERNAL: VRM ECO Register
- */
-union cavm_vrmx_eco
-{
-    uint64_t u;
-    struct cavm_vrmx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_vrmx_eco_s cn; */
-};
-typedef union cavm_vrmx_eco cavm_vrmx_eco_t;
-
-static inline uint64_t CAVM_VRMX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_VRMX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
-        return 0x87e0210000c8ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("VRMX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_VRMX_ECO(a) cavm_vrmx_eco_t
-#define bustype_CAVM_VRMX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_VRMX_ECO(a) "VRMX_ECO"
-#define device_bar_CAVM_VRMX_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_VRMX_ECO(a) (a)
-#define arguments_CAVM_VRMX_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) vrm#_fuse_bypass
  *
  * VRM Fuse Bypass Register

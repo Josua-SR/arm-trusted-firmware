@@ -77,76 +77,6 @@ static inline uint64_t CAVM_RNM_BIST_STATUS_FUNC(void)
 #define arguments_CAVM_RNM_BIST_STATUS -1,-1,-1,-1
 
 /**
- * Register (RSL) rnm_bp_test
- *
- * INTERNAL: RNM Backpressure Test Register
- */
-union cavm_rnm_bp_test
-{
-    uint64_t u;
-    struct cavm_rnm_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 3;  /**< [ 63: 61](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Normal random number memory writes.
-                                                                 \<62\> = No-zeros random number memory writes.
-                                                                 \<61\> = No-zeros random number memory reads. */
-        uint64_t reserved_24_60        : 37;
-        uint64_t bp_cfg                : 6;  /**< [ 23: 18](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Normal random number memory writes.
-                                                                   \<21:20\> = No-zeros random number memory writes.
-                                                                   \<19:18\> = No-zeros random number memory reads. */
-        uint64_t reserved_12_17        : 6;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_17        : 6;
-        uint64_t bp_cfg                : 6;  /**< [ 23: 18](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Normal random number memory writes.
-                                                                   \<21:20\> = No-zeros random number memory writes.
-                                                                   \<19:18\> = No-zeros random number memory reads. */
-        uint64_t reserved_24_60        : 37;
-        uint64_t enable                : 3;  /**< [ 63: 61](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Normal random number memory writes.
-                                                                 \<62\> = No-zeros random number memory writes.
-                                                                 \<61\> = No-zeros random number memory reads. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rnm_bp_test_s cn; */
-};
-typedef union cavm_rnm_bp_test cavm_rnm_bp_test_t;
-
-#define CAVM_RNM_BP_TEST CAVM_RNM_BP_TEST_FUNC()
-static inline uint64_t CAVM_RNM_BP_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RNM_BP_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e00f000028ll;
-    __cavm_csr_fatal("RNM_BP_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RNM_BP_TEST cavm_rnm_bp_test_t
-#define bustype_CAVM_RNM_BP_TEST CSR_TYPE_RSL
-#define basename_CAVM_RNM_BP_TEST "RNM_BP_TEST"
-#define device_bar_CAVM_RNM_BP_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RNM_BP_TEST 0
-#define arguments_CAVM_RNM_BP_TEST -1,-1,-1,-1
-
-/**
  * Register (RSL) rnm_const
  *
  * RNM PF Constants Register
@@ -215,11 +145,7 @@ union cavm_rnm_ctl_status
                                                                  allows 8 times the entropy to be accumulated in each output. */
         uint64_t xor_entropy_25x       : 1;  /**< [ 13: 13](SR/W) When set, entropy is increased 25 times. This puts the RNG unit in a mode
                                                                  compatible with prior chip generations. However, because this XOR's the output
-                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B.
-
-                                                                 Internal:
-                                                                 When set, exporting raw entropy will result in ent_val being ignored and the
-                                                                 internal 5 bit XOR'd entropy being sent out (padded to 8 bits). */
+                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B. */
         uint64_t force_clk             : 1;  /**< [ 12: 12](SR/W) When set, conditional clock is always on. For diagnostic use only. */
         uint64_t reserved_11           : 1;
         uint64_t eer_lck               : 1;  /**< [ 10: 10](SRO/H) Encryption enable register locked. */
@@ -297,11 +223,7 @@ union cavm_rnm_ctl_status
         uint64_t force_clk             : 1;  /**< [ 12: 12](SR/W) When set, conditional clock is always on. For diagnostic use only. */
         uint64_t xor_entropy_25x       : 1;  /**< [ 13: 13](SR/W) When set, entropy is increased 25 times. This puts the RNG unit in a mode
                                                                  compatible with prior chip generations. However, because this XOR's the output
-                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B.
-
-                                                                 Internal:
-                                                                 When set, exporting raw entropy will result in ent_val being ignored and the
-                                                                 internal 5 bit XOR'd entropy being sent out (padded to 8 bits). */
+                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B. */
         uint64_t lower_bandwidth_higher_entropy : 1;/**< [ 14: 14](SR/W) When clear, a new 64-bit random word is produced every 81 cycles. When set a new
                                                                  64-bit random word is produced every 8*81=648 cycles. The slower operation
                                                                  allows 8 times the entropy to be accumulated in each output. */
@@ -397,11 +319,7 @@ union cavm_rnm_ctl_status
                                                                  allows 8 times the entropy to be accumulated in each output. */
         uint64_t xor_entropy_25x       : 1;  /**< [ 13: 13](SR/W) When set, entropy is increased 25 times. This puts the RNG unit in a mode
                                                                  compatible with prior chip generations. However, because this XOR's the output
-                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B.
-
-                                                                 Internal:
-                                                                 When set, exporting raw entropy will result in ent_val being ignored and the
-                                                                 internal 5 bit XOR'd entropy being sent out (padded to 8 bits). */
+                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B. */
         uint64_t force_clk             : 1;  /**< [ 12: 12](SR/W) When set, conditional clock is always on. For diagnostic use only. */
         uint64_t zuc_en                : 1;  /**< [ 11: 11](SR/W) Enable output of all ZUC engines. Before setting this bit software must write to
                                                                  all RNM_ZUC()_INIT_LFSR() and all RNM_ZUC()_INIT_NLF() registers. */
@@ -473,11 +391,7 @@ union cavm_rnm_ctl_status
         uint64_t force_clk             : 1;  /**< [ 12: 12](SR/W) When set, conditional clock is always on. For diagnostic use only. */
         uint64_t xor_entropy_25x       : 1;  /**< [ 13: 13](SR/W) When set, entropy is increased 25 times. This puts the RNG unit in a mode
                                                                  compatible with prior chip generations. However, because this XOR's the output
-                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B.
-
-                                                                 Internal:
-                                                                 When set, exporting raw entropy will result in ent_val being ignored and the
-                                                                 internal 5 bit XOR'd entropy being sent out (padded to 8 bits). */
+                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B. */
         uint64_t lower_bandwidth_higher_entropy : 1;/**< [ 14: 14](SR/W) When clear, a new 64-bit random word is produced every 81 cycles. When set a new
                                                                  64-bit random word is produced every 8*81=648 cycles. The slower operation
                                                                  allows 8 times the entropy to be accumulated in each output. */
@@ -569,11 +483,7 @@ union cavm_rnm_ctl_status
                                                                  allows 8 times the entropy to be accumulated in each output. */
         uint64_t xor_entropy_25x       : 1;  /**< [ 13: 13](SR/W) When set, entropy is increased 25 times. This puts the RNG unit in a mode
                                                                  compatible with prior chip generations. However, because this XOR's the output
-                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B.
-
-                                                                 Internal:
-                                                                 When set, exporting raw entropy will result in ent_val being ignored and the
-                                                                 internal 5 bit XOR'd entropy being sent out (padded to 8 bits). */
+                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B. */
         uint64_t force_clk             : 1;  /**< [ 12: 12](SR/W) When set, conditional clock is always on. For diagnostic use only. */
         uint64_t zuc_en                : 1;  /**< [ 11: 11](SR/W) Enable output of all ZUC engines. Before setting this bit software must write to
                                                                  all RNM_ZUC()_INIT_LFSR(), and all RNM_ZUC()_INIT_NLF() registers. */
@@ -607,13 +517,9 @@ union cavm_rnm_ctl_status
                                                                  cleared. When [RNG_RST] = 1, reading RNM_RANDOM is unpredictable. */
         uint64_t rnm_rst               : 1;  /**< [  2:  2](SRO) Reserved. Writes are ignored for backward compatibility. */
         uint64_t rng_en                : 1;  /**< [  1:  1](SR/W) Enables the output of the RNG. When [RNG_RST] = 1, reading RNM_RANDOM is unpredictable. */
-        uint64_t ent_en                : 1;  /**< [  0:  0](SR/W) Ignored, deprecated feature.
-                                                                 Internal:
-                                                                 Entropy is always enabled regardless of this bit. */
+        uint64_t ent_en                : 1;  /**< [  0:  0](SR/W) Ignored, deprecated feature. */
 #else /* Word 0 - Little Endian */
-        uint64_t ent_en                : 1;  /**< [  0:  0](SR/W) Ignored, deprecated feature.
-                                                                 Internal:
-                                                                 Entropy is always enabled regardless of this bit. */
+        uint64_t ent_en                : 1;  /**< [  0:  0](SR/W) Ignored, deprecated feature. */
         uint64_t rng_en                : 1;  /**< [  1:  1](SR/W) Enables the output of the RNG. When [RNG_RST] = 1, reading RNM_RANDOM is unpredictable. */
         uint64_t rnm_rst               : 1;  /**< [  2:  2](SRO) Reserved. Writes are ignored for backward compatibility. */
         uint64_t rng_rst               : 1;  /**< [  3:  3](SR/W) Reset the RNG. Setting this bit to one cancels the generation of the current
@@ -649,11 +555,7 @@ union cavm_rnm_ctl_status
         uint64_t force_clk             : 1;  /**< [ 12: 12](SR/W) When set, conditional clock is always on. For diagnostic use only. */
         uint64_t xor_entropy_25x       : 1;  /**< [ 13: 13](SR/W) When set, entropy is increased 25 times. This puts the RNG unit in a mode
                                                                  compatible with prior chip generations. However, because this XOR's the output
-                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B.
-
-                                                                 Internal:
-                                                                 When set, exporting raw entropy will result in ent_val being ignored and the
-                                                                 internal 5 bit XOR'd entropy being sent out (padded to 8 bits). */
+                                                                 of multiple ring oscillators, this may not be compatible with FIPS 800-90B. */
         uint64_t lower_bandwidth_higher_entropy : 1;/**< [ 14: 14](SR/W) When clear, a new 64-bit random word is produced every 81 cycles. When set a new
                                                                  64-bit random word is produced every 8*81=648 cycles. The slower operation
                                                                  allows 8 times the entropy to be accumulated in each output. */
@@ -834,9 +736,6 @@ static inline uint64_t CAVM_RNM_RANDOM_FUNC(void)
  * Register (RSL) rnm_serial_num
  *
  * RNM Fuse Serial Number Register
- * Internal:
- * The serial number doesn't need to be on an external CSR bus, but the CSR cores aren't able to
- * add fine-grained clock gating to volatile fields.
  */
 union cavm_rnm_serial_num
 {

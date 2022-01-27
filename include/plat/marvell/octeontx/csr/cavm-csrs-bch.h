@@ -417,12 +417,8 @@ union cavm_bch_bist_result
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_8_63         : 56;
-        uint64_t csr_msix              : 1;  /**< [  7:  7](RO) BIST result of the CSR MSIX memory.
-                                                                 Internal:
-                                                                 csr.msix_mem. */
-        uint64_t csr_fifo              : 1;  /**< [  6:  6](RO) BIST result of the CSR FIFO memory.
-                                                                 Internal:
-                                                                 csr.csr_fifo. */
+        uint64_t csr_msix              : 1;  /**< [  7:  7](RO) BIST result of the CSR MSIX memory. */
+        uint64_t csr_fifo              : 1;  /**< [  6:  6](RO) BIST result of the CSR FIFO memory. */
         uint64_t ncb_oub               : 1;  /**< [  5:  5](RO) BIST result of the NCB OUB memories. */
         uint64_t ncb_inb               : 1;  /**< [  4:  4](RO) BIST result of the NCB INB memories. */
         uint64_t dat                   : 4;  /**< [  3:  0](RO) BIST result of the DAT memories. */
@@ -430,12 +426,8 @@ union cavm_bch_bist_result
         uint64_t dat                   : 4;  /**< [  3:  0](RO) BIST result of the DAT memories. */
         uint64_t ncb_inb               : 1;  /**< [  4:  4](RO) BIST result of the NCB INB memories. */
         uint64_t ncb_oub               : 1;  /**< [  5:  5](RO) BIST result of the NCB OUB memories. */
-        uint64_t csr_fifo              : 1;  /**< [  6:  6](RO) BIST result of the CSR FIFO memory.
-                                                                 Internal:
-                                                                 csr.csr_fifo. */
-        uint64_t csr_msix              : 1;  /**< [  7:  7](RO) BIST result of the CSR MSIX memory.
-                                                                 Internal:
-                                                                 csr.msix_mem. */
+        uint64_t csr_fifo              : 1;  /**< [  6:  6](RO) BIST result of the CSR FIFO memory. */
+        uint64_t csr_msix              : 1;  /**< [  7:  7](RO) BIST result of the CSR MSIX memory. */
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } s;
@@ -458,80 +450,6 @@ static inline uint64_t CAVM_BCH_BIST_RESULT_FUNC(void)
 #define device_bar_CAVM_BCH_BIST_RESULT 0x0 /* PF_BAR0 */
 #define busnum_CAVM_BCH_BIST_RESULT 0
 #define arguments_CAVM_BCH_BIST_RESULT -1,-1,-1,-1
-
-/**
- * Register (NCB) bch_bp_test
- *
- * INTERNAL: BCH Backpressure Test Register
- */
-union cavm_bch_bp_test
-{
-    uint64_t u;
-    struct cavm_bch_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set,disables popping of NCBO FIFO,also credits won't be returned.
-                                                                 \<61\> = When set,disables popping of NCBI FIFO,also credits won't be returned.
-                                                                 \<60\> = When set,enables backpressure on the FPA(XPD) interface. Applicable for T83, has no
-                                                                 effect in T81. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set,disables popping of NCBO FIFO,also credits won't be returned.
-                                                                 \<61\> = When set,disables popping of NCBI FIFO,also credits won't be returned.
-                                                                 \<60\> = When set,enables backpressure on the FPA(XPD) interface. Applicable for T83, has no
-                                                                 effect in T81. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_bch_bp_test_s cn; */
-};
-typedef union cavm_bch_bp_test cavm_bch_bp_test_t;
-
-#define CAVM_BCH_BP_TEST CAVM_BCH_BP_TEST_FUNC()
-static inline uint64_t CAVM_BCH_BP_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BCH_BP_TEST_FUNC(void)
-{
-    return 0x871000000040ll;
-}
-
-#define typedef_CAVM_BCH_BP_TEST cavm_bch_bp_test_t
-#define bustype_CAVM_BCH_BP_TEST CSR_TYPE_NCB
-#define basename_CAVM_BCH_BP_TEST "BCH_BP_TEST"
-#define device_bar_CAVM_BCH_BP_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_BCH_BP_TEST 0
-#define arguments_CAVM_BCH_BP_TEST -1,-1,-1,-1
 
 /**
  * Register (NCB) bch_busy
@@ -673,45 +591,9 @@ static inline uint64_t CAVM_BCH_CTL_FUNC(void)
 #define arguments_CAVM_BCH_CTL -1,-1,-1,-1
 
 /**
- * Register (NCB) bch_eco
- *
- * INTERNAL: BCH PF ECO Register
- */
-union cavm_bch_eco
-{
-    uint64_t u;
-    struct cavm_bch_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_bch_eco_s cn; */
-};
-typedef union cavm_bch_eco cavm_bch_eco_t;
-
-#define CAVM_BCH_ECO CAVM_BCH_ECO_FUNC()
-static inline uint64_t CAVM_BCH_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BCH_ECO_FUNC(void)
-{
-    return 0x871000000030ll;
-}
-
-#define typedef_CAVM_BCH_ECO cavm_bch_eco_t
-#define bustype_CAVM_BCH_ECO CSR_TYPE_NCB
-#define basename_CAVM_BCH_ECO "BCH_ECO"
-#define device_bar_CAVM_BCH_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_BCH_ECO 0
-#define arguments_CAVM_BCH_ECO -1,-1,-1,-1
-
-/**
  * Register (NCB) bch_err_cfg
  *
- * INTERNAL:  BCH PF Error Configuration Register
+ * BCH PF Error Configuration Register
  */
 union cavm_bch_err_cfg
 {
@@ -732,15 +614,7 @@ union cavm_bch_err_cfg
         uint64_t reserved_18_63        : 46;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_bch_err_cfg_s cn8; */
-    struct cavm_bch_err_cfg_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_bch_err_cfg_s cn; */
 };
 typedef union cavm_bch_err_cfg cavm_bch_err_cfg_t;
 
@@ -748,7 +622,9 @@ typedef union cavm_bch_err_cfg cavm_bch_err_cfg_t;
 static inline uint64_t CAVM_BCH_ERR_CFG_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_BCH_ERR_CFG_FUNC(void)
 {
-    return 0x871000000010ll;
+    if (cavm_is_model(OCTEONTX_CN8XXX))
+        return 0x871000000010ll;
+    __cavm_csr_fatal("BCH_ERR_CFG", 0, 0, 0, 0, 0, 0, 0);
 }
 
 #define typedef_CAVM_BCH_ERR_CFG cavm_bch_err_cfg_t
@@ -1372,7 +1248,7 @@ static inline uint64_t CAVM_BCH_PF_POISON_W1S_FUNC(void)
 /**
  * Register (NCB) bch_pf_q#_gmctl
  *
- * INTERNAL: BCH PF Queue Guest Machine Control Register
+ * BCH PF Queue Guest Machine Control Register
  */
 union cavm_bch_pf_qx_gmctl
 {
@@ -1381,57 +1257,24 @@ union cavm_bch_pf_qx_gmctl
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
-        uint64_t gmid                  : 16; /**< [ 15:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Guest machine identifier. The GMID to send to FPA for all
+        uint64_t gmid                  : 16; /**< [ 15:  0](R/W) Guest machine identifier. The GMID to send to FPA for all
                                                                  buffer free operations initiated by this queue.
                                                                  Must be nonzero or FPA will drop requests; see FPA_PF_MAP(). */
 #else /* Word 0 - Little Endian */
-        uint64_t gmid                  : 16; /**< [ 15:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Guest machine identifier. The GMID to send to FPA for all
+        uint64_t gmid                  : 16; /**< [ 15:  0](R/W) Guest machine identifier. The GMID to send to FPA for all
                                                                  buffer free operations initiated by this queue.
                                                                  Must be nonzero or FPA will drop requests; see FPA_PF_MAP(). */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_bch_pf_qx_gmctl_s cn8; */
-    /* struct cavm_bch_pf_qx_gmctl_s cn81xx; */
-    struct cavm_bch_pf_qx_gmctl_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t gmid                  : 16; /**< [ 15:  0](R/W) Guest machine identifier. The GMID to send to FPA for all
-                                                                 buffer free operations initiated by this queue.
-                                                                 Must be nonzero or FPA will drop requests; see FPA_PF_MAP(). */
-#else /* Word 0 - Little Endian */
-        uint64_t gmid                  : 16; /**< [ 15:  0](R/W) Guest machine identifier. The GMID to send to FPA for all
-                                                                 buffer free operations initiated by this queue.
-                                                                 Must be nonzero or FPA will drop requests; see FPA_PF_MAP(). */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } cn83xx;
-    struct cavm_bch_pf_qx_gmctl_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t gmid                  : 16; /**< [ 15:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Was guest machine identifier in CN83xx, now deprecated. */
-#else /* Word 0 - Little Endian */
-        uint64_t gmid                  : 16; /**< [ 15:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Was guest machine identifier in CN83xx, now deprecated. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_bch_pf_qx_gmctl_s cn; */
 };
 typedef union cavm_bch_pf_qx_gmctl cavm_bch_pf_qx_gmctl_t;
 
 static inline uint64_t CAVM_BCH_PF_QX_GMCTL(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_BCH_PF_QX_GMCTL(uint64_t a)
 {
-    if (a==0)
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x871000000100ll + 8ll * ((a) & 0x0);
     __cavm_csr_fatal("BCH_PF_QX_GMCTL", 1, a, 0, 0, 0, 0, 0);
 }
@@ -1581,29 +1424,17 @@ union cavm_bch_vqx_cmd_buf
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_60_63        : 4;
-        uint64_t aura                  : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Guest-aura to use when freeing command-buffer segments. Only used when [DFB] is
-                                                                 clear. For the FPA to not discard the request, FPA_PF_MAP() must consider the
-                                                                 [AURA] and BCH_PF_Q()_GMCTL[GMID] to be valid. */
+        uint64_t aura                  : 12; /**< [ 59: 48](R/W) Reserved. */
         uint64_t ldwb                  : 1;  /**< [ 47: 47](R/W) When reading commands that end on cache line boundaries, use load-and-don't write back commands. */
-        uint64_t dfb                   : 1;  /**< [ 46: 46](RO) Reserved, must be one.
-                                                                 Internal:
-                                                                 Don't free buffers to the FPA. */
+        uint64_t dfb                   : 1;  /**< [ 46: 46](RO) Reserved, must be one. */
         uint64_t size                  : 13; /**< [ 45: 33](R/W) Number of uint64s per command buffer segment. */
         uint64_t reserved_0_32         : 33;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_32         : 33;
         uint64_t size                  : 13; /**< [ 45: 33](R/W) Number of uint64s per command buffer segment. */
-        uint64_t dfb                   : 1;  /**< [ 46: 46](RO) Reserved, must be one.
-                                                                 Internal:
-                                                                 Don't free buffers to the FPA. */
+        uint64_t dfb                   : 1;  /**< [ 46: 46](RO) Reserved, must be one. */
         uint64_t ldwb                  : 1;  /**< [ 47: 47](R/W) When reading commands that end on cache line boundaries, use load-and-don't write back commands. */
-        uint64_t aura                  : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Guest-aura to use when freeing command-buffer segments. Only used when [DFB] is
-                                                                 clear. For the FPA to not discard the request, FPA_PF_MAP() must consider the
-                                                                 [AURA] and BCH_PF_Q()_GMCTL[GMID] to be valid. */
+        uint64_t aura                  : 12; /**< [ 59: 48](R/W) Reserved. */
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
     } s;
@@ -1635,25 +1466,17 @@ union cavm_bch_vqx_cmd_buf
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_60_63        : 4;
-        uint64_t aura                  : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Was guest-aura in CN83xx, now deprecated. */
+        uint64_t aura                  : 12; /**< [ 59: 48](R/W) Reserved. */
         uint64_t ldwb                  : 1;  /**< [ 47: 47](R/W) When reading commands that end on cache line boundaries, use load-and-don't write back commands. */
-        uint64_t dfb                   : 1;  /**< [ 46: 46](R/W) Reserved, must be one.
-                                                                 Internal:
-                                                                 Was don't free buffers to the FPA, now deprecated. */
+        uint64_t dfb                   : 1;  /**< [ 46: 46](R/W) Reserved, must be one. */
         uint64_t size                  : 13; /**< [ 45: 33](R/W) Number of uint64s per command buffer segment. */
         uint64_t reserved_0_32         : 33;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_32         : 33;
         uint64_t size                  : 13; /**< [ 45: 33](R/W) Number of uint64s per command buffer segment. */
-        uint64_t dfb                   : 1;  /**< [ 46: 46](R/W) Reserved, must be one.
-                                                                 Internal:
-                                                                 Was don't free buffers to the FPA, now deprecated. */
+        uint64_t dfb                   : 1;  /**< [ 46: 46](R/W) Reserved, must be one. */
         uint64_t ldwb                  : 1;  /**< [ 47: 47](R/W) When reading commands that end on cache line boundaries, use load-and-don't write back commands. */
-        uint64_t aura                  : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Was guest-aura in CN83xx, now deprecated. */
+        uint64_t aura                  : 12; /**< [ 59: 48](R/W) Reserved. */
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
     } cn9;

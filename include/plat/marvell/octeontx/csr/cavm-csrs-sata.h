@@ -368,9 +368,6 @@ static inline uint64_t CAVM_SATAX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
  * This register contains the pattern definition (bits 23:16 of the
  * first DWORD) and the data pattern (bits 7:0 of the second DWORD)
  * fields of the received BIST activate FIS.
- *
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_bistafr
 {
@@ -441,9 +438,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_BISTAFR(uint64_t a)
  * This register is shared between SATA ports. Before accessing this
  * register, first select the required port by writing the port number
  * to the SATA()_UAHC_GBL_TESTR[PSEL] field.
- *
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_bistcr
 {
@@ -584,9 +578,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_BISTCR(uint64_t a)
  * to the SATA()_UAHC_GBL_TESTR[PSEL] field.
  * Access to the register is disabled on power-on (system reset) or global
  * SATA block reset, and when the TESTR.BSEL is set to 0.
- *
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_bistdecr
 {
@@ -629,9 +620,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_BISTDECR(uint64_t a)
  * This register is shared between SATA ports. Before accessing this
  * register, first select the required port by writing the port number
  * to the SATA()_UAHC_GBL_TESTR[PSEL] field.
- *
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_bistfctr
 {
@@ -670,10 +658,7 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_BISTFCTR(uint64_t a)
 /**
  * Register (NCB32b) sata#_uahc_gbl_bistsr
  *
- * INTERNAL: SATA UAHC BIST Status Register
- *
- * Internal:
- * See DWC_ahsata databook v5.00.
+ * SATA UAHC BIST Status Register
  */
 union cavm_satax_uahc_gbl_bistsr
 {
@@ -701,15 +686,13 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_BISTSR(uint64_t a)
         return 0x8100000000acll + 0x1000000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=5))
         return 0x8100000000acll + 0x1000000000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=3))
-        return 0x8100000000acll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("SATAX_UAHC_GBL_BISTSR", 1, a, 0, 0, 0, 0, 0);
 }
 
 #define typedef_CAVM_SATAX_UAHC_GBL_BISTSR(a) cavm_satax_uahc_gbl_bistsr_t
 #define bustype_CAVM_SATAX_UAHC_GBL_BISTSR(a) CSR_TYPE_NCB32b
 #define basename_CAVM_SATAX_UAHC_GBL_BISTSR(a) "SATAX_UAHC_GBL_BISTSR"
-#define device_bar_CAVM_SATAX_UAHC_GBL_BISTSR(a) 0x4 /* PF_BAR4 */
+#define device_bar_CAVM_SATAX_UAHC_GBL_BISTSR(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_SATAX_UAHC_GBL_BISTSR(a) (a)
 #define arguments_CAVM_SATAX_UAHC_GBL_BISTSR(a) (a),-1,-1,-1
 
@@ -994,8 +977,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_CCC_PORTS(uint64_t a)
  * Register (NCB32b) sata#_uahc_gbl_diagnr3
  *
  * SATA UAHC DIAGNR3 Register
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_diagnr3
 {
@@ -1077,8 +1058,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_GHC(uint64_t a)
  * Register (NCB32b) sata#_uahc_gbl_gparam1r
  *
  * SATA UAHC Global Parameter Register 1
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_gparam1r
 {
@@ -1144,8 +1123,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_GPARAM1R(uint64_t a)
  * Register (NCB32b) sata#_uahc_gbl_gparam2r
  *
  * SATA UAHC Global Parameter Register 2
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_gparam2r
 {
@@ -1278,8 +1255,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_GPARAM2R(uint64_t a)
  * Register (NCB32b) sata#_uahc_gbl_gparam3
  *
  * SATA UAHC Global Parameter 3 Register
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_gparam3
 {
@@ -1325,8 +1300,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_GPARAM3(uint64_t a)
  * Register (NCB32b) sata#_uahc_gbl_idr
  *
  * SATA UAHC ID Register
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_idr
 {
@@ -1412,9 +1385,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_IS(uint64_t a)
  * This register is shared between SATA ports. Before accessing this
  * register, first select the required port by writing the port number
  * to the SATA()_UAHC_GBL_TESTR[PSEL] field.
- *
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_oobr
 {
@@ -1506,8 +1476,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_PI(uint64_t a)
  *
  * SATA UAHC Port Parameter Register
  * Port is selected by the SATA()_UAHC_GBL_TESTR[PSEL] field.
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_pparamr
 {
@@ -1559,8 +1527,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_PPARAMR(uint64_t a)
  * Register (NCB32b) sata#_uahc_gbl_testr
  *
  * SATA UAHC Test Register
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_testr
 {
@@ -1624,8 +1590,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_TESTR(uint64_t a)
  * Register (NCB32b) sata#_uahc_gbl_timer1ms
  *
  * SATA UAHC Timer 1ms Register
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_timer1ms
 {
@@ -1667,8 +1631,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_TIMER1MS(uint64_t a)
  * Register (NCB32b) sata#_uahc_gbl_versionr
  *
  * SATA UAHC Version Register
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_gbl_versionr
 {
@@ -1761,8 +1723,6 @@ static inline uint64_t CAVM_SATAX_UAHC_GBL_VS(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_ci
  *
  * SATA UAHC Command Issue Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_ci
 {
@@ -1802,8 +1762,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_CI(uint64_t a)
  * Register (NCB) sata#_uahc_p0_clb
  *
  * SATA UAHC Command-List Base-Address Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_clb
 {
@@ -1845,8 +1803,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_CLB(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_cmd
  *
  * SATA UAHC Command Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_cmd
 {
@@ -1932,8 +1888,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_CMD(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_devslp
  *
  * SATA UAHC Device Sleep Register
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_devslp
 {
@@ -1997,8 +1951,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_DEVSLP(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_dmacr
  *
  * SATA UAHC DMA Control Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_dmacr
 {
@@ -2046,8 +1998,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_DMACR(uint64_t a)
  * Register (NCB) sata#_uahc_p0_fb
  *
  * SATA UAHC FIS Base-Address Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_fb
 {
@@ -2089,8 +2039,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_FB(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_fbs
  *
  * SATA UAHC FIS-Based Switching Control Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_fbs
 {
@@ -2144,8 +2092,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_FBS(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_ie
  *
  * SATA UAHC Interrupt Enable Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_ie
 {
@@ -2221,8 +2167,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_IE(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_is
  *
  * SATA UAHC Interrupt Status Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_is
 {
@@ -2298,8 +2242,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_IS(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_phycr
  *
  * SATA UAHC PHY Control Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_phycr
 {
@@ -2339,8 +2281,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_PHYCR(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_physr
  *
  * SATA UAHC PHY Status Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_physr
 {
@@ -2380,8 +2320,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_PHYSR(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_sact
  *
  * SATA UAHC SATA Active Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_sact
 {
@@ -2421,8 +2359,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_SACT(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_sctl
  *
  * SATA UAHC SATA Control Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_sctl
 {
@@ -2490,8 +2426,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_SCTL(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_serr
  *
  * SATA UAHC SATA Error Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_serr
 {
@@ -2569,8 +2503,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_SERR(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_sig
  *
  * SATA UAHC Signature Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_sig
 {
@@ -2610,8 +2542,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_SIG(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_sntf
  *
  * SATA UAHC SATA Notification Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_sntf
 {
@@ -2653,8 +2583,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_SNTF(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_ssts
  *
  * SATA UAHC SATA Status Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_ssts
 {
@@ -2700,8 +2628,6 @@ static inline uint64_t CAVM_SATAX_UAHC_P0_SSTS(uint64_t a)
  * Register (NCB32b) sata#_uahc_p0_tfd
  *
  * SATA UAHC Task File Data Registers
- * Internal:
- * See DWC_ahsata databook v5.00.
  */
 union cavm_satax_uahc_p0_tfd
 {
@@ -2821,79 +2747,6 @@ static inline uint64_t CAVM_SATAX_UCTL_BIST_STATUS(uint64_t a)
 #define device_bar_CAVM_SATAX_UCTL_BIST_STATUS(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_SATAX_UCTL_BIST_STATUS(a) (a)
 #define arguments_CAVM_SATAX_UCTL_BIST_STATUS(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) sata#_uctl_bp_test
- *
- * INTERNAL: SATA UCTL Backpressure Test Register
- */
-union cavm_satax_uctl_bp_test
-{
-    uint64_t u;
-    struct cavm_satax_uctl_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Limit the NCBI posted request FIFO from unloading.
-                                                                 \<61\> = Limit the NCBI nonposted request FIFO from unloading.
-                                                                 \<60\> = Limit the NCBI completion request FIFO from unloading. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Limit the NCBI posted request FIFO from unloading.
-                                                                 \<61\> = Limit the NCBI nonposted request FIFO from unloading.
-                                                                 \<60\> = Limit the NCBI completion request FIFO from unloading. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_satax_uctl_bp_test_s cn; */
-};
-typedef union cavm_satax_uctl_bp_test cavm_satax_uctl_bp_test_t;
-
-static inline uint64_t CAVM_SATAX_UCTL_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SATAX_UCTL_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=3))
-        return 0x810000100020ll + 0x1000000000ll * ((a) & 0x3);
-    __cavm_csr_fatal("SATAX_UCTL_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SATAX_UCTL_BP_TEST(a) cavm_satax_uctl_bp_test_t
-#define bustype_CAVM_SATAX_UCTL_BP_TEST(a) CSR_TYPE_NCB
-#define basename_CAVM_SATAX_UCTL_BP_TEST(a) "SATAX_UCTL_BP_TEST"
-#define device_bar_CAVM_SATAX_UCTL_BP_TEST(a) 0x4 /* PF_BAR4 */
-#define busnum_CAVM_SATAX_UCTL_BP_TEST(a) (a)
-#define arguments_CAVM_SATAX_UCTL_BP_TEST(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) sata#_uctl_cap_cfg
@@ -3126,21 +2979,14 @@ union cavm_satax_uctl_ctl
                                                                  controller.
                                                                  1 = Ignore poison and proceed with the transaction as if no problems. */
         uint64_t reserved_2_4          : 3;
-        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t sata_uctl_rst         : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high. Resets UAHC DMA and register shims and the UCTL
                                                                  registers 0x10_0030-0x10_00F8.
 
                                                                  It does not reset UCTL registers 0x10_0000-0x10_0028.
 
                                                                  The UCTL registers starting from 0x10_0030 can be accessed only after the host-controller
-                                                                 clock is active and [SATA_UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and GIB protocols. */
+                                                                 clock is active and [SATA_UCTL_RST] is deasserted. */
 #else /* Word 0 - Little Endian */
         uint64_t sata_uctl_rst         : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high. Resets UAHC DMA and register shims and the UCTL
                                                                  registers 0x10_0030-0x10_00F8.
@@ -3148,15 +2994,8 @@ union cavm_satax_uctl_ctl
                                                                  It does not reset UCTL registers 0x10_0000-0x10_0028.
 
                                                                  The UCTL registers starting from 0x10_0030 can be accessed only after the host-controller
-                                                                 clock is active and [SATA_UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and GIB protocols. */
-        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+                                                                 clock is active and [SATA_UCTL_RST] is deasserted. */
+        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t reserved_2_4          : 3;
         uint64_t dma_psn_ign           : 1;  /**< [  5:  5](R/W) Handling of poison indication on DMA read responses.
                                                                  0 = Treat poison data the same way as fault, sending an AXI error to the SATA
@@ -3280,21 +3119,14 @@ union cavm_satax_uctl_ctl
         uint64_t csclk_en              : 1;  /**< [  4:  4](R/W) Turns on the SATA UCTL interface clock (coprocessor clock). This enables access to UAHC
                                                                  registers via the NCB, as well as UCTL registers starting from 0x10_0030. */
         uint64_t reserved_2_3          : 2;
-        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t sata_uctl_rst         : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high. Resets UAHC DMA and register shims and the UCTL
                                                                  registers 0x10_0030-0x10_00F8.
 
                                                                  It does not reset UCTL registers 0x10_0000-0x10_0028.
 
                                                                  The UCTL registers starting from 0x10_0030 can be accessed only after the host-controller
-                                                                 clock is active and [SATA_UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and GIB protocols. */
+                                                                 clock is active and [SATA_UCTL_RST] is deasserted. */
 #else /* Word 0 - Little Endian */
         uint64_t sata_uctl_rst         : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high. Resets UAHC DMA and register shims and the UCTL
                                                                  registers 0x10_0030-0x10_00F8.
@@ -3302,15 +3134,8 @@ union cavm_satax_uctl_ctl
                                                                  It does not reset UCTL registers 0x10_0000-0x10_0028.
 
                                                                  The UCTL registers starting from 0x10_0030 can be accessed only after the host-controller
-                                                                 clock is active and [SATA_UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and GIB protocols. */
-        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+                                                                 clock is active and [SATA_UCTL_RST] is deasserted. */
+        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t reserved_2_3          : 2;
         uint64_t csclk_en              : 1;  /**< [  4:  4](R/W) Turns on the SATA UCTL interface clock (coprocessor clock). This enables access to UAHC
                                                                  registers via the NCB, as well as UCTL registers starting from 0x10_0030. */
@@ -3418,10 +3243,7 @@ union cavm_satax_uctl_ctl
                                                                  1 = Override the enable of conditional clock to force it running, also forces
                                                                  NCBI clock enable signal to 1. */
         uint64_t reserved_2_3          : 2;
-        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t sata_uctl_rst         : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high. Resets UAHC DMA and register shims and the UCTL
                                                                  registers 0x10_0030-0x10_00F8.
 
@@ -3429,11 +3251,7 @@ union cavm_satax_uctl_ctl
                                                                  [SATA_UCTL_RST] is asserted.
 
                                                                  The UCTL registers starting from 0x10_0030 can be accessed only after the host-controller
-                                                                 clock is active and [SATA_UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and GIB protocols. */
+                                                                 clock is active and [SATA_UCTL_RST] is deasserted. */
 #else /* Word 0 - Little Endian */
         uint64_t sata_uctl_rst         : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high. Resets UAHC DMA and register shims and the UCTL
                                                                  registers 0x10_0030-0x10_00F8.
@@ -3442,15 +3260,8 @@ union cavm_satax_uctl_ctl
                                                                  [SATA_UCTL_RST] is asserted.
 
                                                                  The UCTL registers starting from 0x10_0030 can be accessed only after the host-controller
-                                                                 clock is active and [SATA_UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and GIB protocols. */
-        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+                                                                 clock is active and [SATA_UCTL_RST] is deasserted. */
+        uint64_t sata_uahc_rst         : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t reserved_2_3          : 2;
         uint64_t csclk_force           : 1;  /**< [  4:  4](R/W) Force conditional clock to be running. For diagnostic use only.
                                                                  0 = No override.
@@ -4528,95 +4339,5 @@ static inline uint64_t CAVM_SATAX_UCTL_SHIM_CFG(uint64_t a)
 #define device_bar_CAVM_SATAX_UCTL_SHIM_CFG(a) 0x4 /* PF_BAR4 */
 #define busnum_CAVM_SATAX_UCTL_SHIM_CFG(a) (a)
 #define arguments_CAVM_SATAX_UCTL_SHIM_CFG(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) sata#_uctl_spare0
- *
- * INTERNAL: SATA UCTL Spare Register 0
- *
- * This register is spare.
- *
- * Accessible always.
- *
- * Reset NCB reset.
- */
-union cavm_satax_uctl_spare0
-{
-    uint64_t u;
-    struct cavm_satax_uctl_spare0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t spare                 : 64; /**< [ 63:  0](R/W) Spare. */
-#else /* Word 0 - Little Endian */
-        uint64_t spare                 : 64; /**< [ 63:  0](R/W) Spare. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_satax_uctl_spare0_s cn; */
-};
-typedef union cavm_satax_uctl_spare0 cavm_satax_uctl_spare0_t;
-
-static inline uint64_t CAVM_SATAX_UCTL_SPARE0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SATAX_UCTL_SPARE0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
-        return 0x810000100010ll + 0x1000000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=5))
-        return 0x810000100010ll + 0x1000000000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=3))
-        return 0x810000100010ll + 0x1000000000ll * ((a) & 0x3);
-    __cavm_csr_fatal("SATAX_UCTL_SPARE0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SATAX_UCTL_SPARE0(a) cavm_satax_uctl_spare0_t
-#define bustype_CAVM_SATAX_UCTL_SPARE0(a) CSR_TYPE_NCB
-#define basename_CAVM_SATAX_UCTL_SPARE0(a) "SATAX_UCTL_SPARE0"
-#define device_bar_CAVM_SATAX_UCTL_SPARE0(a) 0x4 /* PF_BAR4 */
-#define busnum_CAVM_SATAX_UCTL_SPARE0(a) (a)
-#define arguments_CAVM_SATAX_UCTL_SPARE0(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) sata#_uctl_spare1
- *
- * INTERNAL: SATA UCTL Spare Register 1
- *
- * This register is spare.
- *
- * Accessible only when SATA()_UCTL_CTL[A_CLK_EN].
- *
- * Reset by NCB reset or SATA()_UCTL_CTL[SATA_UCTL_RST].
- */
-union cavm_satax_uctl_spare1
-{
-    uint64_t u;
-    struct cavm_satax_uctl_spare1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t spare                 : 64; /**< [ 63:  0](R/W) Spare. */
-#else /* Word 0 - Little Endian */
-        uint64_t spare                 : 64; /**< [ 63:  0](R/W) Spare. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_satax_uctl_spare1_s cn; */
-};
-typedef union cavm_satax_uctl_spare1 cavm_satax_uctl_spare1_t;
-
-static inline uint64_t CAVM_SATAX_UCTL_SPARE1(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SATAX_UCTL_SPARE1(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
-        return 0x8100001000f8ll + 0x1000000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=5))
-        return 0x8100001000f8ll + 0x1000000000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=3))
-        return 0x8100001000f8ll + 0x1000000000ll * ((a) & 0x3);
-    __cavm_csr_fatal("SATAX_UCTL_SPARE1", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SATAX_UCTL_SPARE1(a) cavm_satax_uctl_spare1_t
-#define bustype_CAVM_SATAX_UCTL_SPARE1(a) CSR_TYPE_NCB
-#define basename_CAVM_SATAX_UCTL_SPARE1(a) "SATAX_UCTL_SPARE1"
-#define device_bar_CAVM_SATAX_UCTL_SPARE1(a) 0x4 /* PF_BAR4 */
-#define busnum_CAVM_SATAX_UCTL_SPARE1(a) (a)
-#define arguments_CAVM_SATAX_UCTL_SPARE1(a) (a),-1,-1,-1
 
 #endif /* __CAVM_CSRS_SATA_H__ */

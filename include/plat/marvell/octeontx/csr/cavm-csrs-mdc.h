@@ -283,9 +283,7 @@ union cavm_mdc_bist_config
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_27_63        : 37;
-        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only.
-                                                                 Internal:
-                                                                 clock_forcer attribute not used as state is inverted versus other blocks. */
+        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only. */
         uint64_t mdc_broadcast         : 1;  /**< [ 25: 25](R/W) This field is used in conjunction with [MDH_START_RATIO], [MDN_START_RATIO],
                                                                  and [STAGGER_PERIOD] to control BIST start staggering. The field
                                                                  specifies whether or not a given BIST start command is transmitted to
@@ -314,12 +312,7 @@ union cavm_mdc_bist_config
                                                                    0x2 = Every 4th MDN participates - 4 node loops.
                                                                    ...
                                                                    0xA = Every 1024th MDN participates - 1024 node loops. */
-        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This value is XORed with the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse bit to
-                                                                 override its setting. When the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse is blown,
-                                                                 only repairs that are blown into fuses are used and soft repairs are
-                                                                 disallowed. Overriding the fuse allows soft repairs to be used again. */
+        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only. */
         uint64_t stagger_disable       : 1;  /**< [ 16: 16](R/W) BIST stagger disable. Disables the BIST stagger period and starts BIST
                                                                  via a broadcast write to all BIST state machines. For diagnostic use only. */
         uint64_t stagger_period        : 16; /**< [ 15:  0](R/W) When BIST start staggering is enabled, a BIST start command is
@@ -359,12 +352,7 @@ union cavm_mdc_bist_config
                                                                  increasing power consumption. */
         uint64_t stagger_disable       : 1;  /**< [ 16: 16](R/W) BIST stagger disable. Disables the BIST stagger period and starts BIST
                                                                  via a broadcast write to all BIST state machines. For diagnostic use only. */
-        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This value is XORed with the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse bit to
-                                                                 override its setting. When the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse is blown,
-                                                                 only repairs that are blown into fuses are used and soft repairs are
-                                                                 disallowed. Overriding the fuse allows soft repairs to be used again. */
+        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only. */
         uint64_t mdn_start_ratio       : 4;  /**< [ 21: 18](R/W) This field is used in conjuction with [MDC_BROADCAST], [MDH_START_RATIO],
                                                                  and [STAGGER_PERIOD] to control BIST start staggering.  The field effectively
                                                                  specifies how many MDNs participate in a given BIST start command.  The
@@ -393,9 +381,7 @@ union cavm_mdc_bist_config
                                                                  all serial chains simultaneously or not.
                                                                    0 = BIST start commands sent to one chain at a time.
                                                                    1 = BIST start commands sent to all chains simultaneously. */
-        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only.
-                                                                 Internal:
-                                                                 clock_forcer attribute not used as state is inverted versus other blocks. */
+        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only. */
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
@@ -405,9 +391,7 @@ union cavm_mdc_bist_config
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_27_63        : 37;
-        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only.
-                                                                 Internal:
-                                                                 clock_forcer attribute not used as state is inverted versus other blocks. */
+        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only. */
         uint64_t mdc_broadcast         : 1;  /**< [ 25: 25](R/W) This field is used in conjunction with [MDH_START_RATIO], [MDN_START_RATIO],
                                                                  and [STAGGER_PERIOD] to control BIST start staggering. The field
                                                                  specifies whether or not a given BIST start command is transmitted to
@@ -436,12 +420,7 @@ union cavm_mdc_bist_config
                                                                    0x2 = Every 4th MDN participates - 4 node loops.
                                                                    ...
                                                                    0xA = Every 1024th MDN participates - 1024 node loops. */
-        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This value is XORed with the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse bit to
-                                                                 override its setting. When the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse is blown,
-                                                                 only repairs that are blown into fuses are used and soft repairs are
-                                                                 disallowed. Overriding the fuse allows soft repairs to be used again. */
+        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only. */
         uint64_t stagger_disable       : 1;  /**< [ 16: 16](R/W) BIST stagger disable. Disables the BIST stagger period and starts BIST
                                                                  via a broadcast write to all BIST state machines. For diagnostic use only. */
         uint64_t stagger_period        : 16; /**< [ 15:  0](R/W) When BIST start staggering is enabled, a BIST start command is
@@ -481,12 +460,7 @@ union cavm_mdc_bist_config
                                                                  increasing power consumption. */
         uint64_t stagger_disable       : 1;  /**< [ 16: 16](R/W) BIST stagger disable. Disables the BIST stagger period and starts BIST
                                                                  via a broadcast write to all BIST state machines. For diagnostic use only. */
-        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This value is XORed with the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse bit to
-                                                                 override its setting. When the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse is blown,
-                                                                 only repairs that are blown into fuses are used and soft repairs are
-                                                                 disallowed. Overriding the fuse allows soft repairs to be used again. */
+        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only. */
         uint64_t mdn_start_ratio       : 4;  /**< [ 21: 18](R/W) This field is used in conjunction with [MDC_BROADCAST], [MDH_START_RATIO],
                                                                  and [STAGGER_PERIOD] to control BIST start staggering.  The field effectively
                                                                  specifies how many MDNs participate in a given BIST start command.  The
@@ -515,9 +489,7 @@ union cavm_mdc_bist_config
                                                                  all serial chains simultaneously or not.
                                                                    0 = BIST start commands sent to one chain at a time.
                                                                    1 = BIST start commands sent to all chains simultaneously. */
-        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only.
-                                                                 Internal:
-                                                                 clock_forcer attribute not used as state is inverted versus other blocks. */
+        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only. */
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -926,44 +898,6 @@ static inline uint64_t CAVM_MDC_ECC_STATUS_FUNC(void)
 #define arguments_CAVM_MDC_ECC_STATUS -1,-1,-1,-1
 
 /**
- * Register (RSL) mdc_eco
- *
- * INTERNAL: MDC ECO Register
- */
-union cavm_mdc_eco
-{
-    uint64_t u;
-    struct cavm_mdc_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdc_eco_s cn; */
-};
-typedef union cavm_mdc_eco cavm_mdc_eco_t;
-
-#define CAVM_MDC_ECO CAVM_MDC_ECO_FUNC()
-static inline uint64_t CAVM_MDC_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDC_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e0100000f8ll;
-    __cavm_csr_fatal("MDC_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDC_ECO cavm_mdc_eco_t
-#define bustype_CAVM_MDC_ECO CSR_TYPE_RSL
-#define basename_CAVM_MDC_ECO "MDC_ECO"
-#define device_bar_CAVM_MDC_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MDC_ECO 0
-#define arguments_CAVM_MDC_ECO -1,-1,-1,-1
-
-/**
  * Register (RSL) mdc_int_ena_w1c
  *
  * MDC Interrupt Enable Write-1-Clear Register
@@ -1336,16 +1270,7 @@ union cavm_mdc_ras_romx
                                                                  Index 0 indicates the version of the ROM table. A 0x0 at this location indicates
                                                                  this product does not have a ROM.
 
-                                                                 For additional constant data, see each node's MDN_CONST.
-
-                                                                 Internal:
-                                                                 When the user wants to access the RAS INFO for cain ID = CID, hub ID = HID and
-                                                                 node ID = NID he need to access the ROM 3 times:
-                                                                 1) Read the ROM address at (CID+1), to determine CID_base.
-                                                                 2) Read the ROM address at (CID_base + HIB) to determine HID_base.
-                                                                 3) Read the ROM address at (HID_base + NID) to determine RAS_data.
-
-                                                                 For P1 or other chips without the ROM, this must return 0x0 at index 0. */
+                                                                 For additional constant data, see each node's MDN_CONST. */
 #else /* Word 0 - Little Endian */
         uint64_t data                  : 64; /**< [ 63:  0](RO/H) ROM data representing the RAS information for each MDC memory. See the MDC
                                                                  chapter body text for the format of the ROM.
@@ -1353,16 +1278,7 @@ union cavm_mdc_ras_romx
                                                                  Index 0 indicates the version of the ROM table. A 0x0 at this location indicates
                                                                  this product does not have a ROM.
 
-                                                                 For additional constant data, see each node's MDN_CONST.
-
-                                                                 Internal:
-                                                                 When the user wants to access the RAS INFO for cain ID = CID, hub ID = HID and
-                                                                 node ID = NID he need to access the ROM 3 times:
-                                                                 1) Read the ROM address at (CID+1), to determine CID_base.
-                                                                 2) Read the ROM address at (CID_base + HIB) to determine HID_base.
-                                                                 3) Read the ROM address at (HID_base + NID) to determine RAS_data.
-
-                                                                 For P1 or other chips without the ROM, this must return 0x0 at index 0. */
+                                                                 For additional constant data, see each node's MDN_CONST. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_mdc_ras_romx_s cn; */
@@ -1393,42 +1309,6 @@ static inline uint64_t CAVM_MDC_RAS_ROMX(uint64_t a)
 #define device_bar_CAVM_MDC_RAS_ROMX(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_MDC_RAS_ROMX(a) (a)
 #define arguments_CAVM_MDC_RAS_ROMX(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) mdc_scratch
- *
- * INTERNAL: MDC Scratch Register
- */
-union cavm_mdc_scratch
-{
-    uint64_t u;
-    struct cavm_mdc_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t scratch               : 64; /**< [ 63:  0](R/W) Scratch register. */
-#else /* Word 0 - Little Endian */
-        uint64_t scratch               : 64; /**< [ 63:  0](R/W) Scratch register. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdc_scratch_s cn; */
-};
-typedef union cavm_mdc_scratch cavm_mdc_scratch_t;
-
-#define CAVM_MDC_SCRATCH CAVM_MDC_SCRATCH_FUNC()
-static inline uint64_t CAVM_MDC_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDC_SCRATCH_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e0100000f0ll;
-    __cavm_csr_fatal("MDC_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDC_SCRATCH cavm_mdc_scratch_t
-#define bustype_CAVM_MDC_SCRATCH CSR_TYPE_RSL
-#define basename_CAVM_MDC_SCRATCH "MDC_SCRATCH"
-#define device_bar_CAVM_MDC_SCRATCH 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MDC_SCRATCH 0
-#define arguments_CAVM_MDC_SCRATCH -1,-1,-1,-1
 
 /**
  * Register (RSL) mdc_timeouts

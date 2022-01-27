@@ -380,17 +380,13 @@ union cavm_pccvf_xxx_cmd
         uint32_t reserved_21_31        : 11;
         uint32_t cl                    : 1;  /**< [ 20: 20](RO) Capabilities list. Indicates presence of an extended capability item. */
         uint32_t reserved_3_19         : 17;
-        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable.
-                                                                 Internal:
-                                                                 For simplicity always one; we do not disable NCB transactions. */
+        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable. */
         uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory-space access enable. For SR-IOV VFs always zero. */
         uint32_t reserved_0            : 1;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0            : 1;
         uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory-space access enable. For SR-IOV VFs always zero. */
-        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable.
-                                                                 Internal:
-                                                                 For simplicity always one; we do not disable NCB transactions. */
+        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable. */
         uint32_t reserved_3_19         : 17;
         uint32_t cl                    : 1;  /**< [ 20: 20](RO) Capabilities list. Indicates presence of an extended capability item. */
         uint32_t reserved_21_31        : 11;
@@ -407,13 +403,7 @@ union cavm_pccvf_xxx_cmd
                                                                  transactions.
 
                                                                  If PCCVF_XXX_E_DEV_CAP[FLR] is read-only zero, always set and writes have no
-                                                                 effect. Resets to 0 and writable otherwise.
-
-                                                                 Internal:
-                                                                 Drives VF's pcc__blk_masterena if block's CSR file has pcc_flr="True"
-                                                                 attribute. Function must not initiate NCBI DMA requests for the VF when
-                                                                 pcc__blk_masterena=0. In addition, PCC will not generate GIB (MSI-X)
-                                                                 transactions when this bit is clear. */
+                                                                 effect. Resets to 0 and writable otherwise. */
         uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory-space access enable. For SR-IOV VFs always zero. */
         uint32_t reserved_0            : 1;
 #else /* Word 0 - Little Endian */
@@ -423,13 +413,7 @@ union cavm_pccvf_xxx_cmd
                                                                  transactions.
 
                                                                  If PCCVF_XXX_E_DEV_CAP[FLR] is read-only zero, always set and writes have no
-                                                                 effect. Resets to 0 and writable otherwise.
-
-                                                                 Internal:
-                                                                 Drives VF's pcc__blk_masterena if block's CSR file has pcc_flr="True"
-                                                                 attribute. Function must not initiate NCBI DMA requests for the VF when
-                                                                 pcc__blk_masterena=0. In addition, PCC will not generate GIB (MSI-X)
-                                                                 transactions when this bit is clear. */
+                                                                 effect. Resets to 0 and writable otherwise. */
         uint32_t reserved_3_19         : 17;
         uint32_t cl                    : 1;  /**< [ 20: 20](RO) Capabilities list. Indicates presence of an extended capability item. */
         uint32_t reserved_21_31        : 11;
@@ -513,10 +497,7 @@ union cavm_pccvf_xxx_e_dev_cap
                                                                    always zero, and PCCVF_XXX_CMD[ME] is always set.
 
                                                                    1 = PCCVF_XXX_E_DEV_CTL[BCR_FLR], PCCVF_XXX_E_DEV_CTL[TRPEND], and
-                                                                   PCCVF_XXX_CMD[ME] are functional.
-
-                                                                 Internal:
-                                                                 Returns 1 if block's CSR file has pcc_flr="True" attribute. */
+                                                                   PCCVF_XXX_CMD[ME] are functional. */
         uint32_t reserved_16_27        : 12;
         uint32_t rber                  : 1;  /**< [ 15: 15](RO) Role-based error reporting. Required to be set by PCIe 3.1. */
         uint32_t reserved_0_14         : 15;
@@ -532,10 +513,7 @@ union cavm_pccvf_xxx_e_dev_cap
                                                                    always zero, and PCCVF_XXX_CMD[ME] is always set.
 
                                                                    1 = PCCVF_XXX_E_DEV_CTL[BCR_FLR], PCCVF_XXX_E_DEV_CTL[TRPEND], and
-                                                                   PCCVF_XXX_CMD[ME] are functional.
-
-                                                                 Internal:
-                                                                 Returns 1 if block's CSR file has pcc_flr="True" attribute. */
+                                                                   PCCVF_XXX_CMD[ME] are functional. */
         uint32_t reserved_29_31        : 3;
 #endif /* Word 0 - End */
     } s;
@@ -686,17 +664,13 @@ union cavm_pccvf_xxx_msix_cap_hdr
                                                                  1 = All vectors associated with the function are masked, regardless of their respective
                                                                  per-vector mask bits. */
         uint32_t reserved_27_29        : 3;
-        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1).
-                                                                 Internal:
-                                                                 From PCC's MSIX_VF_VECS parameter. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1). */
         uint32_t ncp                   : 8;  /**< [ 15:  8](RO) Next capability pointer. */
         uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X capability ID. */
 #else /* Word 0 - Little Endian */
         uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X capability ID. */
         uint32_t ncp                   : 8;  /**< [ 15:  8](RO) Next capability pointer. */
-        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1).
-                                                                 Internal:
-                                                                 From PCC's MSIX_VF_VECS parameter. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1). */
         uint32_t reserved_27_29        : 3;
         uint32_t funm                  : 1;  /**< [ 30: 30](R/W) Function mask.
                                                                  0 = Each vectors mask bit determines whether the vector is masked or not.
@@ -720,17 +694,13 @@ union cavm_pccvf_xxx_msix_cap_hdr
 
                                                                  Setting or clearing [FUNM] has no effect on the state of the per-vector mask bits. */
         uint32_t reserved_27_29        : 3;
-        uint32_t msixts                : 11; /**< [ 26: 16](RO/H) MSI-X table size encoded as (table size - 1).
-                                                                 Internal:
-                                                                 From PCC's MSIX_VF_VECS parameter. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO/H) MSI-X table size encoded as (table size - 1). */
         uint32_t ncp                   : 8;  /**< [ 15:  8](RO) Next capability pointer. */
         uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X capability ID. */
 #else /* Word 0 - Little Endian */
         uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X capability ID. */
         uint32_t ncp                   : 8;  /**< [ 15:  8](RO) Next capability pointer. */
-        uint32_t msixts                : 11; /**< [ 26: 16](RO/H) MSI-X table size encoded as (table size - 1).
-                                                                 Internal:
-                                                                 From PCC's MSIX_VF_VECS parameter. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO/H) MSI-X table size encoded as (table size - 1). */
         uint32_t reserved_27_29        : 3;
         uint32_t funm                  : 1;  /**< [ 30: 30](R/W) Function mask.
                                                                  0 = Each vectors mask bit determines whether the vector is masked or not.
@@ -863,54 +833,30 @@ union cavm_pccvf_xxx_rev
     struct cavm_pccvf_xxx_rev_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t bcc                   : 8;  /**< [ 31: 24](RO) Base-class code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[23:16]. */
-        uint32_t sc                    : 8;  /**< [ 23: 16](RO) Subclass code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[15:8]. */
-        uint32_t pi                    : 8;  /**< [ 15:  8](RO) Programming interface. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[7:0]. */
+        uint32_t bcc                   : 8;  /**< [ 31: 24](RO) Base-class code. See PCC_DEV_IDL_E. */
+        uint32_t sc                    : 8;  /**< [ 23: 16](RO) Subclass code. See PCC_DEV_IDL_E. */
+        uint32_t pi                    : 8;  /**< [ 15:  8](RO) Programming interface. See PCC_DEV_IDL_E. */
         uint32_t rid                   : 8;  /**< [  7:  0](RO/H) Revision ID. Read only version of PCCPF_XXX_VSEC_SCTL[RID]. */
 #else /* Word 0 - Little Endian */
         uint32_t rid                   : 8;  /**< [  7:  0](RO/H) Revision ID. Read only version of PCCPF_XXX_VSEC_SCTL[RID]. */
-        uint32_t pi                    : 8;  /**< [ 15:  8](RO) Programming interface. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[7:0]. */
-        uint32_t sc                    : 8;  /**< [ 23: 16](RO) Subclass code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[15:8]. */
-        uint32_t bcc                   : 8;  /**< [ 31: 24](RO) Base-class code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[23:16]. */
+        uint32_t pi                    : 8;  /**< [ 15:  8](RO) Programming interface. See PCC_DEV_IDL_E. */
+        uint32_t sc                    : 8;  /**< [ 23: 16](RO) Subclass code. See PCC_DEV_IDL_E. */
+        uint32_t bcc                   : 8;  /**< [ 31: 24](RO) Base-class code. See PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccvf_xxx_rev_s cn8; */
     struct cavm_pccvf_xxx_rev_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t bcc                   : 8;  /**< [ 31: 24](RO/H) Base-class code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[23:16]. */
-        uint32_t sc                    : 8;  /**< [ 23: 16](RO/H) Subclass code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[15:8]. */
-        uint32_t pi                    : 8;  /**< [ 15:  8](RO/H) Programming interface. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[7:0]. */
+        uint32_t bcc                   : 8;  /**< [ 31: 24](RO/H) Base-class code. See PCC_DEV_IDL_E. */
+        uint32_t sc                    : 8;  /**< [ 23: 16](RO/H) Subclass code. See PCC_DEV_IDL_E. */
+        uint32_t pi                    : 8;  /**< [ 15:  8](RO/H) Programming interface. See PCC_DEV_IDL_E. */
         uint32_t rid                   : 8;  /**< [  7:  0](RO/H) Revision ID. Read only version of PCCPF_XXX_VSEC_SCTL[RID]. */
 #else /* Word 0 - Little Endian */
         uint32_t rid                   : 8;  /**< [  7:  0](RO/H) Revision ID. Read only version of PCCPF_XXX_VSEC_SCTL[RID]. */
-        uint32_t pi                    : 8;  /**< [ 15:  8](RO/H) Programming interface. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[7:0]. */
-        uint32_t sc                    : 8;  /**< [ 23: 16](RO/H) Subclass code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[15:8]. */
-        uint32_t bcc                   : 8;  /**< [ 31: 24](RO/H) Base-class code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[23:16]. */
+        uint32_t pi                    : 8;  /**< [ 15:  8](RO/H) Programming interface. See PCC_DEV_IDL_E. */
+        uint32_t sc                    : 8;  /**< [ 23: 16](RO/H) Subclass code. See PCC_DEV_IDL_E. */
+        uint32_t bcc                   : 8;  /**< [ 31: 24](RO/H) Base-class code. See PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } cn9;
 };
@@ -941,35 +887,23 @@ union cavm_pccvf_xxx_subid
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ssid                  : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> enumerated by PCC_DEV_IDL_E.
-                                                                 e.g. 0xA033 for RNM_VF.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__vfunitid. */
+                                                                 e.g. 0xA033 for RNM_VF. */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Cavium = 0x177D. */
 #else /* Word 0 - Little Endian */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Cavium = 0x177D. */
         uint32_t ssid                  : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> enumerated by PCC_DEV_IDL_E.
-                                                                 e.g. 0xA033 for RNM_VF.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__vfunitid. */
+                                                                 e.g. 0xA033 for RNM_VF. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccvf_xxx_subid_s cn8; */
     struct cavm_pccvf_xxx_subid_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0.
-
-                                                                 Internal:
-                                                                 \<15:8\> from PCC's tie__prod. */
+        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0. */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Cavium = 0x177D. */
 #else /* Word 0 - Little Endian */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Cavium = 0x177D. */
-        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0.
-
-                                                                 Internal:
-                                                                 \<15:8\> from PCC's tie__prod. */
+        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0. */
 #endif /* Word 0 - End */
     } cn9;
 };
@@ -1100,10 +1034,7 @@ union cavm_pccvf_xxx_vsec_id
     struct cavm_pccvf_xxx_vsec_id_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCVF_XXX_VSEC_CAP_HDR.
-                                                                 Internal:
-                                                                 Matches PCCPF_XXX_VSEC_ID[LEN], so extra bytes allocated and unused at the end
-                                                                 of the structure. */
+        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCVF_XXX_VSEC_CAP_HDR. */
         uint32_t rev                   : 4;  /**< [ 19: 16](RO) Vendor-specific revision. */
         uint32_t id                    : 16; /**< [ 15:  0](RO) Vendor-specific ID. Indicates the {ProductLine} family VF VSEC ID.
                                                                  Enumerated by PCC_VSECID_E. */
@@ -1111,10 +1042,7 @@ union cavm_pccvf_xxx_vsec_id
         uint32_t id                    : 16; /**< [ 15:  0](RO) Vendor-specific ID. Indicates the {ProductLine} family VF VSEC ID.
                                                                  Enumerated by PCC_VSECID_E. */
         uint32_t rev                   : 4;  /**< [ 19: 16](RO) Vendor-specific revision. */
-        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCVF_XXX_VSEC_CAP_HDR.
-                                                                 Internal:
-                                                                 Matches PCCPF_XXX_VSEC_ID[LEN], so extra bytes allocated and unused at the end
-                                                                 of the structure. */
+        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCVF_XXX_VSEC_CAP_HDR. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccvf_xxx_vsec_id_s cn; */

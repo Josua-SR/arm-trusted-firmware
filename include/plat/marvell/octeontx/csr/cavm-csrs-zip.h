@@ -92,8 +92,6 @@
  *
  * ZIP Operation Enumeration
  * Enumerates ZIP_INST_S[OP].
- * Internal:
- * This encoding provides backward compatibility with CN88XX software.
  */
 #define CAVM_ZIP_OP_E_COMP (2)
 #define CAVM_ZIP_OP_E_DECOMP (0)
@@ -783,20 +781,14 @@ union cavm_zip_inst_s
                                                                  operations are visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:49\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<48\> for forward compatibility. */
 #else /* Word 13 - Little Endian */
         uint64_t wq_ptr                : 64; /**< [895:832] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that the ZIP coprocessor
                                                                  uses to submit work to the SSO after all context, output data, and result write
                                                                  operations are visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:49\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<48\> for forward compatibility. */
 #endif /* Word 13 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 14 - Big Endian */
         uint64_t reserved_896_959      : 64;
@@ -821,10 +813,7 @@ union cavm_zip_inst_s
                                                                  used by subsequent instructions to continue hashing the subsequent chunk of the same file.
 
                                                                  If [HASH_PTR] is 0x0, and [HALG] is not NONE, and [HMIF] is set, behavior is
-                                                                 unpredictable.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 unpredictable. */
 #else /* Word 15 - Little Endian */
         uint64_t hash_ptr              : 64; /**< [1023:960] Hash structure (ZIP_HASH_S) pointer. Bits \<6:0\> must be zero.
                                                                  Bits \<63:49\> are ignored by hardware; software should use a sign-extended bit
@@ -843,10 +832,7 @@ union cavm_zip_inst_s
                                                                  used by subsequent instructions to continue hashing the subsequent chunk of the same file.
 
                                                                  If [HASH_PTR] is 0x0, and [HALG] is not NONE, and [HMIF] is set, behavior is
-                                                                 unpredictable.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 unpredictable. */
 #endif /* Word 15 - End */
     } s;
     /* struct cavm_zip_inst_s_s cn8; */
@@ -1253,20 +1239,14 @@ union cavm_zip_inst_s
                                                                  operations are visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:53\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<52\> for forward compatibility. */
 #else /* Word 13 - Little Endian */
         uint64_t wq_ptr                : 64; /**< [895:832] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that the ZIP coprocessor
                                                                  uses to submit work to the SSO after all context, output data, and result write
                                                                  operations are visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:53\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<52\> for forward compatibility. */
 #endif /* Word 13 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 14 - Big Endian */
         uint64_t reserved_896_959      : 64;
@@ -1291,10 +1271,7 @@ union cavm_zip_inst_s
                                                                  used by subsequent instructions to continue hashing the subsequent chunk of the same file.
 
                                                                  If [HASH_PTR] is 0x0, and [HALG] is not NONE, and [HMIF] is set, behavior is
-                                                                 unpredictable.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 unpredictable. */
 #else /* Word 15 - Little Endian */
         uint64_t hash_ptr              : 64; /**< [1023:960] Hash structure (ZIP_HASH_S) pointer. Bits \<6:0\> must be zero.
                                                                  Bits \<63:53\> are ignored by hardware; software should use a sign-extended bit
@@ -1313,10 +1290,7 @@ union cavm_zip_inst_s
                                                                  used by subsequent instructions to continue hashing the subsequent chunk of the same file.
 
                                                                  If [HASH_PTR] is 0x0, and [HALG] is not NONE, and [HMIF] is set, behavior is
-                                                                 unpredictable.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 unpredictable. */
 #endif /* Word 15 - End */
     } cn9;
     /* struct cavm_zip_inst_s_cn9 cn96xx; */
@@ -1723,20 +1697,14 @@ union cavm_zip_inst_s
                                                                  operations are visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:53\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<52\> for forward compatibility. */
 #else /* Word 13 - Little Endian */
         uint64_t wq_ptr                : 64; /**< [895:832] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that the ZIP coprocessor
                                                                  uses to submit work to the SSO after all context, output data, and result write
                                                                  operations are visible to other CNXXXX units and the cores.
 
                                                                  Bits \<2:0\> must be zero.  Bits \<63:53\> are ignored by hardware; software should
-                                                                 use a sign-extended bit \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 use a sign-extended bit \<52\> for forward compatibility. */
 #endif /* Word 13 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 14 - Big Endian */
         uint64_t reserved_896_959      : 64;
@@ -1761,10 +1729,7 @@ union cavm_zip_inst_s
                                                                  used by subsequent instructions to continue hashing the subsequent chunk of the same file.
 
                                                                  If [HASH_PTR] is 0x0, and [HALG] is not NONE, and [HMIF] is set, behavior is
-                                                                 unpredictable.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 unpredictable. */
 #else /* Word 15 - Little Endian */
         uint64_t hash_ptr              : 64; /**< [1023:960] Hash structure (ZIP_HASH_S) pointer. Bits \<6:0\> must be zero.
                                                                  Bits \<63:53\> are ignored by hardware; software should use a sign-extended bit
@@ -1783,10 +1748,7 @@ union cavm_zip_inst_s
                                                                  used by subsequent instructions to continue hashing the subsequent chunk of the same file.
 
                                                                  If [HASH_PTR] is 0x0, and [HALG] is not NONE, and [HMIF] is set, behavior is
-                                                                 unpredictable.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 unpredictable. */
 #endif /* Word 15 - End */
     } cn98xx;
 };
@@ -1810,10 +1772,7 @@ union cavm_zip_nptr_s
                                                                  128 byte boundary.
 
                                                                  Bits \<63:49\> are ignored by hardware; software should use a sign-extended bit
-                                                                 \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\> and \<6:0\> are ignored by hardware. */
+                                                                 \<48\> for forward compatibility. */
 #else /* Word 0 - Little Endian */
         uint64_t addr                  : 64; /**< [ 63:  0] Pointer to next instruction's IOVA.  Behavior is unpredictable if the address is 0x0.
 
@@ -1821,10 +1780,7 @@ union cavm_zip_nptr_s
                                                                  128 byte boundary.
 
                                                                  Bits \<63:49\> are ignored by hardware; software should use a sign-extended bit
-                                                                 \<48\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:49\> and \<6:0\> are ignored by hardware. */
+                                                                 \<48\> for forward compatibility. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_zip_nptr_s_s cn8; */
@@ -1837,10 +1793,7 @@ union cavm_zip_nptr_s
                                                                  128 byte boundary.
 
                                                                  Bits \<63:53\> are ignored by hardware; software should use a sign-extended bit
-                                                                 \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\> and \<6:0\> are ignored by hardware. */
+                                                                 \<52\> for forward compatibility. */
 #else /* Word 0 - Little Endian */
         uint64_t addr                  : 64; /**< [ 63:  0] Pointer to next instruction's IOVA.  Behavior is unpredictable if the address is 0x0.
 
@@ -1848,10 +1801,7 @@ union cavm_zip_nptr_s
                                                                  128 byte boundary.
 
                                                                  Bits \<63:53\> are ignored by hardware; software should use a sign-extended bit
-                                                                 \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\> and \<6:0\> are ignored by hardware. */
+                                                                 \<52\> for forward compatibility. */
 #endif /* Word 0 - End */
     } cn9;
 };
@@ -3176,91 +3126,6 @@ static inline uint64_t CAVM_ZIPX_CONSTANTS2(uint64_t a)
 #define arguments_CAVM_ZIPX_CONSTANTS2(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) zip#_core#_bp_test
- *
- * INTERNAL: ZIP Backpressure Test Registers
- */
-union cavm_zipx_corex_bp_test
-{
-    uint64_t u;
-    struct cavm_zipx_corex_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t enable                : 4;  /**< [ 51: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\> = Randomly make corresponding engine gather  FIFO output not valid.
-                                                                 \<50\> = Randomly make corresponding engine scatter FIFO output not valid.
-                                                                 \<49\> = Randomly make corresponding engine input   FIFO output not valid.
-                                                                 \<48\> = Randomly make corresponding engine input tag FIFO output not valid.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine read DMA. */
-        uint64_t reserved_24_47        : 24;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                    \<23:22\> = Config 3.
-                                                                    \<21:20\> = Config 2.
-                                                                    \<19:18\> = Config 1.
-                                                                    \<17:16\> = Config 0.
-
-                                                                  When using 0x0, the constant backpressure means the testbench must toggle the
-                                                                  corresponding [ENABLE] bit to keep traffic flowing. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                    \<23:22\> = Config 3.
-                                                                    \<21:20\> = Config 2.
-                                                                    \<19:18\> = Config 1.
-                                                                    \<17:16\> = Config 0.
-
-                                                                  When using 0x0, the constant backpressure means the testbench must toggle the
-                                                                  corresponding [ENABLE] bit to keep traffic flowing. */
-        uint64_t reserved_24_47        : 24;
-        uint64_t enable                : 4;  /**< [ 51: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\> = Randomly make corresponding engine gather  FIFO output not valid.
-                                                                 \<50\> = Randomly make corresponding engine scatter FIFO output not valid.
-                                                                 \<49\> = Randomly make corresponding engine input   FIFO output not valid.
-                                                                 \<48\> = Randomly make corresponding engine input tag FIFO output not valid.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine read DMA. */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_zipx_corex_bp_test_s cn; */
-};
-typedef union cavm_zipx_corex_bp_test cavm_zipx_corex_bp_test_t;
-
-static inline uint64_t CAVM_ZIPX_COREX_BP_TEST(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ZIPX_COREX_BP_TEST(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a==0) && (b<=11)))
-        return 0x838000003400ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
-    __cavm_csr_fatal("ZIPX_COREX_BP_TEST", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ZIPX_COREX_BP_TEST(a,b) cavm_zipx_corex_bp_test_t
-#define bustype_CAVM_ZIPX_COREX_BP_TEST(a,b) CSR_TYPE_NCB
-#define basename_CAVM_ZIPX_COREX_BP_TEST(a,b) "ZIPX_COREX_BP_TEST"
-#define device_bar_CAVM_ZIPX_COREX_BP_TEST(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_ZIPX_COREX_BP_TEST(a,b) (a)
-#define arguments_CAVM_ZIPX_COREX_BP_TEST(a,b) (a),(b),-1,-1
-
-/**
  * Register (NCB) zip#_core#_to_sta
  *
  * ZIP Core Status Registers
@@ -3316,13 +3181,7 @@ union cavm_zipx_core_reset
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reac                  : 1;  /**< [ 63: 63](R/W) Reset ZIP engine after completion of each instruction, to limit exposure to
                                                                  corrupt commands and structures affecting subsequent commands. */
-        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Additional CYA mode to reset both the ZIP engine and engine control logic
-                                                                 after completion of each instruction.  The existing REAC mode (bit 63)
-                                                                 only resets the ZIP engine, and preserves the state of some engine control
-                                                                 logic.  This mode only takes effect if the REAC mode is also
-                                                                 enabled. */
+        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved. */
         uint64_t reserved_12_61        : 50;
         uint64_t reset                 : 12; /**< [ 11:  0](R/W) When set, the corresponding core will be put into reset. When clear, the core is out of
                                                                  reset.  Bit[\<a\>] resets ZIP core \<a\>. */
@@ -3330,13 +3189,7 @@ union cavm_zipx_core_reset
         uint64_t reset                 : 12; /**< [ 11:  0](R/W) When set, the corresponding core will be put into reset. When clear, the core is out of
                                                                  reset.  Bit[\<a\>] resets ZIP core \<a\>. */
         uint64_t reserved_12_61        : 50;
-        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Additional CYA mode to reset both the ZIP engine and engine control logic
-                                                                 after completion of each instruction.  The existing REAC mode (bit 63)
-                                                                 only resets the ZIP engine, and preserves the state of some engine control
-                                                                 logic.  This mode only takes effect if the REAC mode is also
-                                                                 enabled. */
+        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved. */
         uint64_t reac                  : 1;  /**< [ 63: 63](R/W) Reset ZIP engine after completion of each instruction, to limit exposure to
                                                                  corrupt commands and structures affecting subsequent commands. */
 #endif /* Word 0 - End */
@@ -3385,34 +3238,12 @@ union cavm_zipx_core_to_cfg
         uint64_t timeout               : 32; /**< [ 31:  0](R/W) Number of coprocessor-clocks before a ZIP engine is considered hung. When the
                                                                  ZIP()_CORE()_TO_STA[CNT] reaches ZIP()_CORE_TO_CFG[TIMEOUT], the ZIP engine hang
                                                                  can be reported through interrupt ZIP()_VF()_MISC_INT[CTO] if the interrupt is enabled.
-                                                                 If [TIMEOUT] is 0, engine timeout detection is disabled.
-
-                                                                 Internal:
-                                                                 Decompression could be very slow if someone created a malicious compressed stream.
-                                                                 Compression is much more bounded. The worst case would be .5B/cycle plus the Huffman
-                                                                 encoding delay of around 8K cycles. Also note the cripple feature can increase the worst
-                                                                 case delay 4x.
-                                                                 If hangs are just theoretical and therefore very rare, using a large number say 1M
-                                                                 cycles is recommended. Assume 1K cycles to cover the decompression time, plus 8K
-                                                                 Huffman encoding delay, for a total of 9K cycles. In the worst crippled case, the
-                                                                 timeout upper limit is 9K x 4 x 4 = 36K x 4 = 0x24000. For SKUs without cripple, S/W can
-                                                                 overwrite this value to 0x2400. */
+                                                                 If [TIMEOUT] is 0, engine timeout detection is disabled. */
 #else /* Word 0 - Little Endian */
         uint64_t timeout               : 32; /**< [ 31:  0](R/W) Number of coprocessor-clocks before a ZIP engine is considered hung. When the
                                                                  ZIP()_CORE()_TO_STA[CNT] reaches ZIP()_CORE_TO_CFG[TIMEOUT], the ZIP engine hang
                                                                  can be reported through interrupt ZIP()_VF()_MISC_INT[CTO] if the interrupt is enabled.
-                                                                 If [TIMEOUT] is 0, engine timeout detection is disabled.
-
-                                                                 Internal:
-                                                                 Decompression could be very slow if someone created a malicious compressed stream.
-                                                                 Compression is much more bounded. The worst case would be .5B/cycle plus the Huffman
-                                                                 encoding delay of around 8K cycles. Also note the cripple feature can increase the worst
-                                                                 case delay 4x.
-                                                                 If hangs are just theoretical and therefore very rare, using a large number say 1M
-                                                                 cycles is recommended. Assume 1K cycles to cover the decompression time, plus 8K
-                                                                 Huffman encoding delay, for a total of 9K cycles. In the worst crippled case, the
-                                                                 timeout upper limit is 9K x 4 x 4 = 36K x 4 = 0x24000. For SKUs without cripple, S/W can
-                                                                 overwrite this value to 0x2400. */
+                                                                 If [TIMEOUT] is 0, engine timeout detection is disabled. */
         uint64_t reserved_32_61        : 30;
         uint64_t ar                    : 1;  /**< [ 62: 62](R/W) Auto reset. This bit only takes effect when [HALT] is set. When [HALT] is cleared, [AR] is
                                                                  ignored.
@@ -3606,15 +3437,11 @@ union cavm_zipx_dbg_corex_sta
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t busy                  : 1;  /**< [ 63: 63](RO/H) Core state. 0 = core is idle; 1 = core is busy. */
         uint64_t reserved_38_62        : 25;
-        uint64_t ist                   : 6;  /**< [ 37: 32](RO/H) FSM State of current instruction that is executing.
-                                                                 Internal:
-                                                                 See sta_fsm_t in zip_defs.vh. */
+        uint64_t ist                   : 6;  /**< [ 37: 32](RO/H) FSM State of current instruction that is executing. */
         uint64_t nie                   : 32; /**< [ 31:  0](RO/H) Number of instructions executed on this core. */
 #else /* Word 0 - Little Endian */
         uint64_t nie                   : 32; /**< [ 31:  0](RO/H) Number of instructions executed on this core. */
-        uint64_t ist                   : 6;  /**< [ 37: 32](RO/H) FSM State of current instruction that is executing.
-                                                                 Internal:
-                                                                 See sta_fsm_t in zip_defs.vh. */
+        uint64_t ist                   : 6;  /**< [ 37: 32](RO/H) FSM State of current instruction that is executing. */
         uint64_t reserved_38_62        : 25;
         uint64_t busy                  : 1;  /**< [ 63: 63](RO/H) Core state. 0 = core is idle; 1 = core is busy. */
 #endif /* Word 0 - End */
@@ -3685,43 +3512,6 @@ static inline uint64_t CAVM_ZIPX_DBG_QUEX_STA(uint64_t a, uint64_t b)
 #define device_bar_CAVM_ZIPX_DBG_QUEX_STA(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_ZIPX_DBG_QUEX_STA(a,b) (a)
 #define arguments_CAVM_ZIPX_DBG_QUEX_STA(a,b) (a),(b),-1,-1
-
-/**
- * Register (NCB) zip#_eco
- *
- * INTERNAL: ZIP ECO Register
- */
-union cavm_zipx_eco
-{
-    uint64_t u;
-    struct cavm_zipx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_zipx_eco_s cn; */
-};
-typedef union cavm_zipx_eco cavm_zipx_eco_t;
-
-static inline uint64_t CAVM_ZIPX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ZIPX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a==0))
-        return 0x8380000005f0ll + 0x1000000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("ZIPX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ZIPX_ECO(a) cavm_zipx_eco_t
-#define bustype_CAVM_ZIPX_ECO(a) CSR_TYPE_NCB
-#define basename_CAVM_ZIPX_ECO(a) "ZIPX_ECO"
-#define device_bar_CAVM_ZIPX_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_ZIPX_ECO(a) (a)
-#define arguments_CAVM_ZIPX_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) zip#_pf_active_pc
@@ -4675,47 +4465,6 @@ static inline uint64_t CAVM_ZIPX_QUE_PRI(uint64_t a)
 #define device_bar_CAVM_ZIPX_QUE_PRI(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_ZIPX_QUE_PRI(a) (a)
 #define arguments_CAVM_ZIPX_QUE_PRI(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) zip#_que_reset
- *
- * INTERNAL: ZIP Queue Reset Register
- *
- * This register resets the ZIP instruction queues.
- */
-union cavm_zipx_que_reset
-{
-    uint64_t u;
-    struct cavm_zipx_que_reset_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t reset                 : 8;  /**< [  7:  0](R/W) When set, the corresponding queue will be put into reset. When clear, the queue is out of
-                                                                 reset. Bit[\<a\>] resets queue \<a\>. */
-#else /* Word 0 - Little Endian */
-        uint64_t reset                 : 8;  /**< [  7:  0](R/W) When set, the corresponding queue will be put into reset. When clear, the queue is out of
-                                                                 reset. Bit[\<a\>] resets queue \<a\>. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_zipx_que_reset_s cn; */
-};
-typedef union cavm_zipx_que_reset cavm_zipx_que_reset_t;
-
-static inline uint64_t CAVM_ZIPX_QUE_RESET(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ZIPX_QUE_RESET(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a==0))
-        return 0x838000000400ll + 0x1000000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("ZIPX_QUE_RESET", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ZIPX_QUE_RESET(a) cavm_zipx_que_reset_t
-#define bustype_CAVM_ZIPX_QUE_RESET(a) CSR_TYPE_NCB
-#define basename_CAVM_ZIPX_QUE_RESET(a) "ZIPX_QUE_RESET"
-#define device_bar_CAVM_ZIPX_QUE_RESET(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_ZIPX_QUE_RESET(a) (a)
-#define arguments_CAVM_ZIPX_QUE_RESET(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) zip#_throttle
@@ -5802,75 +5551,9 @@ union cavm_zip_corex_bist_status
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_26_63        : 38;
-        uint64_t bstatus               : 26; /**< [ 25:  0](RO/H) BIST result of the ZIP core memories.
-                                                                 Internal:
-                                                                 ZIPC (cores 0,2,4):
-                                                                 \<25:18\> = zipc_hash mem 7-0.
-                                                                 \<17\>    = zip state symbols.
-                                                                 \<16\>    = zip state code1.
-                                                                 \<15\>    = zip state code0.
-                                                                 \<14\>    = zip state data1 hi.
-                                                                 \<13\>    = zip state data1 lo.
-                                                                 \<12\>    = zip state data0 hi.
-                                                                 \<11\>    = zip state data0 lo.
-                                                                 \<10:8\>  = zip history mem1 banks 2-0.
-                                                                 \<7:5\>   = zip history mem0 banks 2-0.
-                                                                 \<4\>     = zip history outfifo.
-                                                                 \<3:2\>   = zip history bundle fifo 1-0.
-                                                                 \<1\>     = zip history dfifo.
-                                                                 \<0\>     = sha ifif.
-
-                                                                 ZIPD (cores 1,3,5):
-                                                                 \<25:19\> = 0.
-                                                                 \<18\>    = zip state cam.
-                                                                 \<17\>    = zip state symbols.
-                                                                 \<16\>    = zip state code1.
-                                                                 \<15\>    = zip state code0.
-                                                                 \<14\>    = zip state data1 hi.
-                                                                 \<13\>    = zip state data1 lo.
-                                                                 \<12\>    = zip state data0 hi.
-                                                                 \<11\>    = zip state data0 lo.
-                                                                 \<10:8\>  = zip history mem1 banks 2-0.
-                                                                 \<7:5\>   = zip history mem0 banks 2-0.
-                                                                 \<4\>     = zip history outfifo.
-                                                                 \<3:2\>   = zip history bundle fifo 1-0.
-                                                                 \<1\>     = zip history dfifo.
-                                                                 \<0\>     = sha ifif. */
+        uint64_t bstatus               : 26; /**< [ 25:  0](RO/H) BIST result of the ZIP core memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t bstatus               : 26; /**< [ 25:  0](RO/H) BIST result of the ZIP core memories.
-                                                                 Internal:
-                                                                 ZIPC (cores 0,2,4):
-                                                                 \<25:18\> = zipc_hash mem 7-0.
-                                                                 \<17\>    = zip state symbols.
-                                                                 \<16\>    = zip state code1.
-                                                                 \<15\>    = zip state code0.
-                                                                 \<14\>    = zip state data1 hi.
-                                                                 \<13\>    = zip state data1 lo.
-                                                                 \<12\>    = zip state data0 hi.
-                                                                 \<11\>    = zip state data0 lo.
-                                                                 \<10:8\>  = zip history mem1 banks 2-0.
-                                                                 \<7:5\>   = zip history mem0 banks 2-0.
-                                                                 \<4\>     = zip history outfifo.
-                                                                 \<3:2\>   = zip history bundle fifo 1-0.
-                                                                 \<1\>     = zip history dfifo.
-                                                                 \<0\>     = sha ifif.
-
-                                                                 ZIPD (cores 1,3,5):
-                                                                 \<25:19\> = 0.
-                                                                 \<18\>    = zip state cam.
-                                                                 \<17\>    = zip state symbols.
-                                                                 \<16\>    = zip state code1.
-                                                                 \<15\>    = zip state code0.
-                                                                 \<14\>    = zip state data1 hi.
-                                                                 \<13\>    = zip state data1 lo.
-                                                                 \<12\>    = zip state data0 hi.
-                                                                 \<11\>    = zip state data0 lo.
-                                                                 \<10:8\>  = zip history mem1 banks 2-0.
-                                                                 \<7:5\>   = zip history mem0 banks 2-0.
-                                                                 \<4\>     = zip history outfifo.
-                                                                 \<3:2\>   = zip history bundle fifo 1-0.
-                                                                 \<1\>     = zip history dfifo.
-                                                                 \<0\>     = sha ifif. */
+        uint64_t bstatus               : 26; /**< [ 25:  0](RO/H) BIST result of the ZIP core memories. */
         uint64_t reserved_26_63        : 38;
 #endif /* Word 0 - End */
     } s;
@@ -5892,91 +5575,6 @@ static inline uint64_t CAVM_ZIP_COREX_BIST_STATUS(uint64_t a)
 #define device_bar_CAVM_ZIP_COREX_BIST_STATUS(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_ZIP_COREX_BIST_STATUS(a) (a)
 #define arguments_CAVM_ZIP_COREX_BIST_STATUS(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) zip_core#_bp_test
- *
- * INTERNAL: ZIP Backpressure Test Registers
- */
-union cavm_zip_corex_bp_test
-{
-    uint64_t u;
-    struct cavm_zip_corex_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t enable                : 4;  /**< [ 51: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\> = Randomly make corresponding engine gather  FIFO output not valid.
-                                                                 \<50\> = Randomly make corresponding engine scatter FIFO output not valid.
-                                                                 \<49\> = Randomly make corresponding engine input   FIFO output not valid.
-                                                                 \<48\> = Randomly make corresponding engine input tag FIFO output not valid.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine read DMA. */
-        uint64_t reserved_24_47        : 24;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                    \<23:22\> = Config 3.
-                                                                    \<21:20\> = Config 2.
-                                                                    \<19:18\> = Config 1.
-                                                                    \<17:16\> = Config 0.
-
-                                                                  When using 0x0, the constant backpressure means the testbench must toggle the
-                                                                  corresponding [ENABLE] bit to keep traffic flowing. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                    \<23:22\> = Config 3.
-                                                                    \<21:20\> = Config 2.
-                                                                    \<19:18\> = Config 1.
-                                                                    \<17:16\> = Config 0.
-
-                                                                  When using 0x0, the constant backpressure means the testbench must toggle the
-                                                                  corresponding [ENABLE] bit to keep traffic flowing. */
-        uint64_t reserved_24_47        : 24;
-        uint64_t enable                : 4;  /**< [ 51: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\> = Randomly make corresponding engine gather  FIFO output not valid.
-                                                                 \<50\> = Randomly make corresponding engine scatter FIFO output not valid.
-                                                                 \<49\> = Randomly make corresponding engine input   FIFO output not valid.
-                                                                 \<48\> = Randomly make corresponding engine input tag FIFO output not valid.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine read DMA. */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_zip_corex_bp_test_s cn; */
-};
-typedef union cavm_zip_corex_bp_test cavm_zip_corex_bp_test_t;
-
-static inline uint64_t CAVM_ZIP_COREX_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ZIP_COREX_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=11))
-        return 0x838000003400ll + 8ll * ((a) & 0xf);
-    __cavm_csr_fatal("ZIP_COREX_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ZIP_COREX_BP_TEST(a) cavm_zip_corex_bp_test_t
-#define bustype_CAVM_ZIP_COREX_BP_TEST(a) CSR_TYPE_NCB
-#define basename_CAVM_ZIP_COREX_BP_TEST(a) "ZIP_COREX_BP_TEST"
-#define device_bar_CAVM_ZIP_COREX_BP_TEST(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_ZIP_COREX_BP_TEST(a) (a)
-#define arguments_CAVM_ZIP_COREX_BP_TEST(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) zip_core#_to_sta
@@ -6036,13 +5634,7 @@ union cavm_zip_core_reset
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reac                  : 1;  /**< [ 63: 63](R/W) Reset ZIP engine after completion of each instruction, to limit exposure to
                                                                  corrupt commands and structures affecting subsequent commands. */
-        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Additional CYA mode to reset both the ZIP engine and engine control logic
-                                                                 after completion of each instruction.  The existing REAC mode (bit 63)
-                                                                 only resets the ZIP engine, and preserves the state of some engine control
-                                                                 logic.  This mode only takes effect if the REAC mode is also
-                                                                 enabled. */
+        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved. */
         uint64_t reserved_12_61        : 50;
         uint64_t reset                 : 12; /**< [ 11:  0](R/W) When set, the corresponding core will be put into reset. When clear, the core is out of
                                                                  reset.  Bit[\<a\>] resets ZIP core \<a\>. */
@@ -6050,13 +5642,7 @@ union cavm_zip_core_reset
         uint64_t reset                 : 12; /**< [ 11:  0](R/W) When set, the corresponding core will be put into reset. When clear, the core is out of
                                                                  reset.  Bit[\<a\>] resets ZIP core \<a\>. */
         uint64_t reserved_12_61        : 50;
-        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Additional CYA mode to reset both the ZIP engine and engine control logic
-                                                                 after completion of each instruction.  The existing REAC mode (bit 63)
-                                                                 only resets the ZIP engine, and preserves the state of some engine control
-                                                                 logic.  This mode only takes effect if the REAC mode is also
-                                                                 enabled. */
+        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved. */
         uint64_t reac                  : 1;  /**< [ 63: 63](R/W) Reset ZIP engine after completion of each instruction, to limit exposure to
                                                                  corrupt commands and structures affecting subsequent commands. */
 #endif /* Word 0 - End */
@@ -6066,13 +5652,7 @@ union cavm_zip_core_reset
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reac                  : 1;  /**< [ 63: 63](R/W) Reset ZIP engine after completion of each instruction, to limit exposure to
                                                                  corrupt commands and structures affecting subsequent commands. */
-        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Additional CYA mode to reset both the ZIP engine and engine control logic
-                                                                 after completion of each instruction.  The existing REAC mode (bit 63)
-                                                                 only resets the ZIP engine, and preserves the state of some engine control
-                                                                 logic.  This mode only takes effect if the REAC mode is also
-                                                                 enabled. */
+        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved. */
         uint64_t reserved_6_61         : 56;
         uint64_t reset                 : 6;  /**< [  5:  0](R/W) When set, the corresponding core will be put into reset. When clear, the core is out of
                                                                  reset.  Bit[\<a\>] resets ZIP core \<a\>. */
@@ -6080,13 +5660,7 @@ union cavm_zip_core_reset
         uint64_t reset                 : 6;  /**< [  5:  0](R/W) When set, the corresponding core will be put into reset. When clear, the core is out of
                                                                  reset.  Bit[\<a\>] resets ZIP core \<a\>. */
         uint64_t reserved_6_61         : 56;
-        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Additional CYA mode to reset both the ZIP engine and engine control logic
-                                                                 after completion of each instruction.  The existing REAC mode (bit 63)
-                                                                 only resets the ZIP engine, and preserves the state of some engine control
-                                                                 logic.  This mode only takes effect if the REAC mode is also
-                                                                 enabled. */
+        uint64_t reac_plus             : 1;  /**< [ 62: 62](R/W) Reserved. */
         uint64_t reac                  : 1;  /**< [ 63: 63](R/W) Reset ZIP engine after completion of each instruction, to limit exposure to
                                                                  corrupt commands and structures affecting subsequent commands. */
 #endif /* Word 0 - End */
@@ -6138,34 +5712,12 @@ union cavm_zip_core_to_cfg
         uint64_t timeout               : 32; /**< [ 31:  0](R/W) Number of coprocessor-clocks before a ZIP engine is considered hung. When the
                                                                  ZIP_CORE()_TO_STA[CNT] reaches ZIP_CORE_TO_CFG[TIMEOUT], the ZIP engine hang
                                                                  can be reported through interrupt ZIP_VF()_MISC_INT[CTO] if the interrupt is enabled.
-                                                                 If [TIMEOUT] is 0, engine timeout detection is disabled.
-
-                                                                 Internal:
-                                                                 Decompression could be very slow if someone created a malicious compressed stream.
-                                                                 Compression is much more bounded. The worst case would be .5B/cycle plus the Huffman
-                                                                 encoding delay of around 8K cycles. Also note the cripple feature can increase the worst
-                                                                 case delay 4x.
-                                                                 If hangs are just theoretical and therefore very rare, using a large number say 1M
-                                                                 cycles is recommended. Assume 1K cycles to cover the decompression time, plus 8K
-                                                                 Huffman encoding delay, for a total of 9K cycles. In the worst crippled case, the
-                                                                 timeout upper limit is 9K x 4 x 4 = 36K x 4 = 0x24000. For SKUs without cripple, S/W can
-                                                                 overwrite this value to 0x2400. */
+                                                                 If [TIMEOUT] is 0, engine timeout detection is disabled. */
 #else /* Word 0 - Little Endian */
         uint64_t timeout               : 32; /**< [ 31:  0](R/W) Number of coprocessor-clocks before a ZIP engine is considered hung. When the
                                                                  ZIP_CORE()_TO_STA[CNT] reaches ZIP_CORE_TO_CFG[TIMEOUT], the ZIP engine hang
                                                                  can be reported through interrupt ZIP_VF()_MISC_INT[CTO] if the interrupt is enabled.
-                                                                 If [TIMEOUT] is 0, engine timeout detection is disabled.
-
-                                                                 Internal:
-                                                                 Decompression could be very slow if someone created a malicious compressed stream.
-                                                                 Compression is much more bounded. The worst case would be .5B/cycle plus the Huffman
-                                                                 encoding delay of around 8K cycles. Also note the cripple feature can increase the worst
-                                                                 case delay 4x.
-                                                                 If hangs are just theoretical and therefore very rare, using a large number say 1M
-                                                                 cycles is recommended. Assume 1K cycles to cover the decompression time, plus 8K
-                                                                 Huffman encoding delay, for a total of 9K cycles. In the worst crippled case, the
-                                                                 timeout upper limit is 9K x 4 x 4 = 36K x 4 = 0x24000. For SKUs without cripple, S/W can
-                                                                 overwrite this value to 0x2400. */
+                                                                 If [TIMEOUT] is 0, engine timeout detection is disabled. */
         uint64_t reserved_32_61        : 30;
         uint64_t ar                    : 1;  /**< [ 62: 62](R/W) Auto reset. This bit only takes effect when [HALT] is set. When [HALT] is cleared, [AR] is
                                                                  ignored.
@@ -6215,27 +5767,9 @@ union cavm_zip_ctl_bist_status
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t bstatus               : 23; /**< [ 22:  0](RO/H) BIST result of CTL memories.
-                                                                 Internal:
-                                                                 \<22\> = MBOX.
-                                                                 \<21\> = MSIX_PMEM.
-                                                                 \<20\> = MSIX_VMEM.
-                                                                 \<19:14\> = STDF[5:0].
-                                                                 \<13:8\> = OFIF[5:0].
-                                                                 \<7:2\> = Input data FIFO (idf) [5:0].
-                                                                 \<1\> = Gather/scatter FIFO (gspf).
-                                                                 \<0\> = Instruction buffer (iqf). */
+        uint64_t bstatus               : 23; /**< [ 22:  0](RO/H) BIST result of CTL memories. */
 #else /* Word 0 - Little Endian */
-        uint64_t bstatus               : 23; /**< [ 22:  0](RO/H) BIST result of CTL memories.
-                                                                 Internal:
-                                                                 \<22\> = MBOX.
-                                                                 \<21\> = MSIX_PMEM.
-                                                                 \<20\> = MSIX_VMEM.
-                                                                 \<19:14\> = STDF[5:0].
-                                                                 \<13:8\> = OFIF[5:0].
-                                                                 \<7:2\> = Input data FIFO (idf) [5:0].
-                                                                 \<1\> = Gather/scatter FIFO (gspf).
-                                                                 \<0\> = Instruction buffer (iqf). */
+        uint64_t bstatus               : 23; /**< [ 22:  0](RO/H) BIST result of CTL memories. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } s;
@@ -6551,15 +6085,11 @@ union cavm_zip_dbg_corex_sta
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t busy                  : 1;  /**< [ 63: 63](RO/H) Core state. 0 = core is idle; 1 = core is busy. */
         uint64_t reserved_38_62        : 25;
-        uint64_t ist                   : 6;  /**< [ 37: 32](RO/H) FSM State of current instruction that is executing.
-                                                                 Internal:
-                                                                 See sta_fsm_t in zip_defs.vh. */
+        uint64_t ist                   : 6;  /**< [ 37: 32](RO/H) FSM State of current instruction that is executing. */
         uint64_t nie                   : 32; /**< [ 31:  0](RO/H) Number of instructions executed on this core. */
 #else /* Word 0 - Little Endian */
         uint64_t nie                   : 32; /**< [ 31:  0](RO/H) Number of instructions executed on this core. */
-        uint64_t ist                   : 6;  /**< [ 37: 32](RO/H) FSM State of current instruction that is executing.
-                                                                 Internal:
-                                                                 See sta_fsm_t in zip_defs.vh. */
+        uint64_t ist                   : 6;  /**< [ 37: 32](RO/H) FSM State of current instruction that is executing. */
         uint64_t reserved_38_62        : 25;
         uint64_t busy                  : 1;  /**< [ 63: 63](RO/H) Core state. 0 = core is idle; 1 = core is busy. */
 #endif /* Word 0 - End */
@@ -6758,45 +6288,13 @@ union cavm_zip_ecce_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_43_63        : 21;
-        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1C/H) Reads or clears enable for ZIP_ECCE_INT[DBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<42\> = mbox.
-                                                                 \<41\> = msix_pmem.
-                                                                 \<40\> = msix_vmem.
-                                                                 \<39:34\> = idf[5:0].
-                                                                 \<33\> = gspf.
-                                                                 \<32\> = iqf. */
+        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1C/H) Reads or clears enable for ZIP_ECCE_INT[DBE]. */
         uint64_t reserved_11_31        : 21;
-        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1C/H) Reads or clears enable for ZIP_ECCE_INT[SBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<10\> = mbox.
-                                                                 \<9\> = msix_pmem.
-                                                                 \<8\> = msix_vmem.
-                                                                 \<7:2\> = idf[5:0].
-                                                                 \<1\> = gspf.
-                                                                 \<0\> = iqf. */
+        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1C/H) Reads or clears enable for ZIP_ECCE_INT[SBE]. */
 #else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1C/H) Reads or clears enable for ZIP_ECCE_INT[SBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<10\> = mbox.
-                                                                 \<9\> = msix_pmem.
-                                                                 \<8\> = msix_vmem.
-                                                                 \<7:2\> = idf[5:0].
-                                                                 \<1\> = gspf.
-                                                                 \<0\> = iqf. */
+        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1C/H) Reads or clears enable for ZIP_ECCE_INT[SBE]. */
         uint64_t reserved_11_31        : 21;
-        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1C/H) Reads or clears enable for ZIP_ECCE_INT[DBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<42\> = mbox.
-                                                                 \<41\> = msix_pmem.
-                                                                 \<40\> = msix_vmem.
-                                                                 \<39:34\> = idf[5:0].
-                                                                 \<33\> = gspf.
-                                                                 \<32\> = iqf. */
+        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1C/H) Reads or clears enable for ZIP_ECCE_INT[DBE]. */
         uint64_t reserved_43_63        : 21;
 #endif /* Word 0 - End */
     } s;
@@ -6833,45 +6331,13 @@ union cavm_zip_ecce_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_43_63        : 21;
-        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1S/H) Reads or sets enable for ZIP_ECCE_INT[DBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<42\> = mbox.
-                                                                 \<41\> = msix_pmem.
-                                                                 \<40\> = msix_vmem.
-                                                                 \<39:34\> = idf[5:0].
-                                                                 \<33\> = gspf.
-                                                                 \<32\> = iqf. */
+        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1S/H) Reads or sets enable for ZIP_ECCE_INT[DBE]. */
         uint64_t reserved_11_31        : 21;
-        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1S/H) Reads or sets enable for ZIP_ECCE_INT[SBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<10\> = mbox.
-                                                                 \<9\> = msix_pmem.
-                                                                 \<8\> = msix_vmem.
-                                                                 \<7:2\> = idf[5:0].
-                                                                 \<1\> = gspf.
-                                                                 \<0\> = iqf. */
+        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1S/H) Reads or sets enable for ZIP_ECCE_INT[SBE]. */
 #else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1S/H) Reads or sets enable for ZIP_ECCE_INT[SBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<10\> = mbox.
-                                                                 \<9\> = msix_pmem.
-                                                                 \<8\> = msix_vmem.
-                                                                 \<7:2\> = idf[5:0].
-                                                                 \<1\> = gspf.
-                                                                 \<0\> = iqf. */
+        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1S/H) Reads or sets enable for ZIP_ECCE_INT[SBE]. */
         uint64_t reserved_11_31        : 21;
-        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1S/H) Reads or sets enable for ZIP_ECCE_INT[DBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<42\> = mbox.
-                                                                 \<41\> = msix_pmem.
-                                                                 \<40\> = msix_vmem.
-                                                                 \<39:34\> = idf[5:0].
-                                                                 \<33\> = gspf.
-                                                                 \<32\> = iqf. */
+        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1S/H) Reads or sets enable for ZIP_ECCE_INT[DBE]. */
         uint64_t reserved_43_63        : 21;
 #endif /* Word 0 - End */
     } s;
@@ -6908,45 +6374,13 @@ union cavm_zip_ecce_int
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_43_63        : 21;
-        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1C/H) Double-bit error detected in internal RAM. 0 = pass, 1 = fail. One bit per memory.
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<42\> = mbox.
-                                                                 \<41\> = msix_pmem.
-                                                                 \<40\> = msix_vmem.
-                                                                 \<39:34\> = idf[5:0].
-                                                                 \<33\> = gspf.
-                                                                 \<32\> = iqf. */
+        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1C/H) Double-bit error detected in internal RAM. 0 = pass, 1 = fail. One bit per memory. */
         uint64_t reserved_11_31        : 21;
-        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1C/H) Single-bit error detected in internal RAM. 0 = pass, 1 = fail. One bit per memory.
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<10\> = mbox.
-                                                                 \<9\> = msix_pmem.
-                                                                 \<8\> = msix_vmem.
-                                                                 \<7:2\> = idf[5:0].
-                                                                 \<1\> = gspf.
-                                                                 \<0\> = iqf. */
+        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1C/H) Single-bit error detected in internal RAM. 0 = pass, 1 = fail. One bit per memory. */
 #else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1C/H) Single-bit error detected in internal RAM. 0 = pass, 1 = fail. One bit per memory.
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<10\> = mbox.
-                                                                 \<9\> = msix_pmem.
-                                                                 \<8\> = msix_vmem.
-                                                                 \<7:2\> = idf[5:0].
-                                                                 \<1\> = gspf.
-                                                                 \<0\> = iqf. */
+        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1C/H) Single-bit error detected in internal RAM. 0 = pass, 1 = fail. One bit per memory. */
         uint64_t reserved_11_31        : 21;
-        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1C/H) Double-bit error detected in internal RAM. 0 = pass, 1 = fail. One bit per memory.
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<42\> = mbox.
-                                                                 \<41\> = msix_pmem.
-                                                                 \<40\> = msix_vmem.
-                                                                 \<39:34\> = idf[5:0].
-                                                                 \<33\> = gspf.
-                                                                 \<32\> = iqf. */
+        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1C/H) Double-bit error detected in internal RAM. 0 = pass, 1 = fail. One bit per memory. */
         uint64_t reserved_43_63        : 21;
 #endif /* Word 0 - End */
     } s;
@@ -6983,45 +6417,13 @@ union cavm_zip_ecce_int_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_43_63        : 21;
-        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1S/H) Reads or sets ZIP_ECCE_INT[DBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<42\> = mbox.
-                                                                 \<41\> = msix_pmem.
-                                                                 \<40\> = msix_vmem.
-                                                                 \<39:34\> = idf[5:0].
-                                                                 \<33\> = gspf.
-                                                                 \<32\> = iqf. */
+        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1S/H) Reads or sets ZIP_ECCE_INT[DBE]. */
         uint64_t reserved_11_31        : 21;
-        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1S/H) Reads or sets ZIP_ECCE_INT[SBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<10\> = mbox.
-                                                                 \<9\> = msix_pmem.
-                                                                 \<8\> = msix_vmem.
-                                                                 \<7:2\> = idf[5:0].
-                                                                 \<1\> = gspf.
-                                                                 \<0\> = iqf. */
+        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1S/H) Reads or sets ZIP_ECCE_INT[SBE]. */
 #else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1S/H) Reads or sets ZIP_ECCE_INT[SBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<10\> = mbox.
-                                                                 \<9\> = msix_pmem.
-                                                                 \<8\> = msix_vmem.
-                                                                 \<7:2\> = idf[5:0].
-                                                                 \<1\> = gspf.
-                                                                 \<0\> = iqf. */
+        uint64_t sbe                   : 11; /**< [ 10:  0](R/W1S/H) Reads or sets ZIP_ECCE_INT[SBE]. */
         uint64_t reserved_11_31        : 21;
-        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1S/H) Reads or sets ZIP_ECCE_INT[DBE].
-                                                                 Internal:
-                                                                 One memory per bit as follows:
-                                                                 \<42\> = mbox.
-                                                                 \<41\> = msix_pmem.
-                                                                 \<40\> = msix_vmem.
-                                                                 \<39:34\> = idf[5:0].
-                                                                 \<33\> = gspf.
-                                                                 \<32\> = iqf. */
+        uint64_t dbe                   : 11; /**< [ 42: 32](R/W1S/H) Reads or sets ZIP_ECCE_INT[DBE]. */
         uint64_t reserved_43_63        : 21;
 #endif /* Word 0 - End */
     } s;
@@ -7044,46 +6446,6 @@ static inline uint64_t CAVM_ZIP_ECCE_INT_W1S_FUNC(void)
 #define device_bar_CAVM_ZIP_ECCE_INT_W1S 0x0 /* PF_BAR0 */
 #define busnum_CAVM_ZIP_ECCE_INT_W1S 0
 #define arguments_CAVM_ZIP_ECCE_INT_W1S -1,-1,-1,-1
-
-/**
- * Register (NCB) zip_eco
- *
- * INTERNAL: ZIP ECO Register
- */
-union cavm_zip_eco
-{
-    uint64_t u;
-    struct cavm_zip_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_zip_eco_s cn; */
-};
-typedef union cavm_zip_eco cavm_zip_eco_t;
-
-#define CAVM_ZIP_ECO CAVM_ZIP_ECO_FUNC()
-static inline uint64_t CAVM_ZIP_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ZIP_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8380000005f0ll;
-    if (cavm_is_model(OCTEONTX_CN96XX))
-        return 0x8380000005f0ll;
-    __cavm_csr_fatal("ZIP_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ZIP_ECO cavm_zip_eco_t
-#define bustype_CAVM_ZIP_ECO CSR_TYPE_NCB
-#define basename_CAVM_ZIP_ECO "ZIP_ECO"
-#define device_bar_CAVM_ZIP_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_ZIP_ECO 0
-#define arguments_CAVM_ZIP_ECO -1,-1,-1,-1
 
 /**
  * Register (NCB) zip_fife_ena_w1c
@@ -8376,50 +7738,6 @@ static inline uint64_t CAVM_ZIP_QUE_PRI_FUNC(void)
 #define device_bar_CAVM_ZIP_QUE_PRI 0x0 /* PF_BAR0 */
 #define busnum_CAVM_ZIP_QUE_PRI 0
 #define arguments_CAVM_ZIP_QUE_PRI -1,-1,-1,-1
-
-/**
- * Register (NCB) zip_que_reset
- *
- * INTERNAL: ZIP Queue Reset Register
- *
- * This register resets the ZIP instruction queues.
- */
-union cavm_zip_que_reset
-{
-    uint64_t u;
-    struct cavm_zip_que_reset_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t reset                 : 8;  /**< [  7:  0](R/W) When set, the corresponding queue will be put into reset. When clear, the queue is out of
-                                                                 reset. Bit[\<a\>] resets queue \<a\>. */
-#else /* Word 0 - Little Endian */
-        uint64_t reset                 : 8;  /**< [  7:  0](R/W) When set, the corresponding queue will be put into reset. When clear, the queue is out of
-                                                                 reset. Bit[\<a\>] resets queue \<a\>. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_zip_que_reset_s cn; */
-};
-typedef union cavm_zip_que_reset cavm_zip_que_reset_t;
-
-#define CAVM_ZIP_QUE_RESET CAVM_ZIP_QUE_RESET_FUNC()
-static inline uint64_t CAVM_ZIP_QUE_RESET_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ZIP_QUE_RESET_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x838000000400ll;
-    if (cavm_is_model(OCTEONTX_CN96XX))
-        return 0x838000000400ll;
-    __cavm_csr_fatal("ZIP_QUE_RESET", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ZIP_QUE_RESET cavm_zip_que_reset_t
-#define bustype_CAVM_ZIP_QUE_RESET CSR_TYPE_NCB
-#define basename_CAVM_ZIP_QUE_RESET "ZIP_QUE_RESET"
-#define device_bar_CAVM_ZIP_QUE_RESET 0x0 /* PF_BAR0 */
-#define busnum_CAVM_ZIP_QUE_RESET 0
-#define arguments_CAVM_ZIP_QUE_RESET -1,-1,-1,-1
 
 /**
  * Register (NCB) zip_throttle

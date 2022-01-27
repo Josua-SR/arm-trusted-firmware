@@ -624,19 +624,11 @@ union cavm_gic_bist_statusr
         uint64_t reserved_9_63         : 55;
         uint64_t bist                  : 9;  /**< [  8:  0](RO/H) Memory BIST status:
                                                                    0 = Pass.
-                                                                   1 = Fail.
-
-                                                                 Internal:
-                                                                 [8:0]= [cic2cic_ig_buf, lpi_cfg_buf, lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem] in GIC. */
+                                                                   1 = Fail. */
 #else /* Word 0 - Little Endian */
         uint64_t bist                  : 9;  /**< [  8:  0](RO/H) Memory BIST status:
                                                                    0 = Pass.
-                                                                   1 = Fail.
-
-                                                                 Internal:
-                                                                 [8:0]= [cic2cic_ig_buf, lpi_cfg_buf, lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem] in GIC. */
+                                                                   1 = Fail. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } s;
@@ -659,206 +651,6 @@ static inline uint64_t CAVM_GIC_BIST_STATUSR_FUNC(void)
 #define device_bar_CAVM_GIC_BIST_STATUSR 0x0 /* PF_BAR0 */
 #define busnum_CAVM_GIC_BIST_STATUSR 0
 #define arguments_CAVM_GIC_BIST_STATUSR -1,-1,-1,-1
-
-/**
- * Register (NCB) gic_bp_test0
- *
- * INTERNAL: GIC Backpressure Test Register
- */
-union cavm_gic_bp_test0
-{
-    uint64_t u;
-    struct cavm_gic_bp_test0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit RDB NCBI transactions. Never limit 100% of the time.
-                                                                 \<62\> = Limit ITS NCBI transactions. Never limit 100% of the time.
-                                                                 \<61\> = Limit RDB interrupt message handling via NCBO. Never limit 100% of the time.
-                                                                 \<60\> = Limit ITS interrupt message handling via NCBO. Never limit 100% of the time. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit RDB NCBI transactions. Never limit 100% of the time.
-                                                                 \<62\> = Limit ITS NCBI transactions. Never limit 100% of the time.
-                                                                 \<61\> = Limit RDB interrupt message handling via NCBO. Never limit 100% of the time.
-                                                                 \<60\> = Limit ITS interrupt message handling via NCBO. Never limit 100% of the time. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gic_bp_test0_s cn; */
-};
-typedef union cavm_gic_bp_test0 cavm_gic_bp_test0_t;
-
-#define CAVM_GIC_BP_TEST0 CAVM_GIC_BP_TEST0_FUNC()
-static inline uint64_t CAVM_GIC_BP_TEST0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GIC_BP_TEST0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8010000100a0ll;
-    __cavm_csr_fatal("GIC_BP_TEST0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GIC_BP_TEST0 cavm_gic_bp_test0_t
-#define bustype_CAVM_GIC_BP_TEST0 CSR_TYPE_NCB
-#define basename_CAVM_GIC_BP_TEST0 "GIC_BP_TEST0"
-#define device_bar_CAVM_GIC_BP_TEST0 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GIC_BP_TEST0 0
-#define arguments_CAVM_GIC_BP_TEST0 -1,-1,-1,-1
-
-/**
- * Register (NCB) gic_bp_test1
- *
- * INTERNAL: GIC Backpressure Test Register
- */
-union cavm_gic_bp_test1
-{
-    uint64_t u;
-    struct cavm_gic_bp_test1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Reserved. TBD?: Limit messages to AP CIMs. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Reserved. TBD?: Limit messages to AP CIMs. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gic_bp_test1_s cn9; */
-    /* struct cavm_gic_bp_test1_s cn96xxp1; */
-    struct cavm_gic_bp_test1_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Reserved. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Reserved. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_gic_bp_test1_cn96xxp3 cn98xx; */
-    /* struct cavm_gic_bp_test1_cn96xxp3 cnf95xx; */
-    /* struct cavm_gic_bp_test1_cn96xxp3 f95mm; */
-    /* struct cavm_gic_bp_test1_cn96xxp3 f95o; */
-    /* struct cavm_gic_bp_test1_cn96xxp3 loki; */
-};
-typedef union cavm_gic_bp_test1 cavm_gic_bp_test1_t;
-
-#define CAVM_GIC_BP_TEST1 CAVM_GIC_BP_TEST1_FUNC()
-static inline uint64_t CAVM_GIC_BP_TEST1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GIC_BP_TEST1_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8010000100b0ll;
-    __cavm_csr_fatal("GIC_BP_TEST1", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GIC_BP_TEST1 cavm_gic_bp_test1_t
-#define bustype_CAVM_GIC_BP_TEST1 CSR_TYPE_NCB
-#define basename_CAVM_GIC_BP_TEST1 "GIC_BP_TEST1"
-#define device_bar_CAVM_GIC_BP_TEST1 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GIC_BP_TEST1 0
-#define arguments_CAVM_GIC_BP_TEST1 -1,-1,-1,-1
 
 /**
  * Register (NCB) gic_cfg_ctlr
@@ -1077,19 +869,9 @@ union cavm_gic_del3t_ctlr
         uint64_t reserved_38_63        : 26;
         uint64_t del3t_core_id         : 6;  /**< [ 37: 32](SR/W) Target CoreID for signaling of GIC DEL3T Errors. Legal range is [0,47]. */
         uint64_t reserved_11_31        : 21;
-        uint64_t del3t_dis             : 11; /**< [ 10:  0](SR/W) Disable signaling of DEL3T Errors.
-                                                                 Internal:
-                                                                 for del3t_dis[10:0]=
-                                                                 [ncbr_stdn,ncbr_fill,cic2cic_ig_buf, lpi_cfg_buf,
-                                                                 lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem]  in GIC. */
+        uint64_t del3t_dis             : 11; /**< [ 10:  0](SR/W) Disable signaling of DEL3T Errors. */
 #else /* Word 0 - Little Endian */
-        uint64_t del3t_dis             : 11; /**< [ 10:  0](SR/W) Disable signaling of DEL3T Errors.
-                                                                 Internal:
-                                                                 for del3t_dis[10:0]=
-                                                                 [ncbr_stdn,ncbr_fill,cic2cic_ig_buf, lpi_cfg_buf,
-                                                                 lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem]  in GIC. */
+        uint64_t del3t_dis             : 11; /**< [ 10:  0](SR/W) Disable signaling of DEL3T Errors. */
         uint64_t reserved_11_31        : 21;
         uint64_t del3t_core_id         : 6;  /**< [ 37: 32](SR/W) Target CoreID for signaling of GIC DEL3T Errors. Legal range is [0,47]. */
         uint64_t reserved_38_63        : 26;
@@ -1101,17 +883,11 @@ union cavm_gic_del3t_ctlr
         uint64_t reserved_38_63        : 26;
         uint64_t del3t_core_id         : 6;  /**< [ 37: 32](SR/W) Target CoreID for signaling of GIC DEL3T Errors. Legal range is [0,23]. */
         uint64_t reserved_11_31        : 21;
-        uint64_t del3t_dis             : 2;  /**< [ 10:  9](SR/W) Disable signaling of DEL3T Errors.
-                                                                 Internal:
-                                                                 for del3t_dis[10:9]=
-                                                                 [ncbr_stdn,ncbr_fill] in GIC. */
+        uint64_t del3t_dis             : 2;  /**< [ 10:  9](SR/W) Disable signaling of DEL3T Errors. */
         uint64_t reserved_0_8          : 9;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_8          : 9;
-        uint64_t del3t_dis             : 2;  /**< [ 10:  9](SR/W) Disable signaling of DEL3T Errors.
-                                                                 Internal:
-                                                                 for del3t_dis[10:9]=
-                                                                 [ncbr_stdn,ncbr_fill] in GIC. */
+        uint64_t del3t_dis             : 2;  /**< [ 10:  9](SR/W) Disable signaling of DEL3T Errors. */
         uint64_t reserved_11_31        : 21;
         uint64_t del3t_core_id         : 6;  /**< [ 37: 32](SR/W) Target CoreID for signaling of GIC DEL3T Errors. Legal range is [0,23]. */
         uint64_t reserved_38_63        : 26;
@@ -1137,9 +913,8 @@ static inline uint64_t CAVM_GIC_DEL3T_CTLR_FUNC(void)
 /**
  * Register (NCB) gic_ecc_ctlr
  *
- * INTERNAL: GIC Implementation Secure ECC Control Register
- *
- * This register is reserved for backwards compatibility.
+ * GIC Implementation Secure ECC Control Register
+ * This register allows inserting ECC errors for testing.
  */
 union cavm_gic_ecc_ctlr
 {
@@ -1154,17 +929,9 @@ union cavm_gic_ecc_ctlr
         uint64_t ram_flip0             : 9;  /**< [ 28: 20](SR/W) Flip syndrome bits on write. Flip syndrome bits \<0\> on writes to the corresponding ram to
                                                                  test single-bit or double-bit error handling. See COR_DIS bit definitions. */
         uint64_t reserved_9_19         : 11;
-        uint64_t cor_dis               : 9;  /**< [  8:  0](SR/W) RAM ECC correction disable.
-                                                                 Internal:
-                                                                 for cor_dis[8:0]= [cic2cic_ig_buf, lpi_cfg_buf,
-                                                                 lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem]  in GIC. */
+        uint64_t cor_dis               : 9;  /**< [  8:  0](SR/W) RAM ECC correction disable. */
 #else /* Word 0 - Little Endian */
-        uint64_t cor_dis               : 9;  /**< [  8:  0](SR/W) RAM ECC correction disable.
-                                                                 Internal:
-                                                                 for cor_dis[8:0]= [cic2cic_ig_buf, lpi_cfg_buf,
-                                                                 lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem]  in GIC. */
+        uint64_t cor_dis               : 9;  /**< [  8:  0](SR/W) RAM ECC correction disable. */
         uint64_t reserved_9_19         : 11;
         uint64_t ram_flip0             : 9;  /**< [ 28: 20](SR/W) Flip syndrome bits on write. Flip syndrome bits \<0\> on writes to the corresponding ram to
                                                                  test single-bit or double-bit error handling. See COR_DIS bit definitions. */
@@ -1174,7 +941,7 @@ union cavm_gic_ecc_ctlr
         uint64_t reserved_49_63        : 15;
 #endif /* Word 0 - End */
     } s;
-    struct cavm_gic_ecc_ctlr_cn8
+    struct cavm_gic_ecc_ctlr_cn
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_60_63        : 4;
@@ -1185,17 +952,9 @@ union cavm_gic_ecc_ctlr
         uint64_t ram_flip0             : 9;  /**< [ 28: 20](SR/W) Flip syndrome bits on write. Flip syndrome bits \<0\> on writes to the corresponding ram to
                                                                  test single-bit or double-bit error handling. See COR_DIS bit definitions. */
         uint64_t reserved_9_19         : 11;
-        uint64_t cor_dis               : 9;  /**< [  8:  0](SR/W) RAM ECC correction disable.
-                                                                 Internal:
-                                                                 for cor_dis[8:0]= [cic2cic_ig_buf, lpi_cfg_buf,
-                                                                 lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem]  in GIC. */
+        uint64_t cor_dis               : 9;  /**< [  8:  0](SR/W) RAM ECC correction disable. */
 #else /* Word 0 - Little Endian */
-        uint64_t cor_dis               : 9;  /**< [  8:  0](SR/W) RAM ECC correction disable.
-                                                                 Internal:
-                                                                 for cor_dis[8:0]= [cic2cic_ig_buf, lpi_cfg_buf,
-                                                                 lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem]  in GIC. */
+        uint64_t cor_dis               : 9;  /**< [  8:  0](SR/W) RAM ECC correction disable. */
         uint64_t reserved_9_19         : 11;
         uint64_t ram_flip0             : 9;  /**< [ 28: 20](SR/W) Flip syndrome bits on write. Flip syndrome bits \<0\> on writes to the corresponding ram to
                                                                  test single-bit or double-bit error handling. See COR_DIS bit definitions. */
@@ -1205,15 +964,7 @@ union cavm_gic_ecc_ctlr
         uint64_t reserved_49_59        : 11;
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
-    } cn8;
-    struct cavm_gic_ecc_ctlr_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } cn9;
+    } cn;
 };
 typedef union cavm_gic_ecc_ctlr cavm_gic_ecc_ctlr_t;
 
@@ -1221,7 +972,9 @@ typedef union cavm_gic_ecc_ctlr cavm_gic_ecc_ctlr_t;
 static inline uint64_t CAVM_GIC_ECC_CTLR_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GIC_ECC_CTLR_FUNC(void)
 {
-    return 0x801000010008ll;
+    if (cavm_is_model(OCTEONTX_CN8XXX))
+        return 0x801000010008ll;
+    __cavm_csr_fatal("GIC_ECC_CTLR", 0, 0, 0, 0, 0, 0, 0);
 }
 
 #define typedef_CAVM_GIC_ECC_CTLR cavm_gic_ecc_ctlr_t
@@ -1244,25 +997,13 @@ union cavm_gic_ecc_int_statusr
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_41_63        : 23;
-        uint64_t dbe                   : 9;  /**< [ 40: 32](R/W1C/H) RAM ECC DBE detected.
-                                                                 Internal:
-                                                                 [8:0] = [cic2cic_ig_buf, lpi_cfg_buf, lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem] in GIC. */
+        uint64_t dbe                   : 9;  /**< [ 40: 32](R/W1C/H) RAM ECC DBE detected. */
         uint64_t reserved_9_31         : 23;
-        uint64_t sbe                   : 9;  /**< [  8:  0](R/W1C/H) RAM ECC SBE detected.
-                                                                 Internal:
-                                                                 [8:0] = [cic2cic_ig_buf, lpi_cfg_buf, lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem] in GIC. */
+        uint64_t sbe                   : 9;  /**< [  8:  0](R/W1C/H) RAM ECC SBE detected. */
 #else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 9;  /**< [  8:  0](R/W1C/H) RAM ECC SBE detected.
-                                                                 Internal:
-                                                                 [8:0] = [cic2cic_ig_buf, lpi_cfg_buf, lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem] in GIC. */
+        uint64_t sbe                   : 9;  /**< [  8:  0](R/W1C/H) RAM ECC SBE detected. */
         uint64_t reserved_9_31         : 23;
-        uint64_t dbe                   : 9;  /**< [ 40: 32](R/W1C/H) RAM ECC DBE detected.
-                                                                 Internal:
-                                                                 [8:0] = [cic2cic_ig_buf, lpi_cfg_buf, lip_rmw_buf,
-                                                                 dtlb_mem,itlb_mem,hct_mem,cqf_mem,rdb_pktf_mem,aprf_mem] in GIC. */
+        uint64_t dbe                   : 9;  /**< [ 40: 32](R/W1C/H) RAM ECC DBE detected. */
         uint64_t reserved_41_63        : 23;
 #endif /* Word 0 - End */
     } s;

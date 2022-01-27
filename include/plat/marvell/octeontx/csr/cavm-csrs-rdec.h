@@ -531,48 +531,6 @@ static inline uint64_t CAVM_RDECX_CONTROL(uint64_t a)
 #define arguments_CAVM_RDECX_CONTROL(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) rdec#_eco
- *
- * INTERNAL: RDEC ECO Register
- */
-union cavm_rdecx_eco
-{
-    uint64_t u;
-    struct cavm_rdecx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rdecx_eco_s cn; */
-};
-typedef union cavm_rdecx_eco cavm_rdecx_eco_t;
-
-static inline uint64_t CAVM_RDECX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RDECX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
-        return 0x87e043100008ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
-        return 0x87e043100008ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
-        return 0x87e043100008ll + 0x8000ll * ((a) & 0x3);
-    __cavm_csr_fatal("RDECX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RDECX_ECO(a) cavm_rdecx_eco_t
-#define bustype_CAVM_RDECX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_RDECX_ECO(a) "RDECX_ECO"
-#define busnum_CAVM_RDECX_ECO(a) (a)
-#define arguments_CAVM_RDECX_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) rdec#_error_enable0
  *
  * RDEC Error Enable 0 Register
@@ -921,46 +879,6 @@ static inline uint64_t CAVM_RDECX_NR_STBL_BX(uint64_t a, uint64_t b)
 #define basename_CAVM_RDECX_NR_STBL_BX(a,b) "RDECX_NR_STBL_BX"
 #define busnum_CAVM_RDECX_NR_STBL_BX(a,b) (a)
 #define arguments_CAVM_RDECX_NR_STBL_BX(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rdec#_scratch
- *
- * INTERNAL: Scratch Registers
- *
- * Scratch register.
- */
-union cavm_rdecx_scratch
-{
-    uint64_t u;
-    struct cavm_rdecx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rdecx_scratch_s cn; */
-};
-typedef union cavm_rdecx_scratch cavm_rdecx_scratch_t;
-
-static inline uint64_t CAVM_RDECX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RDECX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
-        return 0x87e043100080ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
-        return 0x87e043100080ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
-        return 0x87e043100080ll + 0x8000ll * ((a) & 0x3);
-    __cavm_csr_fatal("RDECX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RDECX_SCRATCH(a) cavm_rdecx_scratch_t
-#define bustype_CAVM_RDECX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_RDECX_SCRATCH(a) "RDECX_SCRATCH"
-#define busnum_CAVM_RDECX_SCRATCH(a) (a)
-#define arguments_CAVM_RDECX_SCRATCH(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) rdec#_status

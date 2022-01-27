@@ -55,72 +55,6 @@
 #define CAVM_GTI_INT_VEC_E_WATCHDOG_CLEAR (3)
 
 /**
- * Register (NCB) gti_bp_test
- *
- * INTERNAL: GTI Backpressure Test Register
- */
-union cavm_gti_bp_test
-{
-    uint64_t u;
-    struct cavm_gti_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 2;  /**< [ 63: 62](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit the NCBO request FIFO, backpressure doing CSR access to GTI registers.
-                                                                 \<62\> = Limit the NCBI response FIFO, backpressure doing response for NCBO requests. */
-        uint64_t reserved_24_61        : 38;
-        uint64_t bp_cfg                : 4;  /**< [ 23: 20](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 1.
-                                                                   \<21:20\> = Config 0. */
-        uint64_t reserved_12_19        : 8;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_19        : 8;
-        uint64_t bp_cfg                : 4;  /**< [ 23: 20](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 1.
-                                                                   \<21:20\> = Config 0. */
-        uint64_t reserved_24_61        : 38;
-        uint64_t enable                : 2;  /**< [ 63: 62](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit the NCBO request FIFO, backpressure doing CSR access to GTI registers.
-                                                                 \<62\> = Limit the NCBI response FIFO, backpressure doing response for NCBO requests. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gti_bp_test_s cn; */
-};
-typedef union cavm_gti_bp_test cavm_gti_bp_test_t;
-
-#define CAVM_GTI_BP_TEST CAVM_GTI_BP_TEST_FUNC()
-static inline uint64_t CAVM_GTI_BP_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_BP_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000e0008ll;
-    __cavm_csr_fatal("GTI_BP_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GTI_BP_TEST cavm_gti_bp_test_t
-#define bustype_CAVM_GTI_BP_TEST CSR_TYPE_NCB
-#define basename_CAVM_GTI_BP_TEST "GTI_BP_TEST"
-#define device_bar_CAVM_GTI_BP_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GTI_BP_TEST 0
-#define arguments_CAVM_GTI_BP_TEST -1,-1,-1,-1
-
-/**
  * Register (NCB32b) gti_bz_cidr0
  *
  * GTI Base Component Identification Register 0
@@ -1179,8 +1113,7 @@ static inline uint64_t CAVM_GTI_CC_CNTFID1_FUNC(void)
 /**
  * Register (NCB) gti_cc_cntmb
  *
- * INTERNAL: GTI Counter Control Mailbox Secure Register
- *
+ * GTI Counter Control Mailbox Secure Register
  * Implementation defined register.
  */
 union cavm_gti_cc_cntmb
@@ -1189,64 +1122,12 @@ union cavm_gti_cc_cntmb
     struct cavm_gti_cc_cntmb_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t mbox                  : 64; /**< [ 63:  0](SR/W) Reserved.
-                                                                 Internal:
-                                                                 When written, GTI_CC_CNTCV is saved in GTI_CC_CNTMBTS.
-
-                                                                 For CCPI-enabled chips only.
-
-                                                                 Mailboxes are used as follows:
-
-                                                                 * An AP on node A does a store to node B's GTI_CC_CNTMB.
-
-                                                                 * As the store flies over CCPI/OCX on chip A, OCI signals GTI to capture a
-                                                                 transmit timestamp. GTI on chip A saves GTI_CC_CNTCV in GTI_CC_CNTMBTS, and sets
-                                                                 the GTI_CC_CNTMB_INT[TXTS] interrupt.
-
-                                                                 * As the store flies over CCPI/OCX on chip B, OCI signals GTI to capture a
-                                                                 receive timestamp. GTI on chip B saves GTI_CC_CNTCV in GTI_CC_CNTMBTS, and sets
-                                                                 the GTI_CC_CNTMB_INT[MBRX] interrupt.
-
-                                                                 * GTI on chip B writes GTI_CC_CNTMB with the mailbox value.
-
-                                                                 Note that if a CRC error occurs on the link during the store, the store will get
-                                                                 retried by CCPI resulting in multiple transmit timestamp captures and
-                                                                 TX_TIMESTAMP interrupts. */
+        uint64_t mbox                  : 64; /**< [ 63:  0](SR/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t mbox                  : 64; /**< [ 63:  0](SR/W) Reserved.
-                                                                 Internal:
-                                                                 When written, GTI_CC_CNTCV is saved in GTI_CC_CNTMBTS.
-
-                                                                 For CCPI-enabled chips only.
-
-                                                                 Mailboxes are used as follows:
-
-                                                                 * An AP on node A does a store to node B's GTI_CC_CNTMB.
-
-                                                                 * As the store flies over CCPI/OCX on chip A, OCI signals GTI to capture a
-                                                                 transmit timestamp. GTI on chip A saves GTI_CC_CNTCV in GTI_CC_CNTMBTS, and sets
-                                                                 the GTI_CC_CNTMB_INT[TXTS] interrupt.
-
-                                                                 * As the store flies over CCPI/OCX on chip B, OCI signals GTI to capture a
-                                                                 receive timestamp. GTI on chip B saves GTI_CC_CNTCV in GTI_CC_CNTMBTS, and sets
-                                                                 the GTI_CC_CNTMB_INT[MBRX] interrupt.
-
-                                                                 * GTI on chip B writes GTI_CC_CNTMB with the mailbox value.
-
-                                                                 Note that if a CRC error occurs on the link during the store, the store will get
-                                                                 retried by CCPI resulting in multiple transmit timestamp captures and
-                                                                 TX_TIMESTAMP interrupts. */
+        uint64_t mbox                  : 64; /**< [ 63:  0](SR/W) Reserved. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_cc_cntmb_s cn8; */
-    struct cavm_gti_cc_cntmb_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t mbox                  : 64; /**< [ 63:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t mbox                  : 64; /**< [ 63:  0](RAZ) Reserved; for backwards compatibility. */
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_cc_cntmb_s cn; */
 };
 typedef union cavm_gti_cc_cntmb cavm_gti_cc_cntmb_t;
 
@@ -1256,8 +1137,6 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000000d0ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000000d0ll;
     __cavm_csr_fatal("GTI_CC_CNTMB", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1271,8 +1150,7 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_FUNC(void)
 /**
  * Register (NCB) gti_cc_cntmb_int
  *
- * INTERNAL: GTI Counter Control Mailbox Interrupt Register
- *
+ * GTI Counter Control Mailbox Interrupt Register
  * Implementation defined register.
  */
 union cavm_gti_cc_cntmb_int
@@ -1294,19 +1172,7 @@ union cavm_gti_cc_cntmb_int
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_cc_cntmb_int_s cn8; */
-    struct cavm_gti_cc_cntmb_int_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t mbrx                  : 1;  /**< [  1:  1](RAZ) Reserved; for backwards compatibility. */
-        uint64_t txts                  : 1;  /**< [  0:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t txts                  : 1;  /**< [  0:  0](RAZ) Reserved; for backwards compatibility. */
-        uint64_t mbrx                  : 1;  /**< [  1:  1](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_cc_cntmb_int_s cn; */
 };
 typedef union cavm_gti_cc_cntmb_int cavm_gti_cc_cntmb_int_t;
 
@@ -1316,8 +1182,6 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_INT_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000000e0ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000000e0ll;
     __cavm_csr_fatal("GTI_CC_CNTMB_INT", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1331,7 +1195,8 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_INT_FUNC(void)
 /**
  * Register (NCB) gti_cc_cntmb_int_ena_clr
  *
- * INTERNAL: GTI Counter Control Mailbox Interrupt Enable Clear Register
+ * GTI Counter Control Mailbox Interrupt Enable Clear Register
+ * This register clears interrupt enable bits.
  */
 union cavm_gti_cc_cntmb_int_ena_clr
 {
@@ -1348,19 +1213,7 @@ union cavm_gti_cc_cntmb_int_ena_clr
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_cc_cntmb_int_ena_clr_s cn8; */
-    struct cavm_gti_cc_cntmb_int_ena_clr_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t mbrx                  : 1;  /**< [  1:  1](RAZ) Reserved; for backwards compatibility. */
-        uint64_t txts                  : 1;  /**< [  0:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t txts                  : 1;  /**< [  0:  0](RAZ) Reserved; for backwards compatibility. */
-        uint64_t mbrx                  : 1;  /**< [  1:  1](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_cc_cntmb_int_ena_clr_s cn; */
 };
 typedef union cavm_gti_cc_cntmb_int_ena_clr cavm_gti_cc_cntmb_int_ena_clr_t;
 
@@ -1370,8 +1223,6 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_INT_ENA_CLR_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000000f0ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000000f0ll;
     __cavm_csr_fatal("GTI_CC_CNTMB_INT_ENA_CLR", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1385,7 +1236,8 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_INT_ENA_CLR_FUNC(void)
 /**
  * Register (NCB) gti_cc_cntmb_int_ena_set
  *
- * INTERNAL: GTI Counter Control Mailbox Interrupt Enable Set Register
+ * GTI Counter Control Mailbox Interrupt Enable Set Register
+ * This register sets interrupt enable bits.
  */
 union cavm_gti_cc_cntmb_int_ena_set
 {
@@ -1402,19 +1254,7 @@ union cavm_gti_cc_cntmb_int_ena_set
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_cc_cntmb_int_ena_set_s cn8; */
-    struct cavm_gti_cc_cntmb_int_ena_set_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t mbrx                  : 1;  /**< [  1:  1](RAZ) Reserved; for backwards compatibility. */
-        uint64_t txts                  : 1;  /**< [  0:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t txts                  : 1;  /**< [  0:  0](RAZ) Reserved; for backwards compatibility. */
-        uint64_t mbrx                  : 1;  /**< [  1:  1](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_cc_cntmb_int_ena_set_s cn; */
 };
 typedef union cavm_gti_cc_cntmb_int_ena_set cavm_gti_cc_cntmb_int_ena_set_t;
 
@@ -1424,8 +1264,6 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_INT_ENA_SET_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000000f8ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000000f8ll;
     __cavm_csr_fatal("GTI_CC_CNTMB_INT_ENA_SET", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1439,7 +1277,8 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_INT_ENA_SET_FUNC(void)
 /**
  * Register (NCB) gti_cc_cntmb_int_set
  *
- * INTERNAL: GTI Counter Control Mailbox Interrupt Set Register
+ * GTI Counter Control Mailbox Interrupt Set Register
+ * This register sets interrupt bits.
  */
 union cavm_gti_cc_cntmb_int_set
 {
@@ -1456,19 +1295,7 @@ union cavm_gti_cc_cntmb_int_set
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_cc_cntmb_int_set_s cn8; */
-    struct cavm_gti_cc_cntmb_int_set_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t mbrx                  : 1;  /**< [  1:  1](RAZ) Reserved; for backwards compatibility. */
-        uint64_t txts                  : 1;  /**< [  0:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t txts                  : 1;  /**< [  0:  0](RAZ) Reserved; for backwards compatibility. */
-        uint64_t mbrx                  : 1;  /**< [  1:  1](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_cc_cntmb_int_set_s cn; */
 };
 typedef union cavm_gti_cc_cntmb_int_set cavm_gti_cc_cntmb_int_set_t;
 
@@ -1478,8 +1305,6 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_INT_SET_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000000e8ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000000e8ll;
     __cavm_csr_fatal("GTI_CC_CNTMB_INT_SET", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1493,8 +1318,7 @@ static inline uint64_t CAVM_GTI_CC_CNTMB_INT_SET_FUNC(void)
 /**
  * Register (NCB) gti_cc_cntmbts
  *
- * INTERNAL: GTI Counter Control Mailbox Time Stamp Secure Register
- *
+ * GTI Counter Control Mailbox Time Stamp Secure Register
  * Implementation defined register.
  */
 union cavm_gti_cc_cntmbts
@@ -1503,30 +1327,12 @@ union cavm_gti_cc_cntmbts
     struct cavm_gti_cc_cntmbts_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t timestamp             : 64; /**< [ 63:  0](SRO/H) Reserved.
-                                                                 Internal:
-                                                                 Mailbox time stamp. When GTI_CC_CNTMB is written, GTI_CC_CNTCV is saved in GTI_CC_CNTMBTS.
-                                                                 See GTI_CC_CNTMB.
-
-                                                                 For CCPI-enabled chips only. */
+        uint64_t timestamp             : 64; /**< [ 63:  0](SRO/H) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t timestamp             : 64; /**< [ 63:  0](SRO/H) Reserved.
-                                                                 Internal:
-                                                                 Mailbox time stamp. When GTI_CC_CNTMB is written, GTI_CC_CNTCV is saved in GTI_CC_CNTMBTS.
-                                                                 See GTI_CC_CNTMB.
-
-                                                                 For CCPI-enabled chips only. */
+        uint64_t timestamp             : 64; /**< [ 63:  0](SRO/H) Reserved. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_cc_cntmbts_s cn8; */
-    struct cavm_gti_cc_cntmbts_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t timestamp             : 64; /**< [ 63:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t timestamp             : 64; /**< [ 63:  0](RAZ) Reserved; for backwards compatibility. */
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_cc_cntmbts_s cn; */
 };
 typedef union cavm_gti_cc_cntmbts cavm_gti_cc_cntmbts_t;
 
@@ -1536,8 +1342,6 @@ static inline uint64_t CAVM_GTI_CC_CNTMBTS_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000000d8ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000000d8ll;
     __cavm_csr_fatal("GTI_CC_CNTMBTS", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -3621,7 +3425,7 @@ static inline uint64_t CAVM_GTI_ERR_ECC_FLIP_FUNC(void)
 /**
  * Register (NCB) gti_err_int
  *
- * INTERNAL: GTI Error Interrupt Register
+ * GTI Error Interrupt Register
  */
 union cavm_gti_err_int
 {
@@ -3640,21 +3444,7 @@ union cavm_gti_err_int
         uint64_t reserved_34_63        : 30;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_err_int_s cn8; */
-    struct cavm_gti_err_int_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_34_63        : 30;
-        uint64_t dbe                   : 2;  /**< [ 33: 32](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_31         : 30;
-        uint64_t sbe                   : 2;  /**< [  1:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 2;  /**< [  1:  0](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_31         : 30;
-        uint64_t dbe                   : 2;  /**< [ 33: 32](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_34_63        : 30;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_err_int_s cn; */
 };
 typedef union cavm_gti_err_int cavm_gti_err_int_t;
 
@@ -3664,8 +3454,6 @@ static inline uint64_t CAVM_GTI_ERR_INT_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000f0000ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000f0000ll;
     __cavm_csr_fatal("GTI_ERR_INT", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -3679,7 +3467,8 @@ static inline uint64_t CAVM_GTI_ERR_INT_FUNC(void)
 /**
  * Register (NCB) gti_err_int_ena_clr
  *
- * INTERNAL: GTI Error Interrupt Enable Clear Register
+ * GTI Error Interrupt Enable Clear Register
+ * This register clears interrupt enable bits.
  */
 union cavm_gti_err_int_ena_clr
 {
@@ -3698,21 +3487,7 @@ union cavm_gti_err_int_ena_clr
         uint64_t reserved_34_63        : 30;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_err_int_ena_clr_s cn8; */
-    struct cavm_gti_err_int_ena_clr_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_34_63        : 30;
-        uint64_t dbe                   : 2;  /**< [ 33: 32](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_31         : 30;
-        uint64_t sbe                   : 2;  /**< [  1:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 2;  /**< [  1:  0](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_31         : 30;
-        uint64_t dbe                   : 2;  /**< [ 33: 32](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_34_63        : 30;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_err_int_ena_clr_s cn; */
 };
 typedef union cavm_gti_err_int_ena_clr cavm_gti_err_int_ena_clr_t;
 
@@ -3722,8 +3497,6 @@ static inline uint64_t CAVM_GTI_ERR_INT_ENA_CLR_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000f0010ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000f0010ll;
     __cavm_csr_fatal("GTI_ERR_INT_ENA_CLR", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -3737,7 +3510,8 @@ static inline uint64_t CAVM_GTI_ERR_INT_ENA_CLR_FUNC(void)
 /**
  * Register (NCB) gti_err_int_ena_set
  *
- * INTERNAL: GTI Error Interrupt Enable Set Register
+ * GTI Error Interrupt Enable Set Register
+ * This register sets interrupt enable bits.
  */
 union cavm_gti_err_int_ena_set
 {
@@ -3756,21 +3530,7 @@ union cavm_gti_err_int_ena_set
         uint64_t reserved_34_63        : 30;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_err_int_ena_set_s cn8; */
-    struct cavm_gti_err_int_ena_set_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_34_63        : 30;
-        uint64_t dbe                   : 2;  /**< [ 33: 32](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_31         : 30;
-        uint64_t sbe                   : 2;  /**< [  1:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 2;  /**< [  1:  0](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_31         : 30;
-        uint64_t dbe                   : 2;  /**< [ 33: 32](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_34_63        : 30;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_err_int_ena_set_s cn; */
 };
 typedef union cavm_gti_err_int_ena_set cavm_gti_err_int_ena_set_t;
 
@@ -3780,8 +3540,6 @@ static inline uint64_t CAVM_GTI_ERR_INT_ENA_SET_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000f0018ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000f0018ll;
     __cavm_csr_fatal("GTI_ERR_INT_ENA_SET", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -3795,7 +3553,8 @@ static inline uint64_t CAVM_GTI_ERR_INT_ENA_SET_FUNC(void)
 /**
  * Register (NCB) gti_err_int_set
  *
- * INTERNAL: GTI Error Interrupt Set Register
+ * GTI Error Interrupt Set Register
+ * This register sets interrupt bits.
  */
 union cavm_gti_err_int_set
 {
@@ -3814,21 +3573,7 @@ union cavm_gti_err_int_set
         uint64_t reserved_34_63        : 30;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gti_err_int_set_s cn8; */
-    struct cavm_gti_err_int_set_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_34_63        : 30;
-        uint64_t dbe                   : 2;  /**< [ 33: 32](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_31         : 30;
-        uint64_t sbe                   : 2;  /**< [  1:  0](RAZ) Reserved; for backwards compatibility. */
-#else /* Word 0 - Little Endian */
-        uint64_t sbe                   : 2;  /**< [  1:  0](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_2_31         : 30;
-        uint64_t dbe                   : 2;  /**< [ 33: 32](RAZ) Reserved; for backwards compatibility. */
-        uint64_t reserved_34_63        : 30;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_gti_err_int_set_s cn; */
 };
 typedef union cavm_gti_err_int_set cavm_gti_err_int_set_t;
 
@@ -3838,8 +3583,6 @@ static inline uint64_t CAVM_GTI_ERR_INT_SET_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX))
         return 0x8440000f0008ll;
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000f0008ll;
     __cavm_csr_fatal("GTI_ERR_INT_SET", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -4764,42 +4507,6 @@ static inline uint64_t CAVM_GTI_RD_PIDR7_FUNC(void)
 #define device_bar_CAVM_GTI_RD_PIDR7 0x0 /* PF_BAR0 */
 #define busnum_CAVM_GTI_RD_PIDR7 0
 #define arguments_CAVM_GTI_RD_PIDR7 -1,-1,-1,-1
-
-/**
- * Register (NCB) gti_scratch
- *
- * INTERNAL: GTI Scratch Register
- */
-union cavm_gti_scratch
-{
-    uint64_t u;
-    struct cavm_gti_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t scratch               : 64; /**< [ 63:  0](R/W) Scratch register. */
-#else /* Word 0 - Little Endian */
-        uint64_t scratch               : 64; /**< [ 63:  0](R/W) Scratch register. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gti_scratch_s cn; */
-};
-typedef union cavm_gti_scratch cavm_gti_scratch_t;
-
-#define CAVM_GTI_SCRATCH CAVM_GTI_SCRATCH_FUNC()
-static inline uint64_t CAVM_GTI_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_SCRATCH_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8020000e0018ll;
-    __cavm_csr_fatal("GTI_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GTI_SCRATCH cavm_gti_scratch_t
-#define bustype_CAVM_GTI_SCRATCH CSR_TYPE_NCB
-#define basename_CAVM_GTI_SCRATCH "GTI_SCRATCH"
-#define device_bar_CAVM_GTI_SCRATCH 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GTI_SCRATCH 0
-#define arguments_CAVM_GTI_SCRATCH -1,-1,-1,-1
 
 /**
  * Register (NCB32b) gti_wc#_cidr0

@@ -2293,44 +2293,6 @@ static inline uint64_t CAVM_ULFEX_CONTROL(uint64_t a)
 #define arguments_CAVM_ULFEX_CONTROL(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) ulfe#_eco
- *
- * INTERNAL: ULFE ECO Register
- */
-union cavm_ulfex_eco
-{
-    uint64_t u;
-    struct cavm_ulfex_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ulfex_eco_s cn; */
-};
-typedef union cavm_ulfex_eco cavm_ulfex_eco_t;
-
-static inline uint64_t CAVM_ULFEX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ULFEX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
-        return 0x87e043000008ll + 0x80000ll * ((a) & 0x7);
-    __cavm_csr_fatal("ULFEX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ULFEX_ECO(a) cavm_ulfex_eco_t
-#define bustype_CAVM_ULFEX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_ULFEX_ECO(a) "ULFEX_ECO"
-#define busnum_CAVM_ULFEX_ECO(a) (a)
-#define arguments_CAVM_ULFEX_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) ulfe#_error_enable0
  *
  * ULFE Error Enable 0 Register
@@ -2601,42 +2563,6 @@ static inline uint64_t CAVM_ULFEX_ERROR_SOURCE1(uint64_t a)
 #define arguments_CAVM_ULFEX_ERROR_SOURCE1(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) ulfe#_scratch
- *
- * INTERNAL: Scratch Registers
- *
- * Scratch register.
- */
-union cavm_ulfex_scratch
-{
-    uint64_t u;
-    struct cavm_ulfex_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ulfex_scratch_s cn; */
-};
-typedef union cavm_ulfex_scratch cavm_ulfex_scratch_t;
-
-static inline uint64_t CAVM_ULFEX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ULFEX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
-        return 0x87e043000080ll + 0x80000ll * ((a) & 0x7);
-    __cavm_csr_fatal("ULFEX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ULFEX_SCRATCH(a) cavm_ulfex_scratch_t
-#define bustype_CAVM_ULFEX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_ULFEX_SCRATCH(a) "ULFEX_SCRATCH"
-#define busnum_CAVM_ULFEX_SCRATCH(a) (a)
-#define arguments_CAVM_ULFEX_SCRATCH(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) ulfe#_status
  *
  * ULFE Status Register
@@ -2845,45 +2771,6 @@ static inline uint64_t CAVM_ULFE_CONTROL_FUNC(void)
 #define basename_CAVM_ULFE_CONTROL "ULFE_CONTROL"
 #define busnum_CAVM_ULFE_CONTROL 0
 #define arguments_CAVM_ULFE_CONTROL -1,-1,-1,-1
-
-/**
- * Register (RSL) ulfe_eco
- *
- * INTERNAL: ULFE ECO Register
- */
-union cavm_ulfe_eco
-{
-    uint64_t u;
-    struct cavm_ulfe_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ulfe_eco_s cn; */
-};
-typedef union cavm_ulfe_eco cavm_ulfe_eco_t;
-
-#define CAVM_ULFE_ECO CAVM_ULFE_ECO_FUNC()
-static inline uint64_t CAVM_ULFE_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ULFE_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX))
-        return 0x87e043080008ll;
-    __cavm_csr_fatal("ULFE_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ULFE_ECO cavm_ulfe_eco_t
-#define bustype_CAVM_ULFE_ECO CSR_TYPE_RSL
-#define basename_CAVM_ULFE_ECO "ULFE_ECO"
-#define busnum_CAVM_ULFE_ECO 0
-#define arguments_CAVM_ULFE_ECO -1,-1,-1,-1
 
 /**
  * Register (RSL) ulfe_error_enable0
@@ -3158,43 +3045,6 @@ static inline uint64_t CAVM_ULFE_ERROR_SOURCE1_FUNC(void)
 #define basename_CAVM_ULFE_ERROR_SOURCE1 "ULFE_ERROR_SOURCE1"
 #define busnum_CAVM_ULFE_ERROR_SOURCE1 0
 #define arguments_CAVM_ULFE_ERROR_SOURCE1 -1,-1,-1,-1
-
-/**
- * Register (RSL) ulfe_scratch
- *
- * INTERNAL: Scratch Registers
- *
- * Scratch register.
- */
-union cavm_ulfe_scratch
-{
-    uint64_t u;
-    struct cavm_ulfe_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ulfe_scratch_s cn; */
-};
-typedef union cavm_ulfe_scratch cavm_ulfe_scratch_t;
-
-#define CAVM_ULFE_SCRATCH CAVM_ULFE_SCRATCH_FUNC()
-static inline uint64_t CAVM_ULFE_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ULFE_SCRATCH_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX))
-        return 0x87e043080080ll;
-    __cavm_csr_fatal("ULFE_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ULFE_SCRATCH cavm_ulfe_scratch_t
-#define bustype_CAVM_ULFE_SCRATCH CSR_TYPE_RSL
-#define basename_CAVM_ULFE_SCRATCH "ULFE_SCRATCH"
-#define busnum_CAVM_ULFE_SCRATCH 0
-#define arguments_CAVM_ULFE_SCRATCH -1,-1,-1,-1
 
 /**
  * Register (RSL) ulfe_status

@@ -525,152 +525,6 @@ static inline uint64_t CAVM_FPA_BIST_STATUS_FUNC(void)
 #define arguments_CAVM_FPA_BIST_STATUS -1,-1,-1,-1
 
 /**
- * Register (NCB) fpa_bp_test
- *
- * INTERNAL: FPA Backpressure Test Register
- */
-union cavm_fpa_bp_test
-{
-    uint64_t u;
-    struct cavm_fpa_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 16; /**< [ 63: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Apply backpressure to adp      to csr traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG12].
-                                                                 \<59\> = Apply backpressure to adp      to l2s traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG11].
-                                                                 \<58\> = Apply backpressure to adp      to l2l traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG10].
-                                                                 \<57\> = Apply backpressure to red read to csr traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG9].
-                                                                 \<56\> = Apply backpressure to l2arb    to csr traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG8].
-                                                                 \<55\> = Apply backpressure to csr      to adp traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG7].
-                                                                 \<54\> = Apply backpressure to pcc      to gib traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG6].
-                                                                 \<53\> = Apply backpressure to adp      to pfc traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG5].
-                                                                 \<52\> = generate pmc                   to pfc backpressure. Backpressure weight controlled
-                                                                 by [BP_CFG4].
-                                                                 \<51\> = Apply backpressure to pmc      to ncbi traffic.     Backpressure weight controlled
-                                                                 by [BP_CFG3].
-                                                                 \<50\> = Apply backpressure to csr      to ncbi traffic.     Backpressure weight controlled
-                                                                 by [BP_CFG2].
-                                                                 \<49\> = Apply backpressure to l2s      to ncbi traffic.     Backpressure weight controlled
-                                                                 by [BP_CFG1].
-                                                                 \<48\> = Apply backpressure to l2l      to ncbi traffic.     Backpressure weight controlled
-                                                                 by [BP_CFG0]. */
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<47:46\> = BP_CFG15.
-                                                                   \<45:44\> = BP_CFG14.
-                                                                   \<43:42\> = BP_CFG13.
-                                                                   \<41:40\> = BP_CFG12.
-                                                                   \<39:38\> = BP_CFG11.
-                                                                   \<37:36\> = BP_CFG10.
-                                                                   \<35:34\> = BP_CFG9.
-                                                                   \<33:32\> = BP_CFG8.
-                                                                   \<31:30\> = BP_CFG7.
-                                                                   \<29:28\> = BP_CFG6.
-                                                                   \<27:26\> = BP_CFG5.
-                                                                   \<25:24\> = BP_CFG4.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<47:46\> = BP_CFG15.
-                                                                   \<45:44\> = BP_CFG14.
-                                                                   \<43:42\> = BP_CFG13.
-                                                                   \<41:40\> = BP_CFG12.
-                                                                   \<39:38\> = BP_CFG11.
-                                                                   \<37:36\> = BP_CFG10.
-                                                                   \<35:34\> = BP_CFG9.
-                                                                   \<33:32\> = BP_CFG8.
-                                                                   \<31:30\> = BP_CFG7.
-                                                                   \<29:28\> = BP_CFG6.
-                                                                   \<27:26\> = BP_CFG5.
-                                                                   \<25:24\> = BP_CFG4.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t enable                : 16; /**< [ 63: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Apply backpressure to adp      to csr traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG12].
-                                                                 \<59\> = Apply backpressure to adp      to l2s traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG11].
-                                                                 \<58\> = Apply backpressure to adp      to l2l traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG10].
-                                                                 \<57\> = Apply backpressure to red read to csr traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG9].
-                                                                 \<56\> = Apply backpressure to l2arb    to csr traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG8].
-                                                                 \<55\> = Apply backpressure to csr      to adp traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG7].
-                                                                 \<54\> = Apply backpressure to pcc      to gib traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG6].
-                                                                 \<53\> = Apply backpressure to adp      to pfc traffic.      Backpressure weight controlled
-                                                                 by [BP_CFG5].
-                                                                 \<52\> = generate pmc                   to pfc backpressure. Backpressure weight controlled
-                                                                 by [BP_CFG4].
-                                                                 \<51\> = Apply backpressure to pmc      to ncbi traffic.     Backpressure weight controlled
-                                                                 by [BP_CFG3].
-                                                                 \<50\> = Apply backpressure to csr      to ncbi traffic.     Backpressure weight controlled
-                                                                 by [BP_CFG2].
-                                                                 \<49\> = Apply backpressure to l2s      to ncbi traffic.     Backpressure weight controlled
-                                                                 by [BP_CFG1].
-                                                                 \<48\> = Apply backpressure to l2l      to ncbi traffic.     Backpressure weight controlled
-                                                                 by [BP_CFG0]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_fpa_bp_test_s cn; */
-};
-typedef union cavm_fpa_bp_test cavm_fpa_bp_test_t;
-
-#define CAVM_FPA_BP_TEST CAVM_FPA_BP_TEST_FUNC()
-static inline uint64_t CAVM_FPA_BP_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_BP_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x828000000200ll;
-    __cavm_csr_fatal("FPA_BP_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_FPA_BP_TEST cavm_fpa_bp_test_t
-#define bustype_CAVM_FPA_BP_TEST CSR_TYPE_NCB
-#define basename_CAVM_FPA_BP_TEST "FPA_BP_TEST"
-#define device_bar_CAVM_FPA_BP_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_FPA_BP_TEST 0
-#define arguments_CAVM_FPA_BP_TEST -1,-1,-1,-1
-
-/**
  * Register (NCB) fpa_clk_count
  *
  * FPA Clock Count Register
@@ -797,8 +651,6 @@ static inline uint64_t CAVM_FPA_CONST1_FUNC(void)
  * Register (NCB) fpa_dbg_info
  *
  * FPA Debug Information Register
- * Internal:
- * This register provides debug information.
  */
 union cavm_fpa_dbg_info
 {
@@ -807,39 +659,19 @@ union cavm_fpa_dbg_info
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_17_63        : 47;
-        uint64_t low_pool_deadlock     : 1;  /**< [ 16: 16](RO/H) For diagnostic use only.
-                                                                 Internal:
-                                                                 When the ADP pipeline is stalled indefinitely, this bit indicates the scenario in bug 28280. */
+        uint64_t low_pool_deadlock     : 1;  /**< [ 16: 16](RO/H) For diagnostic use only. */
         uint64_t reserved_14_15        : 2;
-        uint64_t ncbo_cmd_fault_cmd    : 5;  /**< [ 13:  9](RO/H) For diagnostic use only.
-                                                                 Internal:
-                                                                 When an unsupported ncbo command is detected, a fault bit along with the cmd is latched.
-
-                                                                 \<13:9\> = NCBO unsupport command. */
-        uint64_t ncbo_cmd_fault        : 1;  /**< [  8:  8](R/W1C/H) For diagnostic use only.
-                                                                 Internal:
-                                                                 When an unsupported ncbo command is detected, a fault bit along with the cmd is latched.
-
-                                                                 \<8\> = NCBO cmd fault (unsupport command detected). */
+        uint64_t ncbo_cmd_fault_cmd    : 5;  /**< [ 13:  9](RO/H) For diagnostic use only. */
+        uint64_t ncbo_cmd_fault        : 1;  /**< [  8:  8](R/W1C/H) For diagnostic use only. */
         uint64_t reserved_6_7          : 2;
         uint64_t dwb_pending           : 6;  /**< [  5:  0](RO/H) Number of outstanding DWB requests in the DWB queue. For diagnostic use only. */
 #else /* Word 0 - Little Endian */
         uint64_t dwb_pending           : 6;  /**< [  5:  0](RO/H) Number of outstanding DWB requests in the DWB queue. For diagnostic use only. */
         uint64_t reserved_6_7          : 2;
-        uint64_t ncbo_cmd_fault        : 1;  /**< [  8:  8](R/W1C/H) For diagnostic use only.
-                                                                 Internal:
-                                                                 When an unsupported ncbo command is detected, a fault bit along with the cmd is latched.
-
-                                                                 \<8\> = NCBO cmd fault (unsupport command detected). */
-        uint64_t ncbo_cmd_fault_cmd    : 5;  /**< [ 13:  9](RO/H) For diagnostic use only.
-                                                                 Internal:
-                                                                 When an unsupported ncbo command is detected, a fault bit along with the cmd is latched.
-
-                                                                 \<13:9\> = NCBO unsupport command. */
+        uint64_t ncbo_cmd_fault        : 1;  /**< [  8:  8](R/W1C/H) For diagnostic use only. */
+        uint64_t ncbo_cmd_fault_cmd    : 5;  /**< [ 13:  9](RO/H) For diagnostic use only. */
         uint64_t reserved_14_15        : 2;
-        uint64_t low_pool_deadlock     : 1;  /**< [ 16: 16](RO/H) For diagnostic use only.
-                                                                 Internal:
-                                                                 When the ADP pipeline is stalled indefinitely, this bit indicates the scenario in bug 28280. */
+        uint64_t low_pool_deadlock     : 1;  /**< [ 16: 16](RO/H) For diagnostic use only. */
         uint64_t reserved_17_63        : 47;
 #endif /* Word 0 - End */
     } s;
@@ -1383,10 +1215,7 @@ union cavm_fpa_inp_ctl
                                                                  \<0\> = SSO.
                                                                  \<1\> = PKO queue.
                                                                  \<2\> = PKI.
-                                                                 \<19:3\> = Reserved.
-
-                                                                 Internal:
-                                                                 There are 3 requesters on XFR bus. */
+                                                                 \<19:3\> = Reserved. */
         uint64_t free_dis              : 20; /**< [ 19:  0](R/W) Dellocation input disable. Each bit corresponds to a hardware deallocation input
                                                                  queue, and if set add-works from the corresponding coprocessor will be dropped
                                                                  and FPA_GEN_INT[FREE_DIS] set
@@ -1402,11 +1231,7 @@ union cavm_fpa_inp_ctl
                                                                  \<9\> = DPI.
                                                                  \<10\> = DDF.
                                                                  \<11\> = BCH.
-                                                                 \<19:12\> = Reserved.
-
-                                                                 Internal:
-                                                                 Once the grant is sent, the request is marked and it is dropped when the request
-                                                                 data is received. */
+                                                                 \<19:12\> = Reserved. */
 #else /* Word 0 - Little Endian */
         uint64_t free_dis              : 20; /**< [ 19:  0](R/W) Dellocation input disable. Each bit corresponds to a hardware deallocation input
                                                                  queue, and if set add-works from the corresponding coprocessor will be dropped
@@ -1423,21 +1248,14 @@ union cavm_fpa_inp_ctl
                                                                  \<9\> = DPI.
                                                                  \<10\> = DDF.
                                                                  \<11\> = BCH.
-                                                                 \<19:12\> = Reserved.
-
-                                                                 Internal:
-                                                                 Once the grant is sent, the request is marked and it is dropped when the request
-                                                                 data is received. */
+                                                                 \<19:12\> = Reserved. */
         uint64_t alloc_dis             : 20; /**< [ 39: 20](R/W) Allocation input disable. Each bit corresponds to a hardware allocation input
                                                                  queue, and if set add-works from the corresponding coprocessor will be dropped
                                                                  with a no-pointer fault response and FPA_GEN_INT[ALLOC_DIS] set.
                                                                  \<0\> = SSO.
                                                                  \<1\> = PKO queue.
                                                                  \<2\> = PKI.
-                                                                 \<19:3\> = Reserved.
-
-                                                                 Internal:
-                                                                 There are 3 requesters on XFR bus. */
+                                                                 \<19:3\> = Reserved. */
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
@@ -1854,11 +1672,7 @@ union cavm_fpa_poolx_fpf_marks
                                                                  The maximum value is fpf_sz - 48.
 
                                                                  It is recommended that software APIs represent this value as a percentage of fpf_sz, as
-                                                                 fpf_sz may vary between products.
-
-                                                                 Internal:
-                                                                 The worse case buffer requirement is:
-                                                                 (memory_latency + 16 * (num_pools_active - 1) / cycles_per_alloc */
+                                                                 fpf_sz may vary between products. */
         uint64_t reserved_11_15        : 5;
         uint64_t fpf_level             : 11; /**< [ 10:  0](RO/H) The current number of free-page pointers in the pool, in entries. For diagnostic use. */
 #else /* Word 0 - Little Endian */
@@ -1875,11 +1689,7 @@ union cavm_fpa_poolx_fpf_marks
                                                                  The maximum value is fpf_sz - 48.
 
                                                                  It is recommended that software APIs represent this value as a percentage of fpf_sz, as
-                                                                 fpf_sz may vary between products.
-
-                                                                 Internal:
-                                                                 The worse case buffer requirement is:
-                                                                 (memory_latency + 16 * (num_pools_active - 1) / cycles_per_alloc */
+                                                                 fpf_sz may vary between products. */
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
@@ -2886,9 +2696,6 @@ static inline uint64_t CAVM_FPA_VHAURAX_CNT_THRESHOLD(uint64_t a)
  * lower bits of the address formed with FPA_ALLOC_ADDR_S.
  *
  * Writes to this register's address range are ignored.
- *
- * Internal:
- * arch_max really 65536,4096.
  */
 union cavm_fpa_vhaurax_op_allocx
 {
@@ -2938,9 +2745,6 @@ static inline uint64_t CAVM_FPA_VHAURAX_OP_ALLOCX(uint64_t a, uint64_t b)
  * lower bits of the address formed with FPA_FREE_ADDR_S.
  *
  * Reads to this register's address range return 0x0.
- *
- * Internal:
- * arch_max really 65536,4096.
  */
 union cavm_fpa_vhaurax_op_freex
 {
@@ -2988,15 +2792,9 @@ union cavm_fpa_vhpoolx_available
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_36_63        : 28;
-        uint64_t count                 : 36; /**< [ 35:  0](RO/H) The number of free buffers available in this pool.
-                                                                 Internal:
-                                                                 Sized for 2^41 bit
-                                                                 max physical memory - 7 bit cache line. */
+        uint64_t count                 : 36; /**< [ 35:  0](RO/H) The number of free buffers available in this pool. */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 36; /**< [ 35:  0](RO/H) The number of free buffers available in this pool.
-                                                                 Internal:
-                                                                 Sized for 2^41 bit
-                                                                 max physical memory - 7 bit cache line. */
+        uint64_t count                 : 36; /**< [ 35:  0](RO/H) The number of free buffers available in this pool. */
         uint64_t reserved_36_63        : 28;
 #endif /* Word 0 - End */
     } s;

@@ -470,36 +470,6 @@
 #define CAVM_FUS_FUSE_NUM_E_ZIP_ENG_DISABLEX(a) (0x206 + (a))
 
 /**
- * Enumeration fus_fuse_pvt_num_e
- *
- * INTERNAL: Fuse PVT Fuse Number Enumeration
- *
- * Enumerates the fuse numbers for the FUS_FUSE_NUM_E::PVT() fuses.
- */
-#define CAVM_FUS_FUSE_PVT_NUM_E_C0_CORE_ADJX(a) (0xd0 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_C0_SYS_ADJX(a) (0xd8 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_CX_CORE_ADJX(a) (0xe0 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_CX_SYS_ADJX(a) (0xe8 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_C_ANALOG_ADJX(a) (0xf8 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_C_DDR_ADJX(a) (0xf0 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_DVFSX_FREQX(a,b) (0x40 + 0x10 * (a) + (b))
-#define CAVM_FUS_FUSE_PVT_NUM_E_DVFSX_VOLTX(a,b) (0x48 + 0x10 * (a) + (b))
-#define CAVM_FUS_FUSE_PVT_NUM_E_I0_COREX(a) (0x10 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_I0_SYSX(a) (0x20 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_MV_ADJX(a) (0xc0 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_PVT_VERSIONX(a) (0 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_RCLK_FREQ_GUARDBANDX(a) (0xf0 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_SCLK_FREQ_GUARDBANDX(a) (0xf8 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_UNUSED1X(a) (8 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_VDD_CORE_GUARDBANDX(a) (0xe0 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_VDD_SYS_GUARDBANDX(a) (0xe8 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_VMAX_COREX(a) (0x38 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_VMAX_SYSX(a) (0xb8 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_VMIN_COREX(a) (0x30 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_VMIN_SYSX(a) (0xb0 + (a))
-#define CAVM_FUS_FUSE_PVT_NUM_E_XT_ADJX(a) (0xc8 + (a))
-
-/**
  * Register (RSL) fus_bnk_dat#
  *
  * Fuse Bank Store Register
@@ -638,13 +608,7 @@ union cavm_fus_prog
                                                                  but will not persist through a cold domain reset. */
         uint64_t voltage               : 1;  /**< [ 14: 14](RO) Reserved. */
         uint64_t reserved_13           : 1;
-        uint64_t prog                  : 1;  /**< [ 12: 12](R/W/H) Internal:
-                                                                 When written to one by software, blow the fuse bank. Hardware will
-                                                                 clear the field when the program operation is complete.
-                                                                 To write a bank of fuses, software must write the fuse data into
-                                                                 FUS_BNK_DAT().  Then it writes [ADDR] and [EFUSE]
-                                                                 and sets [PROG].  Hardware will clear the [PROG] when the write is
-                                                                 completed.  New fuses will become active after a chip domain reset. */
+        uint64_t prog                  : 1;  /**< [ 12: 12](R/W/H)  */
         uint64_t reserved_11           : 1;
         uint64_t addr                  : 7;  /**< [ 10:  4](R/W) Indicates which of the banks of 128 fuses to blow. Software
                                                                  should not change this field while the FUS_PROG[PROG] bit is set.
@@ -660,13 +624,7 @@ union cavm_fus_prog
                                                                  Address bits greater than the number of bits needed to the number of banks
                                                                  present (FUS_CONST[FUSE_BANKS]) must be zero. */
         uint64_t reserved_11           : 1;
-        uint64_t prog                  : 1;  /**< [ 12: 12](R/W/H) Internal:
-                                                                 When written to one by software, blow the fuse bank. Hardware will
-                                                                 clear the field when the program operation is complete.
-                                                                 To write a bank of fuses, software must write the fuse data into
-                                                                 FUS_BNK_DAT().  Then it writes [ADDR] and [EFUSE]
-                                                                 and sets [PROG].  Hardware will clear the [PROG] when the write is
-                                                                 completed.  New fuses will become active after a chip domain reset. */
+        uint64_t prog                  : 1;  /**< [ 12: 12](R/W/H)  */
         uint64_t reserved_13           : 1;
         uint64_t voltage               : 1;  /**< [ 14: 14](RO) Reserved. */
         uint64_t efuse                 : 1;  /**< [ 15: 15](R/W) Efuse storage. When set, the data is written directly to the efuse
@@ -843,73 +801,37 @@ union cavm_fus_read_times
         uint64_t reserved_32_63        : 32;
         uint64_t done                  : 4;  /**< [ 31: 28](R/W) Hold time of CSB, PGENB, and LOAD with respect to falling edge
                                                                  of STROBE for read and write mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing specs are th_CS = 6 ns, th_PG = 10 ns, th_LD_p = 7 ns. */
+                                                                 Default of 0x0 yields 10 ns at 100 MHz. */
         uint64_t ahd                   : 4;  /**< [ 27: 24](R/W) Hold time of A with respect to falling edge of STROBE
                                                                  for read and write modes in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of tsu_A_r and tsu_A_p is 3 ns min. */
+                                                                 Default of 0x0 yields 10 ns at 100 MHz. */
         uint64_t wrstb_wh              : 12; /**< [ 23: 12](R/W) Pulse width high of STROBE in write mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x3E8 yields 10 us at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of twh_SB_p is 9.8 us max. */
+                                                                 Default of 0x3E8 yields 10 us at 100 MHz. */
         uint64_t rdstb_wh              : 4;  /**< [ 11:  8](R/W) Pulse width high of STROBE in read mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x3 yields 40 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of twh_SB_p is 20 ns min. */
+                                                                 Default of 0x3 yields 40 ns at 100 MHz. */
         uint64_t asu                   : 4;  /**< [  7:  4](R/W) Setup time of A to rising edge of STROBE for read and write
                                                                  modes in GSERC_REF_CLK0 cycles.
-                                                                 Default of 0x1 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of tsu_A_r and tsu_A_p is 12 ns min. */
+                                                                 Default of 0x1 yields 10 ns at 100 MHz. */
         uint64_t setup                 : 4;  /**< [  3:  0](R/W) Setup time of CSB, PGENB, LOAD to rising edge of STROBE
                                                                  in read and write modes in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz.
-
-                                                                 Internal:
-                                                                 tsu_CS = 16 ns, tsu_PG = 14 ns, tsu_LD_r = 10 ns. */
+                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz. */
 #else /* Word 0 - Little Endian */
         uint64_t setup                 : 4;  /**< [  3:  0](R/W) Setup time of CSB, PGENB, LOAD to rising edge of STROBE
                                                                  in read and write modes in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz.
-
-                                                                 Internal:
-                                                                 tsu_CS = 16 ns, tsu_PG = 14 ns, tsu_LD_r = 10 ns. */
+                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz. */
         uint64_t asu                   : 4;  /**< [  7:  4](R/W) Setup time of A to rising edge of STROBE for read and write
                                                                  modes in GSERC_REF_CLK0 cycles.
-                                                                 Default of 0x1 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of tsu_A_r and tsu_A_p is 12 ns min. */
+                                                                 Default of 0x1 yields 10 ns at 100 MHz. */
         uint64_t rdstb_wh              : 4;  /**< [ 11:  8](R/W) Pulse width high of STROBE in read mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x3 yields 40 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of twh_SB_p is 20 ns min. */
+                                                                 Default of 0x3 yields 40 ns at 100 MHz. */
         uint64_t wrstb_wh              : 12; /**< [ 23: 12](R/W) Pulse width high of STROBE in write mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x3E8 yields 10 us at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of twh_SB_p is 9.8 us max. */
+                                                                 Default of 0x3E8 yields 10 us at 100 MHz. */
         uint64_t ahd                   : 4;  /**< [ 27: 24](R/W) Hold time of A with respect to falling edge of STROBE
                                                                  for read and write modes in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of tsu_A_r and tsu_A_p is 3 ns min. */
+                                                                 Default of 0x0 yields 10 ns at 100 MHz. */
         uint64_t done                  : 4;  /**< [ 31: 28](R/W) Hold time of CSB, PGENB, and LOAD with respect to falling edge
                                                                  of STROBE for read and write mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing specs are th_CS = 6 ns, th_PG = 10 ns, th_LD_p = 7 ns. */
+                                                                 Default of 0x0 yields 10 ns at 100 MHz. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -919,73 +841,37 @@ union cavm_fus_read_times
         uint64_t reserved_32_63        : 32;
         uint64_t done                  : 4;  /**< [ 31: 28](R/W) Hold time of CSB, PGENB, and LOAD with respect to falling edge
                                                                  of STROBE for read and write mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing specs are th_CS = 6 ns, th_PG = 10 ns, th_LD_p = 7 ns. */
+                                                                 Default of 0x0 yields 10 ns at 100 MHz. */
         uint64_t ahd                   : 4;  /**< [ 27: 24](R/W) Hold time of A with respect to falling edge of STROBE
                                                                  for read and write modes in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of tsu_A_r and tsu_A_p is 3 ns min. */
+                                                                 Default of 0x0 yields 10 ns at 100 MHz. */
         uint64_t wrstb_wh              : 12; /**< [ 23: 12](R/W) Pulse width high of STROBE in write mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x3E8 yields 10 us at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of twh_SB_p is 9.8 us max. */
+                                                                 Default of 0x3E8 yields 10 us at 100 MHz. */
         uint64_t rdstb_wh              : 4;  /**< [ 11:  8](R/W) Pulse width high of STROBE in read mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x3 yields 40 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of twh_SB_p is 20 ns min. */
+                                                                 Default of 0x3 yields 40 ns at 100 MHz. */
         uint64_t asu                   : 4;  /**< [  7:  4](R/W) Setup time of A to rising edge of STROBE for read and write
                                                                  modes in GSERC_REF_CLK0 cycles.
-                                                                 Default of 0x1 yields 20 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of tsu_A_r and tsu_A_p is 12 ns min. */
+                                                                 Default of 0x1 yields 20 ns at 100 MHz. */
         uint64_t setup                 : 4;  /**< [  3:  0](R/W) Setup time of CSB, PGENB, LOAD to rising edge of STROBE
                                                                  in read and write modes in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz.
-
-                                                                 Internal:
-                                                                 tsu_CS = 16 ns, tsu_PG = 14 ns, tsu_LD_r = 10 ns. */
+                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz. */
 #else /* Word 0 - Little Endian */
         uint64_t setup                 : 4;  /**< [  3:  0](R/W) Setup time of CSB, PGENB, LOAD to rising edge of STROBE
                                                                  in read and write modes in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz.
-
-                                                                 Internal:
-                                                                 tsu_CS = 16 ns, tsu_PG = 14 ns, tsu_LD_r = 10 ns. */
+                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz. */
         uint64_t asu                   : 4;  /**< [  7:  4](R/W) Setup time of A to rising edge of STROBE for read and write
                                                                  modes in GSERC_REF_CLK0 cycles.
-                                                                 Default of 0x1 yields 20 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of tsu_A_r and tsu_A_p is 12 ns min. */
+                                                                 Default of 0x1 yields 20 ns at 100 MHz. */
         uint64_t rdstb_wh              : 4;  /**< [ 11:  8](R/W) Pulse width high of STROBE in read mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x3 yields 40 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of twh_SB_p is 20 ns min. */
+                                                                 Default of 0x3 yields 40 ns at 100 MHz. */
         uint64_t wrstb_wh              : 12; /**< [ 23: 12](R/W) Pulse width high of STROBE in write mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x3E8 yields 10 us at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of twh_SB_p is 9.8 us max. */
+                                                                 Default of 0x3E8 yields 10 us at 100 MHz. */
         uint64_t ahd                   : 4;  /**< [ 27: 24](R/W) Hold time of A with respect to falling edge of STROBE
                                                                  for read and write modes in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing spec of tsu_A_r and tsu_A_p is 3 ns min. */
+                                                                 Default of 0x0 yields 10 ns at 100 MHz. */
         uint64_t done                  : 4;  /**< [ 31: 28](R/W) Hold time of CSB, PGENB, and LOAD with respect to falling edge
                                                                  of STROBE for read and write mode in GSERC_REF_CLK0 + 1 cycles.
-                                                                 Default of 0x0 yields 10 ns at 100 MHz.
-
-                                                                 Internal:
-                                                                 Timing specs are th_CS = 6 ns, th_PG = 10 ns, th_LD_p = 7 ns. */
+                                                                 Default of 0x0 yields 10 ns at 100 MHz. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn98xx;
@@ -1017,10 +903,6 @@ static inline uint64_t CAVM_FUS_READ_TIMES_FUNC(void)
  * Register (RSL) fus_soft_repair
  *
  * INTERNAL: Fuse Soft Repair Register
- *
- * Internal:
- * Aka `soft blow'. Upon reset fuse repairs are loaded into FUS_FUSE_NUM_E::REPAIR()
- * fuses as they are loaded into the memories.
  */
 union cavm_fus_soft_repair
 {
@@ -1029,15 +911,9 @@ union cavm_fus_soft_repair
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_48_63        : 16;
-        uint64_t auto_dly              : 16; /**< [ 47: 32](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 Autoblow Delay.  Power supply ramp delay in 1 uS increments from enabling
-                                                                 [AUTOBLOW] to programming first bit. */
+        uint64_t auto_dly              : 16; /**< [ 47: 32](R/W/H) Reserved. */
         uint64_t reserved_18_31        : 14;
-        uint64_t autoblow              : 1;  /**< [ 17: 17](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 Set to initiate burning of defect fuses to fuse macro. Clears when fuses are
-                                                                 blown. */
+        uint64_t autoblow              : 1;  /**< [ 17: 17](R/W/H) Reserved. */
         uint64_t clr_defects           : 1;  /**< [ 16: 16](R/W) Clear defects.  Setting this bit and then reading all the repair fuse
                                                                  banks with the EFUSE field set will reinitialize the defects to zero.
                                                                  Following this [CLR_DEFECTS] should be cleared and a chip domain
@@ -1061,15 +937,9 @@ union cavm_fus_soft_repair
                                                                  reset should be initiated.  This operation is typically done after
                                                                  too many defects have accumulated and only defects from a slower speed
                                                                  grade are required. */
-        uint64_t autoblow              : 1;  /**< [ 17: 17](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 Set to initiate burning of defect fuses to fuse macro. Clears when fuses are
-                                                                 blown. */
+        uint64_t autoblow              : 1;  /**< [ 17: 17](R/W/H) Reserved. */
         uint64_t reserved_18_31        : 14;
-        uint64_t auto_dly              : 16; /**< [ 47: 32](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 Autoblow Delay.  Power supply ramp delay in 1 uS increments from enabling
-                                                                 [AUTOBLOW] to programming first bit. */
+        uint64_t auto_dly              : 16; /**< [ 47: 32](R/W/H) Reserved. */
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } s;

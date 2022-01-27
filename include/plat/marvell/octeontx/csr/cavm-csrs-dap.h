@@ -47,9 +47,7 @@ union cavm_dap_cab_addr_s
         uint64_t reserved_52_63        : 12;
         uint64_t io                    : 5;  /**< [ 51: 47] Indicates I/O space. */
         uint64_t reserved_46           : 1;
-        uint64_t node                  : 2;  /**< [ 45: 44] Reserved.
-                                                                 Internal:
-                                                                 CCPI node number. */
+        uint64_t node                  : 2;  /**< [ 45: 44] Reserved. */
         uint64_t did                   : 8;  /**< [ 43: 36] Indicates CAB access. */
         uint64_t sec                   : 1;  /**< [ 35: 35] Secure access. See the DAP Chapter for information on the protections related to
                                                                  this field.
@@ -69,9 +67,7 @@ union cavm_dap_cab_addr_s
                                                                  0 = Nonsecure.
                                                                  1 = Secure. */
         uint64_t did                   : 8;  /**< [ 43: 36] Indicates CAB access. */
-        uint64_t node                  : 2;  /**< [ 45: 44] Reserved.
-                                                                 Internal:
-                                                                 CCPI node number. */
+        uint64_t node                  : 2;  /**< [ 45: 44] Reserved. */
         uint64_t reserved_46           : 1;
         uint64_t io                    : 5;  /**< [ 51: 47] Indicates I/O space. */
         uint64_t reserved_52_63        : 12;
@@ -116,44 +112,6 @@ static inline uint64_t CAVM_DAP_CONST_FUNC(void)
 #define device_bar_CAVM_DAP_CONST 0x0 /* PF_BAR0 */
 #define busnum_CAVM_DAP_CONST 0
 #define arguments_CAVM_DAP_CONST -1,-1,-1,-1
-
-/**
- * Register (RSL) dap_eco
- *
- * INTERNAL: DAP ECO Register
- */
-union cavm_dap_eco
-{
-    uint64_t u;
-    struct cavm_dap_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_ro                : 16; /**< [ 31: 16](RO) Reserved for ECO usage. */
-        uint64_t eco_rw                : 16; /**< [ 15:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 16; /**< [ 15:  0](R/W) Reserved for ECO usage. */
-        uint64_t eco_ro                : 16; /**< [ 31: 16](RO) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dap_eco_s cn; */
-};
-typedef union cavm_dap_eco cavm_dap_eco_t;
-
-#define CAVM_DAP_ECO CAVM_DAP_ECO_FUNC()
-static inline uint64_t CAVM_DAP_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DAP_ECO_FUNC(void)
-{
-    return 0x87e002000120ll;
-}
-
-#define typedef_CAVM_DAP_ECO cavm_dap_eco_t
-#define bustype_CAVM_DAP_ECO CSR_TYPE_RSL
-#define basename_CAVM_DAP_ECO "DAP_ECO"
-#define device_bar_CAVM_DAP_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DAP_ECO 0
-#define arguments_CAVM_DAP_ECO -1,-1,-1,-1
 
 /**
  * Register (RSL32b) dap_hwpoll_cnt
@@ -212,11 +170,7 @@ union cavm_dap_imp_dar
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_30_31        : 2;
-        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 Passed to trace unit, but not presently used.
-                                                                 0 = Future trace feature enabled.
-                                                                 1 = Future trace feature disabled. */
+        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved. */
         uint32_t distrace              : 1;  /**< [ 28: 28](R/W) Disable trace unit discovery.
                                                                  0 = Trace unit is discoverable by software.
                                                                  1 = Trace unit is hidden. */
@@ -280,11 +234,7 @@ union cavm_dap_imp_dar
         uint32_t distrace              : 1;  /**< [ 28: 28](R/W) Disable trace unit discovery.
                                                                  0 = Trace unit is discoverable by software.
                                                                  1 = Trace unit is hidden. */
-        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 Passed to trace unit, but not presently used.
-                                                                 0 = Future trace feature enabled.
-                                                                 1 = Future trace feature disabled. */
+        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved. */
         uint32_t reserved_30_31        : 2;
 #endif /* Word 0 - End */
     } s;
@@ -293,11 +243,7 @@ union cavm_dap_imp_dar
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_30_31        : 2;
-        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 Passed to trace unit, but not presently used.
-                                                                 0 = Future trace feature enabled.
-                                                                 1 = Future trace feature disabled. */
+        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved. */
         uint32_t distrace              : 1;  /**< [ 28: 28](RO) Trace unit is always discoverable in CNXXXX.
                                                                  0 = Trace unit is discoverable by software.
                                                                  1 = Trace unit is hidden.
@@ -365,11 +311,7 @@ union cavm_dap_imp_dar
                                                                  1 = Trace unit is hidden.
 
                                                                  In CNXXXX, always discoverable. */
-        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 Passed to trace unit, but not presently used.
-                                                                 0 = Future trace feature enabled.
-                                                                 1 = Future trace feature disabled. */
+        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved. */
         uint32_t reserved_30_31        : 2;
 #endif /* Word 0 - End */
     } cn9;
@@ -378,11 +320,7 @@ union cavm_dap_imp_dar
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_30_31        : 2;
-        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 Passed to trace unit, but not presently used.
-                                                                 0 = Future trace feature enabled.
-                                                                 1 = Future trace feature disabled. */
+        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved. */
         uint32_t distrace              : 1;  /**< [ 28: 28](RO) Trace unit is always discoverable in CNXXXX.
                                                                  0 = Trace unit is discoverable by software.
                                                                  1 = Trace unit is hidden.
@@ -450,11 +388,7 @@ union cavm_dap_imp_dar
                                                                  1 = Trace unit is hidden.
 
                                                                  In CNXXXX, always discoverable. */
-        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 Passed to trace unit, but not presently used.
-                                                                 0 = Future trace feature enabled.
-                                                                 1 = Future trace feature disabled. */
+        uint32_t distracefeature       : 1;  /**< [ 29: 29](R/W) Reserved. */
         uint32_t reserved_30_31        : 2;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -643,42 +577,6 @@ static inline uint64_t CAVM_DAP_RST_ON_WARM_FUNC(void)
 #define device_bar_CAVM_DAP_RST_ON_WARM 0x0 /* PF_BAR0 */
 #define busnum_CAVM_DAP_RST_ON_WARM 0
 #define arguments_CAVM_DAP_RST_ON_WARM -1,-1,-1,-1
-
-/**
- * Register (RSL) dap_scratch
- *
- * INTERNAL: DAP Scratch Register
- *
- * This register is a scratch register for software use.
- */
-union cavm_dap_scratch
-{
-    uint64_t u;
-    struct cavm_dap_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data, not used by hardware. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data, not used by hardware. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dap_scratch_s cn; */
-};
-typedef union cavm_dap_scratch cavm_dap_scratch_t;
-
-#define CAVM_DAP_SCRATCH CAVM_DAP_SCRATCH_FUNC()
-static inline uint64_t CAVM_DAP_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DAP_SCRATCH_FUNC(void)
-{
-    return 0x87e002000118ll;
-}
-
-#define typedef_CAVM_DAP_SCRATCH cavm_dap_scratch_t
-#define bustype_CAVM_DAP_SCRATCH CSR_TYPE_RSL
-#define basename_CAVM_DAP_SCRATCH "DAP_SCRATCH"
-#define device_bar_CAVM_DAP_SCRATCH 0x0 /* PF_BAR0 */
-#define busnum_CAVM_DAP_SCRATCH 0
-#define arguments_CAVM_DAP_SCRATCH -1,-1,-1,-1
 
 /**
  * Register (RSL32b) dap_sraaddr

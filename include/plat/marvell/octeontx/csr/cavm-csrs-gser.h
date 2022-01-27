@@ -678,65 +678,41 @@ union cavm_gserx_cfg
                                                                  set when [BGX] is set and [BGX_DUAL] is clear.
 
                                                                  When [BGX_QUAD] is set, GSER bundles all four lanes for one BGX controller.
-                                                                 [BGX_QUAD] must only be set for the XAUI/DXAUI protocols.
-
-                                                                 Internal:
-                                                                 Not used in CCPI QLMs. */
+                                                                 [BGX_QUAD] must only be set for the XAUI/DXAUI protocols. */
         uint64_t bgx_dual              : 1;  /**< [  3:  3](R/W) When set, indicates the QLM is in BGX dual aggregation mode. [BGX_DUAL] must only be
                                                                  set when [BGX] is also set and [BGX_QUAD] is clear.
 
                                                                  When [BGX_DUAL] is set, GSER bundles lanes 0 and 1 for one BGX controller and bundles
                                                                  lanes 2 and 3 for another BGX controller. [BGX_DUAL] must only be set for the RXAUI
-                                                                 protocol.
-
-                                                                 Internal:
-                                                                 Not used in CCPI QLMs. */
+                                                                 protocol. */
         uint64_t bgx                   : 1;  /**< [  2:  2](R/W) When set, indicates the GSER is configured for BGX mode. [BGX] must not be set
                                                                  when either of [PCIE,SATA] are set.
 
                                                                  When [BGX] is set and both [BGX_DUAL,BGX_QUAD] are clear, GSER exposes each lane to an
-                                                                 independent BGX controller.
-
-                                                                 Internal:
-                                                                 Not used in CCPI QLMs. */
+                                                                 independent BGX controller. */
         uint64_t ila                   : 1;  /**< [  1:  1](R/W) Reserved. */
         uint64_t pcie                  : 1;  /**< [  0:  0](R/W/H) When set, indicates the GSER is configured for PCIE mode. [PCIE] must not be
-                                                                 set when either of [BGX,SATA] is set.
-
-                                                                 Internal:
-                                                                 Not used in CCPI QLMs. */
+                                                                 set when either of [BGX,SATA] is set. */
 #else /* Word 0 - Little Endian */
         uint64_t pcie                  : 1;  /**< [  0:  0](R/W/H) When set, indicates the GSER is configured for PCIE mode. [PCIE] must not be
-                                                                 set when either of [BGX,SATA] is set.
-
-                                                                 Internal:
-                                                                 Not used in CCPI QLMs. */
+                                                                 set when either of [BGX,SATA] is set. */
         uint64_t ila                   : 1;  /**< [  1:  1](R/W) Reserved. */
         uint64_t bgx                   : 1;  /**< [  2:  2](R/W) When set, indicates the GSER is configured for BGX mode. [BGX] must not be set
                                                                  when either of [PCIE,SATA] are set.
 
                                                                  When [BGX] is set and both [BGX_DUAL,BGX_QUAD] are clear, GSER exposes each lane to an
-                                                                 independent BGX controller.
-
-                                                                 Internal:
-                                                                 Not used in CCPI QLMs. */
+                                                                 independent BGX controller. */
         uint64_t bgx_dual              : 1;  /**< [  3:  3](R/W) When set, indicates the QLM is in BGX dual aggregation mode. [BGX_DUAL] must only be
                                                                  set when [BGX] is also set and [BGX_QUAD] is clear.
 
                                                                  When [BGX_DUAL] is set, GSER bundles lanes 0 and 1 for one BGX controller and bundles
                                                                  lanes 2 and 3 for another BGX controller. [BGX_DUAL] must only be set for the RXAUI
-                                                                 protocol.
-
-                                                                 Internal:
-                                                                 Not used in CCPI QLMs. */
+                                                                 protocol. */
         uint64_t bgx_quad              : 1;  /**< [  4:  4](R/W) When set, indicates the QLM is in BGX quad aggregation mode. [BGX_QUAD] must only be
                                                                  set when [BGX] is set and [BGX_DUAL] is clear.
 
                                                                  When [BGX_QUAD] is set, GSER bundles all four lanes for one BGX controller.
-                                                                 [BGX_QUAD] must only be set for the XAUI/DXAUI protocols.
-
-                                                                 Internal:
-                                                                 Not used in CCPI QLMs. */
+                                                                 [BGX_QUAD] must only be set for the XAUI/DXAUI protocols. */
         uint64_t sata                  : 1;  /**< [  5:  5](R/W) When set, indicates the GSER is configured for SATA mode. [SATA] must not be set
                                                                  when either of [BGX,PCIE] are set. [SATA] must only be set for DLM3 (i.e. GSER3). */
         uint64_t reserved_6_63         : 58;
@@ -754,11 +730,7 @@ union cavm_gserx_cfg
                                                                  set when [BGX] is set and [BGX_DUAL] is clear.
 
                                                                  When [BGX_QUAD] is set, GSER bundles all four lanes for one BGX controller.
-                                                                 [BGX_QUAD] must only be set for the XAUI/DXAUI and XLAUI protocols.
-
-                                                                 Internal:
-                                                                 There is hardware to pair DLM 5 and 6 together when [BGX_QUAD] is set in DLM5.
-                                                                 But we currently do not support XAUI/DXAUI/XLAUI on DLM's. */
+                                                                 [BGX_QUAD] must only be set for the XAUI/DXAUI and XLAUI protocols. */
         uint64_t bgx_dual              : 1;  /**< [  3:  3](R/W) When set, indicates the QLM is in BGX dual aggregation mode. [BGX_DUAL] must only be
                                                                  set when [BGX] is also set and [BGX_QUAD] is clear.
 
@@ -766,11 +738,7 @@ union cavm_gserx_cfg
                                                                  lanes 2 and 3 for another BGX controller. [BGX_DUAL] must only be set for the RXAUI
                                                                  protocol.
 
-                                                                 [BGX_DUAL] must not be set in a DLM.
-
-                                                                 Internal:
-                                                                 [BGX_DUAL] should work in a DLM (lanes 0 and 1 bundled for one BGX controller), but
-                                                                 we currently do not support RXAUI in a DLM. */
+                                                                 [BGX_DUAL] must not be set in a DLM. */
         uint64_t bgx                   : 1;  /**< [  2:  2](R/W) When set, indicates the GSER is configured for BGX mode. [BGX] must not be set
                                                                  when either of [PCIE,SATA] are set.
 
@@ -795,20 +763,12 @@ union cavm_gserx_cfg
                                                                  lanes 2 and 3 for another BGX controller. [BGX_DUAL] must only be set for the RXAUI
                                                                  protocol.
 
-                                                                 [BGX_DUAL] must not be set in a DLM.
-
-                                                                 Internal:
-                                                                 [BGX_DUAL] should work in a DLM (lanes 0 and 1 bundled for one BGX controller), but
-                                                                 we currently do not support RXAUI in a DLM. */
+                                                                 [BGX_DUAL] must not be set in a DLM. */
         uint64_t bgx_quad              : 1;  /**< [  4:  4](R/W) When set, indicates the QLM is in BGX quad aggregation mode. [BGX_QUAD] must only be
                                                                  set when [BGX] is set and [BGX_DUAL] is clear.
 
                                                                  When [BGX_QUAD] is set, GSER bundles all four lanes for one BGX controller.
-                                                                 [BGX_QUAD] must only be set for the XAUI/DXAUI and XLAUI protocols.
-
-                                                                 Internal:
-                                                                 There is hardware to pair DLM 5 and 6 together when [BGX_QUAD] is set in DLM5.
-                                                                 But we currently do not support XAUI/DXAUI/XLAUI on DLM's. */
+                                                                 [BGX_QUAD] must only be set for the XAUI/DXAUI and XLAUI protocols. */
         uint64_t sata                  : 1;  /**< [  5:  5](R/W) When set, indicates the GSER is configured for SATA mode. [SATA] must not be set
                                                                  when either of [BGX,PCIE] are set. */
         uint64_t reserved_6_63         : 58;
@@ -2258,85 +2218,35 @@ union cavm_gserx_lanex_pcs_macifc_mon_0
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
-        uint64_t mac_pcs_tx_pstate     : 2;  /**< [ 15: 14](RO/H) Current state of the MAC to PCS TX power state\<2:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_pstate[2:0]. */
-        uint64_t mac_pcs_rx_pstate     : 2;  /**< [ 13: 12](RO/H) Current state of the MAC to PCS RX power state\<2:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_rxX_pstate[2:0]. */
-        uint64_t mac_pcs_lane_pwr_off  : 1;  /**< [ 11: 11](RO/H) Current state of the MAC to PCS lane power off input.
-                                                                 Internal:
-                                                                 mac_pcs_laneX_pwr_off. */
+        uint64_t mac_pcs_tx_pstate     : 2;  /**< [ 15: 14](RO/H) Current state of the MAC to PCS TX power state\<2:0\> input. */
+        uint64_t mac_pcs_rx_pstate     : 2;  /**< [ 13: 12](RO/H) Current state of the MAC to PCS RX power state\<2:0\> input. */
+        uint64_t mac_pcs_lane_pwr_off  : 1;  /**< [ 11: 11](RO/H) Current state of the MAC to PCS lane power off input. */
         uint64_t reserved_10           : 1;
-        uint64_t mac_pcs_lane_soft_reset : 1;/**< [  9:  9](RO/H) Current state of the MAC to PCS soft reset input.
-                                                                 Internal:
-                                                                 mac_pcs_laneX_soft_reset. */
-        uint64_t mac_pcs_lane_loopbk_en : 1; /**< [  8:  8](RO/H) Current state of the MAC to PCS lane loopback enable input.
-                                                                 Internal:
-                                                                 mac_pcs_laneX_loopbk_en. */
+        uint64_t mac_pcs_lane_soft_reset : 1;/**< [  9:  9](RO/H) Current state of the MAC to PCS soft reset input. */
+        uint64_t mac_pcs_lane_loopbk_en : 1; /**< [  8:  8](RO/H) Current state of the MAC to PCS lane loopback enable input. */
         uint64_t mac_pcs_rx_eie_det_en : 1;  /**< [  7:  7](RO/H) Current state of the MAC to PCS receiver electrical idle exit
-                                                                 detect enable input.
-
-                                                                 Internal:
-                                                                 mac_pcs_rxX_eie_det_en. */
-        uint64_t mac_pcs_rx_cdr_coast  : 1;  /**< [  6:  6](RO/H) Current state of the MAC to PCS lane receiver CDR coast input.
-                                                                 Internal:
-                                                                 mac_pcs_rxX_cdr_coast. */
+                                                                 detect enable input. */
+        uint64_t mac_pcs_rx_cdr_coast  : 1;  /**< [  6:  6](RO/H) Current state of the MAC to PCS lane receiver CDR coast input. */
         uint64_t mac_pcs_tx_detrx_en   : 1;  /**< [  5:  5](RO/H) Current state of the MAC to PCS transmitter receiver detect
-                                                                 enable input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_detrx_en. */
+                                                                 enable input. */
         uint64_t mac_pcs_rx_eq_eval    : 1;  /**< [  4:  4](RO/H) Current state of the MAC to PCS receiver equalizer evaluation
-                                                                 request input.
-
-                                                                 Internal:
-                                                                 mac_pcs_rxX_eq_eval. */
-        uint64_t mac_pcs_lane_mode     : 4;  /**< [  3:  0](RO/H) Current state of the MAC to PCS lane mode input.
-                                                                 Internal:
-                                                                 mac_pcs_laneX_mode[3:0]. */
+                                                                 request input. */
+        uint64_t mac_pcs_lane_mode     : 4;  /**< [  3:  0](RO/H) Current state of the MAC to PCS lane mode input. */
 #else /* Word 0 - Little Endian */
-        uint64_t mac_pcs_lane_mode     : 4;  /**< [  3:  0](RO/H) Current state of the MAC to PCS lane mode input.
-                                                                 Internal:
-                                                                 mac_pcs_laneX_mode[3:0]. */
+        uint64_t mac_pcs_lane_mode     : 4;  /**< [  3:  0](RO/H) Current state of the MAC to PCS lane mode input. */
         uint64_t mac_pcs_rx_eq_eval    : 1;  /**< [  4:  4](RO/H) Current state of the MAC to PCS receiver equalizer evaluation
-                                                                 request input.
-
-                                                                 Internal:
-                                                                 mac_pcs_rxX_eq_eval. */
+                                                                 request input. */
         uint64_t mac_pcs_tx_detrx_en   : 1;  /**< [  5:  5](RO/H) Current state of the MAC to PCS transmitter receiver detect
-                                                                 enable input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_detrx_en. */
-        uint64_t mac_pcs_rx_cdr_coast  : 1;  /**< [  6:  6](RO/H) Current state of the MAC to PCS lane receiver CDR coast input.
-                                                                 Internal:
-                                                                 mac_pcs_rxX_cdr_coast. */
+                                                                 enable input. */
+        uint64_t mac_pcs_rx_cdr_coast  : 1;  /**< [  6:  6](RO/H) Current state of the MAC to PCS lane receiver CDR coast input. */
         uint64_t mac_pcs_rx_eie_det_en : 1;  /**< [  7:  7](RO/H) Current state of the MAC to PCS receiver electrical idle exit
-                                                                 detect enable input.
-
-                                                                 Internal:
-                                                                 mac_pcs_rxX_eie_det_en. */
-        uint64_t mac_pcs_lane_loopbk_en : 1; /**< [  8:  8](RO/H) Current state of the MAC to PCS lane loopback enable input.
-                                                                 Internal:
-                                                                 mac_pcs_laneX_loopbk_en. */
-        uint64_t mac_pcs_lane_soft_reset : 1;/**< [  9:  9](RO/H) Current state of the MAC to PCS soft reset input.
-                                                                 Internal:
-                                                                 mac_pcs_laneX_soft_reset. */
+                                                                 detect enable input. */
+        uint64_t mac_pcs_lane_loopbk_en : 1; /**< [  8:  8](RO/H) Current state of the MAC to PCS lane loopback enable input. */
+        uint64_t mac_pcs_lane_soft_reset : 1;/**< [  9:  9](RO/H) Current state of the MAC to PCS soft reset input. */
         uint64_t reserved_10           : 1;
-        uint64_t mac_pcs_lane_pwr_off  : 1;  /**< [ 11: 11](RO/H) Current state of the MAC to PCS lane power off input.
-                                                                 Internal:
-                                                                 mac_pcs_laneX_pwr_off. */
-        uint64_t mac_pcs_rx_pstate     : 2;  /**< [ 13: 12](RO/H) Current state of the MAC to PCS RX power state\<2:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_rxX_pstate[2:0]. */
-        uint64_t mac_pcs_tx_pstate     : 2;  /**< [ 15: 14](RO/H) Current state of the MAC to PCS TX power state\<2:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_pstate[2:0]. */
+        uint64_t mac_pcs_lane_pwr_off  : 1;  /**< [ 11: 11](RO/H) Current state of the MAC to PCS lane power off input. */
+        uint64_t mac_pcs_rx_pstate     : 2;  /**< [ 13: 12](RO/H) Current state of the MAC to PCS RX power state\<2:0\> input. */
+        uint64_t mac_pcs_tx_pstate     : 2;  /**< [ 15: 14](RO/H) Current state of the MAC to PCS TX power state\<2:0\> input. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -2376,43 +2286,17 @@ union cavm_gserx_lanex_pcs_macifc_mon_2
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
-        uint64_t tx_coeff_req          : 1;  /**< [ 15: 15](RO/H) Current state of the MAC to PCS TX coefficient request input.
-                                                                 Internal:
-                                                                 mac_pcs_txX_coeff_req. */
-        uint64_t tx_vboost_en          : 1;  /**< [ 14: 14](RO/H) Current state of the MAC to PCS TX Vboost enable input.
-                                                                 Internal:
-                                                                 mac_pcs_txX_vboost_en. */
-        uint64_t tx_swing              : 5;  /**< [ 13:  9](RO/H) Current state of the MAC to PCS TX equalizer swing\<4:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_swing[4:0]. */
-        uint64_t tx_pre                : 4;  /**< [  8:  5](RO/H) Current state of the MAC to PCS TX equalizer preemphasis\<3:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_pre[3:0]. */
-        uint64_t tx_post               : 5;  /**< [  4:  0](RO/H) Current state of the MAC to PCS TX equalizer postemphasis\<4:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_post[4:0]. */
+        uint64_t tx_coeff_req          : 1;  /**< [ 15: 15](RO/H) Current state of the MAC to PCS TX coefficient request input. */
+        uint64_t tx_vboost_en          : 1;  /**< [ 14: 14](RO/H) Current state of the MAC to PCS TX Vboost enable input. */
+        uint64_t tx_swing              : 5;  /**< [ 13:  9](RO/H) Current state of the MAC to PCS TX equalizer swing\<4:0\> input. */
+        uint64_t tx_pre                : 4;  /**< [  8:  5](RO/H) Current state of the MAC to PCS TX equalizer preemphasis\<3:0\> input. */
+        uint64_t tx_post               : 5;  /**< [  4:  0](RO/H) Current state of the MAC to PCS TX equalizer postemphasis\<4:0\> input. */
 #else /* Word 0 - Little Endian */
-        uint64_t tx_post               : 5;  /**< [  4:  0](RO/H) Current state of the MAC to PCS TX equalizer postemphasis\<4:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_post[4:0]. */
-        uint64_t tx_pre                : 4;  /**< [  8:  5](RO/H) Current state of the MAC to PCS TX equalizer preemphasis\<3:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_pre[3:0]. */
-        uint64_t tx_swing              : 5;  /**< [ 13:  9](RO/H) Current state of the MAC to PCS TX equalizer swing\<4:0\> input.
-
-                                                                 Internal:
-                                                                 mac_pcs_txX_swing[4:0]. */
-        uint64_t tx_vboost_en          : 1;  /**< [ 14: 14](RO/H) Current state of the MAC to PCS TX Vboost enable input.
-                                                                 Internal:
-                                                                 mac_pcs_txX_vboost_en. */
-        uint64_t tx_coeff_req          : 1;  /**< [ 15: 15](RO/H) Current state of the MAC to PCS TX coefficient request input.
-                                                                 Internal:
-                                                                 mac_pcs_txX_coeff_req. */
+        uint64_t tx_post               : 5;  /**< [  4:  0](RO/H) Current state of the MAC to PCS TX equalizer postemphasis\<4:0\> input. */
+        uint64_t tx_pre                : 4;  /**< [  8:  5](RO/H) Current state of the MAC to PCS TX equalizer preemphasis\<3:0\> input. */
+        uint64_t tx_swing              : 5;  /**< [ 13:  9](RO/H) Current state of the MAC to PCS TX equalizer swing\<4:0\> input. */
+        uint64_t tx_vboost_en          : 1;  /**< [ 14: 14](RO/H) Current state of the MAC to PCS TX Vboost enable input. */
+        uint64_t tx_coeff_req          : 1;  /**< [ 15: 15](RO/H) Current state of the MAC to PCS TX coefficient request input. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -3236,10 +3120,7 @@ union cavm_gserx_lanex_rx_cfg_2
 
                                                                  The [RX_SDS_RX_AGC_MVAL] settings should be derived from signal integrity
                                                                  simulations with the IBIS-AMI model supplied by Cavium when
-                                                                 GSER()_LANE()_RX_CFG_5[RX_AGC_MEN_OVRRD_EN,RX_AGC_MEN_OVRRD_VAL] are set.
-
-                                                                 Internal:
-                                                                 reset value may be reasonable default settings. */
+                                                                 GSER()_LANE()_RX_CFG_5[RX_AGC_MEN_OVRRD_EN,RX_AGC_MEN_OVRRD_VAL] are set. */
 #else /* Word 0 - Little Endian */
         uint64_t rx_sds_rx_agc_mval    : 10; /**< [  9:  0](R/W) AGC manual value used when
                                                                  GSER()_LANE()_RX_CFG_5[RX_AGC_MEN_OVRRD_EN,RX_AGC_MEN_OVRRD_VAL]
@@ -3267,10 +3148,7 @@ union cavm_gserx_lanex_rx_cfg_2
 
                                                                  The [RX_SDS_RX_AGC_MVAL] settings should be derived from signal integrity
                                                                  simulations with the IBIS-AMI model supplied by Cavium when
-                                                                 GSER()_LANE()_RX_CFG_5[RX_AGC_MEN_OVRRD_EN,RX_AGC_MEN_OVRRD_VAL] are set.
-
-                                                                 Internal:
-                                                                 reset value may be reasonable default settings. */
+                                                                 GSER()_LANE()_RX_CFG_5[RX_AGC_MEN_OVRRD_EN,RX_AGC_MEN_OVRRD_VAL] are set. */
         uint64_t reserved_10           : 1;
         uint64_t pcs_sds_rx_sampler_boost_en : 1;/**< [ 11: 11](R/W) Faster sampler c2q.
                                                                  For diagnostic use only. */

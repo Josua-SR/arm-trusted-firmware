@@ -176,41 +176,6 @@ static inline uint64_t CAVM_PCM_CLKX_CFG(uint64_t a)
 #define arguments_CAVM_PCM_CLKX_CFG(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pcm_clk#_dbg
- *
- * INTERNAL: PCM Clock Debug Information Register
- */
-union cavm_pcm_clkx_dbg
-{
-    uint64_t u;
-    struct cavm_pcm_clkx_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debuginfo             : 64; /**< [ 63:  0](RO/H) Miscellaneous debug information. */
-#else /* Word 0 - Little Endian */
-        uint64_t debuginfo             : 64; /**< [ 63:  0](RO/H) Miscellaneous debug information. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pcm_clkx_dbg_s cn; */
-};
-typedef union cavm_pcm_clkx_dbg cavm_pcm_clkx_dbg_t;
-
-static inline uint64_t CAVM_PCM_CLKX_DBG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PCM_CLKX_DBG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
-        return 0x806000000038ll + 0x10000ll * ((a) & 0x1);
-    __cavm_csr_fatal("PCM_CLKX_DBG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PCM_CLKX_DBG(a) cavm_pcm_clkx_dbg_t
-#define bustype_CAVM_PCM_CLKX_DBG(a) CSR_TYPE_NCB
-#define basename_CAVM_PCM_CLKX_DBG(a) "PCM_CLKX_DBG"
-#define device_bar_CAVM_PCM_CLKX_DBG(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PCM_CLKX_DBG(a) (a)
-#define arguments_CAVM_PCM_CLKX_DBG(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) pcm_clk#_gen
  *
  * PCM Clock Generation Register
@@ -949,41 +914,6 @@ static inline uint64_t CAVM_PCM_TEX_TDM_CFG(uint64_t a)
 #define device_bar_CAVM_PCM_TEX_TDM_CFG(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PCM_TEX_TDM_CFG(a) (a)
 #define arguments_CAVM_PCM_TEX_TDM_CFG(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pcm_te#_tdm_dbg
- *
- * INTERNAL: PCM TDM Debug Information Register
- */
-union cavm_pcm_tex_tdm_dbg
-{
-    uint64_t u;
-    struct cavm_pcm_tex_tdm_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debuginfo             : 64; /**< [ 63:  0](RO/H) Miscellaneous debug information */
-#else /* Word 0 - Little Endian */
-        uint64_t debuginfo             : 64; /**< [ 63:  0](RO/H) Miscellaneous debug information */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pcm_tex_tdm_dbg_s cn; */
-};
-typedef union cavm_pcm_tex_tdm_dbg cavm_pcm_tex_tdm_dbg_t;
-
-static inline uint64_t CAVM_PCM_TEX_TDM_DBG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PCM_TEX_TDM_DBG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
-        return 0x806000000030ll + 0x10000ll * ((a) & 0x3);
-    __cavm_csr_fatal("PCM_TEX_TDM_DBG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PCM_TEX_TDM_DBG(a) cavm_pcm_tex_tdm_dbg_t
-#define bustype_CAVM_PCM_TEX_TDM_DBG(a) CSR_TYPE_NCB
-#define basename_CAVM_PCM_TEX_TDM_DBG(a) "PCM_TEX_TDM_DBG"
-#define device_bar_CAVM_PCM_TEX_TDM_DBG(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PCM_TEX_TDM_DBG(a) (a)
-#define arguments_CAVM_PCM_TEX_TDM_DBG(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) pcm_te#_txaddr

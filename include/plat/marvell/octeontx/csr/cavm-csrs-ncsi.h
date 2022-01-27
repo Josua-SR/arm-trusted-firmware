@@ -110,22 +110,10 @@ union cavm_ncsi_bist_status
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
         uint64_t status                : 4;  /**< [  3:  0](RO/H) BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass
-                                                                 or never run.
-
-                                                                 Internal:
-                                                                 \<0\> = ncsi.rx.rx_rsp.rsp_bnk.
-                                                                 \<1\> = ncsi.rx.rx_pmac.pmac_bnk.
-                                                                 \<2\> = ncsi.rx.rx_mix.mix_bnk.
-                                                                 \<3\> = ncsi.tx.tx_mix.mix_bnk. */
+                                                                 or never run. */
 #else /* Word 0 - Little Endian */
         uint64_t status                : 4;  /**< [  3:  0](RO/H) BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass
-                                                                 or never run.
-
-                                                                 Internal:
-                                                                 \<0\> = ncsi.rx.rx_rsp.rsp_bnk.
-                                                                 \<1\> = ncsi.rx.rx_pmac.pmac_bnk.
-                                                                 \<2\> = ncsi.rx.rx_mix.mix_bnk.
-                                                                 \<3\> = ncsi.tx.tx_mix.mix_bnk. */
+                                                                 or never run. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
@@ -196,84 +184,6 @@ static inline uint64_t CAVM_NCSI_BMC2CPU_MSG_FUNC(void)
 #define device_bar_CAVM_NCSI_BMC2CPU_MSG 0x0 /* PF_BAR0 */
 #define busnum_CAVM_NCSI_BMC2CPU_MSG 0
 #define arguments_CAVM_NCSI_BMC2CPU_MSG -1,-1,-1,-1
-
-/**
- * Register (RSL) ncsi_bp_test
- *
- * INTERNAL: NCSI Backpressure Test Register
- *
- * These registers contians the back pressure diagnotics data.
- */
-union cavm_ncsi_bp_test
-{
-    uint64_t u;
-    struct cavm_ncsi_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<60\> = Limit RX RSP FIFO traffic. Never limit 100% of the time.
-                                                                 \<61\> = Limit RX AEN FIFO traffic. Never limit 100% of the time.
-                                                                 \<62\> = Limit RX PMAC FIFO traffic. Never limit 100% of the time.
-                                                                 \<63\> = Limit NCSI to CGX transactions. Never limit 100% of the time. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<60\> = Limit RX RSP FIFO traffic. Never limit 100% of the time.
-                                                                 \<61\> = Limit RX AEN FIFO traffic. Never limit 100% of the time.
-                                                                 \<62\> = Limit RX PMAC FIFO traffic. Never limit 100% of the time.
-                                                                 \<63\> = Limit NCSI to CGX transactions. Never limit 100% of the time. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ncsi_bp_test_s cn; */
-};
-typedef union cavm_ncsi_bp_test cavm_ncsi_bp_test_t;
-
-#define CAVM_NCSI_BP_TEST CAVM_NCSI_BP_TEST_FUNC()
-static inline uint64_t CAVM_NCSI_BP_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_BP_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX))
-        return 0x87e00b000c00ll;
-    if (cavm_is_model(OCTEONTX_CN98XX))
-        return 0x87e00b000c00ll;
-    __cavm_csr_fatal("NCSI_BP_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NCSI_BP_TEST cavm_ncsi_bp_test_t
-#define bustype_CAVM_NCSI_BP_TEST CSR_TYPE_RSL
-#define basename_CAVM_NCSI_BP_TEST "NCSI_BP_TEST"
-#define device_bar_CAVM_NCSI_BP_TEST 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NCSI_BP_TEST 0
-#define arguments_CAVM_NCSI_BP_TEST -1,-1,-1,-1
 
 /**
  * Register (RSL) ncsi_clk_en
@@ -655,50 +565,6 @@ static inline uint64_t CAVM_NCSI_CSCLK_ACTIVE_PC_FUNC(void)
 #define device_bar_CAVM_NCSI_CSCLK_ACTIVE_PC 0x0 /* PF_BAR0 */
 #define busnum_CAVM_NCSI_CSCLK_ACTIVE_PC 0
 #define arguments_CAVM_NCSI_CSCLK_ACTIVE_PC -1,-1,-1,-1
-
-/**
- * Register (RSL) ncsi_eco
- *
- * INTERNAL: NCSI ECO Registers
- *
- * This register contains eco registers.
- */
-union cavm_ncsi_eco
-{
-    uint64_t u;
-    struct cavm_ncsi_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_ro                : 16; /**< [ 31: 16](RO) Reserved for ECO usage. */
-        uint64_t eco_rw                : 16; /**< [ 15:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 16; /**< [ 15:  0](R/W) Reserved for ECO usage. */
-        uint64_t eco_ro                : 16; /**< [ 31: 16](RO) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ncsi_eco_s cn; */
-};
-typedef union cavm_ncsi_eco cavm_ncsi_eco_t;
-
-#define CAVM_NCSI_ECO CAVM_NCSI_ECO_FUNC()
-static inline uint64_t CAVM_NCSI_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX))
-        return 0x87e00b000b10ll;
-    if (cavm_is_model(OCTEONTX_CN98XX))
-        return 0x87e00b000b10ll;
-    __cavm_csr_fatal("NCSI_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NCSI_ECO cavm_ncsi_eco_t
-#define bustype_CAVM_NCSI_ECO CSR_TYPE_RSL
-#define basename_CAVM_NCSI_ECO "NCSI_ECO"
-#define device_bar_CAVM_NCSI_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_NCSI_ECO 0
-#define arguments_CAVM_NCSI_ECO -1,-1,-1,-1
 
 /**
  * Register (RSL) ncsi_int

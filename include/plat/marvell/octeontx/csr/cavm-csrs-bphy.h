@@ -75,24 +75,13 @@ union cavm_psm_int_bcn_err_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Fake. */
+        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
 #else /* Word 0 - Little Endian */
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Fake. */
+        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_psm_int_bcn_err_ena_w1c_s cn9; */
-    /* struct cavm_psm_int_bcn_err_ena_w1c_s f95o; */
-    struct cavm_psm_int_bcn_err_ena_w1c_loki
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
-#else /* Word 0 - Little Endian */
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } loki;
+    /* struct cavm_psm_int_bcn_err_ena_w1c_s cn; */
 };
 typedef union cavm_psm_int_bcn_err_ena_w1c cavm_psm_int_bcn_err_ena_w1c_t;
 
@@ -100,8 +89,6 @@ typedef union cavm_psm_int_bcn_err_ena_w1c cavm_psm_int_bcn_err_ena_w1c_t;
 static inline uint64_t CAVM_PSM_INT_BCN_ERR_ENA_W1C_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_PSM_INT_BCN_ERR_ENA_W1C_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_F95O))
-        return 0x8600010ef020ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x8600010e0680ll;
     __cavm_csr_fatal("PSM_INT_BCN_ERR_ENA_W1C", 0, 0, 0, 0, 0, 0, 0);
@@ -127,24 +114,13 @@ union cavm_psm_int_bcn_err_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Fake. */
+        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
 #else /* Word 0 - Little Endian */
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Fake. */
+        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_psm_int_bcn_err_ena_w1s_s cn9; */
-    /* struct cavm_psm_int_bcn_err_ena_w1s_s f95o; */
-    struct cavm_psm_int_bcn_err_ena_w1s_loki
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
-#else /* Word 0 - Little Endian */
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } loki;
+    /* struct cavm_psm_int_bcn_err_ena_w1s_s cn; */
 };
 typedef union cavm_psm_int_bcn_err_ena_w1s cavm_psm_int_bcn_err_ena_w1s_t;
 
@@ -152,8 +128,6 @@ typedef union cavm_psm_int_bcn_err_ena_w1s cavm_psm_int_bcn_err_ena_w1s_t;
 static inline uint64_t CAVM_PSM_INT_BCN_ERR_ENA_W1S_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_PSM_INT_BCN_ERR_ENA_W1S_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_F95O))
-        return 0x8600010ef030ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x8600010e06c0ll;
     __cavm_csr_fatal("PSM_INT_BCN_ERR_ENA_W1S", 0, 0, 0, 0, 0, 0, 0);
@@ -180,24 +154,13 @@ union cavm_psm_int_bcn_err_sum_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Fake. */
+        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) The BCN received an RP1 burst with a CRC error. */
 #else /* Word 0 - Little Endian */
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Fake. */
+        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) The BCN received an RP1 burst with a CRC error. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_psm_int_bcn_err_sum_w1c_s cn9; */
-    /* struct cavm_psm_int_bcn_err_sum_w1c_s f95o; */
-    struct cavm_psm_int_bcn_err_sum_w1c_loki
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) The BCN received an RP1 burst with a CRC error. */
-#else /* Word 0 - Little Endian */
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) The BCN received an RP1 burst with a CRC error. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } loki;
+    /* struct cavm_psm_int_bcn_err_sum_w1c_s cn; */
 };
 typedef union cavm_psm_int_bcn_err_sum_w1c cavm_psm_int_bcn_err_sum_w1c_t;
 
@@ -205,8 +168,6 @@ typedef union cavm_psm_int_bcn_err_sum_w1c cavm_psm_int_bcn_err_sum_w1c_t;
 static inline uint64_t CAVM_PSM_INT_BCN_ERR_SUM_W1C_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_PSM_INT_BCN_ERR_SUM_W1C_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_F95O))
-        return 0x8600010ef000ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x8600010e0600ll;
     __cavm_csr_fatal("PSM_INT_BCN_ERR_SUM_W1C", 0, 0, 0, 0, 0, 0, 0);
@@ -232,24 +193,13 @@ union cavm_psm_int_bcn_err_sum_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Fake. */
+        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1S/H) Reads or sets PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
 #else /* Word 0 - Little Endian */
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1C/H) Fake. */
+        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1S/H) Reads or sets PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_psm_int_bcn_err_sum_w1s_s cn9; */
-    /* struct cavm_psm_int_bcn_err_sum_w1s_s f95o; */
-    struct cavm_psm_int_bcn_err_sum_w1s_loki
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1S/H) Reads or sets PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
-#else /* Word 0 - Little Endian */
-        uint64_t bcn_crc_err           : 1;  /**< [  0:  0](R/W1S/H) Reads or sets PSM_INT_BCN_ERR_SUM_W1C[BCN_CRC_ERR]. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } loki;
+    /* struct cavm_psm_int_bcn_err_sum_w1s_s cn; */
 };
 typedef union cavm_psm_int_bcn_err_sum_w1s cavm_psm_int_bcn_err_sum_w1s_t;
 
@@ -257,8 +207,6 @@ typedef union cavm_psm_int_bcn_err_sum_w1s cavm_psm_int_bcn_err_sum_w1s_t;
 static inline uint64_t CAVM_PSM_INT_BCN_ERR_SUM_W1S_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_PSM_INT_BCN_ERR_SUM_W1S_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_F95O))
-        return 0x8600010ef010ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x8600010e0640ll;
     __cavm_csr_fatal("PSM_INT_BCN_ERR_SUM_W1S", 0, 0, 0, 0, 0, 0, 0);
@@ -2263,9 +2211,7 @@ union cavm_psm_int_timer_ena_w1c
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t reserved_4_7          : 4;
-        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
-                                                                 Internal:
-                                                                 The timer received a late RFP. */
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[BFNERR]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
@@ -2273,9 +2219,7 @@ union cavm_psm_int_timer_ena_w1c
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[BFNERR]. */
-        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
-                                                                 Internal:
-                                                                 The timer received a late RFP. */
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING]. */
         uint64_t reserved_4_7          : 4;
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[SOF]. */
@@ -2318,9 +2262,7 @@ union cavm_psm_int_timer_ena_w1s
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t reserved_4_7          : 4;
-        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
-                                                                 Internal:
-                                                                 The timer received a late RFP. */
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[BFNERR]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
@@ -2328,9 +2270,7 @@ union cavm_psm_int_timer_ena_w1s
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[BFNERR]. */
-        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
-                                                                 Internal:
-                                                                 The timer received a late RFP. */
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING]. */
         uint64_t reserved_4_7          : 4;
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[SOF]. */
@@ -2374,9 +2314,7 @@ union cavm_psm_int_timer_sum_w1c
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1C/H) A start-of-frame was detected. */
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1C/H) A start-of-subframe was detected. */
         uint64_t reserved_4_7          : 4;
-        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 The timer received a late RFP. */
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reserved. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1C/H) The timer received a bad BFN number. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1C/H) The timer received a late RFP. */
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1C/H) The timer received an early RFP. */
@@ -2384,9 +2322,7 @@ union cavm_psm_int_timer_sum_w1c
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1C/H) The timer received an early RFP. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1C/H) The timer received a late RFP. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1C/H) The timer received a bad BFN number. */
-        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 The timer received a late RFP. */
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reserved. */
         uint64_t reserved_4_7          : 4;
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1C/H) A start-of-subframe was detected. */
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1C/H) A start-of-frame was detected. */
@@ -2429,9 +2365,7 @@ union cavm_psm_int_timer_sum_w1s
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t reserved_4_7          : 4;
-        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
-                                                                 Internal:
-                                                                 The timer received a late RFP. */
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_MISSING]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[BFNERR]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
@@ -2439,9 +2373,7 @@ union cavm_psm_int_timer_sum_w1s
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[BFNERR]. */
-        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
-                                                                 Internal:
-                                                                 The timer received a late RFP. */
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_MISSING]. */
         uint64_t reserved_4_7          : 4;
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[SOF]. */

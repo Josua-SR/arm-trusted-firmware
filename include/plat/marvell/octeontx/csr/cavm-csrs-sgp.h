@@ -82,9 +82,7 @@ union cavm_sgp_cfg0
     struct cavm_sgp_cfg0_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t drive_cnt             : 8;  /**< [ 31: 24](RO) Number of supported drives.
-                                                                 Internal:
-                                                                 Corresponds to SATA(0..15). */
+        uint32_t drive_cnt             : 8;  /**< [ 31: 24](RO) Number of supported drives. */
         uint32_t gp_cnt                : 4;  /**< [ 23: 20](RO) Number of general purpose data registers. */
         uint32_t cfg_cnt               : 3;  /**< [ 19: 17](RO) Number of configuration registers. */
         uint32_t ena                   : 1;  /**< [ 16: 16](R/W) SGPIO enable. Enables the SGPIO inputs and outputs. When zero the bus is not driven,
@@ -100,9 +98,7 @@ union cavm_sgp_cfg0
                                                                  effect until the current bit-stream has completed. */
         uint32_t cfg_cnt               : 3;  /**< [ 19: 17](RO) Number of configuration registers. */
         uint32_t gp_cnt                : 4;  /**< [ 23: 20](RO) Number of general purpose data registers. */
-        uint32_t drive_cnt             : 8;  /**< [ 31: 24](RO) Number of supported drives.
-                                                                 Internal:
-                                                                 Corresponds to SATA(0..15). */
+        uint32_t drive_cnt             : 8;  /**< [ 31: 24](RO) Number of supported drives. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_sgp_cfg0_s cn; */

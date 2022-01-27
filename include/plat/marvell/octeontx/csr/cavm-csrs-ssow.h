@@ -140,13 +140,9 @@ union cavm_ssow_get_work_addr_s
 /**
  * Register (RVU_PF_BAR0) ssow_af_bar2_alias#
  *
- * INTERNAL: SSO Work Slot Admin Function  BAR2 Alias Registers
- *
+ * SSO Work Slot Admin Function  BAR2 Alias Registers
  * These registers alias to the SSO Workslot BAR2 registers for the PF and
  * function selected by SSOW_AF_BAR2_SEL[PF_FUNC].
- *
- * Internal:
- * Not implemented. Placeholder for bug33464.
  */
 union cavm_ssow_af_bar2_aliasx
 {
@@ -166,7 +162,9 @@ typedef union cavm_ssow_af_bar2_aliasx cavm_ssow_af_bar2_aliasx_t;
 static inline uint64_t CAVM_SSOW_AF_BAR2_ALIASX(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_SSOW_AF_BAR2_ALIASX(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=131071))
+    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=131071))
+        return 0x840089100000ll + 8ll * ((a) & 0x1ffff);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=131071))
         return 0x840089100000ll + 8ll * ((a) & 0x1ffff);
     __cavm_csr_fatal("SSOW_AF_BAR2_ALIASX", 1, a, 0, 0, 0, 0, 0);
 }
@@ -181,11 +179,8 @@ static inline uint64_t CAVM_SSOW_AF_BAR2_ALIASX(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) ssow_af_bar2_sel
  *
- * INTERNAL: SSO Work Slot Admin Function BAR2 Select Register
- *
+ * SSO Work Slot Admin Function BAR2 Select Register
  * This register configures BAR2 accesses from the SSOW_AF_BAR2_ALIAS() registers in BAR0.
- * Internal:
- * Not implemented. Placeholder for bug33464.
  */
 union cavm_ssow_af_bar2_sel
 {
@@ -212,7 +207,9 @@ typedef union cavm_ssow_af_bar2_sel cavm_ssow_af_bar2_sel_t;
 static inline uint64_t CAVM_SSOW_AF_BAR2_SEL_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_SSOW_AF_BAR2_SEL_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX))
+    if (cavm_is_model(OCTEONTX_CN96XX))
+        return 0x840089000000ll;
+    if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x840089000000ll;
     __cavm_csr_fatal("SSOW_AF_BAR2_SEL", 0, 0, 0, 0, 0, 0, 0);
 }
@@ -238,17 +235,7 @@ union cavm_ssow_af_lf_hws_rst
         uint64_t reserved_13_63        : 51;
         uint64_t exec                  : 1;  /**< [ 12: 12](R/W1S/H) Execute LF software-initiated reset. When software writes a one to set this bit, hardware
                                                                  resets the local function selected by [LF]. Hardware clears this bit when
-                                                                 done.
-
-                                                                 Internal:
-                                                                 This comment applies to all blocks that refer to this register:
-
-                                                                 This should preferrably reset all registers/state associated with the LF, including
-                                                                 any BLK_LF_* and BLK_AF_LF()_* registers. It would also be nice to reset any per-LF
-                                                                 bits in other registers but its OK to have exceptions as long as the AF software has
-                                                                 another way to reset them, e.g. by writing to the bits. Such additional steps
-                                                                 expected from software should be documented in the HRM, e.g. in section 19.11.5
-                                                                 "VF Function Level Reset". */
+                                                                 done. */
         uint64_t reserved_8_11         : 4;
         uint64_t lf                    : 8;  /**< [  7:  0](R/W) Local function that is reset when [EXEC] is set. */
 #else /* Word 0 - Little Endian */
@@ -256,17 +243,7 @@ union cavm_ssow_af_lf_hws_rst
         uint64_t reserved_8_11         : 4;
         uint64_t exec                  : 1;  /**< [ 12: 12](R/W1S/H) Execute LF software-initiated reset. When software writes a one to set this bit, hardware
                                                                  resets the local function selected by [LF]. Hardware clears this bit when
-                                                                 done.
-
-                                                                 Internal:
-                                                                 This comment applies to all blocks that refer to this register:
-
-                                                                 This should preferrably reset all registers/state associated with the LF, including
-                                                                 any BLK_LF_* and BLK_AF_LF()_* registers. It would also be nice to reset any per-LF
-                                                                 bits in other registers but its OK to have exceptions as long as the AF software has
-                                                                 another way to reset them, e.g. by writing to the bits. Such additional steps
-                                                                 expected from software should be documented in the HRM, e.g. in section 19.11.5
-                                                                 "VF Function Level Reset". */
+                                                                 done. */
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } s;
@@ -2149,9 +2126,6 @@ static inline uint64_t CAVM_SSOW_LF_GWS_PENDWQP_FUNC(void)
  * IMPORTANT: Although this register is located in SSO I/O address space, the state of
  * this register is cached inside the cores, and so loads to this register can
  * typically be returned with L1Dcache-like timing.
- *
- * Internal:
- * The address of this register is decoded by AP MEM.
  */
 union cavm_ssow_lf_gws_swtp
 {
@@ -3377,9 +3351,6 @@ static inline uint64_t CAVM_SSOW_VHWSX_PENDWQP(uint64_t a)
  * IMPORTANT: Although this register is located in SSO I/O address space, the state of
  * this register is cached inside the cores, and so loads to this register can
  * typically be returned with L1Dcache-like timing.
- *
- * Internal:
- * The address of this register is decoded by AP MEM.
  */
 union cavm_ssow_vhwsx_swtp
 {

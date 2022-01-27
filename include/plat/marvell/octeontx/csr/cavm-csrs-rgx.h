@@ -43,35 +43,10 @@
 #define CAVM_RGX_INT_VEC_E_GMPX_PCS_INT(a) (1 + 4 * (a))
 
 /**
- * Enumeration rgx_opcode_e
- *
- * INTERNAL: RGX Error Opcode Enumeration
- *
- * Enumerates the error opcodes created by RGX and presented to NIC.
- */
-#define CAVM_RGX_OPCODE_E_RE_FCS (7)
-#define CAVM_RGX_OPCODE_E_RE_FCS_RCV (8)
-#define CAVM_RGX_OPCODE_E_RE_JABBER (2)
-#define CAVM_RGX_OPCODE_E_RE_NONE (0)
-#define CAVM_RGX_OPCODE_E_RE_PARTIAL (1)
-#define CAVM_RGX_OPCODE_E_RE_RX_CTL (0xb)
-#define CAVM_RGX_OPCODE_E_RE_SKIP (0xc)
-#define CAVM_RGX_OPCODE_E_RE_TERMINATE (9)
-
-/**
  * Register (RSL) rgx#_cmr#_config
  *
  * RGX CMR Configuration Registers
  * Logical MAC configuration registers; one per LMAC.
- * Internal:
- * \<pre\>
- * Typical configurations:
- *   ---------------------------------------------------------------------------
- *   Configuration           LMACS  Register             [ENABLE]    [LMAC_TYPE]
- *   ---------------------------------------------------------------------------
- *   RGMII                   `      RGXn_CMR0_CONFIG     1           5
- *   ---------------------------------------------------------------------------
- * \</pre\>
  */
 union cavm_rgxx_cmrx_config
 {
@@ -114,12 +89,7 @@ union cavm_rgxx_cmrx_config
                                                                  packets is enabled in the MAC layer. When [ENABLE] = 1 and [DATA_PKT_TX_EN] = 0, the MAC
                                                                  layer
                                                                  suppresses the transmission of new data and packets for the LMAC. */
-        uint64_t int_beat_gen          : 1;  /**< [ 12: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Internal beat generation. This bit is used for debug/test purposes and should be clear
-                                                                 during normal operation. When set, the LMAC's PCS layer ignores RXVALID and
-                                                                 TXREADY/TXCREDIT from the associated SerDes lanes, internally generates fake (idle)
-                                                                 RXVALID and TXCREDIT pulses, and suppresses transmission to the SerDes. */
+        uint64_t int_beat_gen          : 1;  /**< [ 12: 12](R/W) Reserved. */
         uint64_t mix_en                : 1;  /**< [ 11: 11](R/W) Must be 0. */
         uint64_t lmac_type             : 3;  /**< [ 10:  8](R/W) Logical MAC/port type:
 
@@ -147,12 +117,7 @@ union cavm_rgxx_cmrx_config
                                                                  This field must be programmed to its final value before [ENABLE] is set, and must not
                                                                  be changed when [ENABLE] = 1. */
         uint64_t mix_en                : 1;  /**< [ 11: 11](R/W) Must be 0. */
-        uint64_t int_beat_gen          : 1;  /**< [ 12: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Internal beat generation. This bit is used for debug/test purposes and should be clear
-                                                                 during normal operation. When set, the LMAC's PCS layer ignores RXVALID and
-                                                                 TXREADY/TXCREDIT from the associated SerDes lanes, internally generates fake (idle)
-                                                                 RXVALID and TXCREDIT pulses, and suppresses transmission to the SerDes. */
+        uint64_t int_beat_gen          : 1;  /**< [ 12: 12](R/W) Reserved. */
         uint64_t data_pkt_tx_en        : 1;  /**< [ 13: 13](R/W) Data packet transmit enable. When [ENABLE] = 1 and [DATA_PKT_TX_EN] = 1, the transmission
                                                                  of
                                                                  data
@@ -618,32 +583,6 @@ static inline uint64_t CAVM_RGXX_CMRX_RX_BP_STATUS(uint64_t a, uint64_t b)
  * Register (RSL) rgx#_cmr#_rx_dmac_ctl
  *
  * RGX CMR Receive DMAC Address-Control Register
- * Internal:
- * "* ALGORITHM
- * Here is some pseudo code that represents the address filter behavior.
- * dmac_addr_filter(uint8 prt, uint48 dmac) {
- * for (lmac=0, lmac\<1, lmac++) {
- *   if (is_bcst(dmac))                               // broadcast accept
- *     return (RGX()_CMR({lmac})_RX_DMAC_CTL[BCST_ACCEPT] ? ACCEPT : REJECT);
- *   if (is_mcst(dmac) && RGX()_CMR({lmac})_RX_DMAC_CTL[MCST_MODE] == 0)   // multicast reject
- *     return REJECT;
- *   if (is_mcst(dmac) && RGX()_CMR({lmac})_RX_DMAC_CTL[MCST_MODE] == 1)   // multicast accept
- *     return ACCEPT;
- *   else        // DMAC CAM filter
- *     cam_hit = 0;
- *   for (i=0; i\<32; i++) {
- *     cam = RGX()_CMR_RX_DMAC({i})_CAM;
- *     if (cam[EN] && cam[ID] == {lmac} && cam[ADR] == dmac) {
- *       cam_hit = 1;
- *       break;
- *     }
- *   }
- *   if (cam_hit) {
- *     return (RGX()_CMR({lmac})_RX_DMAC_CTL[CAM_ACCEPT] ? ACCEPT : REJECT);
- *   else
- *     return (RGX()_CMR({lmac})_RX_DMAC_CTL[CAM_ACCEPT] ? REJECT : ACCEPT);
- *   }
- * }"
  */
 union cavm_rgxx_cmrx_rx_dmac_ctl
 {
@@ -753,37 +692,13 @@ union cavm_rgxx_cmrx_rx_id_map
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_15_63        : 49;
-        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Defeatured. Reassembly ID for Octeon PKI; not used in CNXXXX.
-                                                                 Reassembly ID map for this LMAC. A shared pool of 96 reassembly IDs (RIDs) exists for all
-                                                                 MACs.
-
-                                                                 The RID for this LMAC must be constrained such that it does not overlap with any other MAC
-                                                                 in the system. Its reset value has been chosen such that this condition is satisfied:
-
-                                                                 _ RID reset value = 4*(RGX_ID + 1) + LMAC_ID
-
-                                                                 Changes to RID must only occur when the LMAC is quiescent (i.e. the LMAC receive interface
-                                                                 is down and the RX FIFO is empty). */
+        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved. */
         uint64_t unused                : 2;  /**< [  7:  6](RAZ) Reserved. */
         uint64_t pknd                  : 6;  /**< [  5:  0](R/W) Port kind for this LMAC. */
 #else /* Word 0 - Little Endian */
         uint64_t pknd                  : 6;  /**< [  5:  0](R/W) Port kind for this LMAC. */
         uint64_t unused                : 2;  /**< [  7:  6](RAZ) Reserved. */
-        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Defeatured. Reassembly ID for Octeon PKI; not used in CNXXXX.
-                                                                 Reassembly ID map for this LMAC. A shared pool of 96 reassembly IDs (RIDs) exists for all
-                                                                 MACs.
-
-                                                                 The RID for this LMAC must be constrained such that it does not overlap with any other MAC
-                                                                 in the system. Its reset value has been chosen such that this condition is satisfied:
-
-                                                                 _ RID reset value = 4*(RGX_ID + 1) + LMAC_ID
-
-                                                                 Changes to RID must only occur when the LMAC is quiescent (i.e. the LMAC receive interface
-                                                                 is down and the RX FIFO is empty). */
+        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved. */
         uint64_t reserved_15_63        : 49;
 #endif /* Word 0 - End */
     } s;
@@ -2463,64 +2378,10 @@ union cavm_rgxx_cmr_bist_status
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_25_63        : 39;
         uint64_t status                : 25; /**< [ 24:  0](RO/H) '"BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass or never
-                                                                 run.'
-
-                                                                 Internal:
-                                                                 "\<0\> = bgx#.rxb.infif_gmp.
-                                                                 \<1\> = bgx#.rxb.infif_smu.
-                                                                 \<2\> = bgx#.rxb.fif_bnk00.
-                                                                 \<3\> = bgx#.rxb.fif_bnk01.
-                                                                 \<4\> = bgx#.rxb.fif_bnk10.
-                                                                 \<5\> = bgx#.rxb.fif_bnk11.
-                                                                 \<6\> = bgx#.rxb.pki_skd_fif.
-                                                                 \<7\> = bgx#.rxb.nic_skd_fif.
-                                                                 \<8\> = bgx#.rxb_mix0_fif.
-                                                                 \<9\> = bgx#.rxb_mix1_fif.
-                                                                 \<10\> = 0.
-                                                                 \<11\> = bgx#.txb_fif_bnk0.
-                                                                 \<12\> = bgx#.txb_fif_bnk1.
-                                                                 \<13\> = bgx#.txb_skd_m0_pko_fif.
-                                                                 \<14\> = bgx#.txb_skd_m1_pko_fif.
-                                                                 \<15\> = bgx#.txb_skd_m2_pko_fif.
-                                                                 \<16\> = bgx#.txb_skd_m3_pko_fif.
-                                                                 \<17\> = bgx#.txb_skd_m0_nic_fif.
-                                                                 \<18\> = bgx#.txb_skd_m1_nic_fif.
-                                                                 \<19\> = bgx#.txb_skd_m2_nic_fif.
-                                                                 \<20\> = bgx#.txb_skd_m3_nic_fif.
-                                                                 \<21\> = bgx#.txb_mix0_fif.
-                                                                 \<22\> = bgx#.txb_mix1_fif.
-                                                                 \<23\> = bgx#.txb_ncsi_fif.
-                                                                 \<24\> = 0." */
+                                                                 run.' */
 #else /* Word 0 - Little Endian */
         uint64_t status                : 25; /**< [ 24:  0](RO/H) '"BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass or never
-                                                                 run.'
-
-                                                                 Internal:
-                                                                 "\<0\> = bgx#.rxb.infif_gmp.
-                                                                 \<1\> = bgx#.rxb.infif_smu.
-                                                                 \<2\> = bgx#.rxb.fif_bnk00.
-                                                                 \<3\> = bgx#.rxb.fif_bnk01.
-                                                                 \<4\> = bgx#.rxb.fif_bnk10.
-                                                                 \<5\> = bgx#.rxb.fif_bnk11.
-                                                                 \<6\> = bgx#.rxb.pki_skd_fif.
-                                                                 \<7\> = bgx#.rxb.nic_skd_fif.
-                                                                 \<8\> = bgx#.rxb_mix0_fif.
-                                                                 \<9\> = bgx#.rxb_mix1_fif.
-                                                                 \<10\> = 0.
-                                                                 \<11\> = bgx#.txb_fif_bnk0.
-                                                                 \<12\> = bgx#.txb_fif_bnk1.
-                                                                 \<13\> = bgx#.txb_skd_m0_pko_fif.
-                                                                 \<14\> = bgx#.txb_skd_m1_pko_fif.
-                                                                 \<15\> = bgx#.txb_skd_m2_pko_fif.
-                                                                 \<16\> = bgx#.txb_skd_m3_pko_fif.
-                                                                 \<17\> = bgx#.txb_skd_m0_nic_fif.
-                                                                 \<18\> = bgx#.txb_skd_m1_nic_fif.
-                                                                 \<19\> = bgx#.txb_skd_m2_nic_fif.
-                                                                 \<20\> = bgx#.txb_skd_m3_nic_fif.
-                                                                 \<21\> = bgx#.txb_mix0_fif.
-                                                                 \<22\> = bgx#.txb_mix1_fif.
-                                                                 \<23\> = bgx#.txb_ncsi_fif.
-                                                                 \<24\> = 0." */
+                                                                 run.' */
         uint64_t reserved_25_63        : 39;
 #endif /* Word 0 - End */
     } s;
@@ -2648,47 +2509,6 @@ static inline uint64_t CAVM_RGXX_CMR_CHAN_MSK_OR(uint64_t a)
 #define device_bar_CAVM_RGXX_CMR_CHAN_MSK_OR(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_RGXX_CMR_CHAN_MSK_OR(a) (a)
 #define arguments_CAVM_RGXX_CMR_CHAN_MSK_OR(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) rgx#_cmr_eco
- *
- * INTERNAL: RGX ECO Registers
- */
-union cavm_rgxx_cmr_eco
-{
-    uint64_t u;
-    struct cavm_rgxx_cmr_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_ro                : 32; /**< [ 63: 32](RO) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t eco_ro                : 32; /**< [ 63: 32](RO) Internal:
-                                                                 Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_cmr_eco_s cn; */
-};
-typedef union cavm_rgxx_cmr_eco cavm_rgxx_cmr_eco_t;
-
-static inline uint64_t CAVM_RGXX_CMR_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_CMR_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
-        return 0x87e0e8001028ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("RGXX_CMR_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_CMR_ECO(a) cavm_rgxx_cmr_eco_t
-#define bustype_CAVM_RGXX_CMR_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_CMR_ECO(a) "RGXX_CMR_ECO"
-#define device_bar_CAVM_RGXX_CMR_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_CMR_ECO(a) (a)
-#define arguments_CAVM_RGXX_CMR_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) rgx#_cmr_global_config
@@ -3326,45 +3146,6 @@ static inline uint64_t CAVM_RGXX_CMR_NIC_NXC_ADR(uint64_t a)
 #define arguments_CAVM_RGXX_CMR_NIC_NXC_ADR(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) rgx#_cmr_pko_nxc_adr
- *
- * INTERNAL: RGX CMR PKO NXC Exception Registers
- */
-union cavm_rgxx_cmr_pko_nxc_adr
-{
-    uint64_t u;
-    struct cavm_rgxx_cmr_pko_nxc_adr_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t lmac_id               : 4;  /**< [ 15: 12](RO/H) Logged LMAC ID associated with NXC exceptions associated with PKO. */
-        uint64_t channel               : 12; /**< [ 11:  0](RO/H) Logged channel for NXC exceptions associated with PKO. */
-#else /* Word 0 - Little Endian */
-        uint64_t channel               : 12; /**< [ 11:  0](RO/H) Logged channel for NXC exceptions associated with PKO. */
-        uint64_t lmac_id               : 4;  /**< [ 15: 12](RO/H) Logged LMAC ID associated with NXC exceptions associated with PKO. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_cmr_pko_nxc_adr_s cn; */
-};
-typedef union cavm_rgxx_cmr_pko_nxc_adr cavm_rgxx_cmr_pko_nxc_adr_t;
-
-static inline uint64_t CAVM_RGXX_CMR_PKO_NXC_ADR(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_CMR_PKO_NXC_ADR(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
-        return 0x87e0e8001018ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("RGXX_CMR_PKO_NXC_ADR", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_CMR_PKO_NXC_ADR(a) cavm_rgxx_cmr_pko_nxc_adr_t
-#define bustype_CAVM_RGXX_CMR_PKO_NXC_ADR(a) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_CMR_PKO_NXC_ADR(a) "RGXX_CMR_PKO_NXC_ADR"
-#define device_bar_CAVM_RGXX_CMR_PKO_NXC_ADR(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_CMR_PKO_NXC_ADR(a) (a)
-#define arguments_CAVM_RGXX_CMR_PKO_NXC_ADR(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) rgx#_cmr_rx_dmac#_cam
  *
  * RGX CMR Receive CAM Registers
@@ -3534,94 +3315,6 @@ static inline uint64_t CAVM_RGXX_CMR_RX_OVR_BP(uint64_t a)
 #define arguments_CAVM_RGXX_CMR_RX_OVR_BP(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) rgx#_cmr_rx_stat10
- *
- * INTERNAL: RGX Receive Status Register 10
- *
- * Not applicable to RGX.
- *
- * This register provide a count of octets of dropped at the NCSI interface.
- */
-union cavm_rgxx_cmr_rx_stat10
-{
-    uint64_t u;
-    struct cavm_rgxx_cmr_rx_stat10_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t cnt                   : 48; /**< [ 47:  0](R/W/H) Octet count of dropped NCSI packets. [CNT] will wrap and is cleared if NCSI is reset with
-                                                                 RGX()_CMR_GLOBAL_CONFIG[CMR_NCSI_RESET]. */
-#else /* Word 0 - Little Endian */
-        uint64_t cnt                   : 48; /**< [ 47:  0](R/W/H) Octet count of dropped NCSI packets. [CNT] will wrap and is cleared if NCSI is reset with
-                                                                 RGX()_CMR_GLOBAL_CONFIG[CMR_NCSI_RESET]. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_cmr_rx_stat10_s cn; */
-};
-typedef union cavm_rgxx_cmr_rx_stat10 cavm_rgxx_cmr_rx_stat10_t;
-
-static inline uint64_t CAVM_RGXX_CMR_RX_STAT10(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_CMR_RX_STAT10(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
-        return 0x87e0e80000c0ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("RGXX_CMR_RX_STAT10", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_CMR_RX_STAT10(a) cavm_rgxx_cmr_rx_stat10_t
-#define bustype_CAVM_RGXX_CMR_RX_STAT10(a) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_CMR_RX_STAT10(a) "RGXX_CMR_RX_STAT10"
-#define device_bar_CAVM_RGXX_CMR_RX_STAT10(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_CMR_RX_STAT10(a) (a)
-#define arguments_CAVM_RGXX_CMR_RX_STAT10(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) rgx#_cmr_rx_stat9
- *
- * INTERNAL: RGX Receive Status Register 9
- *
- * Not applicable to RGX.
- *
- * This registers provides a count of packets dropped at the NCSI interface.
- * The count of dropped NCSI packets is not accounted for in any other stats
- * registers.
- */
-union cavm_rgxx_cmr_rx_stat9
-{
-    uint64_t u;
-    struct cavm_rgxx_cmr_rx_stat9_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t cnt                   : 48; /**< [ 47:  0](R/W/H) Count of dropped packets. [CNT] will wrap and is cleared if NCSI is reset with
-                                                                 RGX()_CMR_GLOBAL_CONFIG[CMR_NCSI_RESET]. */
-#else /* Word 0 - Little Endian */
-        uint64_t cnt                   : 48; /**< [ 47:  0](R/W/H) Count of dropped packets. [CNT] will wrap and is cleared if NCSI is reset with
-                                                                 RGX()_CMR_GLOBAL_CONFIG[CMR_NCSI_RESET]. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_cmr_rx_stat9_s cn; */
-};
-typedef union cavm_rgxx_cmr_rx_stat9 cavm_rgxx_cmr_rx_stat9_t;
-
-static inline uint64_t CAVM_RGXX_CMR_RX_STAT9(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_CMR_RX_STAT9(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
-        return 0x87e0e80000b8ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("RGXX_CMR_RX_STAT9", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_CMR_RX_STAT9(a) cavm_rgxx_cmr_rx_stat9_t
-#define bustype_CAVM_RGXX_CMR_RX_STAT9(a) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_CMR_RX_STAT9(a) "RGXX_CMR_RX_STAT9"
-#define device_bar_CAVM_RGXX_CMR_RX_STAT9(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_CMR_RX_STAT9(a) (a)
-#define arguments_CAVM_RGXX_CMR_RX_STAT9(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) rgx#_cmr_rx_steering#
  *
  * INTERNAL: RGX CMR Receive Steering Registers
@@ -3635,28 +3328,6 @@ static inline uint64_t CAVM_RGXX_CMR_RX_STAT9(uint64_t a)
  * The steering algorithm is applied after the RX DMAC filter specified by
  * RGX()_CMR()_RX_DMAC_CTL and RGX()_CMR_RX_DMAC()_CAM. As such, the DMAC filter and steering
  * filters should be set in a consistent manner.
- *
- * Internal:
- * "* ALGORITHM
- * // Steering of RX packets for LMAC identified by RGX()_CMR_GLOBAL_CONFIG[NCSI_LMAC_ID].
- * rx_steering(uint48 pkt_dmac, uint16 pkt_etype, uint16 pkt_vlan_id) {
- *    for (int i = 0; i \< 8; i++) {
- *       steer = RGX()_CMR_RX_STEERING(i);
- *       vetype = RGX()_CMR_RX_STEERING_VETYPE(i);
- *       if (steer[MCST_EN] || steer[DMAC_EN] || vetype[VLAN_EN] || vetype[VLAN_TAG_EN]) {
- *          // Filter is enabled.
- *          if (   (!steer[MCST_EN] || is_mcst(pkt_dmac))
- *              && (!steer[DMAC_EN] || pkt_dmac != steer[DMAC])
- *              && (!vetype[VLAN_EN] || pkt_vlan_id != vetype[VLAN_ID])
- *              && (!vetype[VLAN_TAG_EN] || pkt_etype != vetype[VLAN_ETYPE]) )
- *          {
- *             // Filter match (all enabled matching criteria are met).
- *             return steer[DEST];
- *          }
- *       }
- *    }
- *    return RGX()_CMR_RX_STEERING_DEFAULT[DEST]; // No match
- * }"
  */
 union cavm_rgxx_cmr_rx_steeringx
 {
@@ -3713,117 +3384,6 @@ static inline uint64_t CAVM_RGXX_CMR_RX_STEERINGX(uint64_t a, uint64_t b)
 #define device_bar_CAVM_RGXX_CMR_RX_STEERINGX(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_RGXX_CMR_RX_STEERINGX(a,b) (a)
 #define arguments_CAVM_RGXX_CMR_RX_STEERINGX(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_cmr_rx_steering_default
- *
- * INTERNAL: RGX CMR Receive Steering Default Destination Register
- *
- * Not applicable to RGX.
- */
-union cavm_rgxx_cmr_rx_steering_default
-{
-    uint64_t u;
-    struct cavm_rgxx_cmr_rx_steering_default_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t dest                  : 2;  /**< [  1:  0](R/W) Destination for traffic that does not match any of the steering filters specified by
-                                                                 RGX()_CMR_RX_STEERING() and and RGX()_CMR_RX_STEERING_VETYPE():
-                                                                 0x0 = Steer traffic exclusively to NCSI.
-                                                                 0x1 = Steer traffic exclusively to NIC.
-                                                                 0x2 = Steer traffic to BOTH NIC and NCSI.
-                                                                 0x3 = Steer traffic to the bit bucket (drop). */
-#else /* Word 0 - Little Endian */
-        uint64_t dest                  : 2;  /**< [  1:  0](R/W) Destination for traffic that does not match any of the steering filters specified by
-                                                                 RGX()_CMR_RX_STEERING() and and RGX()_CMR_RX_STEERING_VETYPE():
-                                                                 0x0 = Steer traffic exclusively to NCSI.
-                                                                 0x1 = Steer traffic exclusively to NIC.
-                                                                 0x2 = Steer traffic to BOTH NIC and NCSI.
-                                                                 0x3 = Steer traffic to the bit bucket (drop). */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_cmr_rx_steering_default_s cn; */
-};
-typedef union cavm_rgxx_cmr_rx_steering_default cavm_rgxx_cmr_rx_steering_default_t;
-
-static inline uint64_t CAVM_RGXX_CMR_RX_STEERING_DEFAULT(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_CMR_RX_STEERING_DEFAULT(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
-        return 0x87e0e8000448ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("RGXX_CMR_RX_STEERING_DEFAULT", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_CMR_RX_STEERING_DEFAULT(a) cavm_rgxx_cmr_rx_steering_default_t
-#define bustype_CAVM_RGXX_CMR_RX_STEERING_DEFAULT(a) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_CMR_RX_STEERING_DEFAULT(a) "RGXX_CMR_RX_STEERING_DEFAULT"
-#define device_bar_CAVM_RGXX_CMR_RX_STEERING_DEFAULT(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_CMR_RX_STEERING_DEFAULT(a) (a)
-#define arguments_CAVM_RGXX_CMR_RX_STEERING_DEFAULT(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) rgx#_cmr_rx_steering_vetype#
- *
- * INTERNAL: RGX CMR Receive VLAN Ethertype Register
- *
- * Not applicable to RGX.
- *
- * These registers, along with RGX()_CMR_RX_STEERING(), provide eight filters for identifying and
- * steering NCSI receive traffic.
- */
-union cavm_rgxx_cmr_rx_steering_vetypex
-{
-    uint64_t u;
-    struct cavm_rgxx_cmr_rx_steering_vetypex_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_30_63        : 34;
-        uint64_t vlan_en               : 1;  /**< [ 29: 29](R/W) Enable VLAN ID check:
-                                                                 1 = Include VLAN ID checking in the matching algorithm.
-                                                                 0 = Do not include VLAN ID checking in the matching algorithm. */
-        uint64_t vlan_id               : 12; /**< [ 28: 17](R/W) VLAN ID used for the matching algorithm when [VLAN_EN] is set. */
-        uint64_t vlan_tag_en           : 1;  /**< [ 16: 16](R/W) Enable VLAN tag Ethertype check:
-                                                                 1 = Include VLAN tag Ethertype checking in the matching algorithm.
-                                                                 0 = Do not include VLAN tag Ethertype checking in the matching algorithm. */
-        uint64_t vlan_etype            : 16; /**< [ 15:  0](R/W) VLAN Ethertype for the matching algorithm when [VLAN_TAG_EN] is set.
-                                                                 802.1Q and 802.1ad specify several Ethertypes used to identify VLAN tagged and VLAN double
-                                                                 tagged packets. RGX will always match against the tag immediately following the SMAC
-                                                                 address of the L2 header. */
-#else /* Word 0 - Little Endian */
-        uint64_t vlan_etype            : 16; /**< [ 15:  0](R/W) VLAN Ethertype for the matching algorithm when [VLAN_TAG_EN] is set.
-                                                                 802.1Q and 802.1ad specify several Ethertypes used to identify VLAN tagged and VLAN double
-                                                                 tagged packets. RGX will always match against the tag immediately following the SMAC
-                                                                 address of the L2 header. */
-        uint64_t vlan_tag_en           : 1;  /**< [ 16: 16](R/W) Enable VLAN tag Ethertype check:
-                                                                 1 = Include VLAN tag Ethertype checking in the matching algorithm.
-                                                                 0 = Do not include VLAN tag Ethertype checking in the matching algorithm. */
-        uint64_t vlan_id               : 12; /**< [ 28: 17](R/W) VLAN ID used for the matching algorithm when [VLAN_EN] is set. */
-        uint64_t vlan_en               : 1;  /**< [ 29: 29](R/W) Enable VLAN ID check:
-                                                                 1 = Include VLAN ID checking in the matching algorithm.
-                                                                 0 = Do not include VLAN ID checking in the matching algorithm. */
-        uint64_t reserved_30_63        : 34;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_cmr_rx_steering_vetypex_s cn; */
-};
-typedef union cavm_rgxx_cmr_rx_steering_vetypex cavm_rgxx_cmr_rx_steering_vetypex_t;
-
-static inline uint64_t CAVM_RGXX_CMR_RX_STEERING_VETYPEX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_CMR_RX_STEERING_VETYPEX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b<=7)))
-        return 0x87e0e8000400ll + 0x1000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
-    __cavm_csr_fatal("RGXX_CMR_RX_STEERING_VETYPEX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_CMR_RX_STEERING_VETYPEX(a,b) cavm_rgxx_cmr_rx_steering_vetypex_t
-#define bustype_CAVM_RGXX_CMR_RX_STEERING_VETYPEX(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_CMR_RX_STEERING_VETYPEX(a,b) "RGXX_CMR_RX_STEERING_VETYPEX"
-#define device_bar_CAVM_RGXX_CMR_RX_STEERING_VETYPEX(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_CMR_RX_STEERING_VETYPEX(a,b) (a)
-#define arguments_CAVM_RGXX_CMR_RX_STEERING_VETYPEX(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) rgx#_cmr_tx_lmacs
@@ -4057,27 +3617,6 @@ static inline uint64_t CAVM_RGXX_GMP_GMI_PRTX_CFG(uint64_t a, uint64_t b)
  * [CNT]. In normal operation, the L2 header begins after the
  * PREAMBLE + SFD (RGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] = 1) and any optional UDD skip
  * data (RGX()_GMP_GMI_RX()_UDD_SKP[LEN]).
- *
- * Internal:
- * Notes:
- * As each byte in a packet is received by GMI, the L2 byte count is compared
- * against the [CNT].  The L2 byte count is the number of bytes
- * from the beginning of the L2 header (DMAC).  In normal operation, the L2
- * header begins after the PREAMBLE+SFD (RGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK]=1) and any
- * optional UDD skip data (RGX()_GMP_GMI_RX()_UDD_SKP[LEN]).
- * When RGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is clear, PREAMBLE+SFD are prepended to the
- * packet and would require UDD skip length to account for them.
- *
- * Full Duplex:
- * _   L2 Size \<  [CNT] - Accept packet. No filtering is applied.
- * _   L2 Size \>= [CNT] - Apply filter. Accept packet based on PAUSE packet filter.
- *
- * Half Duplex:
- * _   L2 Size \<  [CNT] - Drop packet. Packet is unconditionally dropped.
- * _   L2 Size \>= [CNT] - Accept packet.
- *
- * where L2_size = MAX(0, total_packet_size - RGX()_GMP_GMI_RX()_UDD_SKP[LEN] -
- *                        ((RGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK]==1)*8))
  */
 union cavm_rgxx_gmp_gmi_rxx_decision
 {
@@ -4178,17 +3717,6 @@ static inline uint64_t CAVM_RGXX_GMP_GMI_RXX_FRM_CHK(uint64_t a, uint64_t b)
  * PAUSE
  * packets only apply to full duplex operation, any PAUSE packet would constitute an exception
  * which should be handled by the processing cores. PAUSE packets should not be forwarded.
- *
- * Internal:
- * Notes:
- * [PRE_STRP]:
- * When [PRE_CHK] is set (indicating that the PREAMBLE will be sent), [PRE_STRP]
- * determines if the PREAMBLE+SFD bytes are thrown away or sent to the Octane
- * core as part of the packet.
- * In either mode, the PREAMBLE+SFD bytes are not counted toward the packet
- * size when checking against the MIN and MAX bounds.  Furthermore, the bytes
- * are skipped when locating the start of the L2 header for DMAC and Control
- * frame recognition.
  */
 union cavm_rgxx_gmp_gmi_rxx_frm_ctl
 {
@@ -4461,60 +3989,6 @@ static inline uint64_t CAVM_RGXX_GMP_GMI_RXX_IFG(uint64_t a, uint64_t b)
  * set the error.
  * In half duplex operation, the expectation is that collisions will appear as either MINERR or
  * CAREXT errors.'
- *
- * Internal:
- * Notes:
- * (1) exception conditions 10:0 can also set the rcv/opcode in the received
- * packet's workQ entry.  The RGX()_GMP_GMI_RX()_FRM_CHK register provides a bit mask
- * for configuring which conditions set the error.
- *
- * (2) in half duplex operation, the expectation is that collisions will appear
- * as either MINERR o r CAREXT errors.
- *
- * (3) JABBER An RX jabber error indicates that a packet was received which
- * is longer than the maximum allowed packet as defined by the
- * system.  GMI will truncate the packet at the JABBER count.
- * Failure to do so could lead to system instabilty.
- *
- * (4) NIBERR This error is illegal at 1000Mbs speeds
- * (RGX()_GMP_GMI_PRT()_CFG[SPEED]==0) and will never assert.
- *
- * (5) MINERR total frame DA+SA+TL+DATA+PAD+FCS \< 64
- *
- * (6) ALNERR Indicates that the packet received was not an integer number of
- * bytes.  If FCS checking is enabled, ALNERR will only assert if
- * the FCS is bad.  If FCS checking is disabled, ALNERR will
- * assert in all non-integer frame cases.
- *
- * (7) Collisions Collisions can only occur in half-duplex mode.  A collision
- * is assumed by the receiver when the slottime
- * (RGX()_GMP_GMI_PRT()_CFG[SLOTTIME]) is not satisfied.  In 10/100 mode,
- * this will result in a frame \< SLOTTIME.  In 1000 mode, it
- * could result either in frame \< SLOTTIME or a carrier extend
- * error with the SLOTTIME.  These conditions are visible by...
- * . transfer ended before slottime COLDET
- * . carrier extend error           CAREXT
- *
- * (A) LENERR Length errors occur when the received packet does not match the
- * length field.  LENERR is only checked for packets between 64
- * and 1500 bytes.  For untagged frames, the length must exact
- * match.  For tagged frames the length or length+4 must match.
- *
- * (B) PCTERR checks that the frame begins with a valid PREAMBLE sequence.
- * Does not check the number of PREAMBLE cycles.
- *
- * (C) OVRERR *DON'T PUT IN HRM*
- * OVRERR is an architectural assertion check internal to GMI to
- * make sure no assumption was violated.  In a correctly operating
- * system, this interrupt can never fire.
- * GMI has an internal arbiter which selects which of 4 ports to
- * buffer in the main RX FIFO.  If we normally buffer 8 bytes,
- * then each port will typically push a tick every 8 cycles if
- * the packet interface is going as fast as possible.  If there
- * are four ports, they push every two cycles.  So that's the
- * assumption.  That the inbound module will always be able to
- * consume the tick before another is produced.  If that doesn't
- * happen that's when OVRERR will assert."
  */
 union cavm_rgxx_gmp_gmi_rxx_int
 {
@@ -4824,30 +4298,6 @@ static inline uint64_t CAVM_RGXX_GMP_GMI_RXX_JABBER(uint64_t a, uint64_t b)
  * RGX GMP GMI User-Defined Data Skip Registers
  * This register specifies the amount of user-defined data (UDD) added before the start of the
  * L2C data.
- *
- * Internal:
- * Notes:
- * (1) The skip bytes are part of the packet and will be handled by NIC.
- *
- * (2) The system can determine if the UDD bytes are included in the FCS check
- * by using the FCSSEL field - if the FCS check is enabled.
- *
- * (3) Assume that the preamble/sfd is always at the start of the frame - even
- * before UDD bytes.  In most cases, there will be no preamble in these
- * cases since it will be packet interface in direct communication to
- * another packet interface (MAC to MAC) without a PHY involved.
- *
- * (4) We can still do address filtering and control packet filtering is the
- * user desires.
- *
- * (5) RGX()_GMP_GMI_RX()_UDD_SKP[LEN] must be 0 in half-duplex operation unless
- * RGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is clear.  If RGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is
- * clear,
- * then RGX()_GMP_GMI_RX()_UDD_SKP[LEN] will normally be 8.
- *
- * (6) In all cases, the UDD bytes will be sent down the packet interface as
- * part of the packet.  The UDD bytes are never stripped from the actual
- * packet.
  */
 union cavm_rgxx_gmp_gmi_rxx_udd_skp
 {
@@ -5314,25 +4764,6 @@ static inline uint64_t CAVM_RGXX_GMP_GMI_TXX_MIN_PKT(uint64_t a, uint64_t b)
  *
  * RGX GMI TX PAUSE-Packet Transmission-Interval Registers
  * This register specifies how often PAUSE packets are sent.
- * Internal:
- * Notes:
- * Choosing proper values of RGX()_GMP_GMI_TX()_PAUSE_PKT_TIME[PTIME] and
- * RGX()_GMP_GMI_TX()_PAUSE_PKT_INTERVAL[INTERVAL] can be challenging to the system
- * designer.  It is suggested that TIME be much greater than INTERVAL and
- * RGX()_GMP_GMI_TX()_PAUSE_ZERO[SEND] be set.  This allows a periodic refresh of the PAUSE
- * count and then when the backpressure condition is lifted, a PAUSE packet
- * with TIME==0 will be sent indicating that Octane is ready for additional
- * data.
- *
- * If the system chooses to not set RGX()_GMP_GMI_TX()_PAUSE_ZERO[SEND], then it is
- * suggested that TIME and INTERVAL are programmed such that they satisify the
- * following rule:
- *
- * _ INTERVAL \<= TIME - (largest_pkt_size + IFG + pause_pkt_size)
- *
- * where largest_pkt_size is that largest packet that the system can send
- * (normally 1518B), IFG is the interframe gap and pause_pkt_size is the size
- * of the PAUSE packet (normally 64B).
  */
 union cavm_rgxx_gmp_gmi_txx_pause_pkt_interval
 {
@@ -6004,124 +5435,6 @@ static inline uint64_t CAVM_RGXX_GMP_PCS_ANX_ADV(uint64_t a, uint64_t b)
 #define arguments_CAVM_RGXX_GMP_PCS_ANX_ADV(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) rgx#_gmp_pcs_an#_ext_st
- *
- * INTERNAL: RGX GMO PCS Autonegotiation Extended Status Registers
- */
-union cavm_rgxx_gmp_pcs_anx_ext_st
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_anx_ext_st_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t thou_xfd              : 1;  /**< [ 15: 15](RO/H) When set, PHY is 1000 BASE-X full duplex capable. */
-        uint64_t thou_xhd              : 1;  /**< [ 14: 14](RO/H) When set, PHY is 1000 BASE-X half duplex capable. */
-        uint64_t thou_tfd              : 1;  /**< [ 13: 13](RO/H) When set, PHY is 1000 BASE-T full duplex capable. */
-        uint64_t thou_thd              : 1;  /**< [ 12: 12](RO/H) When set, PHY is 1000 BASE-T half duplex capable. */
-        uint64_t reserved_0_11         : 12;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_11         : 12;
-        uint64_t thou_thd              : 1;  /**< [ 12: 12](RO/H) When set, PHY is 1000 BASE-T half duplex capable. */
-        uint64_t thou_tfd              : 1;  /**< [ 13: 13](RO/H) When set, PHY is 1000 BASE-T full duplex capable. */
-        uint64_t thou_xhd              : 1;  /**< [ 14: 14](RO/H) When set, PHY is 1000 BASE-X half duplex capable. */
-        uint64_t thou_xfd              : 1;  /**< [ 15: 15](RO/H) When set, PHY is 1000 BASE-X full duplex capable. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_anx_ext_st_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_anx_ext_st cavm_rgxx_gmp_pcs_anx_ext_st_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_ANX_EXT_ST(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_ANX_EXT_ST(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030028ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_ANX_EXT_ST", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_ANX_EXT_ST(a,b) cavm_rgxx_gmp_pcs_anx_ext_st_t
-#define bustype_CAVM_RGXX_GMP_PCS_ANX_EXT_ST(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_ANX_EXT_ST(a,b) "RGXX_GMP_PCS_ANX_EXT_ST"
-#define device_bar_CAVM_RGXX_GMP_PCS_ANX_EXT_ST(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_ANX_EXT_ST(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_ANX_EXT_ST(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_gmp_pcs_an#_lp_abil
- *
- * INTERNAL: RGX GMP PCS Autonegotiation Link Partner Ability Registers
- *
- * This is the autonegotiation Link partner ability register 5 as per IEEE 802.3, Clause 37.
- */
-union cavm_rgxx_gmp_pcs_anx_lp_abil
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_anx_lp_abil_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t np                    : 1;  /**< [ 15: 15](RO/H) Next page capable:
-                                                                 0 = Link partner not next page capable.
-                                                                 1 = Link partner next page capable. */
-        uint64_t ack                   : 1;  /**< [ 14: 14](RO/H) When set, indicates acknowledgement received. */
-        uint64_t rem_flt               : 2;  /**< [ 13: 12](RO/H) Link partner's link status as follows:
-                                                                 0x0 = Link OK.
-                                                                 0x1 = Offline.
-                                                                 0x2 = Link failure.
-                                                                 0x3 = Autonegotiation error. */
-        uint64_t reserved_9_11         : 3;
-        uint64_t pause                 : 2;  /**< [  8:  7](RO/H) Link partner PAUSE setting as follows:
-                                                                 0x0 = No PAUSE.
-                                                                 0x1 = Symmetric PAUSE.
-                                                                 0x2 = Asymmetric PAUSE.
-                                                                 0x3 = Both symmetric and asymmetric PAUSE to local device. */
-        uint64_t hfd                   : 1;  /**< [  6:  6](RO/H) Half-duplex. When set, link partner is half-duplex capable. */
-        uint64_t fd                    : 1;  /**< [  5:  5](RO/H) Full-duplex. When set, link partner is full-duplex capable. */
-        uint64_t reserved_0_4          : 5;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_4          : 5;
-        uint64_t fd                    : 1;  /**< [  5:  5](RO/H) Full-duplex. When set, link partner is full-duplex capable. */
-        uint64_t hfd                   : 1;  /**< [  6:  6](RO/H) Half-duplex. When set, link partner is half-duplex capable. */
-        uint64_t pause                 : 2;  /**< [  8:  7](RO/H) Link partner PAUSE setting as follows:
-                                                                 0x0 = No PAUSE.
-                                                                 0x1 = Symmetric PAUSE.
-                                                                 0x2 = Asymmetric PAUSE.
-                                                                 0x3 = Both symmetric and asymmetric PAUSE to local device. */
-        uint64_t reserved_9_11         : 3;
-        uint64_t rem_flt               : 2;  /**< [ 13: 12](RO/H) Link partner's link status as follows:
-                                                                 0x0 = Link OK.
-                                                                 0x1 = Offline.
-                                                                 0x2 = Link failure.
-                                                                 0x3 = Autonegotiation error. */
-        uint64_t ack                   : 1;  /**< [ 14: 14](RO/H) When set, indicates acknowledgement received. */
-        uint64_t np                    : 1;  /**< [ 15: 15](RO/H) Next page capable:
-                                                                 0 = Link partner not next page capable.
-                                                                 1 = Link partner next page capable. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_anx_lp_abil_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_anx_lp_abil cavm_rgxx_gmp_pcs_anx_lp_abil_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_ANX_LP_ABIL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_ANX_LP_ABIL(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030018ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_ANX_LP_ABIL", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_ANX_LP_ABIL(a,b) cavm_rgxx_gmp_pcs_anx_lp_abil_t
-#define bustype_CAVM_RGXX_GMP_PCS_ANX_LP_ABIL(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_ANX_LP_ABIL(a,b) "RGXX_GMP_PCS_ANX_LP_ABIL"
-#define device_bar_CAVM_RGXX_GMP_PCS_ANX_LP_ABIL(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_ANX_LP_ABIL(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_ANX_LP_ABIL(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) rgx#_gmp_pcs_an#_results
  *
  * INTERNAL: RGX GMP PCS Autonegotiation Results Registers
@@ -6191,278 +5504,6 @@ static inline uint64_t CAVM_RGXX_GMP_PCS_ANX_RESULTS(uint64_t a, uint64_t b)
 #define arguments_CAVM_RGXX_GMP_PCS_ANX_RESULTS(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) rgx#_gmp_pcs_int#
- *
- * INTERNAL: RGX GMP PCS Interrupt Registers
- */
-union cavm_rgxx_gmp_pcs_intx
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_intx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_13_63        : 51;
-        uint64_t dbg_sync              : 1;  /**< [ 12: 12](R/W1C/H) Code group sync failure debug help. RGX()_GMP_PCS_INT()[DBG_SYNC] interrupt fires when
-                                                                 code group
-                                                                 synchronization state machine makes a transition from SYNC_ACQUIRED_1 state to
-                                                                 SYNC_ACQUIRED_2 state. (See IEEE 802.3-2005, figure 37-9). It indicates that a bad code
-                                                                 group was received after code group synchronization was achieved. This interrupt should be
-                                                                 disabled during normal link operation. Use it as a debug help feature only. */
-        uint64_t dup                   : 1;  /**< [ 11: 11](R/W1C/H) Set whenever duplex mode changes on the link. */
-        uint64_t sync_bad              : 1;  /**< [ 10: 10](R/W1C/H) Set by hardware whenever RX sync state machine reaches a bad state. Should never be set
-                                                                 during normal operation. */
-        uint64_t an_bad                : 1;  /**< [  9:  9](R/W1C/H) Set by hardware whenever autonegotiation state machine reaches a bad state. Should never
-                                                                 be set during normal operation. */
-        uint64_t rxlock                : 1;  /**< [  8:  8](R/W1C/H) Set by hardware whenever code group sync or bit lock failure occurs. Cannot fire in loopback1 mode. */
-        uint64_t rxbad                 : 1;  /**< [  7:  7](R/W1C/H) Set by hardware whenever RX state machine reaches a bad state. Should never be set during
-                                                                 normal operation. */
-        uint64_t rxerr                 : 1;  /**< [  6:  6](R/W1C/H) Set whenever RX receives a code group error in 10-bit to 8-bit decode logic. Cannot fire
-                                                                 in loopback1 mode. */
-        uint64_t txbad                 : 1;  /**< [  5:  5](R/W1C/H) Set by hardware whenever TX state machine reaches a bad state. Should never be set during
-                                                                 normal operation. */
-        uint64_t txfifo                : 1;  /**< [  4:  4](R/W1C/H) Set whenever hardware detects a TX FIFO overflow condition. */
-        uint64_t txfifu                : 1;  /**< [  3:  3](R/W1C/H) Set whenever hardware detects a TX FIFO underflow condition. */
-        uint64_t an_err                : 1;  /**< [  2:  2](R/W1C/H) Autonegotiation error; AN resolution function failed. */
-        uint64_t xmit                  : 1;  /**< [  1:  1](R/W1C/H) Set whenever hardware detects a change in the XMIT variable. XMIT variable states are
-                                                                 IDLE, CONFIG and DATA. */
-        uint64_t lnkspd                : 1;  /**< [  0:  0](R/W1C/H) Set by hardware whenever link speed has changed. */
-#else /* Word 0 - Little Endian */
-        uint64_t lnkspd                : 1;  /**< [  0:  0](R/W1C/H) Set by hardware whenever link speed has changed. */
-        uint64_t xmit                  : 1;  /**< [  1:  1](R/W1C/H) Set whenever hardware detects a change in the XMIT variable. XMIT variable states are
-                                                                 IDLE, CONFIG and DATA. */
-        uint64_t an_err                : 1;  /**< [  2:  2](R/W1C/H) Autonegotiation error; AN resolution function failed. */
-        uint64_t txfifu                : 1;  /**< [  3:  3](R/W1C/H) Set whenever hardware detects a TX FIFO underflow condition. */
-        uint64_t txfifo                : 1;  /**< [  4:  4](R/W1C/H) Set whenever hardware detects a TX FIFO overflow condition. */
-        uint64_t txbad                 : 1;  /**< [  5:  5](R/W1C/H) Set by hardware whenever TX state machine reaches a bad state. Should never be set during
-                                                                 normal operation. */
-        uint64_t rxerr                 : 1;  /**< [  6:  6](R/W1C/H) Set whenever RX receives a code group error in 10-bit to 8-bit decode logic. Cannot fire
-                                                                 in loopback1 mode. */
-        uint64_t rxbad                 : 1;  /**< [  7:  7](R/W1C/H) Set by hardware whenever RX state machine reaches a bad state. Should never be set during
-                                                                 normal operation. */
-        uint64_t rxlock                : 1;  /**< [  8:  8](R/W1C/H) Set by hardware whenever code group sync or bit lock failure occurs. Cannot fire in loopback1 mode. */
-        uint64_t an_bad                : 1;  /**< [  9:  9](R/W1C/H) Set by hardware whenever autonegotiation state machine reaches a bad state. Should never
-                                                                 be set during normal operation. */
-        uint64_t sync_bad              : 1;  /**< [ 10: 10](R/W1C/H) Set by hardware whenever RX sync state machine reaches a bad state. Should never be set
-                                                                 during normal operation. */
-        uint64_t dup                   : 1;  /**< [ 11: 11](R/W1C/H) Set whenever duplex mode changes on the link. */
-        uint64_t dbg_sync              : 1;  /**< [ 12: 12](R/W1C/H) Code group sync failure debug help. RGX()_GMP_PCS_INT()[DBG_SYNC] interrupt fires when
-                                                                 code group
-                                                                 synchronization state machine makes a transition from SYNC_ACQUIRED_1 state to
-                                                                 SYNC_ACQUIRED_2 state. (See IEEE 802.3-2005, figure 37-9). It indicates that a bad code
-                                                                 group was received after code group synchronization was achieved. This interrupt should be
-                                                                 disabled during normal link operation. Use it as a debug help feature only. */
-        uint64_t reserved_13_63        : 51;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_intx_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_intx cavm_rgxx_gmp_pcs_intx_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_INTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_INTX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030080ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_INTX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_INTX(a,b) cavm_rgxx_gmp_pcs_intx_t
-#define bustype_CAVM_RGXX_GMP_PCS_INTX(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_INTX(a,b) "RGXX_GMP_PCS_INTX"
-#define device_bar_CAVM_RGXX_GMP_PCS_INTX(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_INTX(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_INTX(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_gmp_pcs_int#_ena_w1c
- *
- * INTERNAL: RGX GMP PCS Interrupt Enable Clear Registers
- *
- * This register clears interrupt enable bits.
- */
-union cavm_rgxx_gmp_pcs_intx_ena_w1c
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_intx_ena_w1c_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_13_63        : 51;
-        uint64_t dbg_sync              : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[DBG_SYNC]. */
-        uint64_t dup                   : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[DUP]. */
-        uint64_t sync_bad              : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[SYNC_BAD]. */
-        uint64_t an_bad                : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[AN_BAD]. */
-        uint64_t rxlock                : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[RXLOCK]. */
-        uint64_t rxbad                 : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[RXBAD]. */
-        uint64_t rxerr                 : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[RXERR]. */
-        uint64_t txbad                 : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[TXBAD]. */
-        uint64_t txfifo                : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[TXFIFO]. */
-        uint64_t txfifu                : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[TXFIFU]. */
-        uint64_t an_err                : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[AN_ERR]. */
-        uint64_t xmit                  : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[XMIT]. */
-        uint64_t lnkspd                : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[LNKSPD]. */
-#else /* Word 0 - Little Endian */
-        uint64_t lnkspd                : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[LNKSPD]. */
-        uint64_t xmit                  : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[XMIT]. */
-        uint64_t an_err                : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[AN_ERR]. */
-        uint64_t txfifu                : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[TXFIFU]. */
-        uint64_t txfifo                : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[TXFIFO]. */
-        uint64_t txbad                 : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[TXBAD]. */
-        uint64_t rxerr                 : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[RXERR]. */
-        uint64_t rxbad                 : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[RXBAD]. */
-        uint64_t rxlock                : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[RXLOCK]. */
-        uint64_t an_bad                : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[AN_BAD]. */
-        uint64_t sync_bad              : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[SYNC_BAD]. */
-        uint64_t dup                   : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[DUP]. */
-        uint64_t dbg_sync              : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for RGX(0)_GMP_PCS_INT(0)[DBG_SYNC]. */
-        uint64_t reserved_13_63        : 51;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_intx_ena_w1c_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_intx_ena_w1c cavm_rgxx_gmp_pcs_intx_ena_w1c_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_INTX_ENA_W1C(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_INTX_ENA_W1C(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030090ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_INTX_ENA_W1C", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_INTX_ENA_W1C(a,b) cavm_rgxx_gmp_pcs_intx_ena_w1c_t
-#define bustype_CAVM_RGXX_GMP_PCS_INTX_ENA_W1C(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_INTX_ENA_W1C(a,b) "RGXX_GMP_PCS_INTX_ENA_W1C"
-#define device_bar_CAVM_RGXX_GMP_PCS_INTX_ENA_W1C(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_INTX_ENA_W1C(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_INTX_ENA_W1C(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_gmp_pcs_int#_ena_w1s
- *
- * INTERNAL: RGX GMP PCS Interrupt Enable Set Registers
- *
- * This register sets interrupt enable bits.
- */
-union cavm_rgxx_gmp_pcs_intx_ena_w1s
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_intx_ena_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_13_63        : 51;
-        uint64_t dbg_sync              : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[DBG_SYNC]. */
-        uint64_t dup                   : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[DUP]. */
-        uint64_t sync_bad              : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[SYNC_BAD]. */
-        uint64_t an_bad                : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[AN_BAD]. */
-        uint64_t rxlock                : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[RXLOCK]. */
-        uint64_t rxbad                 : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[RXBAD]. */
-        uint64_t rxerr                 : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[RXERR]. */
-        uint64_t txbad                 : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[TXBAD]. */
-        uint64_t txfifo                : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[TXFIFO]. */
-        uint64_t txfifu                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[TXFIFU]. */
-        uint64_t an_err                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[AN_ERR]. */
-        uint64_t xmit                  : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[XMIT]. */
-        uint64_t lnkspd                : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[LNKSPD]. */
-#else /* Word 0 - Little Endian */
-        uint64_t lnkspd                : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[LNKSPD]. */
-        uint64_t xmit                  : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[XMIT]. */
-        uint64_t an_err                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[AN_ERR]. */
-        uint64_t txfifu                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[TXFIFU]. */
-        uint64_t txfifo                : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[TXFIFO]. */
-        uint64_t txbad                 : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[TXBAD]. */
-        uint64_t rxerr                 : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[RXERR]. */
-        uint64_t rxbad                 : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[RXBAD]. */
-        uint64_t rxlock                : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[RXLOCK]. */
-        uint64_t an_bad                : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[AN_BAD]. */
-        uint64_t sync_bad              : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[SYNC_BAD]. */
-        uint64_t dup                   : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[DUP]. */
-        uint64_t dbg_sync              : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for RGX(0)_GMP_PCS_INT(0)[DBG_SYNC]. */
-        uint64_t reserved_13_63        : 51;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_intx_ena_w1s_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_intx_ena_w1s cavm_rgxx_gmp_pcs_intx_ena_w1s_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_INTX_ENA_W1S(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_INTX_ENA_W1S(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030098ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_INTX_ENA_W1S", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_INTX_ENA_W1S(a,b) cavm_rgxx_gmp_pcs_intx_ena_w1s_t
-#define bustype_CAVM_RGXX_GMP_PCS_INTX_ENA_W1S(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_INTX_ENA_W1S(a,b) "RGXX_GMP_PCS_INTX_ENA_W1S"
-#define device_bar_CAVM_RGXX_GMP_PCS_INTX_ENA_W1S(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_INTX_ENA_W1S(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_INTX_ENA_W1S(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_gmp_pcs_int#_w1s
- *
- * INTERNAL: RGX GMP PCS Interrupt Set Registers
- *
- * This register sets interrupt bits.
- */
-union cavm_rgxx_gmp_pcs_intx_w1s
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_intx_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_13_63        : 51;
-        uint64_t dbg_sync              : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[DBG_SYNC]. */
-        uint64_t dup                   : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[DUP]. */
-        uint64_t sync_bad              : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[SYNC_BAD]. */
-        uint64_t an_bad                : 1;  /**< [  9:  9](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[AN_BAD]. */
-        uint64_t rxlock                : 1;  /**< [  8:  8](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[RXLOCK]. */
-        uint64_t rxbad                 : 1;  /**< [  7:  7](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[RXBAD]. */
-        uint64_t rxerr                 : 1;  /**< [  6:  6](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[RXERR]. */
-        uint64_t txbad                 : 1;  /**< [  5:  5](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[TXBAD]. */
-        uint64_t txfifo                : 1;  /**< [  4:  4](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[TXFIFO]. */
-        uint64_t txfifu                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[TXFIFU]. */
-        uint64_t an_err                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[AN_ERR]. */
-        uint64_t xmit                  : 1;  /**< [  1:  1](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[XMIT]. */
-        uint64_t lnkspd                : 1;  /**< [  0:  0](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[LNKSPD]. */
-#else /* Word 0 - Little Endian */
-        uint64_t lnkspd                : 1;  /**< [  0:  0](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[LNKSPD]. */
-        uint64_t xmit                  : 1;  /**< [  1:  1](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[XMIT]. */
-        uint64_t an_err                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[AN_ERR]. */
-        uint64_t txfifu                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[TXFIFU]. */
-        uint64_t txfifo                : 1;  /**< [  4:  4](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[TXFIFO]. */
-        uint64_t txbad                 : 1;  /**< [  5:  5](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[TXBAD]. */
-        uint64_t rxerr                 : 1;  /**< [  6:  6](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[RXERR]. */
-        uint64_t rxbad                 : 1;  /**< [  7:  7](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[RXBAD]. */
-        uint64_t rxlock                : 1;  /**< [  8:  8](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[RXLOCK]. */
-        uint64_t an_bad                : 1;  /**< [  9:  9](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[AN_BAD]. */
-        uint64_t sync_bad              : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[SYNC_BAD]. */
-        uint64_t dup                   : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[DUP]. */
-        uint64_t dbg_sync              : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets RGX(0)_GMP_PCS_INT(0)[DBG_SYNC]. */
-        uint64_t reserved_13_63        : 51;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_intx_w1s_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_intx_w1s cavm_rgxx_gmp_pcs_intx_w1s_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_INTX_W1S(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_INTX_W1S(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030088ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_INTX_W1S", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_INTX_W1S(a,b) cavm_rgxx_gmp_pcs_intx_w1s_t
-#define bustype_CAVM_RGXX_GMP_PCS_INTX_W1S(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_INTX_W1S(a,b) "RGXX_GMP_PCS_INTX_W1S"
-#define device_bar_CAVM_RGXX_GMP_PCS_INTX_W1S(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_INTX_W1S(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_INTX_W1S(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) rgx#_gmp_pcs_link#_timer
  *
  * INTERNAL: RGX GMP PCS Link Timer Registers
@@ -6511,15 +5552,6 @@ static inline uint64_t CAVM_RGXX_GMP_PCS_LINKX_TIMER(uint64_t a, uint64_t b)
  * Register (RSL) rgx#_gmp_pcs_misc#_ctl
  *
  * INTERNAL: RGX GMP SGMII Miscellaneous Control Registers
- *
- * Internal:
- * SGMII bit [12] is really a misnomer, it is a decode  of pi_qlm_cfg pins to indicate SGMII or
- * 1000Base-X modes.
- *
- * Note: The SGMII AN Advertisement Register above will be sent during Auto Negotiation if
- * [MAC_PHY] is set (1=PHY mode). If the bit is not set (0=MAC mode), the
- * tx_Config_Reg\<14\> becomes ACK bit and tx_Config_Reg\<0\> is always 1.
- * All other bits in tx_Config_Reg sent will be 0. The PHY dictates the Auto Negotiation results.
  */
 union cavm_rgxx_gmp_pcs_miscx_ctl
 {
@@ -6871,92 +5903,6 @@ static inline uint64_t CAVM_RGXX_GMP_PCS_MRX_STATUS(uint64_t a, uint64_t b)
 #define arguments_CAVM_RGXX_GMP_PCS_MRX_STATUS(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) rgx#_gmp_pcs_rx#_states
- *
- * INTERNAL: RGX GMP PCS RX State-Machines States Registers
- */
-union cavm_rgxx_gmp_pcs_rxx_states
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_rxx_states_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t rx_bad                : 1;  /**< [ 15: 15](RO/H) Receive state machine is in an illegal state. */
-        uint64_t rx_st                 : 5;  /**< [ 14: 10](RO/H) Receive state-machine state. */
-        uint64_t sync_bad              : 1;  /**< [  9:  9](RO/H) Receive synchronization state machine is in an illegal state. */
-        uint64_t sync                  : 4;  /**< [  8:  5](RO/H) Receive synchronization state-machine state. */
-        uint64_t an_bad                : 1;  /**< [  4:  4](RO/H) Autonegotiation state machine is in an illegal state. */
-        uint64_t an_st                 : 4;  /**< [  3:  0](RO/H) Autonegotiation state-machine state. */
-#else /* Word 0 - Little Endian */
-        uint64_t an_st                 : 4;  /**< [  3:  0](RO/H) Autonegotiation state-machine state. */
-        uint64_t an_bad                : 1;  /**< [  4:  4](RO/H) Autonegotiation state machine is in an illegal state. */
-        uint64_t sync                  : 4;  /**< [  8:  5](RO/H) Receive synchronization state-machine state. */
-        uint64_t sync_bad              : 1;  /**< [  9:  9](RO/H) Receive synchronization state machine is in an illegal state. */
-        uint64_t rx_st                 : 5;  /**< [ 14: 10](RO/H) Receive state-machine state. */
-        uint64_t rx_bad                : 1;  /**< [ 15: 15](RO/H) Receive state machine is in an illegal state. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_rxx_states_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_rxx_states cavm_rgxx_gmp_pcs_rxx_states_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_RXX_STATES(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_RXX_STATES(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030058ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_RXX_STATES", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_RXX_STATES(a,b) cavm_rgxx_gmp_pcs_rxx_states_t
-#define bustype_CAVM_RGXX_GMP_PCS_RXX_STATES(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_RXX_STATES(a,b) "RGXX_GMP_PCS_RXX_STATES"
-#define device_bar_CAVM_RGXX_GMP_PCS_RXX_STATES(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_RXX_STATES(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_RXX_STATES(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_gmp_pcs_rx#_sync
- *
- * INTERNAL: RGX GMP PCS Code Group Synchronization Registers
- */
-union cavm_rgxx_gmp_pcs_rxx_sync
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_rxx_sync_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t sync                  : 1;  /**< [  1:  1](RO/H) When set, code group synchronization achieved. */
-        uint64_t bit_lock              : 1;  /**< [  0:  0](RO/H) When set, bit lock achieved. */
-#else /* Word 0 - Little Endian */
-        uint64_t bit_lock              : 1;  /**< [  0:  0](RO/H) When set, bit lock achieved. */
-        uint64_t sync                  : 1;  /**< [  1:  1](RO/H) When set, code group synchronization achieved. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_rxx_sync_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_rxx_sync cavm_rgxx_gmp_pcs_rxx_sync_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_RXX_SYNC(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_RXX_SYNC(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030050ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_RXX_SYNC", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_RXX_SYNC(a,b) cavm_rgxx_gmp_pcs_rxx_sync_t
-#define bustype_CAVM_RGXX_GMP_PCS_RXX_SYNC(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_RXX_SYNC(a,b) "RGXX_GMP_PCS_RXX_SYNC"
-#define device_bar_CAVM_RGXX_GMP_PCS_RXX_SYNC(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_RXX_SYNC(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_RXX_SYNC(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) rgx#_gmp_pcs_sgm#_an_adv
  *
  * INTERNAL: RGX GMP PCS SGMII Autonegotiation Advertisement Registers
@@ -7018,200 +5964,6 @@ static inline uint64_t CAVM_RGXX_GMP_PCS_SGMX_AN_ADV(uint64_t a, uint64_t b)
 #define device_bar_CAVM_RGXX_GMP_PCS_SGMX_AN_ADV(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_RGXX_GMP_PCS_SGMX_AN_ADV(a,b) (a)
 #define arguments_CAVM_RGXX_GMP_PCS_SGMX_AN_ADV(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_gmp_pcs_sgm#_lp_adv
- *
- * INTERNAL: RGX GMP PCS SGMII Link-Partner-Advertisement Registers
- *
- * This is the SGMII link partner advertisement register (received as rx_Config_Reg\<15:0\> as
- * defined in IEEE 802.3 clause 37).
- */
-union cavm_rgxx_gmp_pcs_sgmx_lp_adv
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_sgmx_lp_adv_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t link                  : 1;  /**< [ 15: 15](RO/H) Link status: 1 = Link up. 0 = Link down. */
-        uint64_t reserved_13_14        : 2;
-        uint64_t dup                   : 1;  /**< [ 12: 12](RO/H) Duplex mode: 1 = Full duplex, 0 = Half duplex. */
-        uint64_t speed                 : 2;  /**< [ 11: 10](RO/H) Link speed:
-                                                                 0x0 = 10 Mb/s.
-                                                                 0x1 = 100 Mb/s.
-                                                                 0x2 = 1000 Mb/s.
-                                                                 0x3 = Reserved. */
-        uint64_t reserved_1_9          : 9;
-        uint64_t one                   : 1;  /**< [  0:  0](RO/H) Always set to match tx_Config_Reg\<0\> */
-#else /* Word 0 - Little Endian */
-        uint64_t one                   : 1;  /**< [  0:  0](RO/H) Always set to match tx_Config_Reg\<0\> */
-        uint64_t reserved_1_9          : 9;
-        uint64_t speed                 : 2;  /**< [ 11: 10](RO/H) Link speed:
-                                                                 0x0 = 10 Mb/s.
-                                                                 0x1 = 100 Mb/s.
-                                                                 0x2 = 1000 Mb/s.
-                                                                 0x3 = Reserved. */
-        uint64_t dup                   : 1;  /**< [ 12: 12](RO/H) Duplex mode: 1 = Full duplex, 0 = Half duplex. */
-        uint64_t reserved_13_14        : 2;
-        uint64_t link                  : 1;  /**< [ 15: 15](RO/H) Link status: 1 = Link up. 0 = Link down. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    struct cavm_rgxx_gmp_pcs_sgmx_lp_adv_cn
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t link                  : 1;  /**< [ 15: 15](RO/H) Link status: 1 = Link up. 0 = Link down. */
-        uint64_t reserved_14           : 1;
-        uint64_t reserved_13           : 1;
-        uint64_t dup                   : 1;  /**< [ 12: 12](RO/H) Duplex mode: 1 = Full duplex, 0 = Half duplex. */
-        uint64_t speed                 : 2;  /**< [ 11: 10](RO/H) Link speed:
-                                                                 0x0 = 10 Mb/s.
-                                                                 0x1 = 100 Mb/s.
-                                                                 0x2 = 1000 Mb/s.
-                                                                 0x3 = Reserved. */
-        uint64_t reserved_1_9          : 9;
-        uint64_t one                   : 1;  /**< [  0:  0](RO/H) Always set to match tx_Config_Reg\<0\> */
-#else /* Word 0 - Little Endian */
-        uint64_t one                   : 1;  /**< [  0:  0](RO/H) Always set to match tx_Config_Reg\<0\> */
-        uint64_t reserved_1_9          : 9;
-        uint64_t speed                 : 2;  /**< [ 11: 10](RO/H) Link speed:
-                                                                 0x0 = 10 Mb/s.
-                                                                 0x1 = 100 Mb/s.
-                                                                 0x2 = 1000 Mb/s.
-                                                                 0x3 = Reserved. */
-        uint64_t dup                   : 1;  /**< [ 12: 12](RO/H) Duplex mode: 1 = Full duplex, 0 = Half duplex. */
-        uint64_t reserved_13           : 1;
-        uint64_t reserved_14           : 1;
-        uint64_t link                  : 1;  /**< [ 15: 15](RO/H) Link status: 1 = Link up. 0 = Link down. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } cn;
-};
-typedef union cavm_rgxx_gmp_pcs_sgmx_lp_adv cavm_rgxx_gmp_pcs_sgmx_lp_adv_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_SGMX_LP_ADV(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_SGMX_LP_ADV(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030070ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_SGMX_LP_ADV", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_SGMX_LP_ADV(a,b) cavm_rgxx_gmp_pcs_sgmx_lp_adv_t
-#define bustype_CAVM_RGXX_GMP_PCS_SGMX_LP_ADV(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_SGMX_LP_ADV(a,b) "RGXX_GMP_PCS_SGMX_LP_ADV"
-#define device_bar_CAVM_RGXX_GMP_PCS_SGMX_LP_ADV(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_SGMX_LP_ADV(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_SGMX_LP_ADV(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_gmp_pcs_tx#_states
- *
- * INTERNAL: RGX GMP PCS TX State-Machines States Registers
- */
-union cavm_rgxx_gmp_pcs_txx_states
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_txx_states_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_7_63         : 57;
-        uint64_t xmit                  : 2;  /**< [  6:  5](RO/H) 0x0 = Undefined.
-                                                                 0x1 = Config.
-                                                                 0x2 = Idle.
-                                                                 0x3 = Data. */
-        uint64_t tx_bad                : 1;  /**< [  4:  4](RO/H) Transmit state machine in an illegal state. */
-        uint64_t ord_st                : 4;  /**< [  3:  0](RO/H) Transmit ordered set state-machine state. */
-#else /* Word 0 - Little Endian */
-        uint64_t ord_st                : 4;  /**< [  3:  0](RO/H) Transmit ordered set state-machine state. */
-        uint64_t tx_bad                : 1;  /**< [  4:  4](RO/H) Transmit state machine in an illegal state. */
-        uint64_t xmit                  : 2;  /**< [  6:  5](RO/H) 0x0 = Undefined.
-                                                                 0x1 = Config.
-                                                                 0x2 = Idle.
-                                                                 0x3 = Data. */
-        uint64_t reserved_7_63         : 57;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_txx_states_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_txx_states cavm_rgxx_gmp_pcs_txx_states_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_TXX_STATES(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_TXX_STATES(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030060ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_TXX_STATES", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_TXX_STATES(a,b) cavm_rgxx_gmp_pcs_txx_states_t
-#define bustype_CAVM_RGXX_GMP_PCS_TXX_STATES(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_TXX_STATES(a,b) "RGXX_GMP_PCS_TXX_STATES"
-#define device_bar_CAVM_RGXX_GMP_PCS_TXX_STATES(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_TXX_STATES(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_TXX_STATES(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) rgx#_gmp_pcs_tx_rx#_polarity
- *
- * INTERNAL: RGX GMP PCS TX/RX Polarity Registers
- *
- * RGX()_GMP_PCS_TX_RX()_POLARITY[AUTORXPL] shows correct polarity needed on the link
- * receive path after code group synchronization is achieved.
- */
-union cavm_rgxx_gmp_pcs_tx_rxx_polarity
-{
-    uint64_t u;
-    struct cavm_rgxx_gmp_pcs_tx_rxx_polarity_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_4_63         : 60;
-        uint64_t rxovrd                : 1;  /**< [  3:  3](R/W) RX polarity override.
-                                                                 0 = AUTORXPL determines polarity.
-                                                                 1 = [RXPLRT] determines polarity. */
-        uint64_t autorxpl              : 1;  /**< [  2:  2](RO/H) Auto RX polarity detected:
-                                                                 0 = Normal polarity.
-                                                                 1 = Inverted polarity.
-
-                                                                 This bit always represents the correct RX polarity setting needed for successful RX path
-                                                                 operation, once a successful code group sync is obtained. */
-        uint64_t rxplrt                : 1;  /**< [  1:  1](R/W) RX polarity: 0 = Normal polarity, 1 = Inverted polarity. */
-        uint64_t txplrt                : 1;  /**< [  0:  0](R/W) TX polarity: 0 = Normal polarity, 1 = Inverted polarity. */
-#else /* Word 0 - Little Endian */
-        uint64_t txplrt                : 1;  /**< [  0:  0](R/W) TX polarity: 0 = Normal polarity, 1 = Inverted polarity. */
-        uint64_t rxplrt                : 1;  /**< [  1:  1](R/W) RX polarity: 0 = Normal polarity, 1 = Inverted polarity. */
-        uint64_t autorxpl              : 1;  /**< [  2:  2](RO/H) Auto RX polarity detected:
-                                                                 0 = Normal polarity.
-                                                                 1 = Inverted polarity.
-
-                                                                 This bit always represents the correct RX polarity setting needed for successful RX path
-                                                                 operation, once a successful code group sync is obtained. */
-        uint64_t rxovrd                : 1;  /**< [  3:  3](R/W) RX polarity override.
-                                                                 0 = AUTORXPL determines polarity.
-                                                                 1 = [RXPLRT] determines polarity. */
-        uint64_t reserved_4_63         : 60;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rgxx_gmp_pcs_tx_rxx_polarity_s cn; */
-};
-typedef union cavm_rgxx_gmp_pcs_tx_rxx_polarity cavm_rgxx_gmp_pcs_tx_rxx_polarity_t;
-
-static inline uint64_t CAVM_RGXX_GMP_PCS_TX_RXX_POLARITY(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RGXX_GMP_PCS_TX_RXX_POLARITY(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
-        return 0x87e0e8030048ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("RGXX_GMP_PCS_TX_RXX_POLARITY", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RGXX_GMP_PCS_TX_RXX_POLARITY(a,b) cavm_rgxx_gmp_pcs_tx_rxx_polarity_t
-#define bustype_CAVM_RGXX_GMP_PCS_TX_RXX_POLARITY(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RGXX_GMP_PCS_TX_RXX_POLARITY(a,b) "RGXX_GMP_PCS_TX_RXX_POLARITY"
-#define device_bar_CAVM_RGXX_GMP_PCS_TX_RXX_POLARITY(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_RGXX_GMP_PCS_TX_RXX_POLARITY(a,b) (a)
-#define arguments_CAVM_RGXX_GMP_PCS_TX_RXX_POLARITY(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) rgx#_msix_pba#

@@ -24,28 +24,6 @@
  *
  * Performance Counter Event Enumeration
  * Enumerates the events that may be counted.  See PMU()_PMEVTYPER()_EL0[EVTCOUNT].
- * Internal:
- * \<pre\>
- *    0x0000 to 0x003F    Common architectural and microarchitectural events
- *       0x0020 to 0x03F      Arm house style events
- *       0x0040 to 0x04F      Arm Recommended, implementation defined events (Aka Arm House
- * Style)
- *    0x0040 to 0x00BF    Arm recommended common architectural and microarchitectural events.
- * IMPLEMENTATION DEFINED
- *    0x00C0 to 0x3FFF    IMPLEMENTATION DEFINED
- *      0x0180 to 0x01B7     Marvell Misc Counters
- *      0x01B8 to 0x01FF     Marvell - special instructions and events
- *      0x0300 to 0x03FF     Marvell - can be secure mode only
- *    0x4000 to 0x403F    Common architectural and microarchitectural events (PMCEID0_EL0[63:32],
- * PMCEID0_EL1[63:32])
- *    0x4040 to 0x40BF    Arm recommended common architectural and microarchitectural events.
- * IMPLEMENTATION DEFINED
- *    0x40C0 to 0x7FFF    IMPLEMENTATION DEFINED
- *    0x8000 to 0x80BF    Reserved
- *    0x80C0 to 0xBFFF    IMPLEMENTATION DEFINED
- *    0xC000 to 0xC0BF    Reserved
- *    0xC0C0 to 0xFFFF    IMPLEMENTATION DEFINED
- * \</pre\>
  */
 #define CAVM_PMU_PERF_E_AES_FOLDED (0x4c14)
 #define CAVM_PMU_PERF_E_ASE_SPEC (0x74)

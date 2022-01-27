@@ -179,90 +179,6 @@ static inline uint64_t CAVM_PNBX_DMA_STRID(uint64_t a)
 #define arguments_CAVM_PNBX_DMA_STRID(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) pnb#_eco
- *
- * INTERNAL: PNB ECO Register
- *
- * An ECO CSR.
- */
-union cavm_pnbx_eco
-{
-    uint64_t u;
-    struct cavm_pnbx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pnbx_eco_s cn; */
-};
-typedef union cavm_pnbx_eco cavm_pnbx_eco_t;
-
-static inline uint64_t CAVM_PNBX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PNBX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e041000300ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x87e041000300ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e041000300ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e041000300ll + 0x1000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("PNBX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PNBX_ECO(a) cavm_pnbx_eco_t
-#define bustype_CAVM_PNBX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_PNBX_ECO(a) "PNBX_ECO"
-#define busnum_CAVM_PNBX_ECO(a) (a)
-#define arguments_CAVM_PNBX_ECO(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) pnb#_eco_scratch
- *
- * INTERNAL: PNB Scratch Register
- */
-union cavm_pnbx_eco_scratch
-{
-    uint64_t u;
-    struct cavm_pnbx_eco_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t scratch               : 64; /**< [ 63:  0](R/W)  */
-#else /* Word 0 - Little Endian */
-        uint64_t scratch               : 64; /**< [ 63:  0](R/W)  */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pnbx_eco_scratch_s cn; */
-};
-typedef union cavm_pnbx_eco_scratch cavm_pnbx_eco_scratch_t;
-
-static inline uint64_t CAVM_PNBX_ECO_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PNBX_ECO_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e041000308ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x87e041000308ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e041000308ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e041000308ll + 0x1000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("PNBX_ECO_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PNBX_ECO_SCRATCH(a) cavm_pnbx_eco_scratch_t
-#define bustype_CAVM_PNBX_ECO_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_PNBX_ECO_SCRATCH(a) "PNBX_ECO_SCRATCH"
-#define busnum_CAVM_PNBX_ECO_SCRATCH(a) (a)
-#define arguments_CAVM_PNBX_ECO_SCRATCH(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) pnb#_ghab#_pull_arb_wt
  *
  * PNB GHAB Pull Arbitration Weight Register
@@ -786,19 +702,13 @@ union cavm_pnbx_psm_push_arb_wt
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_22_63        : 42;
-        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) TODO
-                                                                 Internal:
-                                                                 High-priority weight. Unused since PSM writes are always low
-                                                                 priority. */
+        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) TODO */
         uint64_t reserved_6_15         : 10;
         uint64_t lp_wgt                : 6;  /**< [  5:  0](R/W) Arbitration weight for PSM writes to SMEM. */
 #else /* Word 0 - Little Endian */
         uint64_t lp_wgt                : 6;  /**< [  5:  0](R/W) Arbitration weight for PSM writes to SMEM. */
         uint64_t reserved_6_15         : 10;
-        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) TODO
-                                                                 Internal:
-                                                                 High-priority weight. Unused since PSM writes are always low
-                                                                 priority. */
+        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) TODO */
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } s;
@@ -810,19 +720,13 @@ union cavm_pnbx_psm_push_arb_wt
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_22_63        : 42;
-        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 High-priority weight. Unused since PSM writes are always low
-                                                                 priority. */
+        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) Reserved. */
         uint64_t reserved_6_15         : 10;
         uint64_t lp_wgt                : 6;  /**< [  5:  0](R/W) Arbitration weight for PSM writes to SMEM. */
 #else /* Word 0 - Little Endian */
         uint64_t lp_wgt                : 6;  /**< [  5:  0](R/W) Arbitration weight for PSM writes to SMEM. */
         uint64_t reserved_6_15         : 10;
-        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 High-priority weight. Unused since PSM writes are always low
-                                                                 priority. */
+        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) Reserved. */
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } loki;

@@ -72,48 +72,6 @@ static inline uint64_t CAVM_RFOEX_ABX_CONTROL(uint64_t a, uint64_t b)
 #define arguments_CAVM_RFOEX_ABX_CONTROL(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) rfoe#_ab#_scratch
- *
- * INTERNAL: Scratch Register
- *
- * Scratch register.
- */
-union cavm_rfoex_abx_scratch
-{
-    uint64_t u;
-    struct cavm_rfoex_abx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_abx_scratch_s cn; */
-};
-typedef union cavm_rfoex_abx_scratch cavm_rfoex_abx_scratch_t;
-
-static inline uint64_t CAVM_RFOEX_ABX_SCRATCH(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_ABX_SCRATCH(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043d00080ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
-        return 0x87e043d00080ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
-        return 0x87e043d00080ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
-        return 0x87e043d00080ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1);
-    __cavm_csr_fatal("RFOEX_ABX_SCRATCH", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RFOEX_ABX_SCRATCH(a,b) cavm_rfoex_abx_scratch_t
-#define bustype_CAVM_RFOEX_ABX_SCRATCH(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RFOEX_ABX_SCRATCH(a,b) "RFOEX_ABX_SCRATCH"
-#define busnum_CAVM_RFOEX_ABX_SCRATCH(a,b) (a)
-#define arguments_CAVM_RFOEX_ABX_SCRATCH(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) rfoe#_ab#_slot#_configuration
  *
  * RFOE AB Job Configuration Register
@@ -158,10 +116,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
                                                                  bits of the input sample.
                                                                  o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
-                                                                 of saturating.
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 of saturating. */
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
                                                                  0: Y = SATn(X).
                                                                  1: Y = SATn(ROUND(X)).
@@ -176,10 +131,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  n is the sample bit width specified by [SAMPLE_WIDTH].
 
                                                                  Note that the saturation operation can be bypassed by setting
-                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1. */
         uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
                                                                  packet. Samples read from memory are always assume to have 16-bit I
                                                                  and 16-bit Q components. */
@@ -259,20 +211,14 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  n is the sample bit width specified by [SAMPLE_WIDTH].
 
                                                                  Note that the saturation operation can be bypassed by setting
-                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1. */
         uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
                                                                  0 = Perform symmetric saturation to [SAMPLE_WIDTH].
                                                                  1 = Bypass saturation.
                                                                  o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
                                                                  bits of the input sample.
                                                                  o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
-                                                                 of saturating.
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 of saturating. */
         uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
                                                                  0 = indicates seqNum is used.
                                                                  1 = indicates timeStamp is used. */
@@ -331,10 +277,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
                                                                  bits of the input sample.
                                                                  o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
-                                                                 of saturating.
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 of saturating. */
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
                                                                  0: Y = SATn(X).
                                                                  1: Y = SATn(ROUND(X)).
@@ -349,10 +292,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  n is the sample bit width specified by [SAMPLE_WIDTH].
 
                                                                  Note that the saturation operation can be bypassed by setting
-                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1. */
         uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
                                                                  packet. Samples read from memory are always assume to have 16-bit I
                                                                  and 16-bit Q components. */
@@ -432,20 +372,14 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  n is the sample bit width specified by [SAMPLE_WIDTH].
 
                                                                  Note that the saturation operation can be bypassed by setting
-                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1. */
         uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
                                                                  0 = Perform symmetric saturation to [SAMPLE_WIDTH].
                                                                  1 = Bypass saturation.
                                                                  o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
                                                                  bits of the input sample.
                                                                  o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
-                                                                 of saturating.
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 of saturating. */
         uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
                                                                  0 = indicates seqNum is used.
                                                                  1 = indicates timeStamp is used. */
@@ -511,16 +445,10 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
 
                                                                  where m = 16 - n, and when m=0, 2^(0-1) = 0.
-                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH]. */
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
 
-                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS]. */
         uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
                                                                  packet. Samples read from memory are always assume to have 16-bit I
                                                                  and 16-bit Q components. */
@@ -588,10 +516,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  and 16-bit Q components. */
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
 
-                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS]. */
         uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
                                                                  0 = Perform symmetric saturation to [SAMPLE_WIDTH].
                                                                  o If [SAMPLE_WIDTH_OPTION]=0, Y = SATn(X).
@@ -608,10 +533,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
 
                                                                  where m = 16 - n, and when m=0, 2^(0-1) = 0.
-                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH]. */
         uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
                                                                  0 = indicates seqNum is used.
                                                                  1 = indicates timeStamp is used. */
@@ -681,17 +603,11 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
                                                                  ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
                                                                  where m = 16 - n, and when m=0, 2^(0-1) = 0.
-                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH]. */
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
                                                                  Used when [RFOE_MODE] = 0.
 
-                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS]. */
         uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
                                                                  For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
                                                                  packet. Samples read from memory are always assume to have 16-bit I
@@ -766,10 +682,7 @@ union cavm_rfoex_abx_slotx_configuration
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
                                                                  Used when [RFOE_MODE] = 0.
 
-                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS]. */
         uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
                                                                  Used when [RFOE_MODE] = 0.
                                                                  0 = Perform symmetric saturation to [SAMPLE_WIDTH].
@@ -784,10 +697,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
                                                                  ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
                                                                  where m = 16 - n, and when m=0, 2^(0-1) = 0.
-                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH]. */
         uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
                                                                  Used when [RFOE_MODE] = 0. */
         uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
@@ -859,10 +769,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
                                                                  bits of the input sample.
                                                                  o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
-                                                                 of saturating.
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 of saturating. */
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
                                                                  Used when [RFOE_MODE] = 0.
                                                                  0: Y = SATn(X).
@@ -878,10 +785,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  n is the sample bit width specified by [SAMPLE_WIDTH].
 
                                                                  Note that the saturation operation can be bypassed by setting
-                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1. */
         uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
                                                                  For [SAMPLE_MODE]=1, width in bits of I/Q samples in transmitted RoE
                                                                  packet. Samples read from memory are always assume to have 16-bit I
@@ -968,10 +872,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  n is the sample bit width specified by [SAMPLE_WIDTH].
 
                                                                  Note that the saturation operation can be bypassed by setting
-                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1. */
         uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
                                                                  Used when [RFOE_MODE] = 0.
                                                                  0 = Perform symmetric saturation to [SAMPLE_WIDTH].
@@ -982,10 +883,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
                                                                  bits of the input sample.
                                                                  o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
-                                                                 of saturating.
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 of saturating. */
         uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
                                                                  Used when [RFOE_MODE] = 0. */
         uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
@@ -1064,17 +962,11 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
 
                                                                  where m = 16 - n, and when m=0, 2^(0-1) = 0.
-                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH]. */
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
                                                                  Used when [RFOE_MODE] = 0.
 
-                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS]. */
         uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
                                                                  For [SAMPLE_MODE]=1, width in bits of I/Q samples in transmitted RoE
                                                                  packet. Samples read from memory are always assume to have 16-bit I
@@ -1149,10 +1041,7 @@ union cavm_rfoex_abx_slotx_configuration
         uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
                                                                  Used when [RFOE_MODE] = 0.
 
-                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
-
-                                                                 Internal:
-                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS]. */
         uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
                                                                  Used when [RFOE_MODE] = 0.
                                                                  0 = Perform symmetric saturation to [SAMPLE_WIDTH].
@@ -1170,10 +1059,7 @@ union cavm_rfoex_abx_slotx_configuration
                                                                  _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
 
                                                                  where m = 16 - n, and when m=0, 2^(0-1) = 0.
-                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
-
-                                                                 Internal:
-                                                                 Same as rfif_dl_sample_width.v definition. */
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH]. */
         uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
                                                                  Used when [RFOE_MODE] = 0. */
         uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
@@ -1267,23 +1153,9 @@ union cavm_rfoex_abx_slotx_configuration1
                                                                  * When [PKT_MODE]=0x1 or 0x2, the number of samples to read from
                                                                  memory. Samples in memory are always 32 bits, with 16-bit I and
                                                                  16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4. */
-        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, interpret the
-                                                                 first [RBMAP_BYTES] as an RoE rbMap. The bytes will be byte-swapped,
-                                                                 and the [RBMAP_BYTES] will be zero-padded.
-
-                                                                 Feature not implemented in a meaningful way for t95 pass 1, so making
-                                                                 this reserved. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, interpret the
-                                                                 first [RBMAP_BYTES] as an RoE rbMap. The bytes will be byte-swapped,
-                                                                 and the [RBMAP_BYTES] will be zero-padded.
-
-                                                                 Feature not implemented in a meaningful way for t95 pass 1, so making
-                                                                 this reserved. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved. */
         uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
                                                                  * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
 
@@ -1333,23 +1205,9 @@ union cavm_rfoex_abx_slotx_configuration1
                                                                  * When [PKT_MODE]=0x1 or 0x2, the number of samples to read from
                                                                  memory. Samples in memory are always 32 bits, with 16-bit I and
                                                                  16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4. */
-        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, interpret the
-                                                                 first [RBMAP_BYTES] as an RoE rbMap. The bytes will be byte-swapped,
-                                                                 and the [RBMAP_BYTES] will be zero-padded.
-
-                                                                 Feature not implemented in a meaningful way for t95 pass 1, so making
-                                                                 this reserved. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, interpret the
-                                                                 first [RBMAP_BYTES] as an RoE rbMap. The bytes will be byte-swapped,
-                                                                 and the [RBMAP_BYTES] will be zero-padded.
-
-                                                                 Feature not implemented in a meaningful way for t95 pass 1, so making
-                                                                 this reserved. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved. */
         uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
                                                                  * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
 

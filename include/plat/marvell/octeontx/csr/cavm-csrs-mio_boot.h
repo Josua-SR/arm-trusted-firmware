@@ -80,43 +80,9 @@ union cavm_mio_boot_bist_stat
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
-        uint64_t stat                  : 16; /**< [ 15:  0](RO/H) BIST status.
-                                                                 Internal:
-                                                                 \<0\> = mio.mio_boot.mio_boot_fifo.mem.
-                                                                 \<1\> = mio.mio_boot.mio_boot_rsp.mem.
-                                                                 \<2\> = mio.mio_boot.mio_boot_dma.mem.
-                                                                 \<3\> = mio.mio_nbt.mio_nbt_fifo.mem.
-                                                                 \<4\> = mio.mio_emm.bufs.mem.mem.
-                                                                 \<5\> = mio.mio_nbr.ncbo_crd_fif_mem0.
-                                                                 \<6\> = mio.csr.csr_fifo.
-                                                                 \<7\> = mio_boot_rom/mio_boot_rom1 (internal bootroms).
-                                                                 \<8\> = mio.mio_rsl.mio_pcc.gpi_pcc.
-                                                                 \<9\> = mio.mio_pbus.mio_pbus_fifo.mem.
-                                                                 \<10\> = mio.mio_pbus.mio_pbus_rsp.mem.
-                                                                 \<11\> = mio.mio_ndf.mio_ndf_bufs.ndf_buf.
-                                                                 \<12\> = mio.mio_ndf.ndf_ncb_rcv_fif.
-                                                                 \<13\> = mio.mio_pcm.mio_pcm_ctl.dmamem.
-                                                                 \<14\> = mio.mio_pcm.mio_pcm_ctl.maskmem.
-                                                                 \<15\> = mio.mio_nbt.mio_nbt_pfifo.mem. */
+        uint64_t stat                  : 16; /**< [ 15:  0](RO/H) BIST status. */
 #else /* Word 0 - Little Endian */
-        uint64_t stat                  : 16; /**< [ 15:  0](RO/H) BIST status.
-                                                                 Internal:
-                                                                 \<0\> = mio.mio_boot.mio_boot_fifo.mem.
-                                                                 \<1\> = mio.mio_boot.mio_boot_rsp.mem.
-                                                                 \<2\> = mio.mio_boot.mio_boot_dma.mem.
-                                                                 \<3\> = mio.mio_nbt.mio_nbt_fifo.mem.
-                                                                 \<4\> = mio.mio_emm.bufs.mem.mem.
-                                                                 \<5\> = mio.mio_nbr.ncbo_crd_fif_mem0.
-                                                                 \<6\> = mio.csr.csr_fifo.
-                                                                 \<7\> = mio_boot_rom/mio_boot_rom1 (internal bootroms).
-                                                                 \<8\> = mio.mio_rsl.mio_pcc.gpi_pcc.
-                                                                 \<9\> = mio.mio_pbus.mio_pbus_fifo.mem.
-                                                                 \<10\> = mio.mio_pbus.mio_pbus_rsp.mem.
-                                                                 \<11\> = mio.mio_ndf.mio_ndf_bufs.ndf_buf.
-                                                                 \<12\> = mio.mio_ndf.ndf_ncb_rcv_fif.
-                                                                 \<13\> = mio.mio_pcm.mio_pcm_ctl.dmamem.
-                                                                 \<14\> = mio.mio_pcm.mio_pcm_ctl.maskmem.
-                                                                 \<15\> = mio.mio_nbt.mio_nbt_pfifo.mem. */
+        uint64_t stat                  : 16; /**< [ 15:  0](RO/H) BIST status. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -126,37 +92,9 @@ union cavm_mio_boot_bist_stat
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_13_63        : 51;
-        uint64_t stat                  : 13; /**< [ 12:  0](RO/H) BIST status.
-                                                                 Internal:
-                                                                 \<0\> = mio.mio_boot.mio_boot_fifo.mem.
-                                                                   \<1\> = mio.mio_boot.mio_boot_rsp.mem.
-                                                                   \<2\> = mio.mio_boot.mio_boot_dma.mem.
-                                                                   \<3\> = mio.mio_nbt.mio_nbt_fifo.mem.
-                                                                   \<4\> = mio.mio_emm.bufs.mem.mem.
-                                                                   \<5\> = mio.mio_nbr.ncbo_crd_fif_mem0.
-                                                                   \<6\> = mio.csr.csr_fifo.
-                                                                   \<7\> = mio_boot_rom/mio_boot_rom1 (internal bootroms).
-                                                                   \<8\> = mio.mio_rsl.mio_pcc.gpi_pcc.
-                                                                   \<9\> = mio.mio_pbus.mio_pbus_fifo.mem.
-                                                                  \<10\> = mio.mio_pbus.mio_pbus_rsp.mem.
-                                                                  \<11\> = mio.mio_ndf.mio_ndf_bufs.ndf_buf.
-                                                                  \<12\> = mio.mio_ndf.ndf_ncb_rcv_fif. */
+        uint64_t stat                  : 13; /**< [ 12:  0](RO/H) BIST status. */
 #else /* Word 0 - Little Endian */
-        uint64_t stat                  : 13; /**< [ 12:  0](RO/H) BIST status.
-                                                                 Internal:
-                                                                 \<0\> = mio.mio_boot.mio_boot_fifo.mem.
-                                                                   \<1\> = mio.mio_boot.mio_boot_rsp.mem.
-                                                                   \<2\> = mio.mio_boot.mio_boot_dma.mem.
-                                                                   \<3\> = mio.mio_nbt.mio_nbt_fifo.mem.
-                                                                   \<4\> = mio.mio_emm.bufs.mem.mem.
-                                                                   \<5\> = mio.mio_nbr.ncbo_crd_fif_mem0.
-                                                                   \<6\> = mio.csr.csr_fifo.
-                                                                   \<7\> = mio_boot_rom/mio_boot_rom1 (internal bootroms).
-                                                                   \<8\> = mio.mio_rsl.mio_pcc.gpi_pcc.
-                                                                   \<9\> = mio.mio_pbus.mio_pbus_fifo.mem.
-                                                                  \<10\> = mio.mio_pbus.mio_pbus_rsp.mem.
-                                                                  \<11\> = mio.mio_ndf.mio_ndf_bufs.ndf_buf.
-                                                                  \<12\> = mio.mio_ndf.ndf_ncb_rcv_fif. */
+        uint64_t stat                  : 13; /**< [ 12:  0](RO/H) BIST status. */
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } cn83xx;
@@ -309,24 +247,12 @@ union cavm_mio_boot_rom_limit
         uint64_t addr                  : 17; /**< [ 16:  0](SR/W/H) End of ROM address.  This field specifies the first invalid address in ROM_MEM();
                                                                  access to a ROM_MEM() address at or above this address will return a fault and zeros.
                                                                  Writes to this register which attempt to set an [ADDR] greater than the previous [ADDR]
-                                                                 setting are ignored.
-
-                                                                 Internal:
-                                                                 If trusted boot mode, resets to the size of the internal
-                                                                 bootrom (0x4000), ROM boot instructions may then write to decrease the value. If
-                                                                 non-trusted boot resets to a value read from ROM_MEM() at address MAX - 12, just
-                                                                 before the CRC. */
+                                                                 setting are ignored. */
 #else /* Word 0 - Little Endian */
         uint64_t addr                  : 17; /**< [ 16:  0](SR/W/H) End of ROM address.  This field specifies the first invalid address in ROM_MEM();
                                                                  access to a ROM_MEM() address at or above this address will return a fault and zeros.
                                                                  Writes to this register which attempt to set an [ADDR] greater than the previous [ADDR]
-                                                                 setting are ignored.
-
-                                                                 Internal:
-                                                                 If trusted boot mode, resets to the size of the internal
-                                                                 bootrom (0x4000), ROM boot instructions may then write to decrease the value. If
-                                                                 non-trusted boot resets to a value read from ROM_MEM() at address MAX - 12, just
-                                                                 before the CRC. */
+                                                                 setting are ignored. */
         uint64_t reserved_17_63        : 47;
 #endif /* Word 0 - End */
     } s;

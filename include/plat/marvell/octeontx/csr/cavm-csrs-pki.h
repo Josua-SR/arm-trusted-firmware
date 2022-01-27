@@ -50,8 +50,6 @@
  *
  * PKI Channel Enumeration
  * Enumerates the value of PKI_WQE_S[CHAN]. Also used for PKO_L3_L2_SQ()_CHANNEL[CHANNEL].
- * Internal:
- * A subset of PKI_CHAN_E also enumerates the values of PKI_FEWQ_S[PORT] and PKI_BEWQ_S[PORT].
  */
 #define CAVM_PKI_CHAN_E_BGXX_LMACX_CHX(a,b,c) (0x800 + 0x100 * (a) + 0x10 * (b) + (c))
 #define CAVM_PKI_CHAN_E_DPI_CHX(a) (0x400 + (a))
@@ -64,8 +62,6 @@
  *
  * PKI Error Level Enumeration
  * Enumerates the value of PKI_WQE_S[ERRLEV].
- * Internal:
- * PKI_ERRLEV_E also enumerates the values of PKI_FEWQ_S[ERRLEV] and PKI_BEWQ_S[ERRLEV].
  */
 #define CAVM_PKI_ERRLEV_E_LA (1)
 #define CAVM_PKI_ERRLEV_E_LB (2)
@@ -81,8 +77,6 @@
  *
  * PKI Ethertypes Enumeration
  * Enumerates the standard Ethertype values.
- * Internal:
- * Only used by parse engine and software; opaque to PKI HW.
  */
 #define CAVM_PKI_ETHERTYPE_E_ARP (0x806)
 #define CAVM_PKI_ETHERTYPE_E_CNM (0x22e7)
@@ -124,8 +118,6 @@
  *
  * PKI IP Protocol Enumeration
  * Enumerates the IPv4 protocol and IPv6 next-header values.
- * Internal:
- * Only used by parse engine and software; opaque to PKI HW.
  */
 #define CAVM_PKI_IPPROTO_E_AH (0x33)
 #define CAVM_PKI_IPPROTO_E_DEST (0x3c)
@@ -152,10 +144,6 @@
  * for each PKI_LTYPE_E, indicates which layers can hold the PKI_LTYPE_E,
  * and also indicates (in the descriptions) PKI_CL()_PCAM()_ACTION()[SETTY]
  * usage of the PKI_LTYPE_E.
- *
- * Internal:
- * PKI_LTYPE_E also enumerates the values of PKI_BEWQ_S[LBTY], PKI_BEWQ_S[LCTY],
- * PKI_BEWQ_S[LDTY], PKI_BEWQ_S[LETY], PKI_BEWQ_S[LFTY] and PKI_BEWQ_S[LGTY].
  */
 #define CAVM_PKI_LTYPE_E_ARP (6)
 #define CAVM_PKI_LTYPE_E_ENET (1)
@@ -188,8 +176,6 @@
  *
  * PKI Error Opcode Enumeration
  * Enumerates the value of PKI_WQE_S[OPCODE].
- * Internal:
- * PKI_OPCODE_E also enumerates the values of PKI_FEWQ_S[OPCODE] and PKI_BEWQ_S[OPCODE].
  */
 #define CAVM_PKI_OPCODE_E_IP_CHK (0x42)
 #define CAVM_PKI_OPCODE_E_IP_HOP (0x45)
@@ -247,12 +233,6 @@
  * * The description indicates the meaning of each data bit programmed with
  *   PKI_CL()_PCAM()_MATCH().  MATCH bits which are indicated as reserved must be
  *   programmed to always match (don't cares) when programming PKI_CL()_PCAM()_MATCH().
- *
- * Internal:
- * Only used by parse engine and software; opaque to PKI HW.
- *
- * The PCAM is banked for alternating accesses, so the bank
- * must toggle between each parse engine access for maximum performance.
  */
 #define CAVM_PKI_PCAM_TERM_E_DMACH (0xa)
 #define CAVM_PKI_PCAM_TERM_E_DMACL (0xb)
@@ -290,8 +270,6 @@
  *
  * PKI QPG QoS Algorithm Enumeration
  * Enumerates the values of PKI_CL()_STYLE()_ALG[QPG_QOS].
- * Internal:
- * Only used by parse engine and software; opaque to PKI HW.
  */
 #define CAVM_PKI_QPGQOS_E_DIFF (4)
 #define CAVM_PKI_QPGQOS_E_DSA_SRC (3)
@@ -317,8 +295,6 @@
  *
  * PKI IP UDP Port Enumeration
  * Enumerates the IP UDP port values.
- * Internal:
- * Only used by parse engine and software; opaque to PKI HW.
  */
 #define CAVM_PKI_UDPPORT_E_GENEVE (0x17c1)
 #define CAVM_PKI_UDPPORT_E_GTPC (0x84b)
@@ -334,8 +310,6 @@
  *
  * PKI VXLAN GPE Protocol Enumeration
  * Enumerates the VXLAN GPE next protocol values.
- * Internal:
- * Only used by parse engine and software; opaque to PKI HW.
  */
 #define CAVM_PKI_VXLANGPEPROT_E_ETHERNET (3)
 #define CAVM_PKI_VXLANGPEPROT_E_IP4 (1)
@@ -343,207 +317,6 @@
 #define CAVM_PKI_VXLANGPEPROT_E_MPLS (5)
 #define CAVM_PKI_VXLANGPEPROT_E_NSH (4)
 #define CAVM_PKI_VXLANGPEPROT_E_RESERVED (0)
-
-/**
- * Structure pki_bewq_s
- *
- * INTERNAL: PKI Back-end WQE Structure
- *
- * This structure describes the handoff structure between an IPE parse engine and PKI
- * back-end, and how the field is modified to create PKI_WQE_S. The fields names are
- * generally similar to PKI_WQE_S; see the respective PKI_WQE_S field definitions for
- * more information.
- */
-union cavm_pki_bewq_s
-{
-    uint64_t u[16];
-    struct cavm_pki_bewq_s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t node                  : 2;  /**< [ 63: 62] BE opaque pass-through to WQE. */
-        uint64_t reserved_60_61        : 2;
-        uint64_t aura                  : 12; /**< [ 59: 48] PKI_WQE_S[AURA] is normally calculated solely by PKI BE, but if
-                                                                 PKI_CL()_STYLE()_CFG[QPG_DIS_AURA] is set, PKI_WQE_S[AURA] is [AURA]. */
-        uint64_t reserved_47           : 1;
-        uint64_t apad                  : 3;  /**< [ 46: 44] BE pass-through to WQE; BE uses to determine packet write data alignment. */
-        uint64_t port                  : 12; /**< [ 43: 32] BE uses to compute WQE[CHAN]. */
-        uint64_t fcsptr                : 8;  /**< [ 31: 24] Indicates to BE byte location at which BE will start FCS
-                                                                 calculation. Parse engine should load from PKI_CL()_PKIND()_SKIP[FCS_SKIP]. */
-        uint64_t style                 : 8;  /**< [ 23: 16] BE pass-through to WQE; BE uses for final-style CSR lookup. */
-        uint64_t reserved_6_15         : 10;
-        uint64_t pknd                  : 6;  /**< [  5:  0] BE opaque pass-through to WQE. */
-#else /* Word 0 - Little Endian */
-        uint64_t pknd                  : 6;  /**< [  5:  0] BE opaque pass-through to WQE. */
-        uint64_t reserved_6_15         : 10;
-        uint64_t style                 : 8;  /**< [ 23: 16] BE pass-through to WQE; BE uses for final-style CSR lookup. */
-        uint64_t fcsptr                : 8;  /**< [ 31: 24] Indicates to BE byte location at which BE will start FCS
-                                                                 calculation. Parse engine should load from PKI_CL()_PKIND()_SKIP[FCS_SKIP]. */
-        uint64_t port                  : 12; /**< [ 43: 32] BE uses to compute WQE[CHAN]. */
-        uint64_t apad                  : 3;  /**< [ 46: 44] BE pass-through to WQE; BE uses to determine packet write data alignment. */
-        uint64_t reserved_47           : 1;
-        uint64_t aura                  : 12; /**< [ 59: 48] PKI_WQE_S[AURA] is normally calculated solely by PKI BE, but if
-                                                                 PKI_CL()_STYLE()_CFG[QPG_DIS_AURA] is set, PKI_WQE_S[AURA] is [AURA]. */
-        uint64_t reserved_60_61        : 2;
-        uint64_t node                  : 2;  /**< [ 63: 62] BE opaque pass-through to WQE. */
-#endif /* Word 0 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t len                   : 16; /**< [127:112] BE ignores, and creates WQE[LEN] with complete packet length. */
-        uint64_t reserved_108_111      : 4;
-        uint64_t grp                   : 10; /**< [107: 98] PKI_WQE_S[GRP] is normally calculated solely by PKI BE. But if
-                                                                 PKI_CL()_STYLE()_CFG[QPG_DIS_GRP] is set, PKI_WQE_S[GRP] is [GRP]. */
-        uint64_t tt                    : 2;  /**< [ 97: 96] BE opaque pass-through to WQE. */
-        uint64_t tag                   : 32; /**< [ 95: 64] PKI_WQE_S[TAG]\<31:16\> = [TAG]\<31:16\>.
-
-                                                                 PKI_WQE_S[TAG]\<15:0\> = [TAG]\<15:0\> ^ F
-                                                                 if (PKI_CL()_STYLE()_CFG2[TAG_MASKEN])
-                                                                    PKI_WQE_S[TAG]\<15:0\> &= ~PKI_STYLE()_TAG_MASK[MASK];
-
-                                                                 Where F is a function of various optional hw_tuple_tag()'s and
-                                                                 hw_mask_tag(). See PKI_WQE_S[TAG]. */
-#else /* Word 1 - Little Endian */
-        uint64_t tag                   : 32; /**< [ 95: 64] PKI_WQE_S[TAG]\<31:16\> = [TAG]\<31:16\>.
-
-                                                                 PKI_WQE_S[TAG]\<15:0\> = [TAG]\<15:0\> ^ F
-                                                                 if (PKI_CL()_STYLE()_CFG2[TAG_MASKEN])
-                                                                    PKI_WQE_S[TAG]\<15:0\> &= ~PKI_STYLE()_TAG_MASK[MASK];
-
-                                                                 Where F is a function of various optional hw_tuple_tag()'s and
-                                                                 hw_mask_tag(). See PKI_WQE_S[TAG]. */
-        uint64_t tt                    : 2;  /**< [ 97: 96] BE opaque pass-through to WQE. */
-        uint64_t grp                   : 10; /**< [107: 98] PKI_WQE_S[GRP] is normally calculated solely by PKI BE. But if
-                                                                 PKI_CL()_STYLE()_CFG[QPG_DIS_GRP] is set, PKI_WQE_S[GRP] is [GRP]. */
-        uint64_t reserved_108_111      : 4;
-        uint64_t len                   : 16; /**< [127:112] BE ignores, and creates WQE[LEN] with complete packet length. */
-#endif /* Word 1 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
-        uint64_t sw                    : 1;  /**< [191:191] BE opaque pass-through to WQE. */
-        uint64_t lgty                  : 5;  /**< [190:186] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lfty                  : 5;  /**< [185:181] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lety                  : 5;  /**< [180:176] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t ldty                  : 5;  /**< [175:171] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lcty                  : 5;  /**< [170:166] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lbty                  : 5;  /**< [165:161] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lae                   : 1;  /**< [160:160] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t reserved_152_159      : 8;
-        uint64_t vv                    : 1;  /**< [151:151] BE opaque pass-through to WQE. */
-        uint64_t vs                    : 1;  /**< [150:150] BE opaque pass-through to WQE. */
-        uint64_t sh                    : 1;  /**< [149:149] BE pass-through; BE uses for statistics. */
-        uint64_t pf                    : 4;  /**< [148:145] BE opaque pass-through to WQE. */
-        uint64_t l3fr                  : 1;  /**< [144:144] BE opaque pass-through to WQE. */
-        uint64_t l3b                   : 1;  /**< [143:143] BE pass-through; BE uses for statistics. */
-        uint64_t l3m                   : 1;  /**< [142:142] BE pass-through; BE uses for statistics. */
-        uint64_t l2b                   : 1;  /**< [141:141] BE pass-through; BE uses for statistics. */
-        uint64_t l2m                   : 1;  /**< [140:140] BE pass-through; BE uses for statistics. */
-        uint64_t raw                   : 1;  /**< [139:139] BE pass-through; BE uses for statistics. */
-        uint64_t errlev                : 3;  /**< [138:136] Pre-BE error state, which BE overrides on a BE error. */
-        uint64_t opcode                : 8;  /**< [135:128] Pre-BE error state, which BE overrides on a BE error. */
-#else /* Word 2 - Little Endian */
-        uint64_t opcode                : 8;  /**< [135:128] Pre-BE error state, which BE overrides on a BE error. */
-        uint64_t errlev                : 3;  /**< [138:136] Pre-BE error state, which BE overrides on a BE error. */
-        uint64_t raw                   : 1;  /**< [139:139] BE pass-through; BE uses for statistics. */
-        uint64_t l2m                   : 1;  /**< [140:140] BE pass-through; BE uses for statistics. */
-        uint64_t l2b                   : 1;  /**< [141:141] BE pass-through; BE uses for statistics. */
-        uint64_t l3m                   : 1;  /**< [142:142] BE pass-through; BE uses for statistics. */
-        uint64_t l3b                   : 1;  /**< [143:143] BE pass-through; BE uses for statistics. */
-        uint64_t l3fr                  : 1;  /**< [144:144] BE opaque pass-through to WQE. */
-        uint64_t pf                    : 4;  /**< [148:145] BE opaque pass-through to WQE. */
-        uint64_t sh                    : 1;  /**< [149:149] BE pass-through; BE uses for statistics. */
-        uint64_t vs                    : 1;  /**< [150:150] BE opaque pass-through to WQE. */
-        uint64_t vv                    : 1;  /**< [151:151] BE opaque pass-through to WQE. */
-        uint64_t reserved_152_159      : 8;
-        uint64_t lae                   : 1;  /**< [160:160] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lbty                  : 5;  /**< [165:161] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lcty                  : 5;  /**< [170:166] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t ldty                  : 5;  /**< [175:171] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lety                  : 5;  /**< [180:176] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lfty                  : 5;  /**< [185:181] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lgty                  : 5;  /**< [190:186] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t sw                    : 1;  /**< [191:191] BE opaque pass-through to WQE. */
-#endif /* Word 2 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
-        uint64_t cfg                   : 32; /**< [255:224] BE input value of PKI_CL()_STYLE()_CFG\<31:0\>. BE then replaces with SIZE/ADDR. */
-        uint64_t cfg2                  : 32; /**< [223:192] BE input value of PKI_CL()_STYLE()_CFG2\<31:0\>. BE then replaces with SIZE/ADDR. */
-#else /* Word 3 - Little Endian */
-        uint64_t cfg2                  : 32; /**< [223:192] BE input value of PKI_CL()_STYLE()_CFG2\<31:0\>. BE then replaces with SIZE/ADDR. */
-        uint64_t cfg                   : 32; /**< [255:224] BE input value of PKI_CL()_STYLE()_CFG\<31:0\>. BE then replaces with SIZE/ADDR. */
-#endif /* Word 3 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
-        uint64_t vlptr                 : 8;  /**< [319:312] BE pass-through; BE uses for tagging. */
-        uint64_t lgptr                 : 8;  /**< [311:304] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lfptr                 : 8;  /**< [303:296] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t leptr                 : 8;  /**< [295:288] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t ldptr                 : 8;  /**< [287:280] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lcptr                 : 8;  /**< [279:272] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lbptr                 : 8;  /**< [271:264] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t laptr                 : 8;  /**< [263:256] BE pass-through; BE uses for tagging/checksum. */
-#else /* Word 4 - Little Endian */
-        uint64_t laptr                 : 8;  /**< [263:256] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lbptr                 : 8;  /**< [271:264] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lcptr                 : 8;  /**< [279:272] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t ldptr                 : 8;  /**< [287:280] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t leptr                 : 8;  /**< [295:288] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lfptr                 : 8;  /**< [303:296] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t lgptr                 : 8;  /**< [311:304] BE pass-through; BE uses for tagging/checksum. */
-        uint64_t vlptr                 : 8;  /**< [319:312] BE pass-through; BE uses for tagging. */
-#endif /* Word 4 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
-        uint64_t reserved_320_383      : 64;
-#else /* Word 5 - Little Endian */
-        uint64_t reserved_320_383      : 64;
-#endif /* Word 5 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 6 - Big Endian */
-        uint64_t reserved_384_447      : 64;
-#else /* Word 6 - Little Endian */
-        uint64_t reserved_384_447      : 64;
-#endif /* Word 6 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 7 - Big Endian */
-        uint64_t reserved_448_511      : 64;
-#else /* Word 7 - Little Endian */
-        uint64_t reserved_448_511      : 64;
-#endif /* Word 7 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 8 - Big Endian */
-        uint64_t reserved_512_575      : 64;
-#else /* Word 8 - Little Endian */
-        uint64_t reserved_512_575      : 64;
-#endif /* Word 8 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 9 - Big Endian */
-        uint64_t reserved_576_639      : 64;
-#else /* Word 9 - Little Endian */
-        uint64_t reserved_576_639      : 64;
-#endif /* Word 9 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 10 - Big Endian */
-        uint64_t reserved_640_703      : 64;
-#else /* Word 10 - Little Endian */
-        uint64_t reserved_640_703      : 64;
-#endif /* Word 10 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 11 - Big Endian */
-        uint64_t reserved_704_767      : 64;
-#else /* Word 11 - Little Endian */
-        uint64_t reserved_704_767      : 64;
-#endif /* Word 11 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 12 - Big Endian */
-        uint64_t reserved_768_831      : 64;
-#else /* Word 12 - Little Endian */
-        uint64_t reserved_768_831      : 64;
-#endif /* Word 12 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 13 - Big Endian */
-        uint64_t reserved_832_895      : 64;
-#else /* Word 13 - Little Endian */
-        uint64_t reserved_832_895      : 64;
-#endif /* Word 13 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 14 - Big Endian */
-        uint64_t reserved_896_959      : 64;
-#else /* Word 14 - Little Endian */
-        uint64_t reserved_896_959      : 64;
-#endif /* Word 14 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 15 - Big Endian */
-        uint64_t reserved_960_1023     : 64;
-#else /* Word 15 - Little Endian */
-        uint64_t reserved_960_1023     : 64;
-#endif /* Word 15 - End */
-    } s;
-    /* struct cavm_pki_bewq_s_s cn; */
-};
 
 /**
  * Structure pki_buflink_s
@@ -727,50 +500,6 @@ union cavm_pki_buflink_s
 };
 
 /**
- * Structure pki_fewq_s
- *
- * INTERNAL: PKI Front-end WQE Structure
- *
- * This structure describes the handoff structure between the PKI front end and IPE
- * parse engine code. The fields are similar to PKI_WQE_S.
- */
-union cavm_pki_fewq_s
-{
-    uint64_t u[3];
-    struct cavm_pki_fewq_s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_44_63        : 20;
-        uint64_t port                  : 12; /**< [ 43: 32] FE initializes to port packet was received from. */
-        uint64_t reserved_6_31         : 26;
-        uint64_t pknd                  : 6;  /**< [  5:  0] FE initializes to pkind packet was received on. */
-#else /* Word 0 - Little Endian */
-        uint64_t pknd                  : 6;  /**< [  5:  0] FE initializes to pkind packet was received on. */
-        uint64_t reserved_6_31         : 26;
-        uint64_t port                  : 12; /**< [ 43: 32] FE initializes to port packet was received from. */
-        uint64_t reserved_44_63        : 20;
-#endif /* Word 0 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t len                   : 16; /**< [127:112] FE initializes with packet header length, values 0-256. */
-        uint64_t reserved_64_111       : 48;
-#else /* Word 1 - Little Endian */
-        uint64_t reserved_64_111       : 48;
-        uint64_t len                   : 16; /**< [127:112] FE initializes with packet header length, values 0-256. */
-#endif /* Word 1 - End */
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
-        uint64_t reserved_139_191      : 53;
-        uint64_t errlev                : 3;  /**< [138:136] FE sets if receive error, otherwise 0x0. */
-        uint64_t opcode                : 8;  /**< [135:128] FE sets if receive error, otherwise 0x0. */
-#else /* Word 2 - Little Endian */
-        uint64_t opcode                : 8;  /**< [135:128] FE sets if receive error, otherwise 0x0. */
-        uint64_t errlev                : 3;  /**< [138:136] FE sets if receive error, otherwise 0x0. */
-        uint64_t reserved_139_191      : 53;
-#endif /* Word 2 - End */
-    } s;
-    /* struct cavm_pki_fewq_s_s cn; */
-};
-
-/**
  * Structure pki_inst_hdr_s
  *
  * PKI Instruction Header Structure
@@ -780,10 +509,6 @@ union cavm_pki_fewq_s
  * byte order. That is, in the memory byte stream, the first byte memory byte
  * always contains PKI_INST_HDR_S\<63:56\>, the second memory byte always contains
  * PKI_INST_HDR_S\<53:48\>, etc.
- *
- * Internal:
- * Parse engine, software, and external hardware may use this external definition,
- * but it is opaque to PKI HW.
  */
 union cavm_pki_inst_hdr_s
 {
@@ -937,17 +662,11 @@ union cavm_pki_wqe_s
     struct cavm_pki_wqe_s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t node                  : 2;  /**< [ 63: 62] Node number on which the packet arrived.
-                                                                 Internal:
-                                                                 This is needed by software; do not remove on single-node parts. */
+        uint64_t node                  : 2;  /**< [ 63: 62] Node number on which the packet arrived. */
         uint64_t reserved_60_61        : 2;
         uint64_t aura                  : 12; /**< [ 59: 48] The guest-aura computed for the packet. PKI sets [AURA] to
                                                                  PKI_QPG_TBL(q)[GAURA], where q is the QPG computed for the
-                                                                 packet (see the parser document).
-
-                                                                 Internal:
-                                                                 q is PKI_BEWQ_S[CFG\<10:0\>]. [AURA] is normally calculated solely by PKI BE,
-                                                                 but if PKI_CL()_STYLE()_CFG[QPG_DIS_AURA] is set, [AURA] is PKI_BEWQ_S[AURA]. */
+                                                                 packet (see the parser document). */
         uint64_t reserved_47           : 1;
         uint64_t apad                  : 3;  /**< [ 46: 44] Number of bytes of alignment padding that were applied. The pad is calculated by
                                                                  the following algorithm:
@@ -967,12 +686,7 @@ union cavm_pki_wqe_s
                                                                    else
                                                                       [APAD] = PKI_CL()_STYLE()_ALG[APAD_NIP];
                                                                  }
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 The pad is calculated by the parse engine.
-
-                                                                 [APAD] is PKI_BEWQ_S[APAD]. */
+                                                                 \</pre\> */
         uint64_t chan                  : 12; /**< [ 43: 32] The logical channel that the packet arrived from, enumerated by PKI_CHAN_E.
 
                                                                  PKI computes channel numbers as follows:
@@ -981,51 +695,28 @@ union cavm_pki_wqe_s
                                                                   [CHAN] = port + (PKI_CL()_STYLE()_CFG[QPG_DIS_PADD] ? 0 : PKI_QPG_TBL(q)[PADD]);
                                                                  \</pre\>
 
-                                                                 where q is the QPG is computed for the packet (see the parser document).
-
-                                                                 Internal:
-                                                                 port in the [CHAN] pseudocode above is PKI_BEWQ_S[PORT] and probably
-                                                                 also PKI_FEWQ_S[PORT]. q in the pseudocode above is PKI_BEWQ_S[CFG]\<10:0\>.
-
-                                                                 PKI HW does: [CHAN] = PKI_BEWQ_S[PORT] +
-                                                                        (PKI_BEWQ_S[CFG\<18\>] ? 0 : PKI_QPG_TBL(PKI_BEWQ_S[CFG\<10:0\>])[PADD]) */
+                                                                 where q is the QPG is computed for the packet (see the parser document). */
         uint64_t bufs                  : 8;  /**< [ 31: 24] Number of data buffers used to store the packet data, never zero. For example,
                                                                  the value will be 0x1 if PKI_STYLE()_BUF[DIS_WQ_DAT]=0 and all of the data fit
                                                                  into a combined buffer comprising the work queue entry and first data
                                                                  buffer. [BUFS] will also be 0x1 if PKI_STYLE()_BUF[DIS_WQ_DAT]=1 and only a
-                                                                 single data buffer was created.
-
-                                                                 Internal:
-                                                                 [BUFS] is computed solely by PKI BE HW. */
+                                                                 single data buffer was created. */
         uint64_t style                 : 8;  /**< [ 23: 16] The last 8-bit STYLE produced by the parser for the packet. The low 6 bits are the FINAL
                                                                  STYLE, which is used to index the PKI_CL*_STYLE* (i.e. PKI_CL*_SMEM*) and
-                                                                 PKI_STYLE* CSRs.
-
-                                                                 Internal:
-                                                                 [STYLE] is PKI_BEWQ_S[STYLE]. */
+                                                                 PKI_STYLE* CSRs. */
         uint64_t reserved_6_15         : 10;
-        uint64_t pknd                  : 6;  /**< [  5:  0] Pkind computed by the inbound interface for the packet.
-                                                                 Internal:
-                                                                 [PKND] is PKI_BEWQ_S[PKND] and probably also PKI_FEWQ_S[PKND]. */
+        uint64_t pknd                  : 6;  /**< [  5:  0] Pkind computed by the inbound interface for the packet. */
 #else /* Word 0 - Little Endian */
-        uint64_t pknd                  : 6;  /**< [  5:  0] Pkind computed by the inbound interface for the packet.
-                                                                 Internal:
-                                                                 [PKND] is PKI_BEWQ_S[PKND] and probably also PKI_FEWQ_S[PKND]. */
+        uint64_t pknd                  : 6;  /**< [  5:  0] Pkind computed by the inbound interface for the packet. */
         uint64_t reserved_6_15         : 10;
         uint64_t style                 : 8;  /**< [ 23: 16] The last 8-bit STYLE produced by the parser for the packet. The low 6 bits are the FINAL
                                                                  STYLE, which is used to index the PKI_CL*_STYLE* (i.e. PKI_CL*_SMEM*) and
-                                                                 PKI_STYLE* CSRs.
-
-                                                                 Internal:
-                                                                 [STYLE] is PKI_BEWQ_S[STYLE]. */
+                                                                 PKI_STYLE* CSRs. */
         uint64_t bufs                  : 8;  /**< [ 31: 24] Number of data buffers used to store the packet data, never zero. For example,
                                                                  the value will be 0x1 if PKI_STYLE()_BUF[DIS_WQ_DAT]=0 and all of the data fit
                                                                  into a combined buffer comprising the work queue entry and first data
                                                                  buffer. [BUFS] will also be 0x1 if PKI_STYLE()_BUF[DIS_WQ_DAT]=1 and only a
-                                                                 single data buffer was created.
-
-                                                                 Internal:
-                                                                 [BUFS] is computed solely by PKI BE HW. */
+                                                                 single data buffer was created. */
         uint64_t chan                  : 12; /**< [ 43: 32] The logical channel that the packet arrived from, enumerated by PKI_CHAN_E.
 
                                                                  PKI computes channel numbers as follows:
@@ -1034,14 +725,7 @@ union cavm_pki_wqe_s
                                                                   [CHAN] = port + (PKI_CL()_STYLE()_CFG[QPG_DIS_PADD] ? 0 : PKI_QPG_TBL(q)[PADD]);
                                                                  \</pre\>
 
-                                                                 where q is the QPG is computed for the packet (see the parser document).
-
-                                                                 Internal:
-                                                                 port in the [CHAN] pseudocode above is PKI_BEWQ_S[PORT] and probably
-                                                                 also PKI_FEWQ_S[PORT]. q in the pseudocode above is PKI_BEWQ_S[CFG]\<10:0\>.
-
-                                                                 PKI HW does: [CHAN] = PKI_BEWQ_S[PORT] +
-                                                                        (PKI_BEWQ_S[CFG\<18\>] ? 0 : PKI_QPG_TBL(PKI_BEWQ_S[CFG\<10:0\>])[PADD]) */
+                                                                 where q is the QPG is computed for the packet (see the parser document). */
         uint64_t apad                  : 3;  /**< [ 46: 44] Number of bytes of alignment padding that were applied. The pad is calculated by
                                                                  the following algorithm:
 
@@ -1060,24 +744,13 @@ union cavm_pki_wqe_s
                                                                    else
                                                                       [APAD] = PKI_CL()_STYLE()_ALG[APAD_NIP];
                                                                  }
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 The pad is calculated by the parse engine.
-
-                                                                 [APAD] is PKI_BEWQ_S[APAD]. */
+                                                                 \</pre\> */
         uint64_t reserved_47           : 1;
         uint64_t aura                  : 12; /**< [ 59: 48] The guest-aura computed for the packet. PKI sets [AURA] to
                                                                  PKI_QPG_TBL(q)[GAURA], where q is the QPG computed for the
-                                                                 packet (see the parser document).
-
-                                                                 Internal:
-                                                                 q is PKI_BEWQ_S[CFG\<10:0\>]. [AURA] is normally calculated solely by PKI BE,
-                                                                 but if PKI_CL()_STYLE()_CFG[QPG_DIS_AURA] is set, [AURA] is PKI_BEWQ_S[AURA]. */
+                                                                 packet (see the parser document). */
         uint64_t reserved_60_61        : 2;
-        uint64_t node                  : 2;  /**< [ 63: 62] Node number on which the packet arrived.
-                                                                 Internal:
-                                                                 This is needed by software; do not remove on single-node parts. */
+        uint64_t node                  : 2;  /**< [ 63: 62] Node number on which the packet arrived. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t len                   : 16; /**< [127:112] Total number of bytes of packet data, from 1 to nearly 2^16. The total
@@ -1096,10 +769,7 @@ union cavm_pki_wqe_s
                                                                  PKI hardware supports packets that are as large as (2^16 - 64) bytes
                                                                  on the external interface. [LEN] can be larger than the number of bytes
                                                                  on the external interface if the MAC adds bytes to the input packet
-                                                                 (e.g. BGX()_SMU()_RX_FRM_CTL[PTP_MODE]).
-
-                                                                 Internal:
-                                                                 [LEN] is calculated solely by PKI BE. */
+                                                                 (e.g. BGX()_SMU()_RX_FRM_CTL[PTP_MODE]). */
         uint64_t reserved_108_111      : 4;
         uint64_t grp                   : 10; /**< [107: 98] The SSO guest-group number used for the packet's ADD_WORK. One of
                                                                  PKI_QPG_TBL(q)[GRP_OK,GRP_BAD], possibly with low [TAG] bits added
@@ -1108,13 +778,7 @@ union cavm_pki_wqe_s
                                                                  both [ERRLEV,OPCODE] are zero (i.e. RE/RE_NONE), else the BAD's are used.
                                                                  q is the QPG computed for the packet (see the parser document).
 
-                                                                 [GRP]\<9:8\> is always zero.
-
-                                                                 Internal:
-                                                                 q is PKI_BEWQ_S[CFG\<10:0\>].
-
-                                                                 [GRP] is normally calculated solely by PKI BE. But if
-                                                                 PKI_CL()_STYLE()_CFG[QPG_DIS_GRP] is set, [GRP] is PKI_BEWQ_S[GRP]. */
+                                                                 [GRP]\<9:8\> is always zero. */
         uint64_t tt                    : 2;  /**< [ 97: 96] The initial tag type for the packet's SSO ADD_WORK. Enumerated with SSO_TT_E
                                                                  (UNTAGGED, ORDERED, or ATOMIC). Calculated as follows:
 
@@ -1129,113 +793,10 @@ union cavm_pki_wqe_s
                                                                        [TT] = PKI_CL()_STYLE()_ALG[TT];
                                                                     }
                                                                  }
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 [TT] is calculated by the parse engine.
-
-                                                                 [TT] is PKI_BEWQ_S[TT]. */
-        uint64_t tag                   : 32; /**< [ 95: 64] The initial tag for the work-queue entry.
-                                                                 Internal:
-                                                                 A combination of hardware and microcode creates [TAG]. Microcode
-                                                                 computes PKI_BEWQ_S[TAG]. Hardware creates the final [TAG] as
-                                                                 follows:
-
-                                                                 [TAG]\<31:16\> = PKI_BEWQ_S[TAG]\<31:16\>.
-
-                                                                 [TAG]\<15:0\> = PKI_BEWQ_S[TAG]\<15:0\> ^ F
-                                                                 if (PKI_CL()_STYLE()_CFG2[TAG_MASKEN])
-                                                                    [TAG]\<15:0\> &= ~PKI_STYLE()_TAG_MASK[MASK];
-
-                                                                 Where F is a function of various optional hw_tuple_tag()'s and
-                                                                 hw_mask_tag() - see below.
-
-                                                                 pseudocode:
-
-                                                                 void calculate_tag(uint style, int pkt_len, packet) {
-                                                                  if (WQE[ERRLEV]\<=LA && WQE[OPCODE]!=NONE) { //Done by PBE PLC
-                                                                   WQE[TAG] = 0xFFFFFFFF;
-                                                                  }
-                                                                  else if (PKI_CL(0..3)_PKIND(0..63)_CFG[pkind][INST_HDR] //Done by UCode
-                                                                        && PKI_INST_HDR[UTAG]) {
-                                                                   WQE[TAG] = PKI_INST_HDR[TAG];
-                                                                  }
-                                                                  else {  // Done by combination of UCode and PBE PLC
-                                                                   uint32 tag = 0;
-                                                                   uint16 crc = 0;
-                                                                   crc = crc ^ hw_lb_to_lg_tag(style, packet); // hw_lb_to_lg_tag done by UCode
-                                                                   // hw_tuple_tag done by hardware, UCode will clear
-                                                                   // PKI_CL(0..3)_STYLE(0..63)_CFG2[style][TAG_SRC_LX]
-                                                                   // and [PKI_CL(0..3)_STYLE(0..63)_CFG2[style][TAG_DST_LX] to disable
-                                                                   // this XOR if tag is set by INST_HDR
-                                                                   crc = crc ^ hw_tuple_tag(style, packet, LC);
-                                                                   crc = crc ^ hw_tuple_tag(style, packet, LD);
-                                                                   crc = crc ^ hw_tuple_tag(style, packet, LE);
-                                                                   crc = crc ^ hw_tuple_tag(style, packet, LF);
-                                                                   // hw_mask_tag done by hardware, UCode will clear
-                                                                   // (PKI_CL(0..3)_STYLE(0..63)_CFG2[style].TAG_INC[mask])
-                                                                   // to disable this XOR if tag is set by INST_HDR
-                                                                   tag\<15:0\> = crc ^ hw_mask_tag(style, pkt_len, packet);
-                                                                   if (PKI_CL(0..3)_STYLE(0..63)_CFG2[TAG_MASKEN])
-                                                                    tag\<15:0\> = tag\<15:0\> & ~PKI_STYLE(0..63)_TAG_MASK[style]; // done by hardware
-                                                                   if (PKI_CL(0..3)_STYLE(0..63)_ALG[style][TAG_PRT]) // UCODE sets tag\<27:16\>
-                                                                    tag\<27:16\> = PKI_FEWQ_S/PKI_BEWQ_S[PORT]; // set by UCODE
-                                                                   else
-                                                                    tag\<27:16\> = 0xFFF;
-                                                                   WQE[TAG] = tag;
-                                                                  }
-                                                                 } */
+                                                                 \</pre\> */
+        uint64_t tag                   : 32; /**< [ 95: 64] The initial tag for the work-queue entry. */
 #else /* Word 1 - Little Endian */
-        uint64_t tag                   : 32; /**< [ 95: 64] The initial tag for the work-queue entry.
-                                                                 Internal:
-                                                                 A combination of hardware and microcode creates [TAG]. Microcode
-                                                                 computes PKI_BEWQ_S[TAG]. Hardware creates the final [TAG] as
-                                                                 follows:
-
-                                                                 [TAG]\<31:16\> = PKI_BEWQ_S[TAG]\<31:16\>.
-
-                                                                 [TAG]\<15:0\> = PKI_BEWQ_S[TAG]\<15:0\> ^ F
-                                                                 if (PKI_CL()_STYLE()_CFG2[TAG_MASKEN])
-                                                                    [TAG]\<15:0\> &= ~PKI_STYLE()_TAG_MASK[MASK];
-
-                                                                 Where F is a function of various optional hw_tuple_tag()'s and
-                                                                 hw_mask_tag() - see below.
-
-                                                                 pseudocode:
-
-                                                                 void calculate_tag(uint style, int pkt_len, packet) {
-                                                                  if (WQE[ERRLEV]\<=LA && WQE[OPCODE]!=NONE) { //Done by PBE PLC
-                                                                   WQE[TAG] = 0xFFFFFFFF;
-                                                                  }
-                                                                  else if (PKI_CL(0..3)_PKIND(0..63)_CFG[pkind][INST_HDR] //Done by UCode
-                                                                        && PKI_INST_HDR[UTAG]) {
-                                                                   WQE[TAG] = PKI_INST_HDR[TAG];
-                                                                  }
-                                                                  else {  // Done by combination of UCode and PBE PLC
-                                                                   uint32 tag = 0;
-                                                                   uint16 crc = 0;
-                                                                   crc = crc ^ hw_lb_to_lg_tag(style, packet); // hw_lb_to_lg_tag done by UCode
-                                                                   // hw_tuple_tag done by hardware, UCode will clear
-                                                                   // PKI_CL(0..3)_STYLE(0..63)_CFG2[style][TAG_SRC_LX]
-                                                                   // and [PKI_CL(0..3)_STYLE(0..63)_CFG2[style][TAG_DST_LX] to disable
-                                                                   // this XOR if tag is set by INST_HDR
-                                                                   crc = crc ^ hw_tuple_tag(style, packet, LC);
-                                                                   crc = crc ^ hw_tuple_tag(style, packet, LD);
-                                                                   crc = crc ^ hw_tuple_tag(style, packet, LE);
-                                                                   crc = crc ^ hw_tuple_tag(style, packet, LF);
-                                                                   // hw_mask_tag done by hardware, UCode will clear
-                                                                   // (PKI_CL(0..3)_STYLE(0..63)_CFG2[style].TAG_INC[mask])
-                                                                   // to disable this XOR if tag is set by INST_HDR
-                                                                   tag\<15:0\> = crc ^ hw_mask_tag(style, pkt_len, packet);
-                                                                   if (PKI_CL(0..3)_STYLE(0..63)_CFG2[TAG_MASKEN])
-                                                                    tag\<15:0\> = tag\<15:0\> & ~PKI_STYLE(0..63)_TAG_MASK[style]; // done by hardware
-                                                                   if (PKI_CL(0..3)_STYLE(0..63)_ALG[style][TAG_PRT]) // UCODE sets tag\<27:16\>
-                                                                    tag\<27:16\> = PKI_FEWQ_S/PKI_BEWQ_S[PORT]; // set by UCODE
-                                                                   else
-                                                                    tag\<27:16\> = 0xFFF;
-                                                                   WQE[TAG] = tag;
-                                                                  }
-                                                                 } */
+        uint64_t tag                   : 32; /**< [ 95: 64] The initial tag for the work-queue entry. */
         uint64_t tt                    : 2;  /**< [ 97: 96] The initial tag type for the packet's SSO ADD_WORK. Enumerated with SSO_TT_E
                                                                  (UNTAGGED, ORDERED, or ATOMIC). Calculated as follows:
 
@@ -1250,12 +811,7 @@ union cavm_pki_wqe_s
                                                                        [TT] = PKI_CL()_STYLE()_ALG[TT];
                                                                     }
                                                                  }
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 [TT] is calculated by the parse engine.
-
-                                                                 [TT] is PKI_BEWQ_S[TT]. */
+                                                                 \</pre\> */
         uint64_t grp                   : 10; /**< [107: 98] The SSO guest-group number used for the packet's ADD_WORK. One of
                                                                  PKI_QPG_TBL(q)[GRP_OK,GRP_BAD], possibly with low [TAG] bits added
                                                                  to it (see PKI_QPG_TBL(q)[GRPTAG_OK,GRPTAG_BAD] and
@@ -1263,13 +819,7 @@ union cavm_pki_wqe_s
                                                                  both [ERRLEV,OPCODE] are zero (i.e. RE/RE_NONE), else the BAD's are used.
                                                                  q is the QPG computed for the packet (see the parser document).
 
-                                                                 [GRP]\<9:8\> is always zero.
-
-                                                                 Internal:
-                                                                 q is PKI_BEWQ_S[CFG\<10:0\>].
-
-                                                                 [GRP] is normally calculated solely by PKI BE. But if
-                                                                 PKI_CL()_STYLE()_CFG[QPG_DIS_GRP] is set, [GRP] is PKI_BEWQ_S[GRP]. */
+                                                                 [GRP]\<9:8\> is always zero. */
         uint64_t reserved_108_111      : 4;
         uint64_t len                   : 16; /**< [127:112] Total number of bytes of packet data, from 1 to nearly 2^16. The total
                                                                  packet length includes all the packet bytes, except that the CRC field is
@@ -1287,19 +837,11 @@ union cavm_pki_wqe_s
                                                                  PKI hardware supports packets that are as large as (2^16 - 64) bytes
                                                                  on the external interface. [LEN] can be larger than the number of bytes
                                                                  on the external interface if the MAC adds bytes to the input packet
-                                                                 (e.g. BGX()_SMU()_RX_FRM_CTL[PTP_MODE]).
-
-                                                                 Internal:
-                                                                 [LEN] is calculated solely by PKI BE. */
+                                                                 (e.g. BGX()_SMU()_RX_FRM_CTL[PTP_MODE]). */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t sw                    : 1;  /**< [191:191] Reserved for software use. [SW] will be set when corresponding
-                                                                 PKI_STYLE()_WQ2[DATA]\<63\> is set, but this is not recommended.
-
-                                                                 Internal:
-                                                                 [SW] = PKI_BEWQ_S[SW] | PKI_STYLE()_WQ2\<63\>
-
-                                                                 Microcode could set this bit, but doesn't currently. */
+                                                                 PKI_STYLE()_WQ2[DATA]\<63\> is set, but this is not recommended. */
         uint64_t lgty                  : 5;  /**< [190:186] Custom header type parsed after normal C, D, E, or F layer parsing.
                                                                  Enumerated by PKI_LTYPE_E. (See the parser document.)
 
@@ -1322,10 +864,7 @@ union cavm_pki_wqe_s
                                                                  [LGTY] is 0x0 (PKI_LTYPE_E::NONE) unless set after normal C, D, E, or F
                                                                  layer parsing via PKI_CL()_PCAM()_ACTION()[SETTY]. [LGTY] is unpredictable
                                                                  when [ERRLEV] \<= LG. [LGTY] bits are always set when corresponding
-                                                                 PKI_STYLE()_WQ2\<62:58\> bits are set.
-
-                                                                 Internal:
-                                                                 [LGTY] = PKI_BEWQ_S[LGTY] | PKI_STYLE()_WQ2\<62:58\> */
+                                                                 PKI_STYLE()_WQ2\<62:58\> bits are set. */
         uint64_t lfty                  : 5;  /**< [185:181] Layer F header type parsed, often corresponding to layer 4 (UDP/TCP).
                                                                  Enumerated by PKI_LTYPE_E. (See the parser document.)
 
@@ -1338,10 +877,7 @@ union cavm_pki_wqe_s
 
                                                                  [LFTY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer E or F parsing sets it.
                                                                  [LFTY] is unpredictable when [ERRLEV] \<= LF. [LFTY] bits are always set
-                                                                 when corresponding PKI_STYLE()_WQ2\<57:53\> bits are set.
-
-                                                                 Internal:
-                                                                 [LFTY] = PKI_BEWQ_S[LFTY] | PKI_STYLE()_WQ2\<57:53\> */
+                                                                 when corresponding PKI_STYLE()_WQ2\<57:53\> bits are set. */
         uint64_t lety                  : 5;  /**< [180:176] Layer E header type parsed, often corresponding to inner IP. Enumerated
                                                                  by PKI_LTYPE_E. See also [LEPTR]. (See the parser document.)
 
@@ -1352,10 +888,7 @@ union cavm_pki_wqe_s
 
                                                                  [LETY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer E parsing sets it.
                                                                  [LETY] is unpredictable when [ERRLEV] \<= LE. [LETY] bits are always set
-                                                                 when corresponding PKI_STYLE()_WQ2\<52:48\> bits are set.
-
-                                                                 Internal:
-                                                                 [LETY] = PKI_BEWQ_S[LETY] | PKI_STYLE()_WQ2\<52:48\> */
+                                                                 when corresponding PKI_STYLE()_WQ2\<52:48\> bits are set. */
         uint64_t ldty                  : 5;  /**< [175:171] Layer D header typed parsed, typically corresponding to a virtualization
                                                                  header. Enumerated by PKI_LTYPE_E. See also [LDPTR]. (See the
                                                                  parser document.)
@@ -1369,10 +902,7 @@ union cavm_pki_wqe_s
 
                                                                  [LDTY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer C or D parsing sets it.
                                                                  [LDTY] is unpredictable when [ERRLEV] \<= LD. [LDTY] bits are always set
-                                                                 when corresponding PKI_STYLE()_WQ2\<47:43\> bits are set.
-
-                                                                 Internal:
-                                                                 [LDTY] = PKI_BEWQ_S[LDTY] | PKI_STYLE()_WQ2\<47:43\> */
+                                                                 when corresponding PKI_STYLE()_WQ2\<47:43\> bits are set. */
         uint64_t lcty                  : 5;  /**< [170:166] Layer C header type parsed, typically corresponding to outer IP. Enumerated by
                                                                  PKI_LTYPE_E. See also [LCPTR]. (See the parser document.)
 
@@ -1386,10 +916,7 @@ union cavm_pki_wqe_s
 
                                                                  [LCTY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer B or C parsing sets it.
                                                                  [LCTY] is unpredictable when [ERRLEV] \<= LC. [LCTY] bits are always set
-                                                                 when corresponding PKI_STYLE()_WQ2\<42:38\> bits are set.
-
-                                                                 Internal:
-                                                                 [LCTY] = PKI_BEWQ_S[LCTY] | PKI_STYLE()_WQ2\<42:38\> */
+                                                                 when corresponding PKI_STYLE()_WQ2\<42:38\> bits are set. */
         uint64_t lbty                  : 5;  /**< [165:161] Layer B (non-VLAN) protocol type parsed. Enumerated by PKI_LTYPE_E. See
                                                                  also [LBPTR]. (See the parser document. For VLAN, see [VV,VS,VLPTR].)
 
@@ -1399,18 +926,12 @@ union cavm_pki_wqe_s
                                                                  [LBTY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer B PCAM parsing sets it via
                                                                  PKI_CL()_PCAM()_ACTION()[SETTY]. [LBTY] is unpredictable when
                                                                  [ERRLEV] \<= LB. [LBTY] bits are always set when corresponding
-                                                                 PKI_STYLE()_WQ2\<37:33\> bits are set.
-
-                                                                 Internal:
-                                                                 [LBTY] = PKI_BEWQ_S[LBTY] | PKI_STYLE()_WQ2\<37:33\> */
+                                                                 PKI_STYLE()_WQ2\<37:33\> bits are set. */
         uint64_t lae                   : 1;  /**< [160:160] Indicates that Layer A Ethernet was parsed, typically used to indicate Layer 2
                                                                  parsing.
 
                                                                  [LAE] is clear when L2 is not parsed, and it unpredictable when [ERRLEV] = LA.
-                                                                 [LAE] is always set when PKI_STYLE()_WQ2\<32\> is set.
-
-                                                                 Internal:
-                                                                 [LAE] = PKI_BEWQ_S[LAE] | PKI_STYLE()_WQ2\<32\> */
+                                                                 [LAE] is always set when PKI_STYLE()_WQ2\<32\> is set. */
         uint64_t reserved_152_159      : 8;
         uint64_t vv                    : 1;  /**< [151:151] One or more VLAN fields were found in the L2 HDR for the packet. This bit
                                                                  asserts when in skip-to-L2 mode and the PCAM lookup indicated a VLAN flow
@@ -1419,28 +940,17 @@ union cavm_pki_wqe_s
 
                                                                  [VV] is clear when [LAE] is clear (before ORing PKI_STYLE()_WQ2\<32\> to [LAE]).
                                                                  [VV] is unpredictable when [ERRLEV] \<= LA. [VV] is always set when
-                                                                 PKI_STYLE()_WQ2\<23\> is set.
-
-                                                                 Internal:
-                                                                 [VV] = PKI_BEWQ_S[VV] | PKI_STYLE()_WQ2\<23\> */
+                                                                 PKI_STYLE()_WQ2\<23\> is set. */
         uint64_t vs                    : 1;  /**< [150:150] Multiple VLAN fields were found in the L2 HDR for the packet, with 'found' as
                                                                  described under [VV]. VLAN fields can be found in ordinary VLAN headers,
                                                                  GLORT, or DSA.
 
                                                                  [VS] is clear when [VV]=0 (before ORing PKI_STYLE()_WQ2\<23\> to [VV]).
                                                                  [VS] is unpredictable when [ERRLEV] \<= LA. [VS] is always set when
-                                                                 PKI_STYLE()_WQ2\<22\> is set.
-
-                                                                 Internal:
-                                                                 [VS] = PKI_BEWQ_S[VS] | PKI_STYLE()_WQ2\<22\> */
+                                                                 PKI_STYLE()_WQ2\<22\> is set. */
         uint64_t sh                    : 1;  /**< [149:149] PKI BE incremented special-handling statistics.
 
-                                                                 [SH] is set when PKI_STYLE()_WQ2\<21\> is set.
-
-                                                                 Internal:
-                                                                 [SH] = PKI_BEWQ_S[SH] | PKI_STYLE()_WQ2\<21\>
-
-                                                                 Microcode is capable of setting this field, but does not at present. */
+                                                                 [SH] is set when PKI_STYLE()_WQ2\<21\> is set. */
         uint64_t pf4                   : 1;  /**< [148:148] Opaque to PKI hardware. Software may wish to use this bit to indicate a particular
                                                                  protocol.
 
@@ -1448,10 +958,7 @@ union cavm_pki_wqe_s
                                                                  set by a PCAM action, and unpredictable if the data fed into that PCAM match is
                                                                  unpredictable such as due to a L2 data error.
 
-                                                                 [PF3] is always set when PKI_STYLE()_WQ2\<20\> is set.
-
-                                                                 Internal:
-                                                                 [PF4] = PKI_BEWQ_S[PF4] | PKI_STYLE()_WQ2\<20\> */
+                                                                 [PF3] is always set when PKI_STYLE()_WQ2\<20\> is set. */
         uint64_t pf3                   : 1;  /**< [147:147] Opaque to PKI hardware. Software may wish to use this bit to indicate a particular
                                                                  protocol.
 
@@ -1459,10 +966,7 @@ union cavm_pki_wqe_s
                                                                  set by a PCAM action, and unpredictable if the data fed into that PCAM match is
                                                                  unpredictable such as due to a L2 data error.
 
-                                                                 [PF3] is always set when PKI_STYLE()_WQ2\<19\> is set.
-
-                                                                 Internal:
-                                                                 [PF3] = PKI_BEWQ_S[PF3] | PKI_STYLE()_WQ2\<19\> */
+                                                                 [PF3] is always set when PKI_STYLE()_WQ2\<19\> is set. */
         uint64_t pf2                   : 1;  /**< [146:146] Opaque to PKI hardware. Software may wish to use this bit to indicate a particular
                                                                  protocol.
 
@@ -1470,10 +974,7 @@ union cavm_pki_wqe_s
                                                                  set by a PCAM action, and unpredictable if the data fed into that PCAM match is
                                                                  unpredictable such as due to a L2 data error.
 
-                                                                 [PF2] is always set when PKI_STYLE()_WQ2\<18\> is set.
-
-                                                                 Internal:
-                                                                 [PF2] = PKI_BEWQ_S[PF2] | PKI_STYLE()_WQ2\<18\> */
+                                                                 [PF2] is always set when PKI_STYLE()_WQ2\<18\> is set. */
         uint64_t pf1                   : 1;  /**< [145:145] Opaque to PKI hardware. Software may wish to use this bit to indicate a particular
                                                                  protocol.
 
@@ -1481,10 +982,7 @@ union cavm_pki_wqe_s
                                                                  set by a PCAM action, and unpredictable if the data fed into that PCAM match is
                                                                  unpredictable such as due to a L2 data error.
 
-                                                                 [PF1] is always set when PKI_STYLE()_WQ2\<17\> is set.
-
-                                                                 Internal:
-                                                                 [PF1] = PKI_BEWQ_S[PF1] | PKI_STYLE()_WQ2\<17\> */
+                                                                 [PF1] is always set when PKI_STYLE()_WQ2\<17\> is set. */
         uint64_t l3fr                  : 1;  /**< [144:144] Set when the outer IP (Layer C) indicates a fragment.
 
                                                                  For IPv4, parse engine sets this bit when either the MF bit is set or the offset
@@ -1495,54 +993,36 @@ union cavm_pki_wqe_s
 
                                                                  [L3FR] is clear when [LCTY] is not an IP4 nor IP6 type (before ORing
                                                                  PKI_STYLE()_WQ2\<42:38\> to [LCTY]). [L3FR] is unpredictable when [ERRLEV] \<= LC.
-                                                                 [L3FR] is always set when PKI_STYLE()_WQ2\<16\> is set.
-
-                                                                 Internal:
-                                                                 [L3FR] = PKI_BEWQ_S[L3FR] | PKI_STYLE()_WQ2\<16\> */
+                                                                 [L3FR] is always set when PKI_STYLE()_WQ2\<16\> is set. */
         uint64_t l3b                   : 1;  /**< [143:143] Set when the outer IP4 indicates broadcast, i.e. the destination address is all
                                                                  ones. Broadcast is not defined for IPv6.
 
                                                                  [L3B] is clear when [LCTY] is not an IP4 type (before ORing
                                                                  PKI_STYLE()_WQ2\<42:38\> to [LCTY]). [L3B] is unpredictable when [ERRLEV] \<= LC.
-                                                                 [L3B] is always set when PKI_STYLE()_WQ2\<15\> is set.
-
-                                                                 Internal:
-                                                                 [L3B] = PKI_BEWQ_S[L3B] | PKI_STYLE()_WQ2\<15\> */
+                                                                 [L3B] is always set when PKI_STYLE()_WQ2\<15\> is set. */
         uint64_t l3m                   : 1;  /**< [142:142] Set when the outer IP indicates multicast, i.e. the IPv4 destination address
                                                                  \<31:28\> = 0xE, or the IPv6 MSB of the 128-bit destination address = 0xFF.
 
                                                                  [L3M] is clear when [LCTY] is not an IP4 nor IP6 type (before ORing
                                                                  PKI_STYLE()_WQ2\<42:38\> to [LCTY]). [L3M] is unpredictable when [ERRLEV] \<= LC.
-                                                                 [L3M] is always set when PKI_STYLE()_WQ2\<14\> is set.
-
-                                                                 Internal:
-                                                                 [L3M] = PKI_BEWQ_S[L3M] | PKI_STYLE()_WQ2\<14\> */
+                                                                 [L3M] is always set when PKI_STYLE()_WQ2\<14\> is set. */
         uint64_t l2b                   : 1;  /**< [141:141] Set when the packet's destination MAC address field in the L2 HDR is the
                                                                  broadcast address (i.e. all 1s).
 
                                                                  [L2B] is clear when [LAE] is clear (before ORing PKI_STYLE()_WQ2\<32\> to [LAE]).
                                                                  [L2B] is unpredictable when [ERRLEV] \<= LB. [L2B] is always set when PKI_STYLE()_WQ2\<13\>
-                                                                 is set.
-
-                                                                 Internal:
-                                                                 [L2B] = PKI_BEWQ_S[L2B] | PKI_STYLE()_WQ2\<13\> */
+                                                                 is set. */
         uint64_t l2m                   : 1;  /**< [140:140] Set when the packet's destination MAC address field in the L2 HDR is a multicast
                                                                  address (i.e. the LSB of the first byte of the destination MAC is set, and
                                                                  the address is not a broadcast address - see [L2B]).
 
                                                                  [L2M] is clear when [LAE] is clear (before ORing PKI_STYLE()_WQ2\<32\> to [LAE]).
                                                                  [L2M] is unpredictable when [ERRLEV] \<= LB. [L2M] is always set when PKI_STYLE()_WQ2\<12\>
-                                                                 is set.
-
-                                                                 Internal:
-                                                                 [L2M] = PKI_BEWQ_S[L2M] | PKI_STYLE()_WQ2\<12\> */
+                                                                 is set. */
         uint64_t raw                   : 1;  /**< [139:139] Raw packet, for unique statistics and drop handling.
 
                                                                  [RAW] is set when PKI_INST_HDR_S[RAW] is set and parsed. [RAW] is unpredictable
-                                                                 when [ERRLEV] \<= LB. [RAW] is always set when PKI_STYLE()_WQ2\<11\> is set.
-
-                                                                 Internal:
-                                                                 [RAW] = PKI_BEWQ_S[RAW] | PKI_STYLE()_WQ2\<11\>. */
+                                                                 when [ERRLEV] \<= LB. [RAW] is always set when PKI_STYLE()_WQ2\<11\> is set. */
         uint64_t errlev                : 3;  /**< [138:136] Normally zero, but when errors are detected contains the lowest protocol layer
                                                                  containing an error, and [OPCODE] will indicate the precise error
                                                                  reason. Enumerated by PKI_ERRLEV_E. PKI_STYLE()_WQ2\<10:8\> may modify [ERRLEV]
@@ -1552,33 +1032,18 @@ union cavm_pki_wqe_s
                                                                  this is a shorthand for 'all errors at LC and below', that is more precisely,
                                                                  '[ERRLEV] = (RE or LB or LC) and [OPCODE] != 0x0'. This is not true when
                                                                  [ERRLEV] = (NONE nor LD nor LE nor LF), nor when [OPCODE] = 0x0 (no error at
-                                                                 all).
-
-                                                                 Internal:
-                                                                 Calculated by microcode and possibly modified by the PKI BE. [ERRLEV] may
-                                                                 (or may not) be PKI_BEWQ_S[ERRLEV]. PKI_ERRLEV_E describes which are done
-                                                                 by microcode, and which by hardware. */
+                                                                 all). */
         uint64_t opcode                : 8;  /**< [135:128] Normally zero, but when nonzero and [ERRLEV] is nonzero, contains an exception
                                                                  opcode enumerated by PKI_OPCODE_E. PKI_STYLE()_WQ2\<7:0\> may modify [OPCODE]
                                                                  (before hardware error checks).
 
-                                                                 [OPCODE]\<i\> will generally be set when PKI_STYLE()_WQ2[DATA]\<i\> is set.
-
-                                                                 Internal:
-                                                                 Calculated by microcode and possibly modified by the PKI BE. [OPCODE] may
-                                                                 (or may not) be PKI_BEWQ_S[OPCODE]. PKI_OPCODE_E describes which are done
-                                                                 by microcode, and which by hardware. */
+                                                                 [OPCODE]\<i\> will generally be set when PKI_STYLE()_WQ2[DATA]\<i\> is set. */
 #else /* Word 2 - Little Endian */
         uint64_t opcode                : 8;  /**< [135:128] Normally zero, but when nonzero and [ERRLEV] is nonzero, contains an exception
                                                                  opcode enumerated by PKI_OPCODE_E. PKI_STYLE()_WQ2\<7:0\> may modify [OPCODE]
                                                                  (before hardware error checks).
 
-                                                                 [OPCODE]\<i\> will generally be set when PKI_STYLE()_WQ2[DATA]\<i\> is set.
-
-                                                                 Internal:
-                                                                 Calculated by microcode and possibly modified by the PKI BE. [OPCODE] may
-                                                                 (or may not) be PKI_BEWQ_S[OPCODE]. PKI_OPCODE_E describes which are done
-                                                                 by microcode, and which by hardware. */
+                                                                 [OPCODE]\<i\> will generally be set when PKI_STYLE()_WQ2[DATA]\<i\> is set. */
         uint64_t errlev                : 3;  /**< [138:136] Normally zero, but when errors are detected contains the lowest protocol layer
                                                                  containing an error, and [OPCODE] will indicate the precise error
                                                                  reason. Enumerated by PKI_ERRLEV_E. PKI_STYLE()_WQ2\<10:8\> may modify [ERRLEV]
@@ -1588,56 +1053,36 @@ union cavm_pki_wqe_s
                                                                  this is a shorthand for 'all errors at LC and below', that is more precisely,
                                                                  '[ERRLEV] = (RE or LB or LC) and [OPCODE] != 0x0'. This is not true when
                                                                  [ERRLEV] = (NONE nor LD nor LE nor LF), nor when [OPCODE] = 0x0 (no error at
-                                                                 all).
-
-                                                                 Internal:
-                                                                 Calculated by microcode and possibly modified by the PKI BE. [ERRLEV] may
-                                                                 (or may not) be PKI_BEWQ_S[ERRLEV]. PKI_ERRLEV_E describes which are done
-                                                                 by microcode, and which by hardware. */
+                                                                 all). */
         uint64_t raw                   : 1;  /**< [139:139] Raw packet, for unique statistics and drop handling.
 
                                                                  [RAW] is set when PKI_INST_HDR_S[RAW] is set and parsed. [RAW] is unpredictable
-                                                                 when [ERRLEV] \<= LB. [RAW] is always set when PKI_STYLE()_WQ2\<11\> is set.
-
-                                                                 Internal:
-                                                                 [RAW] = PKI_BEWQ_S[RAW] | PKI_STYLE()_WQ2\<11\>. */
+                                                                 when [ERRLEV] \<= LB. [RAW] is always set when PKI_STYLE()_WQ2\<11\> is set. */
         uint64_t l2m                   : 1;  /**< [140:140] Set when the packet's destination MAC address field in the L2 HDR is a multicast
                                                                  address (i.e. the LSB of the first byte of the destination MAC is set, and
                                                                  the address is not a broadcast address - see [L2B]).
 
                                                                  [L2M] is clear when [LAE] is clear (before ORing PKI_STYLE()_WQ2\<32\> to [LAE]).
                                                                  [L2M] is unpredictable when [ERRLEV] \<= LB. [L2M] is always set when PKI_STYLE()_WQ2\<12\>
-                                                                 is set.
-
-                                                                 Internal:
-                                                                 [L2M] = PKI_BEWQ_S[L2M] | PKI_STYLE()_WQ2\<12\> */
+                                                                 is set. */
         uint64_t l2b                   : 1;  /**< [141:141] Set when the packet's destination MAC address field in the L2 HDR is the
                                                                  broadcast address (i.e. all 1s).
 
                                                                  [L2B] is clear when [LAE] is clear (before ORing PKI_STYLE()_WQ2\<32\> to [LAE]).
                                                                  [L2B] is unpredictable when [ERRLEV] \<= LB. [L2B] is always set when PKI_STYLE()_WQ2\<13\>
-                                                                 is set.
-
-                                                                 Internal:
-                                                                 [L2B] = PKI_BEWQ_S[L2B] | PKI_STYLE()_WQ2\<13\> */
+                                                                 is set. */
         uint64_t l3m                   : 1;  /**< [142:142] Set when the outer IP indicates multicast, i.e. the IPv4 destination address
                                                                  \<31:28\> = 0xE, or the IPv6 MSB of the 128-bit destination address = 0xFF.
 
                                                                  [L3M] is clear when [LCTY] is not an IP4 nor IP6 type (before ORing
                                                                  PKI_STYLE()_WQ2\<42:38\> to [LCTY]). [L3M] is unpredictable when [ERRLEV] \<= LC.
-                                                                 [L3M] is always set when PKI_STYLE()_WQ2\<14\> is set.
-
-                                                                 Internal:
-                                                                 [L3M] = PKI_BEWQ_S[L3M] | PKI_STYLE()_WQ2\<14\> */
+                                                                 [L3M] is always set when PKI_STYLE()_WQ2\<14\> is set. */
         uint64_t l3b                   : 1;  /**< [143:143] Set when the outer IP4 indicates broadcast, i.e. the destination address is all
                                                                  ones. Broadcast is not defined for IPv6.
 
                                                                  [L3B] is clear when [LCTY] is not an IP4 type (before ORing
                                                                  PKI_STYLE()_WQ2\<42:38\> to [LCTY]). [L3B] is unpredictable when [ERRLEV] \<= LC.
-                                                                 [L3B] is always set when PKI_STYLE()_WQ2\<15\> is set.
-
-                                                                 Internal:
-                                                                 [L3B] = PKI_BEWQ_S[L3B] | PKI_STYLE()_WQ2\<15\> */
+                                                                 [L3B] is always set when PKI_STYLE()_WQ2\<15\> is set. */
         uint64_t l3fr                  : 1;  /**< [144:144] Set when the outer IP (Layer C) indicates a fragment.
 
                                                                  For IPv4, parse engine sets this bit when either the MF bit is set or the offset
@@ -1648,10 +1093,7 @@ union cavm_pki_wqe_s
 
                                                                  [L3FR] is clear when [LCTY] is not an IP4 nor IP6 type (before ORing
                                                                  PKI_STYLE()_WQ2\<42:38\> to [LCTY]). [L3FR] is unpredictable when [ERRLEV] \<= LC.
-                                                                 [L3FR] is always set when PKI_STYLE()_WQ2\<16\> is set.
-
-                                                                 Internal:
-                                                                 [L3FR] = PKI_BEWQ_S[L3FR] | PKI_STYLE()_WQ2\<16\> */
+                                                                 [L3FR] is always set when PKI_STYLE()_WQ2\<16\> is set. */
         uint64_t pf1                   : 1;  /**< [145:145] Opaque to PKI hardware. Software may wish to use this bit to indicate a particular
                                                                  protocol.
 
@@ -1659,10 +1101,7 @@ union cavm_pki_wqe_s
                                                                  set by a PCAM action, and unpredictable if the data fed into that PCAM match is
                                                                  unpredictable such as due to a L2 data error.
 
-                                                                 [PF1] is always set when PKI_STYLE()_WQ2\<17\> is set.
-
-                                                                 Internal:
-                                                                 [PF1] = PKI_BEWQ_S[PF1] | PKI_STYLE()_WQ2\<17\> */
+                                                                 [PF1] is always set when PKI_STYLE()_WQ2\<17\> is set. */
         uint64_t pf2                   : 1;  /**< [146:146] Opaque to PKI hardware. Software may wish to use this bit to indicate a particular
                                                                  protocol.
 
@@ -1670,10 +1109,7 @@ union cavm_pki_wqe_s
                                                                  set by a PCAM action, and unpredictable if the data fed into that PCAM match is
                                                                  unpredictable such as due to a L2 data error.
 
-                                                                 [PF2] is always set when PKI_STYLE()_WQ2\<18\> is set.
-
-                                                                 Internal:
-                                                                 [PF2] = PKI_BEWQ_S[PF2] | PKI_STYLE()_WQ2\<18\> */
+                                                                 [PF2] is always set when PKI_STYLE()_WQ2\<18\> is set. */
         uint64_t pf3                   : 1;  /**< [147:147] Opaque to PKI hardware. Software may wish to use this bit to indicate a particular
                                                                  protocol.
 
@@ -1681,10 +1117,7 @@ union cavm_pki_wqe_s
                                                                  set by a PCAM action, and unpredictable if the data fed into that PCAM match is
                                                                  unpredictable such as due to a L2 data error.
 
-                                                                 [PF3] is always set when PKI_STYLE()_WQ2\<19\> is set.
-
-                                                                 Internal:
-                                                                 [PF3] = PKI_BEWQ_S[PF3] | PKI_STYLE()_WQ2\<19\> */
+                                                                 [PF3] is always set when PKI_STYLE()_WQ2\<19\> is set. */
         uint64_t pf4                   : 1;  /**< [148:148] Opaque to PKI hardware. Software may wish to use this bit to indicate a particular
                                                                  protocol.
 
@@ -1692,28 +1125,17 @@ union cavm_pki_wqe_s
                                                                  set by a PCAM action, and unpredictable if the data fed into that PCAM match is
                                                                  unpredictable such as due to a L2 data error.
 
-                                                                 [PF3] is always set when PKI_STYLE()_WQ2\<20\> is set.
-
-                                                                 Internal:
-                                                                 [PF4] = PKI_BEWQ_S[PF4] | PKI_STYLE()_WQ2\<20\> */
+                                                                 [PF3] is always set when PKI_STYLE()_WQ2\<20\> is set. */
         uint64_t sh                    : 1;  /**< [149:149] PKI BE incremented special-handling statistics.
 
-                                                                 [SH] is set when PKI_STYLE()_WQ2\<21\> is set.
-
-                                                                 Internal:
-                                                                 [SH] = PKI_BEWQ_S[SH] | PKI_STYLE()_WQ2\<21\>
-
-                                                                 Microcode is capable of setting this field, but does not at present. */
+                                                                 [SH] is set when PKI_STYLE()_WQ2\<21\> is set. */
         uint64_t vs                    : 1;  /**< [150:150] Multiple VLAN fields were found in the L2 HDR for the packet, with 'found' as
                                                                  described under [VV]. VLAN fields can be found in ordinary VLAN headers,
                                                                  GLORT, or DSA.
 
                                                                  [VS] is clear when [VV]=0 (before ORing PKI_STYLE()_WQ2\<23\> to [VV]).
                                                                  [VS] is unpredictable when [ERRLEV] \<= LA. [VS] is always set when
-                                                                 PKI_STYLE()_WQ2\<22\> is set.
-
-                                                                 Internal:
-                                                                 [VS] = PKI_BEWQ_S[VS] | PKI_STYLE()_WQ2\<22\> */
+                                                                 PKI_STYLE()_WQ2\<22\> is set. */
         uint64_t vv                    : 1;  /**< [151:151] One or more VLAN fields were found in the L2 HDR for the packet. This bit
                                                                  asserts when in skip-to-L2 mode and the PCAM lookup indicated a VLAN flow
                                                                  (PKI_CL()_PCAM()_TERM()[TERM] = ETHTYPE0..3, DSA, or GLORT matched with the
@@ -1721,19 +1143,13 @@ union cavm_pki_wqe_s
 
                                                                  [VV] is clear when [LAE] is clear (before ORing PKI_STYLE()_WQ2\<32\> to [LAE]).
                                                                  [VV] is unpredictable when [ERRLEV] \<= LA. [VV] is always set when
-                                                                 PKI_STYLE()_WQ2\<23\> is set.
-
-                                                                 Internal:
-                                                                 [VV] = PKI_BEWQ_S[VV] | PKI_STYLE()_WQ2\<23\> */
+                                                                 PKI_STYLE()_WQ2\<23\> is set. */
         uint64_t reserved_152_159      : 8;
         uint64_t lae                   : 1;  /**< [160:160] Indicates that Layer A Ethernet was parsed, typically used to indicate Layer 2
                                                                  parsing.
 
                                                                  [LAE] is clear when L2 is not parsed, and it unpredictable when [ERRLEV] = LA.
-                                                                 [LAE] is always set when PKI_STYLE()_WQ2\<32\> is set.
-
-                                                                 Internal:
-                                                                 [LAE] = PKI_BEWQ_S[LAE] | PKI_STYLE()_WQ2\<32\> */
+                                                                 [LAE] is always set when PKI_STYLE()_WQ2\<32\> is set. */
         uint64_t lbty                  : 5;  /**< [165:161] Layer B (non-VLAN) protocol type parsed. Enumerated by PKI_LTYPE_E. See
                                                                  also [LBPTR]. (See the parser document. For VLAN, see [VV,VS,VLPTR].)
 
@@ -1743,10 +1159,7 @@ union cavm_pki_wqe_s
                                                                  [LBTY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer B PCAM parsing sets it via
                                                                  PKI_CL()_PCAM()_ACTION()[SETTY]. [LBTY] is unpredictable when
                                                                  [ERRLEV] \<= LB. [LBTY] bits are always set when corresponding
-                                                                 PKI_STYLE()_WQ2\<37:33\> bits are set.
-
-                                                                 Internal:
-                                                                 [LBTY] = PKI_BEWQ_S[LBTY] | PKI_STYLE()_WQ2\<37:33\> */
+                                                                 PKI_STYLE()_WQ2\<37:33\> bits are set. */
         uint64_t lcty                  : 5;  /**< [170:166] Layer C header type parsed, typically corresponding to outer IP. Enumerated by
                                                                  PKI_LTYPE_E. See also [LCPTR]. (See the parser document.)
 
@@ -1760,10 +1173,7 @@ union cavm_pki_wqe_s
 
                                                                  [LCTY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer B or C parsing sets it.
                                                                  [LCTY] is unpredictable when [ERRLEV] \<= LC. [LCTY] bits are always set
-                                                                 when corresponding PKI_STYLE()_WQ2\<42:38\> bits are set.
-
-                                                                 Internal:
-                                                                 [LCTY] = PKI_BEWQ_S[LCTY] | PKI_STYLE()_WQ2\<42:38\> */
+                                                                 when corresponding PKI_STYLE()_WQ2\<42:38\> bits are set. */
         uint64_t ldty                  : 5;  /**< [175:171] Layer D header typed parsed, typically corresponding to a virtualization
                                                                  header. Enumerated by PKI_LTYPE_E. See also [LDPTR]. (See the
                                                                  parser document.)
@@ -1777,10 +1187,7 @@ union cavm_pki_wqe_s
 
                                                                  [LDTY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer C or D parsing sets it.
                                                                  [LDTY] is unpredictable when [ERRLEV] \<= LD. [LDTY] bits are always set
-                                                                 when corresponding PKI_STYLE()_WQ2\<47:43\> bits are set.
-
-                                                                 Internal:
-                                                                 [LDTY] = PKI_BEWQ_S[LDTY] | PKI_STYLE()_WQ2\<47:43\> */
+                                                                 when corresponding PKI_STYLE()_WQ2\<47:43\> bits are set. */
         uint64_t lety                  : 5;  /**< [180:176] Layer E header type parsed, often corresponding to inner IP. Enumerated
                                                                  by PKI_LTYPE_E. See also [LEPTR]. (See the parser document.)
 
@@ -1791,10 +1198,7 @@ union cavm_pki_wqe_s
 
                                                                  [LETY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer E parsing sets it.
                                                                  [LETY] is unpredictable when [ERRLEV] \<= LE. [LETY] bits are always set
-                                                                 when corresponding PKI_STYLE()_WQ2\<52:48\> bits are set.
-
-                                                                 Internal:
-                                                                 [LETY] = PKI_BEWQ_S[LETY] | PKI_STYLE()_WQ2\<52:48\> */
+                                                                 when corresponding PKI_STYLE()_WQ2\<52:48\> bits are set. */
         uint64_t lfty                  : 5;  /**< [185:181] Layer F header type parsed, often corresponding to layer 4 (UDP/TCP).
                                                                  Enumerated by PKI_LTYPE_E. (See the parser document.)
 
@@ -1807,10 +1211,7 @@ union cavm_pki_wqe_s
 
                                                                  [LFTY] is 0x0 (PKI_LTYPE_E::NONE) unless Layer E or F parsing sets it.
                                                                  [LFTY] is unpredictable when [ERRLEV] \<= LF. [LFTY] bits are always set
-                                                                 when corresponding PKI_STYLE()_WQ2\<57:53\> bits are set.
-
-                                                                 Internal:
-                                                                 [LFTY] = PKI_BEWQ_S[LFTY] | PKI_STYLE()_WQ2\<57:53\> */
+                                                                 when corresponding PKI_STYLE()_WQ2\<57:53\> bits are set. */
         uint64_t lgty                  : 5;  /**< [190:186] Custom header type parsed after normal C, D, E, or F layer parsing.
                                                                  Enumerated by PKI_LTYPE_E. (See the parser document.)
 
@@ -1833,17 +1234,9 @@ union cavm_pki_wqe_s
                                                                  [LGTY] is 0x0 (PKI_LTYPE_E::NONE) unless set after normal C, D, E, or F
                                                                  layer parsing via PKI_CL()_PCAM()_ACTION()[SETTY]. [LGTY] is unpredictable
                                                                  when [ERRLEV] \<= LG. [LGTY] bits are always set when corresponding
-                                                                 PKI_STYLE()_WQ2\<62:58\> bits are set.
-
-                                                                 Internal:
-                                                                 [LGTY] = PKI_BEWQ_S[LGTY] | PKI_STYLE()_WQ2\<62:58\> */
+                                                                 PKI_STYLE()_WQ2\<62:58\> bits are set. */
         uint64_t sw                    : 1;  /**< [191:191] Reserved for software use. [SW] will be set when corresponding
-                                                                 PKI_STYLE()_WQ2[DATA]\<63\> is set, but this is not recommended.
-
-                                                                 Internal:
-                                                                 [SW] = PKI_BEWQ_S[SW] | PKI_STYLE()_WQ2\<63\>
-
-                                                                 Microcode could set this bit, but doesn't currently. */
+                                                                 PKI_STYLE()_WQ2[DATA]\<63\> is set, but this is not recommended. */
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
         uint64_t addr                  : 64; /**< [255:192] Address of the first buffer pointer. When PKI_STYLE()_BUF[DIS_WQ_DAT]=0, ADDR
@@ -2561,45 +1954,9 @@ union cavm_pki_bist_status0
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_34_63        : 30;
-        uint64_t bist                  : 34; /**< [ 33:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST.
-                                                                 Internal:
-                                                                 This register collects status for PKI_PFE.
-                                                                 \<33\> = PSTAT_MEM2.
-                                                                 \<32\> = PSTAT_MEM1.
-                                                                 \<31\> = PSTAT_MEM0.
-                                                                 \<30\> = INB_ERRS.
-                                                                 \<29\> = INB OCTS.
-                                                                 \<28\> = INB PKTS.
-                                                                 \<27\> = LD FIF.
-                                                                 \<26\> = PBE STATE.
-                                                                 \<25\> = WADR STATE.
-                                                                 \<24\> = NXT PTAG.
-                                                                 \<23\> = CUR PTAG.
-                                                                 \<22\> = X2P FIF.
-                                                                 \<21\> = DROP FIF.
-                                                                 \<20\> = NXT BLK.
-                                                                 \<19..16\> = KMEM.
-                                                                 \<15..0\> = ASM BUFF. */
+        uint64_t bist                  : 34; /**< [ 33:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST. */
 #else /* Word 0 - Little Endian */
-        uint64_t bist                  : 34; /**< [ 33:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST.
-                                                                 Internal:
-                                                                 This register collects status for PKI_PFE.
-                                                                 \<33\> = PSTAT_MEM2.
-                                                                 \<32\> = PSTAT_MEM1.
-                                                                 \<31\> = PSTAT_MEM0.
-                                                                 \<30\> = INB_ERRS.
-                                                                 \<29\> = INB OCTS.
-                                                                 \<28\> = INB PKTS.
-                                                                 \<27\> = LD FIF.
-                                                                 \<26\> = PBE STATE.
-                                                                 \<25\> = WADR STATE.
-                                                                 \<24\> = NXT PTAG.
-                                                                 \<23\> = CUR PTAG.
-                                                                 \<22\> = X2P FIF.
-                                                                 \<21\> = DROP FIF.
-                                                                 \<20\> = NXT BLK.
-                                                                 \<19..16\> = KMEM.
-                                                                 \<15..0\> = ASM BUFF. */
+        uint64_t bist                  : 34; /**< [ 33:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST. */
         uint64_t reserved_34_63        : 30;
 #endif /* Word 0 - End */
     } s;
@@ -2636,67 +1993,9 @@ union cavm_pki_bist_status1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_29_63        : 35;
-        uint64_t bist                  : 29; /**< [ 28:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST.
-                                                                 Internal:
-                                                                 This
-                                                                 register collects status for PKI_PBE.
-                                                                 \<28\> = NCBWQE_MEM.
-                                                                 \<27..26\> = NCB_MEM.
-                                                                 \<25\> = DSTATS_MEM0.
-                                                                 \<24\> = DSTATS_MEM1.
-                                                                 \<23\> = DSTATS_MEM2.
-                                                                 \<22\> = DSTATS_MEM3.
-                                                                 \<21\> = DSTATS_MEM4.
-                                                                 \<20\> = STATS_MEM0.
-                                                                 \<19\> = STATS_MEM1.
-                                                                 \<18\> = STATS_MEM2.
-                                                                 \<17\> = STATS_MEM3.
-                                                                 \<16\> = SWS.
-                                                                 \<15\> = WQEOUT.
-                                                                 \<14\> = DOA.
-                                                                 \<13\> = BPID.
-                                                                 \<12:10\> = Reserved.
-                                                                 \<9\> = PLC.
-                                                                 \<8\> = PKTWQ.
-                                                                 \<7\> = Reserved.
-                                                                 \<6\> = STRM.
-                                                                 \<5\> = TAG.
-                                                                 \<4\> = Reserved.
-                                                                 \<3\> = CHAN.
-                                                                 \<2\> = PBTAG.
-                                                                 \<1\> = STYLEWQ.
-                                                                 \<0\> = QPG. */
+        uint64_t bist                  : 29; /**< [ 28:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST. */
 #else /* Word 0 - Little Endian */
-        uint64_t bist                  : 29; /**< [ 28:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST.
-                                                                 Internal:
-                                                                 This
-                                                                 register collects status for PKI_PBE.
-                                                                 \<28\> = NCBWQE_MEM.
-                                                                 \<27..26\> = NCB_MEM.
-                                                                 \<25\> = DSTATS_MEM0.
-                                                                 \<24\> = DSTATS_MEM1.
-                                                                 \<23\> = DSTATS_MEM2.
-                                                                 \<22\> = DSTATS_MEM3.
-                                                                 \<21\> = DSTATS_MEM4.
-                                                                 \<20\> = STATS_MEM0.
-                                                                 \<19\> = STATS_MEM1.
-                                                                 \<18\> = STATS_MEM2.
-                                                                 \<17\> = STATS_MEM3.
-                                                                 \<16\> = SWS.
-                                                                 \<15\> = WQEOUT.
-                                                                 \<14\> = DOA.
-                                                                 \<13\> = BPID.
-                                                                 \<12:10\> = Reserved.
-                                                                 \<9\> = PLC.
-                                                                 \<8\> = PKTWQ.
-                                                                 \<7\> = Reserved.
-                                                                 \<6\> = STRM.
-                                                                 \<5\> = TAG.
-                                                                 \<4\> = Reserved.
-                                                                 \<3\> = CHAN.
-                                                                 \<2\> = PBTAG.
-                                                                 \<1\> = STYLEWQ.
-                                                                 \<0\> = QPG. */
+        uint64_t bist                  : 29; /**< [ 28:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST. */
         uint64_t reserved_29_63        : 35;
 #endif /* Word 0 - End */
     } s;
@@ -2733,43 +2032,9 @@ union cavm_pki_bist_status2
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_25_63        : 39;
-        uint64_t bist                  : 25; /**< [ 24:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST.
-                                                                 Internal:
-                                                                 This
-                                                                 register collects status for PKI_PIX (verif/vkits/pki/pki_mem_info_table.sv).
-                                                                 24     = IMEM.
-                                                                 23..20 = Reserved.
-                                                                 19     = IPEC1 / IPEs 10 .. 19 (RegFile + DMEM).
-                                                                 18     = IPEC1 / IPEs  0 ..  9 (RegFile + DMEM).
-                                                                 17     = IPEC0 / IPEs 10 .. 19 (RegFile + DMEM).
-                                                                 16     = IPEC0 / IPEs  0 ..  9 (RegFile + DMEM).
-                                                                 15..13 = Reserved.
-                                                                 14..12 = IPEC SMEM.
-                                                                 11..10 = Reserved.
-                                                                 9..8   = IPEC PCAM ECC.
-                                                                 7..6   = Reserved.
-                                                                 5..4   = IPEC PCAM RES.
-                                                                 3..2   = Reserved.
-                                                                 1..0   = IPEC PCAM CAM. */
+        uint64_t bist                  : 25; /**< [ 24:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST. */
 #else /* Word 0 - Little Endian */
-        uint64_t bist                  : 25; /**< [ 24:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST.
-                                                                 Internal:
-                                                                 This
-                                                                 register collects status for PKI_PIX (verif/vkits/pki/pki_mem_info_table.sv).
-                                                                 24     = IMEM.
-                                                                 23..20 = Reserved.
-                                                                 19     = IPEC1 / IPEs 10 .. 19 (RegFile + DMEM).
-                                                                 18     = IPEC1 / IPEs  0 ..  9 (RegFile + DMEM).
-                                                                 17     = IPEC0 / IPEs 10 .. 19 (RegFile + DMEM).
-                                                                 16     = IPEC0 / IPEs  0 ..  9 (RegFile + DMEM).
-                                                                 15..13 = Reserved.
-                                                                 14..12 = IPEC SMEM.
-                                                                 11..10 = Reserved.
-                                                                 9..8   = IPEC PCAM ECC.
-                                                                 7..6   = Reserved.
-                                                                 5..4   = IPEC PCAM RES.
-                                                                 3..2   = Reserved.
-                                                                 1..0   = IPEC PCAM CAM. */
+        uint64_t bist                  : 25; /**< [ 24:  0](RO/H) BIST results. Hardware sets a bit in BIST for memory that fails BIST. */
         uint64_t reserved_25_63        : 39;
 #endif /* Word 0 - End */
     } s;
@@ -2792,228 +2057,6 @@ static inline uint64_t CAVM_PKI_BIST_STATUS2_FUNC(void)
 #define device_bar_CAVM_PKI_BIST_STATUS2 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKI_BIST_STATUS2 0
 #define arguments_CAVM_PKI_BIST_STATUS2 -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_bp_test0
- *
- * INTERNAL: PKI Backpressure Test Register 0
- */
-union cavm_pki_bp_test0
-{
-    uint64_t u;
-    struct cavm_pki_bp_test0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit the NCBO FIFO, backpressure the sending NCB csrs requests to PFE.
-                                                                 \<62\> = Limit the RD FIFO, backpressure sending packet data to PBE.
-                                                                 \<61\> = Limit the LD FIFO , backpressure scheduling packet headers to PIX.
-                                                                 \<60\> = Limit the X2P FIFO, ultimately backpressuring X2P bus. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit the NCBO FIFO, backpressure the sending NCB csrs requests to PFE.
-                                                                 \<62\> = Limit the RD FIFO, backpressure sending packet data to PBE.
-                                                                 \<61\> = Limit the LD FIFO , backpressure scheduling packet headers to PIX.
-                                                                 \<60\> = Limit the X2P FIFO, ultimately backpressuring X2P bus. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_bp_test0_s cn; */
-};
-typedef union cavm_pki_bp_test0 cavm_pki_bp_test0_t;
-
-#define CAVM_PKI_BP_TEST0 CAVM_PKI_BP_TEST0_FUNC()
-static inline uint64_t CAVM_PKI_BP_TEST0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_BP_TEST0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000250ll;
-    __cavm_csr_fatal("PKI_BP_TEST0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_BP_TEST0 cavm_pki_bp_test0_t
-#define bustype_CAVM_PKI_BP_TEST0 CSR_TYPE_NCB
-#define basename_CAVM_PKI_BP_TEST0 "PKI_BP_TEST0"
-#define device_bar_CAVM_PKI_BP_TEST0 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_BP_TEST0 0
-#define arguments_CAVM_PKI_BP_TEST0 -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_bp_test1
- *
- * INTERNAL: PKI Backpressure Test Register 1
- */
-union cavm_pki_bp_test1
-{
-    uint64_t u;
-    struct cavm_pki_bp_test1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Unused.
-                                                                 \<62\> = Limit data flow start in PLC.
-                                                                 \<61\> = Limit return of pointers from FPC back to PCE.
-                                                                 \<60\> = Limit unload flow start in PCE. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Unused.
-                                                                 \<62\> = Limit data flow start in PLC.
-                                                                 \<61\> = Limit return of pointers from FPC back to PCE.
-                                                                 \<60\> = Limit unload flow start in PCE. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_bp_test1_s cn; */
-};
-typedef union cavm_pki_bp_test1 cavm_pki_bp_test1_t;
-
-#define CAVM_PKI_BP_TEST1 CAVM_PKI_BP_TEST1_FUNC()
-static inline uint64_t CAVM_PKI_BP_TEST1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_BP_TEST1_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000260ll;
-    __cavm_csr_fatal("PKI_BP_TEST1", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_BP_TEST1 cavm_pki_bp_test1_t
-#define bustype_CAVM_PKI_BP_TEST1 CSR_TYPE_NCB
-#define basename_CAVM_PKI_BP_TEST1 "PKI_BP_TEST1"
-#define device_bar_CAVM_PKI_BP_TEST1 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_BP_TEST1 0
-#define arguments_CAVM_PKI_BP_TEST1 -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_bp_test2
- *
- * INTERNAL: PKI Backpressure Test Register 2
- */
-union cavm_pki_bp_test2
-{
-    uint64_t u;
-    struct cavm_pki_bp_test2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit the CLS from unloading.
-                                                                 \<62\> = Limit the CLS from executing.
-                                                                 \<61\> = Limit the timer expiration.
-                                                                 \<60\> = Limit the schedule from schedule PFE requests. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit the CLS from unloading.
-                                                                 \<62\> = Limit the CLS from executing.
-                                                                 \<61\> = Limit the timer expiration.
-                                                                 \<60\> = Limit the schedule from schedule PFE requests. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_bp_test2_s cn; */
-};
-typedef union cavm_pki_bp_test2 cavm_pki_bp_test2_t;
-
-#define CAVM_PKI_BP_TEST2 CAVM_PKI_BP_TEST2_FUNC()
-static inline uint64_t CAVM_PKI_BP_TEST2_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_BP_TEST2_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000270ll;
-    __cavm_csr_fatal("PKI_BP_TEST2", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_BP_TEST2 cavm_pki_bp_test2_t
-#define bustype_CAVM_PKI_BP_TEST2 CSR_TYPE_NCB
-#define basename_CAVM_PKI_BP_TEST2 "PKI_BP_TEST2"
-#define device_bar_CAVM_PKI_BP_TEST2 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_BP_TEST2 0
-#define arguments_CAVM_PKI_BP_TEST2 -1,-1,-1,-1
 
 /**
  * Register (NCB) pki_bpid#_state
@@ -3079,31 +2122,19 @@ union cavm_pki_buf_ctl
                                                                  interface.
                                                                  The application should not de-assert this bit after asserting it. The receivers of this
                                                                  bit may have been put into backpressure mode and can only be released by PKI informing
-                                                                 them that the backpressure has been released.
-
-                                                                 Internal:
-                                                                 Must be set for PKI HW to assert any output backpressure wires. */
+                                                                 them that the backpressure has been released. */
         uint64_t reserved_1            : 1;
         uint64_t pki_en                : 1;  /**< [  0:  0](R/W) PKI enable. When set to 1, enables the operation of the PKI. When clear to 0, the PKI
-                                                                 asserts backpressure on all ports.
-
-                                                                 Internal:
-                                                                 Suppresses grants to X2P, not BPID backpressure. */
+                                                                 asserts backpressure on all ports. */
 #else /* Word 0 - Little Endian */
         uint64_t pki_en                : 1;  /**< [  0:  0](R/W) PKI enable. When set to 1, enables the operation of the PKI. When clear to 0, the PKI
-                                                                 asserts backpressure on all ports.
-
-                                                                 Internal:
-                                                                 Suppresses grants to X2P, not BPID backpressure. */
+                                                                 asserts backpressure on all ports. */
         uint64_t reserved_1            : 1;
         uint64_t pbp_en                : 1;  /**< [  2:  2](R/W) Bpid enable. When set, enables the sending of bpid level backpressure to the input
                                                                  interface.
                                                                  The application should not de-assert this bit after asserting it. The receivers of this
                                                                  bit may have been put into backpressure mode and can only be released by PKI informing
-                                                                 them that the backpressure has been released.
-
-                                                                 Internal:
-                                                                 Must be set for PKI HW to assert any output backpressure wires. */
+                                                                 them that the backpressure has been released. */
         uint64_t reserved_3_4          : 2;
         uint64_t pkt_off               : 1;  /**< [  5:  5](R/W) Packet buffer off. When this bit is set to 1, the PKI does not buffer the received packet
                                                                  data; when it is clear to 0, the PKI works normally, buffering the received packet data. */
@@ -3482,12 +2513,8 @@ union cavm_pki_clx_int
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
-        uint64_t iptint                : 1;  /**< [  3:  3](R/W1C/H) PCAM parse engine debug interrupt.
-                                                                 Internal:
-                                                                 Caused by TRAP or INTR parse engine state. */
-        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1C/H) PCAM/SMEM internal port conflict. Internal error, should not occur.
-                                                                 Internal:
-                                                                 Parse engine mis-scheduled PCAM or SMEM ops with overlapping accesses. */
+        uint64_t iptint                : 1;  /**< [  3:  3](R/W1C/H) PCAM parse engine debug interrupt. */
+        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1C/H) PCAM/SMEM internal port conflict. Internal error, should not occur. */
         uint64_t pcam_conf             : 2;  /**< [  1:  0](R/W1C/H) PCAM() match hit multiple rows, indicating either a soft error in the PCAM or a
                                                                  programming error in PKI_CL()_PCAM()_MATCH() or related registers.
                                                                  Once a conflict is detected, the PCAM state
@@ -3499,12 +2526,8 @@ union cavm_pki_clx_int
                                                                  Once a conflict is detected, the PCAM state
                                                                  is unpredictable and is required to be fully reconfigured before further valid processing
                                                                  can take place. */
-        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1C/H) PCAM/SMEM internal port conflict. Internal error, should not occur.
-                                                                 Internal:
-                                                                 Parse engine mis-scheduled PCAM or SMEM ops with overlapping accesses. */
-        uint64_t iptint                : 1;  /**< [  3:  3](R/W1C/H) PCAM parse engine debug interrupt.
-                                                                 Internal:
-                                                                 Caused by TRAP or INTR parse engine state. */
+        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1C/H) PCAM/SMEM internal port conflict. Internal error, should not occur. */
+        uint64_t iptint                : 1;  /**< [  3:  3](R/W1C/H) PCAM parse engine debug interrupt. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
@@ -3540,21 +2563,13 @@ union cavm_pki_clx_int_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
-        uint64_t iptint                : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[IPTINT].
-                                                                 Internal:
-                                                                 Caused by TRAP or INTR parse engine state. */
-        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[SCHED_CONF].
-                                                                 Internal:
-                                                                 Parse engine mis-scheduled PCAM or SMEM ops with overlapping accesses. */
+        uint64_t iptint                : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[IPTINT]. */
+        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[SCHED_CONF]. */
         uint64_t pcam_conf             : 2;  /**< [  1:  0](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[PCAM_CONF]. */
 #else /* Word 0 - Little Endian */
         uint64_t pcam_conf             : 2;  /**< [  1:  0](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[PCAM_CONF]. */
-        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[SCHED_CONF].
-                                                                 Internal:
-                                                                 Parse engine mis-scheduled PCAM or SMEM ops with overlapping accesses. */
-        uint64_t iptint                : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[IPTINT].
-                                                                 Internal:
-                                                                 Caused by TRAP or INTR parse engine state. */
+        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[SCHED_CONF]. */
+        uint64_t iptint                : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PKI_CL(0..1)_INT[IPTINT]. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
@@ -3590,21 +2605,13 @@ union cavm_pki_clx_int_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
-        uint64_t iptint                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[IPTINT].
-                                                                 Internal:
-                                                                 Caused by TRAP or INTR parse engine state. */
-        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[SCHED_CONF].
-                                                                 Internal:
-                                                                 Parse engine mis-scheduled PCAM or SMEM ops with overlapping accesses. */
+        uint64_t iptint                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[IPTINT]. */
+        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[SCHED_CONF]. */
         uint64_t pcam_conf             : 2;  /**< [  1:  0](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[PCAM_CONF]. */
 #else /* Word 0 - Little Endian */
         uint64_t pcam_conf             : 2;  /**< [  1:  0](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[PCAM_CONF]. */
-        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[SCHED_CONF].
-                                                                 Internal:
-                                                                 Parse engine mis-scheduled PCAM or SMEM ops with overlapping accesses. */
-        uint64_t iptint                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[IPTINT].
-                                                                 Internal:
-                                                                 Caused by TRAP or INTR parse engine state. */
+        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[SCHED_CONF]. */
+        uint64_t iptint                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PKI_CL(0..1)_INT[IPTINT]. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
@@ -3640,21 +2647,13 @@ union cavm_pki_clx_int_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
-        uint64_t iptint                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[IPTINT].
-                                                                 Internal:
-                                                                 Caused by TRAP or INTR parse engine state. */
-        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[SCHED_CONF].
-                                                                 Internal:
-                                                                 Parse engine mis-scheduled PCAM or SMEM ops with overlapping accesses. */
+        uint64_t iptint                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[IPTINT]. */
+        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[SCHED_CONF]. */
         uint64_t pcam_conf             : 2;  /**< [  1:  0](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[PCAM_CONF]. */
 #else /* Word 0 - Little Endian */
         uint64_t pcam_conf             : 2;  /**< [  1:  0](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[PCAM_CONF]. */
-        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[SCHED_CONF].
-                                                                 Internal:
-                                                                 Parse engine mis-scheduled PCAM or SMEM ops with overlapping accesses. */
-        uint64_t iptint                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[IPTINT].
-                                                                 Internal:
-                                                                 Caused by TRAP or INTR parse engine state. */
+        uint64_t sched_conf            : 1;  /**< [  2:  2](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[SCHED_CONF]. */
+        uint64_t iptint                : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PKI_CL(0..1)_INT[IPTINT]. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
@@ -3980,10 +2979,6 @@ static inline uint64_t CAVM_PKI_CLX_PCAMX_TERMX(uint64_t a, uint64_t b, uint64_t
  * the PKI parse engine.
  *
  * For each legal j, PKI_CL(i)_PKIND(j)_CFG must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW. But PKI HW supplies them to the
- * parse engine code for parsing/sequencing.
  */
 union cavm_pki_clx_pkindx_cfg
 {
@@ -3999,12 +2994,7 @@ union cavm_pki_clx_pkindx_cfg
                                                                  0x2 = Enable custom LG header extraction after layer D.
                                                                  0x3 = Enable custom LG header extraction after layer E.
                                                                  0x4 = Enable custom LG header extraction after layer F.
-                                                                 0x5-0x7 = Reserved.
-
-                                                                 Internal:
-                                                                 Nonzero implemented only in software's parse engine code.
-
-                                                                 [LG_CUSTOM_LAYER] must be clear if PKI_GBL_PEN[CLG_PEN] is clear. */
+                                                                 0x5-0x7 = Reserved. */
         uint64_t fcs_pres              : 1;  /**< [  7:  7](R/W) FCS present.
                                                                  0 = FCS not present. FCS may not be checked nor stripped.
                                                                  1 = FCS present; the last four bytes of the packet are part of the FCS and may not be
@@ -4014,10 +3004,7 @@ union cavm_pki_clx_pkindx_cfg
                                                                  corresponding [FCS_PRES] must be set. */
         uint64_t mpls_en               : 1;  /**< [  6:  6](R/W) Enable MPLS parsing.
                                                                  0 = Any MPLS labels are ignored, but may be handled by custom Ethertype PCAM matchers.
-                                                                 1 = MPLS label stacks are parsed and skipped over.
-
-                                                                 Internal:
-                                                                 [MPLS_EN] must be clear when PKI_GBL_PEN[MPLS_PEN] is clear. */
+                                                                 1 = MPLS label stacks are parsed and skipped over. */
         uint64_t inst_hdr              : 1;  /**< [  5:  5](R/W) INST header. When set, a PKI_INST_HDR_S is present PKI_CL()_PKIND()_SKIP[INST_SKIP]
                                                                  bytes into the packet received by PKI. */
         uint64_t lg_custom             : 1;  /**< [  4:  4](R/W) Enable parsing LG_CUSTOM layers. */
@@ -4026,83 +3013,56 @@ union cavm_pki_clx_pkindx_cfg
                                                                  0 = Any Fulcrum header is ignored.
                                                                  1 = Fulcrum header is parsed.
 
-                                                                 [FULC_EN] must be clear when any of [HG_EN,HG2_EN,DSA_EN] are set.
-
-                                                                 Internal:
-                                                                 [FULC_EN] must be clear when PKI_GBL_PEN[FULC_PEN] is clear. */
+                                                                 [FULC_EN] must be clear when any of [HG_EN,HG2_EN,DSA_EN] are set. */
         uint64_t dsa_en                : 1;  /**< [  2:  2](R/W) Enable DSA parsing.
 
                                                                  0 = Any DSA header is ignored.
                                                                  1 = DSA is parsed.
 
-                                                                 [DSA_EN] must be clear when any of [HG_EN,HG2_EN,FULC_EN] are set.
-
-                                                                 Internal:
-                                                                 [DSA_EN] must be clear when PKI_GBL_PEN[DSA_PEN] is clear. */
+                                                                 [DSA_EN] must be clear when any of [HG_EN,HG2_EN,FULC_EN] are set. */
         uint64_t hg2_en                : 1;  /**< [  1:  1](R/W) Enable HiGig 2 parsing.
 
                                                                  0 = Any HiGig2 header is ignored.
                                                                  1 = HiGig2 is parsed.
 
-                                                                 [HG2_EN] must be clear when any of [HG_EN,FULC_EN,DSA_EN] is set.
-
-                                                                 Internal:
-                                                                 [HG2_EN] must be clear when PKI_GBL_PEN[HG_PEN] is clear. */
+                                                                 [HG2_EN] must be clear when any of [HG_EN,FULC_EN,DSA_EN] is set. */
         uint64_t hg_en                 : 1;  /**< [  0:  0](R/W) Enable HiGig parsing.
 
                                                                  0 = Any HiGig header is ignored.
                                                                  1 = HiGig is parsed.
 
-                                                                 [HG_EN] must be clear when any of [HG2_EN,FULC_EN,DSA_EN] is set.
-
-                                                                 Internal:
-                                                                 [HG_EN] must be clear when PKI_GBL_PEN[HG_PEN] is clear. */
+                                                                 [HG_EN] must be clear when any of [HG2_EN,FULC_EN,DSA_EN] is set. */
 #else /* Word 0 - Little Endian */
         uint64_t hg_en                 : 1;  /**< [  0:  0](R/W) Enable HiGig parsing.
 
                                                                  0 = Any HiGig header is ignored.
                                                                  1 = HiGig is parsed.
 
-                                                                 [HG_EN] must be clear when any of [HG2_EN,FULC_EN,DSA_EN] is set.
-
-                                                                 Internal:
-                                                                 [HG_EN] must be clear when PKI_GBL_PEN[HG_PEN] is clear. */
+                                                                 [HG_EN] must be clear when any of [HG2_EN,FULC_EN,DSA_EN] is set. */
         uint64_t hg2_en                : 1;  /**< [  1:  1](R/W) Enable HiGig 2 parsing.
 
                                                                  0 = Any HiGig2 header is ignored.
                                                                  1 = HiGig2 is parsed.
 
-                                                                 [HG2_EN] must be clear when any of [HG_EN,FULC_EN,DSA_EN] is set.
-
-                                                                 Internal:
-                                                                 [HG2_EN] must be clear when PKI_GBL_PEN[HG_PEN] is clear. */
+                                                                 [HG2_EN] must be clear when any of [HG_EN,FULC_EN,DSA_EN] is set. */
         uint64_t dsa_en                : 1;  /**< [  2:  2](R/W) Enable DSA parsing.
 
                                                                  0 = Any DSA header is ignored.
                                                                  1 = DSA is parsed.
 
-                                                                 [DSA_EN] must be clear when any of [HG_EN,HG2_EN,FULC_EN] are set.
-
-                                                                 Internal:
-                                                                 [DSA_EN] must be clear when PKI_GBL_PEN[DSA_PEN] is clear. */
+                                                                 [DSA_EN] must be clear when any of [HG_EN,HG2_EN,FULC_EN] are set. */
         uint64_t fulc_en               : 1;  /**< [  3:  3](R/W) Enable Fulcrum tag parsing.
 
                                                                  0 = Any Fulcrum header is ignored.
                                                                  1 = Fulcrum header is parsed.
 
-                                                                 [FULC_EN] must be clear when any of [HG_EN,HG2_EN,DSA_EN] are set.
-
-                                                                 Internal:
-                                                                 [FULC_EN] must be clear when PKI_GBL_PEN[FULC_PEN] is clear. */
+                                                                 [FULC_EN] must be clear when any of [HG_EN,HG2_EN,DSA_EN] are set. */
         uint64_t lg_custom             : 1;  /**< [  4:  4](R/W) Enable parsing LG_CUSTOM layers. */
         uint64_t inst_hdr              : 1;  /**< [  5:  5](R/W) INST header. When set, a PKI_INST_HDR_S is present PKI_CL()_PKIND()_SKIP[INST_SKIP]
                                                                  bytes into the packet received by PKI. */
         uint64_t mpls_en               : 1;  /**< [  6:  6](R/W) Enable MPLS parsing.
                                                                  0 = Any MPLS labels are ignored, but may be handled by custom Ethertype PCAM matchers.
-                                                                 1 = MPLS label stacks are parsed and skipped over.
-
-                                                                 Internal:
-                                                                 [MPLS_EN] must be clear when PKI_GBL_PEN[MPLS_PEN] is clear. */
+                                                                 1 = MPLS label stacks are parsed and skipped over. */
         uint64_t fcs_pres              : 1;  /**< [  7:  7](R/W) FCS present.
                                                                  0 = FCS not present. FCS may not be checked nor stripped.
                                                                  1 = FCS present; the last four bytes of the packet are part of the FCS and may not be
@@ -4116,12 +3076,7 @@ union cavm_pki_clx_pkindx_cfg
                                                                  0x2 = Enable custom LG header extraction after layer D.
                                                                  0x3 = Enable custom LG header extraction after layer E.
                                                                  0x4 = Enable custom LG header extraction after layer F.
-                                                                 0x5-0x7 = Reserved.
-
-                                                                 Internal:
-                                                                 Nonzero implemented only in software's parse engine code.
-
-                                                                 [LG_CUSTOM_LAYER] must be clear if PKI_GBL_PEN[CLG_PEN] is clear. */
+                                                                 0x5-0x7 = Reserved. */
         uint64_t rsvdrw15              : 5;  /**< [ 15: 11](R/W) Reserved. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
@@ -4169,14 +3124,6 @@ static inline uint64_t CAVM_PKI_CLX_PKINDX_CFG(uint64_t a, uint64_t b)
  *
  * For each legal j and k value, PKI_CL(i)_PKIND(j)_KMEM(k) must be configured
  * identically for i=0..1.
- *
- * Internal:
- * The register initialization value for each PKIND and register number (plus 32 or 48
- * based on PKI_ICG()_CFG[MLO]). The other PKI_PKND* registers alias inside regions of
- * PKI_CL()_PKIND()_KMEM().
- *
- * The value of these CSRs do not directly influence PKI HW. But PKI HW supplies them
- * to the parse engine code for parsing/sequencing.
  */
 union cavm_pki_clx_pkindx_kmemx
 {
@@ -4218,10 +3165,6 @@ static inline uint64_t CAVM_PKI_CLX_PKINDX_KMEMX(uint64_t a, uint64_t b, uint64_
  * the PKI parse engine.
  *
  * For each legal j, PKI_CL(i)_PKIND(j)_L2_CUSTOM must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW. But PKI HW supplies them to the
- * parse engine code for parsing/sequencing.
  */
 union cavm_pki_clx_pkindx_l2_custom
 {
@@ -4232,10 +3175,7 @@ union cavm_pki_clx_pkindx_l2_custom
         uint64_t reserved_16_63        : 48;
         uint64_t valid                 : 1;  /**< [ 15: 15](R/W) Valid.
                                                                  0 = Disable custom L2 header extraction.
-                                                                 1 = Enable custom L2 header extraction.
-
-                                                                 Internal:
-                                                                 [VALID] must be clear when PKI_GBL_PEN[CL2_PEN] is clear. */
+                                                                 1 = Enable custom L2 header extraction. */
         uint64_t rsvdrw14              : 7;  /**< [ 14:  8](R/W) Reserved. */
         uint64_t offset                : 8;  /**< [  7:  0](R/W) Scan offset. Pointer to first byte of 32-bit custom extraction header, as
                                                                  absolute number of bytes from beginning of packet. Must be even. If PTP_MODE,
@@ -4249,10 +3189,7 @@ union cavm_pki_clx_pkindx_l2_custom
         uint64_t rsvdrw14              : 7;  /**< [ 14:  8](R/W) Reserved. */
         uint64_t valid                 : 1;  /**< [ 15: 15](R/W) Valid.
                                                                  0 = Disable custom L2 header extraction.
-                                                                 1 = Enable custom L2 header extraction.
-
-                                                                 Internal:
-                                                                 [VALID] must be clear when PKI_GBL_PEN[CL2_PEN] is clear. */
+                                                                 1 = Enable custom L2 header extraction. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -4283,10 +3220,6 @@ static inline uint64_t CAVM_PKI_CLX_PKINDX_L2_CUSTOM(uint64_t a, uint64_t b)
  * the PKI parse engine.
  *
  * For each legal j, PKI_CL(i)_PKIND(j)_LG_CUSTOM must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW. But PKI HW supplies them to the
- * parse engine code for parsing/sequencing.
  */
 union cavm_pki_clx_pkindx_lg_custom
 {
@@ -4298,18 +3231,12 @@ union cavm_pki_clx_pkindx_lg_custom
         uint64_t offset                : 8;  /**< [  7:  0](R/W) Scan offset. Pointer to first byte of 32-bit custom extraction header, as
                                                                  relative number of bytes from PKI_WQE_S[LCPTR], PKI_WQE_S[LDPTR],
                                                                  PKI_WQE_S[LEPTR], PKI_WQE_S[LFPTR], as selected by
-                                                                 PKI_CL()_PKIND()_CFG[LG_CUSTOM_LAYER]. Must be even.
-
-                                                                 Internal:
-                                                                 Support for LC/LD/LE added in software's parse engine code. */
+                                                                 PKI_CL()_PKIND()_CFG[LG_CUSTOM_LAYER]. Must be even. */
 #else /* Word 0 - Little Endian */
         uint64_t offset                : 8;  /**< [  7:  0](R/W) Scan offset. Pointer to first byte of 32-bit custom extraction header, as
                                                                  relative number of bytes from PKI_WQE_S[LCPTR], PKI_WQE_S[LDPTR],
                                                                  PKI_WQE_S[LEPTR], PKI_WQE_S[LFPTR], as selected by
-                                                                 PKI_CL()_PKIND()_CFG[LG_CUSTOM_LAYER]. Must be even.
-
-                                                                 Internal:
-                                                                 Support for LC/LD/LE added in software's parse engine code. */
+                                                                 PKI_CL()_PKIND()_CFG[LG_CUSTOM_LAYER]. Must be even. */
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } s;
@@ -4340,10 +3267,6 @@ static inline uint64_t CAVM_PKI_CLX_PKINDX_LG_CUSTOM(uint64_t a, uint64_t b)
  * the PKI parse engine.
  *
  * For each legal j, PKI_CL(i)_PKIND(j)_SKIP must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW. But PKI HW supplies them to the
- * parse engine code for parsing/sequencing.
  */
 union cavm_pki_clx_pkindx_skip
 {
@@ -4399,10 +3322,6 @@ static inline uint64_t CAVM_PKI_CLX_PKINDX_SKIP(uint64_t a, uint64_t b)
  * the PKI parse engine.
  *
  * For each legal j, PKI_CL(i)_PKIND(j)_STYLE must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW. But PKI HW supplies them to the
- * parse engine code for parsing/sequencing.
  */
 union cavm_pki_clx_pkindx_style
 {
@@ -4428,16 +3347,7 @@ union cavm_pki_clx_pkindx_style
                                                                  _ 0x1 = Parse LB..LG.
                                                                  _ 0x3 = Parse LC..LG.
                                                                  _ 0x7F = Parse none and error check none of LA..LG.
-                                                                 _ else = Reserved.
-
-                                                                 Internal:
-                                                                 The following are additional constraints:
-
-                                                                 _ [PM]\<2\> (i.e. [PM\<LC\>]) must be set when PKI_GBL_PEN[L3_PEN] is set
-                                                                 _ [PM]\<3\> (i.e. [PM\<LD\>]) must be set when PKI_GBL_PEN[VIRT_PEN] is set
-                                                                 _ [PM]\<4\> (i.e. [PM\<LE\>]) must be set when PKI_GBL_PEN[IL3_PEN] is set
-                                                                 _ [PM]\<5\> (i.e. [PM\<LF\>]) must be set when PKI_GBL_PEN[L4_PEN] is set
-                                                                 _ [PM]\<6\> (i.e. [PM\<LG\>]) must be set when PKI_GBL_PEN[CLG_PEN] is set */
+                                                                 _ else = Reserved. */
         uint64_t style                 : 8;  /**< [  7:  0](R/W) Initial style. Initial style number for packets on this port, will remain as final style
                                                                  if no PCAM entries match the packet. Note only 64 final styles exist, the upper two bits
                                                                  will only be used for PCAM matching. */
@@ -4461,16 +3371,7 @@ union cavm_pki_clx_pkindx_style
                                                                  _ 0x1 = Parse LB..LG.
                                                                  _ 0x3 = Parse LC..LG.
                                                                  _ 0x7F = Parse none and error check none of LA..LG.
-                                                                 _ else = Reserved.
-
-                                                                 Internal:
-                                                                 The following are additional constraints:
-
-                                                                 _ [PM]\<2\> (i.e. [PM\<LC\>]) must be set when PKI_GBL_PEN[L3_PEN] is set
-                                                                 _ [PM]\<3\> (i.e. [PM\<LD\>]) must be set when PKI_GBL_PEN[VIRT_PEN] is set
-                                                                 _ [PM]\<4\> (i.e. [PM\<LE\>]) must be set when PKI_GBL_PEN[IL3_PEN] is set
-                                                                 _ [PM]\<5\> (i.e. [PM\<LF\>]) must be set when PKI_GBL_PEN[L4_PEN] is set
-                                                                 _ [PM]\<6\> (i.e. [PM\<LG\>]) must be set when PKI_GBL_PEN[CLG_PEN] is set */
+                                                                 _ else = Reserved. */
         uint64_t rsvdrw15              : 1;  /**< [ 15: 15](R/W) Reserved. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
@@ -4515,12 +3416,6 @@ static inline uint64_t CAVM_PKI_CLX_PKINDX_STYLE(uint64_t a, uint64_t b)
  * PKI_CL()_ECC_INT[SMEM_SBE] or PKI_CL()_ECC_INT[SMEM_DBE].
  *
  * For each legal j, PKI_CL(i)_SMEM(j) must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW, but the parse engine code
- * gets them, and the parse engine code will typically indirectly construct
- * PKI_BEWQ_S[CFG,CFG2] from them. So not very indirectly, some of these CSRs influence
- * PKI HW.
  */
 union cavm_pki_clx_smemx
 {
@@ -4600,10 +3495,6 @@ static inline uint64_t CAVM_PKI_CLX_START(uint64_t a)
  * the PKI parse engine.
  *
  * For each legal j, PKI_CL(i)_STYLE(j)_ALG must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW. But PKI HW supplies them
- * to the parse engine code.
  */
 union cavm_pki_clx_stylex_alg
 {
@@ -4709,11 +3600,6 @@ static inline uint64_t CAVM_PKI_CLX_STYLEX_ALG(uint64_t a, uint64_t b)
  * the PKI parse engine and other PKI hardware.
  *
  * For each legal j, PKI_CL(i)_STYLE(j)_CFG must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW, but the parse engine code
- * gets them, and the parse engine code will typically indirectly construct
- * PKI_BEWQ_S[CFG] from them. So not very indirectly, these CSRs influence PKI HW.
  */
 union cavm_pki_clx_stylex_cfg
 {
@@ -4722,227 +3608,97 @@ union cavm_pki_clx_stylex_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_32_63        : 32;
-        uint64_t rsvdrw31              : 1;  /**< [ 31: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 Parse engine only passes along field RSVDRW31, and doesn't otherwise use it. */
+        uint64_t rsvdrw31              : 1;  /**< [ 31: 31](R/W) Reserved. */
         uint64_t ip6_udp_opt           : 1;  /**< [ 30: 30](R/W) IPv6/UDP checksum is optional. IPv4 allows an optional UDP checksum by sending the all-0s
                                                                  patterns. IPv6 outlaws this and the spec says to always check UDP checksum.
                                                                  0 = Spec compliant, do not allow optional code.
-                                                                 1 = Treat IPv6 as IPv4; the all-0s pattern will cause a UDP checksum pass.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field IP6_UDP_OPT, and doesn't otherwise use it. */
+                                                                 1 = Treat IPv6 as IPv4; the all-0s pattern will cause a UDP checksum pass. */
         uint64_t lenerr_en             : 1;  /**< [ 29: 29](R/W) L2 length error check enable. When set, the hardware checks that the number of packet
                                                                  bytes following the L2 length field (excluding FCS) is at least as large as the L2
                                                                  length field value whenever the Ethertype / L2 length field is \<= 1535.
 
                                                                  The PKI L2 length check assumes that the packet received by PKI contains a trailing FCS
                                                                  when
-                                                                 the PKI_CL()_PKIND()_CFG[FCS_PRES] for the pkind of the packet is set.
-
-                                                                 Internal:
-                                                                 The parse engine clears this bit in PKI_BEWQ_S[CFG] when SNAP length checks
-                                                                 are not appropriate. */
-        uint64_t lenerr_eqpad          : 1;  /**< [ 28: 28](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine only passes along field LENERR_EQPAD, and doesn't otherwise use it. */
+                                                                 the PKI_CL()_PKIND()_CFG[FCS_PRES] for the pkind of the packet is set. */
+        uint64_t lenerr_eqpad          : 1;  /**< [ 28: 28](R/W) Reserved. Must be zero. */
         uint64_t minmax_sel            : 1;  /**< [ 27: 27](R/W) Selects which PKI_FRM_LEN_CHK() register is used for this pkind for MINERR and MAXERR
                                                                  checks.
                                                                  0 = use PKI_FRM_LEN_CHK(0).
-                                                                 1 = use PKI_FRM_LEN_CHK(1).
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field MINMAX_SEL, and doesn't otherwise use it. */
+                                                                 1 = use PKI_FRM_LEN_CHK(1). */
         uint64_t maxerr_en             : 1;  /**< [ 26: 26](R/W) Max frame error check enable. See PKI_FRM_LEN_CHK()[MAXLEN], [MINMAX_SEL],
-                                                                 PKI_OPCODE_E::L2_OVERSIZE,L2_OVERRUN, PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field MAXERR_EN, and doesn't otherwise use it. */
+                                                                 PKI_OPCODE_E::L2_OVERSIZE,L2_OVERRUN, PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE]. */
         uint64_t minerr_en             : 1;  /**< [ 25: 25](R/W) Min frame error check enable. See PKI_FRM_LEN_CHK()[MINLEN], [MINMAX_SEL],
-                                                                 PKI_OPCODE_E::L2_UNDERSIZE,L2_FRAGMENT, PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field MINERR_EN, and doesn't otherwise use it. */
-        uint64_t qpg_dis_grptag        : 1;  /**< [ 24: 24](R/W) Disable computing group using PKI_WQE_S[TAG]. See PKI_WQE_S[GRP].
-                                                                 Internal:
-                                                                 Parse engine only passes along field QPG_DIS_GRPTAG, and doesn't otherwise use it. */
+                                                                 PKI_OPCODE_E::L2_UNDERSIZE,L2_FRAGMENT, PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE]. */
+        uint64_t qpg_dis_grptag        : 1;  /**< [ 24: 24](R/W) Disable computing group using PKI_WQE_S[TAG]. See PKI_WQE_S[GRP]. */
         uint64_t fcs_strip             : 1;  /**< [ 23: 23](R/W) Strip L2 FCS bytes from packet, decrease PKI_WQE_S[LEN] by 4 bytes. Corresponding
                                                                  PKI_CL()_PKIND()_CFG[FCS_PRES] must be set when [FCS_STRIP] is set.
 
-                                                                 See the PKI_OPCODE_E::L2_PUNY exception case.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field FCS_STRIP, and doesn't otherwise use it.
-
-                                                                 The microcode doesn't need to clear [FCS_STRIP] in PKI_BEWQ_S[CFG] when
-                                                                 a PKI_OPCODE_E::L2_PUNY occurs. PKI BE hardware will not decrement PKI_WQE_S[LEN]
-                                                                 when it would end up zero or negative. */
+                                                                 See the PKI_OPCODE_E::L2_PUNY exception case. */
         uint64_t fcs_chk               : 1;  /**< [ 22: 22](R/W) FCS checking enabled. Corresponding PKI_CL()_PKIND()_CFG[FCS_PRES] must be set
                                                                  when [FCS_CHK] is set. See PKI_OPCODE_E::L2_PFCS,L2_FRAGMENT,L2_OVERRUN,
-                                                                 PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field FCS_CHK, and doesn't otherwise use it. */
+                                                                 PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE]. */
         uint64_t rawdrp                : 1;  /**< [ 21: 21](R/W) Allow RAW packet drop.
                                                                  0 = Never drop packets with PKI_WQE_S[RAW] set.
-                                                                 1 = Allow the PKI to drop RAW packets based on PKI_QPG_TBLB()[ENA_RED/ENA_DROP].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field RAWDRP, and doesn't otherwise use it. */
+                                                                 1 = Allow the PKI to drop RAW packets based on PKI_QPG_TBLB()[ENA_RED/ENA_DROP]. */
         uint64_t drop                  : 1;  /**< [ 20: 20](R/W) Force packet dropping.
                                                                  0 = Drop packet based on PKI_QPG_TBLB()[ENA_RED/ENA_DROP].
-                                                                 1 = Always drop the packet. Overrides [NODROP], [RAWDRP].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field DROP, and doesn't otherwise use it. */
+                                                                 1 = Always drop the packet. Overrides [NODROP], [RAWDRP]. */
         uint64_t nodrop                : 1;  /**< [ 19: 19](R/W) Disable QoS packet drop.
                                                                  0 = Allowed to drop packet based on PKI_QPG_TBLB()[ENA_RED/ENA_DROP].
-                                                                 1 = Never drop the packet. Overrides [RAWDRP].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field NODROP, and doesn't otherwise use it. */
-        uint64_t qpg_dis_padd          : 1;  /**< [ 18: 18](R/W) Disable computing port adder by QPG algorithm. See PKI_WQE_S[CHAN].
-                                                                 Internal:
-                                                                 Parse engine only passes along field QPG_DIS_PADD, and doesn't otherwise use it. */
-        uint64_t qpg_dis_grp           : 1;  /**< [ 17: 17](R/W) Disable computing group by QPG algorithm.
-                                                                 Internal:
-                                                                 Parse engine uses [QPG_DIS_GRP] only for custom pass 1 PKI workaround for limited
-                                                                 applications,
-                                                                 which makes WQE[GRP]\<5:0\> a function of WQE[TAG] for IPv4/UDP/TCP.
-                                                                 Parse engine passes along field QPG_DIS_GRP unmodified.
-
-                                                                 [QPG_DIS_GRP] should normally always be clear.
-
-                                                                 PKI_WQE_S[GRP] is normally calculated solely by PKI HW. But if
-                                                                 [QPG_DIS_GRP] is set, PKI_WQE_S[GRP] is PKI_BEWQ_S[GRP]. */
+                                                                 1 = Never drop the packet. Overrides [RAWDRP]. */
+        uint64_t qpg_dis_padd          : 1;  /**< [ 18: 18](R/W) Disable computing port adder by QPG algorithm. See PKI_WQE_S[CHAN]. */
+        uint64_t qpg_dis_grp           : 1;  /**< [ 17: 17](R/W) Disable computing group by QPG algorithm. */
         uint64_t qpg_dis_aura          : 1;  /**< [ 16: 16](R/W) Disable computing aura by QPG algorithm.
 
-                                                                 [QPG_DIS_AURA] should normally always be clear.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field QPG_DIS_AURA, and doesn't otherwise use it.
-                                                                 PKI_WQE_S[AURA] is normally calculated solely by PKI BE, but if [QPG_DIS_AURA] is set,
-                                                                 PKI_WQE_S[AURA] is PKI_BEWQ_S[AURA]. */
-        uint64_t rsvdrw15              : 5;  /**< [ 15: 11](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine code may corrupt PKI_BEWQ_S[CFG]\<15:11\> during QPG calculations.
-                                                                 See [QPG_BASE]. Effectively, PKI_BEWQ_S[CFG]\<15:11\> is unpredictable. */
-        uint64_t qpg_base              : 11; /**< [ 10:  0](R/W) Base index into PKI_QPG_TBL().
-                                                                 Internal:
-                                                                 The parse engine typically starts with [QPG_BASE], performs the
-                                                                 QPG add in place, and passes the result through to PKI_BEWQ_S[CFG]. The
-                                                                 port shift and carry from the add may corrupt PKI_BEWQ_S[CFG]\<15:11\>. */
+                                                                 [QPG_DIS_AURA] should normally always be clear. */
+        uint64_t rsvdrw15              : 5;  /**< [ 15: 11](R/W) Reserved. Must be zero. */
+        uint64_t qpg_base              : 11; /**< [ 10:  0](R/W) Base index into PKI_QPG_TBL(). */
 #else /* Word 0 - Little Endian */
-        uint64_t qpg_base              : 11; /**< [ 10:  0](R/W) Base index into PKI_QPG_TBL().
-                                                                 Internal:
-                                                                 The parse engine typically starts with [QPG_BASE], performs the
-                                                                 QPG add in place, and passes the result through to PKI_BEWQ_S[CFG]. The
-                                                                 port shift and carry from the add may corrupt PKI_BEWQ_S[CFG]\<15:11\>. */
-        uint64_t rsvdrw15              : 5;  /**< [ 15: 11](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine code may corrupt PKI_BEWQ_S[CFG]\<15:11\> during QPG calculations.
-                                                                 See [QPG_BASE]. Effectively, PKI_BEWQ_S[CFG]\<15:11\> is unpredictable. */
+        uint64_t qpg_base              : 11; /**< [ 10:  0](R/W) Base index into PKI_QPG_TBL(). */
+        uint64_t rsvdrw15              : 5;  /**< [ 15: 11](R/W) Reserved. Must be zero. */
         uint64_t qpg_dis_aura          : 1;  /**< [ 16: 16](R/W) Disable computing aura by QPG algorithm.
 
-                                                                 [QPG_DIS_AURA] should normally always be clear.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field QPG_DIS_AURA, and doesn't otherwise use it.
-                                                                 PKI_WQE_S[AURA] is normally calculated solely by PKI BE, but if [QPG_DIS_AURA] is set,
-                                                                 PKI_WQE_S[AURA] is PKI_BEWQ_S[AURA]. */
-        uint64_t qpg_dis_grp           : 1;  /**< [ 17: 17](R/W) Disable computing group by QPG algorithm.
-                                                                 Internal:
-                                                                 Parse engine uses [QPG_DIS_GRP] only for custom pass 1 PKI workaround for limited
-                                                                 applications,
-                                                                 which makes WQE[GRP]\<5:0\> a function of WQE[TAG] for IPv4/UDP/TCP.
-                                                                 Parse engine passes along field QPG_DIS_GRP unmodified.
-
-                                                                 [QPG_DIS_GRP] should normally always be clear.
-
-                                                                 PKI_WQE_S[GRP] is normally calculated solely by PKI HW. But if
-                                                                 [QPG_DIS_GRP] is set, PKI_WQE_S[GRP] is PKI_BEWQ_S[GRP]. */
-        uint64_t qpg_dis_padd          : 1;  /**< [ 18: 18](R/W) Disable computing port adder by QPG algorithm. See PKI_WQE_S[CHAN].
-                                                                 Internal:
-                                                                 Parse engine only passes along field QPG_DIS_PADD, and doesn't otherwise use it. */
+                                                                 [QPG_DIS_AURA] should normally always be clear. */
+        uint64_t qpg_dis_grp           : 1;  /**< [ 17: 17](R/W) Disable computing group by QPG algorithm. */
+        uint64_t qpg_dis_padd          : 1;  /**< [ 18: 18](R/W) Disable computing port adder by QPG algorithm. See PKI_WQE_S[CHAN]. */
         uint64_t nodrop                : 1;  /**< [ 19: 19](R/W) Disable QoS packet drop.
                                                                  0 = Allowed to drop packet based on PKI_QPG_TBLB()[ENA_RED/ENA_DROP].
-                                                                 1 = Never drop the packet. Overrides [RAWDRP].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field NODROP, and doesn't otherwise use it. */
+                                                                 1 = Never drop the packet. Overrides [RAWDRP]. */
         uint64_t drop                  : 1;  /**< [ 20: 20](R/W) Force packet dropping.
                                                                  0 = Drop packet based on PKI_QPG_TBLB()[ENA_RED/ENA_DROP].
-                                                                 1 = Always drop the packet. Overrides [NODROP], [RAWDRP].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field DROP, and doesn't otherwise use it. */
+                                                                 1 = Always drop the packet. Overrides [NODROP], [RAWDRP]. */
         uint64_t rawdrp                : 1;  /**< [ 21: 21](R/W) Allow RAW packet drop.
                                                                  0 = Never drop packets with PKI_WQE_S[RAW] set.
-                                                                 1 = Allow the PKI to drop RAW packets based on PKI_QPG_TBLB()[ENA_RED/ENA_DROP].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field RAWDRP, and doesn't otherwise use it. */
+                                                                 1 = Allow the PKI to drop RAW packets based on PKI_QPG_TBLB()[ENA_RED/ENA_DROP]. */
         uint64_t fcs_chk               : 1;  /**< [ 22: 22](R/W) FCS checking enabled. Corresponding PKI_CL()_PKIND()_CFG[FCS_PRES] must be set
                                                                  when [FCS_CHK] is set. See PKI_OPCODE_E::L2_PFCS,L2_FRAGMENT,L2_OVERRUN,
-                                                                 PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field FCS_CHK, and doesn't otherwise use it. */
+                                                                 PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE]. */
         uint64_t fcs_strip             : 1;  /**< [ 23: 23](R/W) Strip L2 FCS bytes from packet, decrease PKI_WQE_S[LEN] by 4 bytes. Corresponding
                                                                  PKI_CL()_PKIND()_CFG[FCS_PRES] must be set when [FCS_STRIP] is set.
 
-                                                                 See the PKI_OPCODE_E::L2_PUNY exception case.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field FCS_STRIP, and doesn't otherwise use it.
-
-                                                                 The microcode doesn't need to clear [FCS_STRIP] in PKI_BEWQ_S[CFG] when
-                                                                 a PKI_OPCODE_E::L2_PUNY occurs. PKI BE hardware will not decrement PKI_WQE_S[LEN]
-                                                                 when it would end up zero or negative. */
-        uint64_t qpg_dis_grptag        : 1;  /**< [ 24: 24](R/W) Disable computing group using PKI_WQE_S[TAG]. See PKI_WQE_S[GRP].
-                                                                 Internal:
-                                                                 Parse engine only passes along field QPG_DIS_GRPTAG, and doesn't otherwise use it. */
+                                                                 See the PKI_OPCODE_E::L2_PUNY exception case. */
+        uint64_t qpg_dis_grptag        : 1;  /**< [ 24: 24](R/W) Disable computing group using PKI_WQE_S[TAG]. See PKI_WQE_S[GRP]. */
         uint64_t minerr_en             : 1;  /**< [ 25: 25](R/W) Min frame error check enable. See PKI_FRM_LEN_CHK()[MINLEN], [MINMAX_SEL],
-                                                                 PKI_OPCODE_E::L2_UNDERSIZE,L2_FRAGMENT, PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field MINERR_EN, and doesn't otherwise use it. */
+                                                                 PKI_OPCODE_E::L2_UNDERSIZE,L2_FRAGMENT, PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE]. */
         uint64_t maxerr_en             : 1;  /**< [ 26: 26](R/W) Max frame error check enable. See PKI_FRM_LEN_CHK()[MAXLEN], [MINMAX_SEL],
-                                                                 PKI_OPCODE_E::L2_OVERSIZE,L2_OVERRUN, PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE].
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field MAXERR_EN, and doesn't otherwise use it. */
+                                                                 PKI_OPCODE_E::L2_OVERSIZE,L2_OVERRUN, PKI_ERRLEV_E::LA, and PKI_WQE_S[ERRLEV,OPCODE]. */
         uint64_t minmax_sel            : 1;  /**< [ 27: 27](R/W) Selects which PKI_FRM_LEN_CHK() register is used for this pkind for MINERR and MAXERR
                                                                  checks.
                                                                  0 = use PKI_FRM_LEN_CHK(0).
-                                                                 1 = use PKI_FRM_LEN_CHK(1).
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field MINMAX_SEL, and doesn't otherwise use it. */
-        uint64_t lenerr_eqpad          : 1;  /**< [ 28: 28](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine only passes along field LENERR_EQPAD, and doesn't otherwise use it. */
+                                                                 1 = use PKI_FRM_LEN_CHK(1). */
+        uint64_t lenerr_eqpad          : 1;  /**< [ 28: 28](R/W) Reserved. Must be zero. */
         uint64_t lenerr_en             : 1;  /**< [ 29: 29](R/W) L2 length error check enable. When set, the hardware checks that the number of packet
                                                                  bytes following the L2 length field (excluding FCS) is at least as large as the L2
                                                                  length field value whenever the Ethertype / L2 length field is \<= 1535.
 
                                                                  The PKI L2 length check assumes that the packet received by PKI contains a trailing FCS
                                                                  when
-                                                                 the PKI_CL()_PKIND()_CFG[FCS_PRES] for the pkind of the packet is set.
-
-                                                                 Internal:
-                                                                 The parse engine clears this bit in PKI_BEWQ_S[CFG] when SNAP length checks
-                                                                 are not appropriate. */
+                                                                 the PKI_CL()_PKIND()_CFG[FCS_PRES] for the pkind of the packet is set. */
         uint64_t ip6_udp_opt           : 1;  /**< [ 30: 30](R/W) IPv6/UDP checksum is optional. IPv4 allows an optional UDP checksum by sending the all-0s
                                                                  patterns. IPv6 outlaws this and the spec says to always check UDP checksum.
                                                                  0 = Spec compliant, do not allow optional code.
-                                                                 1 = Treat IPv6 as IPv4; the all-0s pattern will cause a UDP checksum pass.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field IP6_UDP_OPT, and doesn't otherwise use it. */
-        uint64_t rsvdrw31              : 1;  /**< [ 31: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 Parse engine only passes along field RSVDRW31, and doesn't otherwise use it. */
+                                                                 1 = Treat IPv6 as IPv4; the all-0s pattern will cause a UDP checksum pass. */
+        uint64_t rsvdrw31              : 1;  /**< [ 31: 31](R/W) Reserved. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } s;
@@ -4973,11 +3729,6 @@ static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG(uint64_t a, uint64_t b)
  * the PKI parse engine and other PKI hardware.
  *
  * For each legal j, PKI_CL(i)_STYLE(j)_CFG2 must be configured identically for i=0..1.
- *
- * Internal:
- * The value of these CSRs do not directly influence PKI HW, but the parse engine code
- * gets them, and the parse engine code will typically indirectly construct
- * PKI_BEWQ_S[CFG2] from them. So not very indirectly, these CSRs influence PKI HW.
  */
 union cavm_pki_clx_stylex_cfg2
 {
@@ -4988,379 +3739,175 @@ union cavm_pki_clx_stylex_cfg2
         uint64_t reserved_32_63        : 32;
         uint64_t tag_inc               : 4;  /**< [ 31: 28](R/W) Include masked tags using PKI_TAG_INC()_MASK. Each bit indicates to include the
                                                                  corresponding PKI_TAG_INC()_MASK range. See also PKI_TAG_INC()_CTL
-                                                                 and PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear these bits if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t rsvdrw27              : 3;  /**< [ 27: 25](R/W) Reserved.
-                                                                 Internal:
-                                                                 Parse engine only passes along field RSVDRW27, and doesn't otherwise use it. */
-        uint64_t tag_masken            : 1;  /**< [ 24: 24](R/W) When set, apply PKI_STYLE()_TAG_MASK to computed tag. See PKI_WQE_S[TAG].
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t tag_src_lg            : 1;  /**< [ 23: 23](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Description from before when TAG_SRC_LG became reserved:
-
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 and PKI_WQE_S[TAG]. */
+        uint64_t rsvdrw27              : 3;  /**< [ 27: 25](R/W) Reserved. */
+        uint64_t tag_masken            : 1;  /**< [ 24: 24](R/W) When set, apply PKI_STYLE()_TAG_MASK to computed tag. See PKI_WQE_S[TAG]. */
+        uint64_t tag_src_lg            : 1;  /**< [ 23: 23](R/W) Reserved. Must be zero. */
         uint64_t tag_src_lf            : 1;  /**< [ 22: 22](R/W) When set, PKI hardware includes the (inner or outer) IPv4/IPv6 TCP/UDP/SCTP
                                                                  source port in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LFTY])_MAP[BELTYPE]
                                                                  equals any of PKI_BELTYPE_E::TCP,UDP,SCTP. PKI_WQE_S[LFPTR] points to the
                                                                  TCP/UDP/SCTP header in this case. In an IP-in-IP case, [TAG_SRC_LF] refers
                                                                  to the inner IPv4/IPv6 TCP/UDP/SCTP, else the outer/only IPv4/IPv6 TCP/UDP/SCTP.
-                                                                 See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 See PKI_WQE_S[TAG]. */
         uint64_t tag_src_le            : 1;  /**< [ 21: 21](R/W) When set, PKI hardware includes the inner IPv4/IPv6 source address (in an
                                                                  IP-in-IP case) in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LETY])_MAP[BELTYPE]
                                                                  equals either of PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LEPTR] points to the inner
-                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG]. */
         uint64_t tag_src_ld            : 1;  /**< [ 20: 20](R/W) When set, PKI hardware includes the outer IPv4/IPv6 UDP source port (in an
                                                                  IP-in-IP case) in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LDTY])_MAP[BELTYPE]
                                                                  equals PKI_BELTYPE_E::UDP. PKI_WQE_S[LDPTR] points to the UDP header in this case.
-                                                                 See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 See PKI_WQE_S[TAG]. */
         uint64_t tag_src_lc            : 1;  /**< [ 19: 19](R/W) When set, PKI hardware includes the outermost IPv4/IPv6 source address
                                                                  in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LCTY])_MAP[BELTYPE]
                                                                  equals either of PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LCPTR] points to the
-                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t tag_src_lb            : 1;  /**< [ 18: 18](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Description from before when TAG_SRC_LB became reserved:
-
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t tag_dst_lg            : 1;  /**< [ 17: 17](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Description from before when TAG_DST_LG became reserved:
-
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG]. */
+        uint64_t tag_src_lb            : 1;  /**< [ 18: 18](R/W) Reserved. Must be zero. */
+        uint64_t tag_dst_lg            : 1;  /**< [ 17: 17](R/W) Reserved. Must be zero. */
         uint64_t tag_dst_lf            : 1;  /**< [ 16: 16](R/W) When set, PKI hardware includes the (inner or outer) IPv4/IPv6 TCP/UDP/SCTP
                                                                  destination port in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LFTY])_MAP[BELTYPE]
                                                                  equals any of PKI_BELTYPE_E::TCP,UDP,SCTP. PKI_WQE_S[LFPTR] points to the
                                                                  TCP/UDP/SCTP header in this case. In an IP-in-IP case, [TAG_DST_LF] refers
                                                                  to the inner IPv4/IPv6 TCP/UDP/SCTP, else the outer/only IPv4/IPv6 TCP/UDP/SCTP.
-                                                                 See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 See PKI_WQE_S[TAG]. */
         uint64_t tag_dst_le            : 1;  /**< [ 15: 15](R/W) When set, PKI hardware includes the inner IPv4/IPv6 destination address (in an
                                                                  IP-in-IP case) in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LETY])_MAP[BELTYPE]
                                                                  equals either of PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LEPTR] points to the inner
-                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG]. */
         uint64_t tag_dst_ld            : 1;  /**< [ 14: 14](R/W) When set, PKI hardware includes the outer IPv4/IPv6 UDP destination port (in an
                                                                  IP-in-IP case) in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LDTY])_MAP[BELTYPE]
                                                                  equals PKI_BELTYPE_E::UDP. PKI_WQE_S[LDPTR] points to the UDP header in this case.
-                                                                 See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 See PKI_WQE_S[TAG]. */
         uint64_t tag_dst_lc            : 1;  /**< [ 13: 13](R/W) When set, PKI hardware includes the outermost IPv4/IPv6 destination address
                                                                  in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LCTY])_MAP[BELTYPE]
                                                                  equals either of PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LCPTR] points to the
-                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t tag_dst_lb            : 1;  /**< [ 12: 12](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Description from before when TAG_DST_LB became reserved:
-
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t len_lg                : 1;  /**< [ 11: 11](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LG, and doesn't otherwise use it. */
+                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG]. */
+        uint64_t tag_dst_lb            : 1;  /**< [ 12: 12](R/W) Reserved. Must be zero. */
+        uint64_t len_lg                : 1;  /**< [ 11: 11](R/W) Reserved. Must be zero. */
         uint64_t len_lf                : 1;  /**< [ 10: 10](R/W) When set, PKI hardware performs an (inner or outer) IPv4/IPv6 TCP/UDP/SCTP
                                                                  PKI_OPCODE_E::L4_LEN check when PKI_LTYPE(PKI_WQE_S[LFTY])_MAP[BELTYPE]
                                                                  equals any of PKI_BELTYPE_E::TCP,UDP,SCTP. PKI_WQE_S[LFPTR] points to the
                                                                  TCP/UDP/SCTP header in this case. In an IP-in-IP case, [LEN_LF] refers
                                                                  to the inner IPv4/IPv6 TCP/UDP/SCTP, else the outer/only IPv4/IPv6 TCP/UDP/SCTP.
-                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LF.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LF, and doesn't otherwise use it. */
+                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LF. */
         uint64_t len_le                : 1;  /**< [  9:  9](R/W) When set, PKI hardware performs an inner IPv4/IPv6 PKI_OPCODE_E::IP_MALD check (in an
                                                                  IP-in-IP case) when PKI_LTYPE(PKI_WQE_S[LETY])_MAP[BELTYPE] equals either of
                                                                  PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LEPTR] points to the inner IPv4/IPv6 header in this
-                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LE.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LE, and doesn't otherwise use it. */
+                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LE. */
         uint64_t len_ld                : 1;  /**< [  8:  8](R/W) When set, PKI hardware performs an outer IPv4/IPv6 UDP PKI_OPCODE_E::L4_LEN
                                                                  check (in an IP-in-IP case) when PKI_LTYPE(PKI_WQE_S[LDTY])_MAP[BELTYPE]
                                                                  equals PKI_BELTYPE_E::UDP. PKI_WQE_S[LDPTR] points to the UDP header in this case.
-                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LD.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LD, and doesn't otherwise use it. */
+                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LD. */
         uint64_t len_lc                : 1;  /**< [  7:  7](R/W) When set, PKI hardware performs an outermost IPv4/IPv6 PKI_OPCODE_E::IP_MALD
                                                                  check when PKI_LTYPE(PKI_WQE_S[LCTY])_MAP[BELTYPE] equals either of
                                                                  PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LCPTR] points to the IPv4/IPv6 header in this
-                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LC.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LC, and doesn't otherwise use it. */
-        uint64_t len_lb                : 1;  /**< [  6:  6](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LB, and doesn't otherwise use it. */
-        uint64_t csum_lg               : 1;  /**< [  5:  5](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LG, and doesn't otherwise use it. */
+                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LC. */
+        uint64_t len_lb                : 1;  /**< [  6:  6](R/W) Reserved. Must be zero. */
+        uint64_t csum_lg               : 1;  /**< [  5:  5](R/W) Reserved. Must be zero. */
         uint64_t csum_lf               : 1;  /**< [  4:  4](R/W) When set, PKI hardware performs an (inner or outer) IPv4/IPv6 TCP/UDP/SCTP
                                                                  PKI_OPCODE_E::L4_CHK check when PKI_LTYPE(PKI_WQE_S[LFTY])_MAP[BELTYPE]
                                                                  equals any of PKI_BELTYPE_E::TCP,UDP,SCTP. PKI_WQE_S[LFPTR] points to the
                                                                  TCP/UDP/SCTP header in this case. In an IP-in-IP case, [CSUM_LF] refers
                                                                  to the inner IPv4/IPv6 TCP/UDP/SCTP, else the outer/only IPv4/IPv6 TCP/UDP/SCTP.
-                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LF.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LF, and doesn't otherwise use it. */
+                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LF. */
         uint64_t csum_le               : 1;  /**< [  3:  3](R/W) When set, PKI hardware performs an inner IPv4/IPv6 PKI_OPCODE_E::IP_CHK check (in an
                                                                  IP-in-IP case) when PKI_LTYPE(PKI_WQE_S[LETY])_MAP[BELTYPE] equals either of
                                                                  PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LEPTR] points to the inner IPv4/IPv6 header in this
-                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LE.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LE, and doesn't otherwise use it. */
+                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LE. */
         uint64_t csum_ld               : 1;  /**< [  2:  2](R/W) When set, PKI hardware performs an outer IPv4/IPv6 UDP PKI_OPCODE_E::L4_CHK
                                                                  check (in an IP-in-IP case) when PKI_LTYPE(PKI_WQE_S[LDTY])_MAP[BELTYPE]
                                                                  equals PKI_BELTYPE_E::UDP. PKI_WQE_S[LDPTR] points to the UDP header in this case.
-                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LD.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LD, and doesn't otherwise use it. */
+                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LD. */
         uint64_t csum_lc               : 1;  /**< [  1:  1](R/W) When set, PKI hardware performs an outermost IPv4/IPv6 PKI_OPCODE_E::IP_CHK
                                                                  check when PKI_LTYPE(PKI_WQE_S[LCTY])_MAP[BELTYPE] equals either of
                                                                  PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LCPTR] points to the IPv4/IPv6 header in this
-                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LC.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LC, and doesn't otherwise use it. */
-        uint64_t csum_lb               : 1;  /**< [  0:  0](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Microcode replaces this bit with PKI_CL()_PKIND()_CFG[FCS_PRES]. PKI BE hardware uses it
-                                                                 for length calculation using fcs_pres_size.
-
-                                                                 where fcs_pres_size = (PKI_CL()_PKIND()_CFG[FCS_PRES]? 4 : 0). */
+                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LC. */
+        uint64_t csum_lb               : 1;  /**< [  0:  0](R/W) Reserved. Must be zero. */
 #else /* Word 0 - Little Endian */
-        uint64_t csum_lb               : 1;  /**< [  0:  0](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Microcode replaces this bit with PKI_CL()_PKIND()_CFG[FCS_PRES]. PKI BE hardware uses it
-                                                                 for length calculation using fcs_pres_size.
-
-                                                                 where fcs_pres_size = (PKI_CL()_PKIND()_CFG[FCS_PRES]? 4 : 0). */
+        uint64_t csum_lb               : 1;  /**< [  0:  0](R/W) Reserved. Must be zero. */
         uint64_t csum_lc               : 1;  /**< [  1:  1](R/W) When set, PKI hardware performs an outermost IPv4/IPv6 PKI_OPCODE_E::IP_CHK
                                                                  check when PKI_LTYPE(PKI_WQE_S[LCTY])_MAP[BELTYPE] equals either of
                                                                  PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LCPTR] points to the IPv4/IPv6 header in this
-                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LC.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LC, and doesn't otherwise use it. */
+                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LC. */
         uint64_t csum_ld               : 1;  /**< [  2:  2](R/W) When set, PKI hardware performs an outer IPv4/IPv6 UDP PKI_OPCODE_E::L4_CHK
                                                                  check (in an IP-in-IP case) when PKI_LTYPE(PKI_WQE_S[LDTY])_MAP[BELTYPE]
                                                                  equals PKI_BELTYPE_E::UDP. PKI_WQE_S[LDPTR] points to the UDP header in this case.
-                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LD.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LD, and doesn't otherwise use it. */
+                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LD. */
         uint64_t csum_le               : 1;  /**< [  3:  3](R/W) When set, PKI hardware performs an inner IPv4/IPv6 PKI_OPCODE_E::IP_CHK check (in an
                                                                  IP-in-IP case) when PKI_LTYPE(PKI_WQE_S[LETY])_MAP[BELTYPE] equals either of
                                                                  PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LEPTR] points to the inner IPv4/IPv6 header in this
-                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LE.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LE, and doesn't otherwise use it. */
+                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LE. */
         uint64_t csum_lf               : 1;  /**< [  4:  4](R/W) When set, PKI hardware performs an (inner or outer) IPv4/IPv6 TCP/UDP/SCTP
                                                                  PKI_OPCODE_E::L4_CHK check when PKI_LTYPE(PKI_WQE_S[LFTY])_MAP[BELTYPE]
                                                                  equals any of PKI_BELTYPE_E::TCP,UDP,SCTP. PKI_WQE_S[LFPTR] points to the
                                                                  TCP/UDP/SCTP header in this case. In an IP-in-IP case, [CSUM_LF] refers
                                                                  to the inner IPv4/IPv6 TCP/UDP/SCTP, else the outer/only IPv4/IPv6 TCP/UDP/SCTP.
-                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LF.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LF, and doesn't otherwise use it. */
-        uint64_t csum_lg               : 1;  /**< [  5:  5](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine only passes along field CSUM_LG, and doesn't otherwise use it. */
-        uint64_t len_lb                : 1;  /**< [  6:  6](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LB, and doesn't otherwise use it. */
+                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LF. */
+        uint64_t csum_lg               : 1;  /**< [  5:  5](R/W) Reserved. Must be zero. */
+        uint64_t len_lb                : 1;  /**< [  6:  6](R/W) Reserved. Must be zero. */
         uint64_t len_lc                : 1;  /**< [  7:  7](R/W) When set, PKI hardware performs an outermost IPv4/IPv6 PKI_OPCODE_E::IP_MALD
                                                                  check when PKI_LTYPE(PKI_WQE_S[LCTY])_MAP[BELTYPE] equals either of
                                                                  PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LCPTR] points to the IPv4/IPv6 header in this
-                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LC.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LC, and doesn't otherwise use it. */
+                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LC. */
         uint64_t len_ld                : 1;  /**< [  8:  8](R/W) When set, PKI hardware performs an outer IPv4/IPv6 UDP PKI_OPCODE_E::L4_LEN
                                                                  check (in an IP-in-IP case) when PKI_LTYPE(PKI_WQE_S[LDTY])_MAP[BELTYPE]
                                                                  equals PKI_BELTYPE_E::UDP. PKI_WQE_S[LDPTR] points to the UDP header in this case.
-                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LD.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LD, and doesn't otherwise use it. */
+                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LD. */
         uint64_t len_le                : 1;  /**< [  9:  9](R/W) When set, PKI hardware performs an inner IPv4/IPv6 PKI_OPCODE_E::IP_MALD check (in an
                                                                  IP-in-IP case) when PKI_LTYPE(PKI_WQE_S[LETY])_MAP[BELTYPE] equals either of
                                                                  PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LEPTR] points to the inner IPv4/IPv6 header in this
-                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LE.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LE, and doesn't otherwise use it. */
+                                                                 case. See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LE. */
         uint64_t len_lf                : 1;  /**< [ 10: 10](R/W) When set, PKI hardware performs an (inner or outer) IPv4/IPv6 TCP/UDP/SCTP
                                                                  PKI_OPCODE_E::L4_LEN check when PKI_LTYPE(PKI_WQE_S[LFTY])_MAP[BELTYPE]
                                                                  equals any of PKI_BELTYPE_E::TCP,UDP,SCTP. PKI_WQE_S[LFPTR] points to the
                                                                  TCP/UDP/SCTP header in this case. In an IP-in-IP case, [LEN_LF] refers
                                                                  to the inner IPv4/IPv6 TCP/UDP/SCTP, else the outer/only IPv4/IPv6 TCP/UDP/SCTP.
-                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LF.
-
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LF, and doesn't otherwise use it. */
-        uint64_t len_lg                : 1;  /**< [ 11: 11](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Parse engine only passes along field LEN_LG, and doesn't otherwise use it. */
-        uint64_t tag_dst_lb            : 1;  /**< [ 12: 12](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Description from before when TAG_DST_LB became reserved:
-
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 See PKI_WQE_S[ERRLEV,OPCODE] and PKI_ERRLEV_E::LF. */
+        uint64_t len_lg                : 1;  /**< [ 11: 11](R/W) Reserved. Must be zero. */
+        uint64_t tag_dst_lb            : 1;  /**< [ 12: 12](R/W) Reserved. Must be zero. */
         uint64_t tag_dst_lc            : 1;  /**< [ 13: 13](R/W) When set, PKI hardware includes the outermost IPv4/IPv6 destination address
                                                                  in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LCTY])_MAP[BELTYPE]
                                                                  equals either of PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LCPTR] points to the
-                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG]. */
         uint64_t tag_dst_ld            : 1;  /**< [ 14: 14](R/W) When set, PKI hardware includes the outer IPv4/IPv6 UDP destination port (in an
                                                                  IP-in-IP case) in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LDTY])_MAP[BELTYPE]
                                                                  equals PKI_BELTYPE_E::UDP. PKI_WQE_S[LDPTR] points to the UDP header in this case.
-                                                                 See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 See PKI_WQE_S[TAG]. */
         uint64_t tag_dst_le            : 1;  /**< [ 15: 15](R/W) When set, PKI hardware includes the inner IPv4/IPv6 destination address (in an
                                                                  IP-in-IP case) in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LETY])_MAP[BELTYPE]
                                                                  equals either of PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LEPTR] points to the inner
-                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG]. */
         uint64_t tag_dst_lf            : 1;  /**< [ 16: 16](R/W) When set, PKI hardware includes the (inner or outer) IPv4/IPv6 TCP/UDP/SCTP
                                                                  destination port in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LFTY])_MAP[BELTYPE]
                                                                  equals any of PKI_BELTYPE_E::TCP,UDP,SCTP. PKI_WQE_S[LFPTR] points to the
                                                                  TCP/UDP/SCTP header in this case. In an IP-in-IP case, [TAG_DST_LF] refers
                                                                  to the inner IPv4/IPv6 TCP/UDP/SCTP, else the outer/only IPv4/IPv6 TCP/UDP/SCTP.
-                                                                 See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t tag_dst_lg            : 1;  /**< [ 17: 17](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Description from before when TAG_DST_LG became reserved:
-
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t tag_src_lb            : 1;  /**< [ 18: 18](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Description from before when TAG_SRC_LB became reserved:
-
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 See PKI_WQE_S[TAG]. */
+        uint64_t tag_dst_lg            : 1;  /**< [ 17: 17](R/W) Reserved. Must be zero. */
+        uint64_t tag_src_lb            : 1;  /**< [ 18: 18](R/W) Reserved. Must be zero. */
         uint64_t tag_src_lc            : 1;  /**< [ 19: 19](R/W) When set, PKI hardware includes the outermost IPv4/IPv6 source address
                                                                  in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LCTY])_MAP[BELTYPE]
                                                                  equals either of PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LCPTR] points to the
-                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG]. */
         uint64_t tag_src_ld            : 1;  /**< [ 20: 20](R/W) When set, PKI hardware includes the outer IPv4/IPv6 UDP source port (in an
                                                                  IP-in-IP case) in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LDTY])_MAP[BELTYPE]
                                                                  equals PKI_BELTYPE_E::UDP. PKI_WQE_S[LDPTR] points to the UDP header in this case.
-                                                                 See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 See PKI_WQE_S[TAG]. */
         uint64_t tag_src_le            : 1;  /**< [ 21: 21](R/W) When set, PKI hardware includes the inner IPv4/IPv6 source address (in an
                                                                  IP-in-IP case) in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LETY])_MAP[BELTYPE]
                                                                  equals either of PKI_BELTYPE_E::IP4,IP6. PKI_WQE_S[LEPTR] points to the inner
-                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 IPv4/IPv6 header in this case. See PKI_WQE_S[TAG]. */
         uint64_t tag_src_lf            : 1;  /**< [ 22: 22](R/W) When set, PKI hardware includes the (inner or outer) IPv4/IPv6 TCP/UDP/SCTP
                                                                  source port in tuple tag generation when PKI_LTYPE(PKI_WQE_S[LFTY])_MAP[BELTYPE]
                                                                  equals any of PKI_BELTYPE_E::TCP,UDP,SCTP. PKI_WQE_S[LFPTR] points to the
                                                                  TCP/UDP/SCTP header in this case. In an IP-in-IP case, [TAG_SRC_LF] refers
                                                                  to the inner IPv4/IPv6 TCP/UDP/SCTP, else the outer/only IPv4/IPv6 TCP/UDP/SCTP.
-                                                                 See PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] is set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t tag_src_lg            : 1;  /**< [ 23: 23](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Description from before when TAG_SRC_LG became reserved:
-
-                                                                 The parse engine must clear this bit for PKI BE for TCP packets with SYN flag set
-                                                                 and ACK flag clear when PKI_CL()_STYLE()_ALG[TAG_SYN] set, or when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t tag_masken            : 1;  /**< [ 24: 24](R/W) When set, apply PKI_STYLE()_TAG_MASK to computed tag. See PKI_WQE_S[TAG].
-                                                                 Internal:
-                                                                 The parse engine must clear this bit if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
-        uint64_t rsvdrw27              : 3;  /**< [ 27: 25](R/W) Reserved.
-                                                                 Internal:
-                                                                 Parse engine only passes along field RSVDRW27, and doesn't otherwise use it. */
+                                                                 See PKI_WQE_S[TAG]. */
+        uint64_t tag_src_lg            : 1;  /**< [ 23: 23](R/W) Reserved. Must be zero. */
+        uint64_t tag_masken            : 1;  /**< [ 24: 24](R/W) When set, apply PKI_STYLE()_TAG_MASK to computed tag. See PKI_WQE_S[TAG]. */
+        uint64_t rsvdrw27              : 3;  /**< [ 27: 25](R/W) Reserved. */
         uint64_t tag_inc               : 4;  /**< [ 31: 28](R/W) Include masked tags using PKI_TAG_INC()_MASK. Each bit indicates to include the
                                                                  corresponding PKI_TAG_INC()_MASK range. See also PKI_TAG_INC()_CTL
-                                                                 and PKI_WQE_S[TAG].
-
-                                                                 Internal:
-                                                                 The parse engine must clear these bits if the BE is not to compute the tag, e.g. when
-                                                                 PKI_INST_HDR_S[UTAG] is set. */
+                                                                 and PKI_WQE_S[TAG]. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } s;
@@ -5590,44 +4137,6 @@ static inline uint64_t CAVM_PKI_CONST3_FUNC(void)
 #define device_bar_CAVM_PKI_CONST3 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKI_CONST3 0
 #define arguments_CAVM_PKI_CONST3 -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_dbg_crdts
- *
- * INTERNAL: PKI Credit Count Debug Register
- */
-union cavm_pki_dbg_crdts
-{
-    uint64_t u;
-    struct cavm_pki_dbg_crdts_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_6_63         : 58;
-        uint64_t x2p_crdts             : 6;  /**< [  5:  0](RO/H) PKI available credit counts that are not visible via OCLA debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t x2p_crdts             : 6;  /**< [  5:  0](RO/H) PKI available credit counts that are not visible via OCLA debug. */
-        uint64_t reserved_6_63         : 58;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_dbg_crdts_s cn; */
-};
-typedef union cavm_pki_dbg_crdts cavm_pki_dbg_crdts_t;
-
-#define CAVM_PKI_DBG_CRDTS CAVM_PKI_DBG_CRDTS_FUNC()
-static inline uint64_t CAVM_PKI_DBG_CRDTS_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_DBG_CRDTS_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000fff090ll;
-    __cavm_csr_fatal("PKI_DBG_CRDTS", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_DBG_CRDTS cavm_pki_dbg_crdts_t
-#define bustype_CAVM_PKI_DBG_CRDTS CSR_TYPE_NCB
-#define basename_CAVM_PKI_DBG_CRDTS "PKI_DBG_CRDTS"
-#define device_bar_CAVM_PKI_DBG_CRDTS 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_DBG_CRDTS 0
-#define arguments_CAVM_PKI_DBG_CRDTS -1,-1,-1,-1
 
 /**
  * Register (NCB) pki_dstat#_stat0
@@ -6911,8 +5420,6 @@ static inline uint64_t CAVM_PKI_ECC2_INT_W1S_FUNC(void)
  * Register (NCB) pki_frm_len_chk#
  *
  * PKI Frame Length Check Registers
- * Internal:
- * INTERNAL: This doesn't virtualize well, but we don't anticipate many sizes.
  */
 union cavm_pki_frm_len_chkx
 {
@@ -6980,9 +5487,6 @@ static inline uint64_t CAVM_PKI_FRM_LEN_CHKX(uint64_t a)
  * SDK code that loads PKI_IMEM() with the parse engine code.  This allows the loader to
  * appropriately select the parse engine code with only those features required, so that
  * performance will be optimized.
- *
- * Internal:
- * This CSR has no direct hardware effect. It is for strictly for software use.
  */
 union cavm_pki_gbl_pen
 {
@@ -7395,30 +5899,15 @@ union cavm_pki_icgx_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_53_63        : 11;
-        uint64_t maxipe_use            : 5;  /**< [ 52: 48](R/W) Reserved. Must be 0x14.
-                                                                 Internal:
-                                                                 Maximum number of IPEs to use in each cluster for this ICG. For diagnostic use
-                                                                 only. Allows reducing the number of IPEs available for debug, characterization,
-                                                                 repair, etc. Must be between 1 and PKI_CONST1[IPES] (20). Normally, PKI will
-                                                                 have all 20 IPEs available in a cluster for packet processing, other values will
-                                                                 decrease performance. */
+        uint64_t maxipe_use            : 5;  /**< [ 52: 48](R/W) Reserved. Must be 0x14. */
         uint64_t reserved_36_47        : 12;
         uint64_t clusters              : 4;  /**< [ 35: 32](R/W) Bit-mask of clusters in this cluster group. A given cluster can only be enabled
                                                                  in a single cluster group. Behavior is undefined for an ICG which receives
                                                                  traffic with a [CLUSTERS] of 0x0. ICG(0)'s entry resets to 0x3, all other
                                                                  entries to 0x0. Valid values of [CLUSTERS] are 0x0-0x3. */
         uint64_t reserved_27_31        : 5;
-        uint64_t release_rqd           : 1;  /**< [ 26: 26](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Release required. For diagnostic use only.
-                                                                 0 = Release of r64 to r95 will occur immediately, no release microop is needed.
-                                                                 1 = Release will wait until release microop executes. */
-        uint64_t mlo                   : 1;  /**< [ 25: 25](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Memory low bypass enable. For diagnostic use only.
-                                                                 0 = KMEM specifies contents of r48 to r63. The parse engine code expects this setting.
-                                                                 1 = KMEM specifies contents of r32 to r47. This may be desirable when PKIENA=0 to allow
-                                                                 direct control over the back end. */
+        uint64_t release_rqd           : 1;  /**< [ 26: 26](R/W) Reserved. Must be zero. */
+        uint64_t mlo                   : 1;  /**< [ 25: 25](R/W) Reserved. Must be zero. */
         uint64_t pena                  : 1;  /**< [ 24: 24](R/W) Parse enable. Must be set after PKI has been initialized and PKI_IMEM() loaded.
                                                                  0 = IPE transitions from start directly to done without executing a sequence, and the KMEM
                                                                  bits effectively are copied through to the WQ.
@@ -7435,11 +5924,7 @@ union cavm_pki_icgx_cfg
                                                                  typically be 800 divided by the population count of [CLUSTERS]
                                                                  (800/PKI_CONST1[CLS]). The smallest useful nonzero value is 0xA0,
                                                                  corresponding to the minimum number of cycles needed to fill one cluster with
-                                                                 packets.
-
-                                                                 Internal:
-                                                                 The number 800 above was chosen as a typical production parse engine code
-                                                                 length with some additional instruction growth. */
+                                                                 packets. */
 #else /* Word 0 - Little Endian */
         uint64_t delay                 : 12; /**< [ 11:  0](R/W) Delay between cluster starts, as described under [TIMER]. If 0x0, a cluster can
                                                                  start at any time relative to other clusters. [DELAY] should typically be
@@ -7448,11 +5933,7 @@ union cavm_pki_icgx_cfg
                                                                  typically be 800 divided by the population count of [CLUSTERS]
                                                                  (800/PKI_CONST1[CLS]). The smallest useful nonzero value is 0xA0,
                                                                  corresponding to the minimum number of cycles needed to fill one cluster with
-                                                                 packets.
-
-                                                                 Internal:
-                                                                 The number 800 above was chosen as a typical production parse engine code
-                                                                 length with some additional instruction growth. */
+                                                                 packets. */
         uint64_t timer                 : 12; /**< [ 23: 12](RO/H) Current hold-off timer. Enables even spreading of cluster utilization over time;
                                                                  while [TIMER] is nonzero, a cluster in this group will not start parsing. When a
                                                                  cluster in this group starts parsing, [TIMER] is set to [DELAY], and decrements
@@ -7462,30 +5943,15 @@ union cavm_pki_icgx_cfg
                                                                  0 = IPE transitions from start directly to done without executing a sequence, and the KMEM
                                                                  bits effectively are copied through to the WQ.
                                                                  1 = Normal parse engine operation. */
-        uint64_t mlo                   : 1;  /**< [ 25: 25](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Memory low bypass enable. For diagnostic use only.
-                                                                 0 = KMEM specifies contents of r48 to r63. The parse engine code expects this setting.
-                                                                 1 = KMEM specifies contents of r32 to r47. This may be desirable when PKIENA=0 to allow
-                                                                 direct control over the back end. */
-        uint64_t release_rqd           : 1;  /**< [ 26: 26](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Release required. For diagnostic use only.
-                                                                 0 = Release of r64 to r95 will occur immediately, no release microop is needed.
-                                                                 1 = Release will wait until release microop executes. */
+        uint64_t mlo                   : 1;  /**< [ 25: 25](R/W) Reserved. Must be zero. */
+        uint64_t release_rqd           : 1;  /**< [ 26: 26](R/W) Reserved. Must be zero. */
         uint64_t reserved_27_31        : 5;
         uint64_t clusters              : 4;  /**< [ 35: 32](R/W) Bit-mask of clusters in this cluster group. A given cluster can only be enabled
                                                                  in a single cluster group. Behavior is undefined for an ICG which receives
                                                                  traffic with a [CLUSTERS] of 0x0. ICG(0)'s entry resets to 0x3, all other
                                                                  entries to 0x0. Valid values of [CLUSTERS] are 0x0-0x3. */
         uint64_t reserved_36_47        : 12;
-        uint64_t maxipe_use            : 5;  /**< [ 52: 48](R/W) Reserved. Must be 0x14.
-                                                                 Internal:
-                                                                 Maximum number of IPEs to use in each cluster for this ICG. For diagnostic use
-                                                                 only. Allows reducing the number of IPEs available for debug, characterization,
-                                                                 repair, etc. Must be between 1 and PKI_CONST1[IPES] (20). Normally, PKI will
-                                                                 have all 20 IPEs available in a cluster for packet processing, other values will
-                                                                 decrease performance. */
+        uint64_t maxipe_use            : 5;  /**< [ 52: 48](R/W) Reserved. Must be 0x14. */
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } s;
@@ -7729,230 +6195,6 @@ static inline uint64_t CAVM_PKI_MSIX_VECX_CTL(uint64_t a)
 #define arguments_CAVM_PKI_MSIX_VECX_CTL(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pki_pbe_eco
- *
- * INTERNAL: PKI PBE ECO Register
- */
-union cavm_pki_pbe_eco
-{
-    uint64_t u;
-    struct cavm_pki_pbe_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pbe_eco_s cn; */
-};
-typedef union cavm_pki_pbe_eco cavm_pki_pbe_eco_t;
-
-#define CAVM_PKI_PBE_ECO CAVM_PKI_PBE_ECO_FUNC()
-static inline uint64_t CAVM_PKI_PBE_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PBE_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000710ll;
-    __cavm_csr_fatal("PKI_PBE_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PBE_ECO cavm_pki_pbe_eco_t
-#define bustype_CAVM_PKI_PBE_ECO CSR_TYPE_NCB
-#define basename_CAVM_PKI_PBE_ECO "PKI_PBE_ECO"
-#define device_bar_CAVM_PKI_PBE_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PBE_ECO 0
-#define arguments_CAVM_PKI_PBE_ECO -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pbe_fxa_result
- *
- * INTERNAL: PKI PBE FXA Result Register
- *
- * For diagnostic use only.
- * Reads of this register will indicate whether or not FPA has returned a pointer back
- * to PKI and, if so, the values that were returned. A write to this register with any
- * data value will clear the VALID field. This will indicate to PKI that software has
- * consumed the values associated with the most recently returned pointer information
- * set. It is recommended that software write to this register prior to each write of
- * PKI_PBE_XFR_REQUEST.
- */
-union cavm_pki_pbe_fxa_result
-{
-    uint64_t u;
-    struct cavm_pki_pbe_fxa_result_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t valid                 : 1;  /**< [ 63: 63](R/W/H) If set, indicates that remaining fields within this register are valid to be
-                                                                 read by software. */
-        uint64_t fault                 : 1;  /**< [ 62: 62](R/W/H) The value of FAULT returned by FPA.  Indicates an illegal combination of GMID/GAURA
-                                                                 during the request for a pointer. */
-        uint64_t avail                 : 1;  /**< [ 61: 61](R/W/H) The value of AVAIL returned by FPA as part of a pointer return. */
-        uint64_t red                   : 1;  /**< [ 60: 60](R/W/H) The value of RED returned by FPA as part of a pointer return. */
-        uint64_t reserved_46_59        : 14;
-        uint64_t rsvd_ptr              : 4;  /**< [ 45: 42](R/W/H) Reserved for future pointer growth. */
-        uint64_t pointer               : 42; /**< [ 41:  0](R/W/H) Defines the 128-byte aligned pointer returned by FPA.  So pointer\<48:7\>. */
-#else /* Word 0 - Little Endian */
-        uint64_t pointer               : 42; /**< [ 41:  0](R/W/H) Defines the 128-byte aligned pointer returned by FPA.  So pointer\<48:7\>. */
-        uint64_t rsvd_ptr              : 4;  /**< [ 45: 42](R/W/H) Reserved for future pointer growth. */
-        uint64_t reserved_46_59        : 14;
-        uint64_t red                   : 1;  /**< [ 60: 60](R/W/H) The value of RED returned by FPA as part of a pointer return. */
-        uint64_t avail                 : 1;  /**< [ 61: 61](R/W/H) The value of AVAIL returned by FPA as part of a pointer return. */
-        uint64_t fault                 : 1;  /**< [ 62: 62](R/W/H) The value of FAULT returned by FPA.  Indicates an illegal combination of GMID/GAURA
-                                                                 during the request for a pointer. */
-        uint64_t valid                 : 1;  /**< [ 63: 63](R/W/H) If set, indicates that remaining fields within this register are valid to be
-                                                                 read by software. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pbe_fxa_result_s cn; */
-};
-typedef union cavm_pki_pbe_fxa_result cavm_pki_pbe_fxa_result_t;
-
-#define CAVM_PKI_PBE_FXA_RESULT CAVM_PKI_PBE_FXA_RESULT_FUNC()
-static inline uint64_t CAVM_PKI_PBE_FXA_RESULT_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PBE_FXA_RESULT_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000fff008ll;
-    __cavm_csr_fatal("PKI_PBE_FXA_RESULT", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PBE_FXA_RESULT cavm_pki_pbe_fxa_result_t
-#define bustype_CAVM_PKI_PBE_FXA_RESULT CSR_TYPE_NCB
-#define basename_CAVM_PKI_PBE_FXA_RESULT "PKI_PBE_FXA_RESULT"
-#define device_bar_CAVM_PKI_PBE_FXA_RESULT 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PBE_FXA_RESULT 0
-#define arguments_CAVM_PKI_PBE_FXA_RESULT -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pbe_lwa_inject_hi
- *
- * INTERNAL: PKI PBE LWA Inject High Register
- *
- * For diagnostic use only.
- * A write to this register will prepare some of the control fields needed to initiate
- * a long work add request so SSO.  The request will not be made until both
- * PKI_PBE_LWA_INJECT_LO and PKI_PBE_LWA_INJECT_HI have been written as a pair.  It is
- * recommended to write PKI_PBE_LWA_INJECT_HI as the second of the two writes.
- * A read of this register is 0x0 for all bits except \<0\> which indicates if
- * a previous request is pending (SSO has not yet granted PKI's LWA request).
- */
-union cavm_pki_pbe_lwa_inject_hi
-{
-    uint64_t u;
-    struct cavm_pki_pbe_lwa_inject_hi_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t gmid                  : 16; /**< [ 47: 32](WO) Bus GMID field for the request when written.  Reads as 0. */
-        uint64_t tag_msbs              : 31; /**< [ 31:  1](WO) Bus TAG\<31:1\> field for the request when written.
-                                                                 Reads as 0. */
-        uint64_t tag_lsb_busy          : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 Bus TAG\<0\> field for the request when written.
-                                                                 On a read, if set, this bit indicates that a previous LWA
-                                                                 request is pending (SSO has not yet given a grant for the
-                                                                 request). */
-#else /* Word 0 - Little Endian */
-        uint64_t tag_lsb_busy          : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 Bus TAG\<0\> field for the request when written.
-                                                                 On a read, if set, this bit indicates that a previous LWA
-                                                                 request is pending (SSO has not yet given a grant for the
-                                                                 request). */
-        uint64_t tag_msbs              : 31; /**< [ 31:  1](WO) Bus TAG\<31:1\> field for the request when written.
-                                                                 Reads as 0. */
-        uint64_t gmid                  : 16; /**< [ 47: 32](WO) Bus GMID field for the request when written.  Reads as 0. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pbe_lwa_inject_hi_s cn; */
-};
-typedef union cavm_pki_pbe_lwa_inject_hi cavm_pki_pbe_lwa_inject_hi_t;
-
-#define CAVM_PKI_PBE_LWA_INJECT_HI CAVM_PKI_PBE_LWA_INJECT_HI_FUNC()
-static inline uint64_t CAVM_PKI_PBE_LWA_INJECT_HI_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PBE_LWA_INJECT_HI_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000fff028ll;
-    __cavm_csr_fatal("PKI_PBE_LWA_INJECT_HI", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PBE_LWA_INJECT_HI cavm_pki_pbe_lwa_inject_hi_t
-#define bustype_CAVM_PKI_PBE_LWA_INJECT_HI CSR_TYPE_NCB
-#define basename_CAVM_PKI_PBE_LWA_INJECT_HI "PKI_PBE_LWA_INJECT_HI"
-#define device_bar_CAVM_PKI_PBE_LWA_INJECT_HI 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PBE_LWA_INJECT_HI 0
-#define arguments_CAVM_PKI_PBE_LWA_INJECT_HI -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pbe_lwa_inject_lo
- *
- * INTERNAL: PKI PBE LWA Inject Low Register
- *
- * For diagnostic use only.
- * A write to this register will prepare some of the control fields needed to initiate
- * a long work add request so SSO.  The request will not be made until both
- * PKI_PBE_LWA_INJECT_LO and PKI_PBE_LWA_INJECT_HI have been written as a pair.  It is
- * recommended to write PKI_PBE_LWA_INJECT_HI as the second of the two writes.
- * A read of this register is 0x0 for all bits except \<0\> which indicates if
- * a previous request is pending (SSO has not yet granted PKI's LWA request).
- */
-union cavm_pki_pbe_lwa_inject_lo
-{
-    uint64_t u;
-    struct cavm_pki_pbe_lwa_inject_lo_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ttype                 : 2;  /**< [ 63: 62](WO) Bus ttype field for request when written.  Reads as 0. */
-        uint64_t reserved_61           : 1;
-        uint64_t lwa                   : 1;  /**< [ 60: 60](WO) Bus LWA field for request when written.  Reads as 0. */
-        uint64_t ggrp                  : 10; /**< [ 59: 50](WO) Bus GGRP field for request when written.  Reads as 0. */
-        uint64_t reserved_46_49        : 4;
-        uint64_t wqp_msbs              : 45; /**< [ 45:  1](WO) Bus WQP\<48:4\> field for the LWA request to SSO when written.
-                                                                 Reads as 0. */
-        uint64_t wqp_lsb_busy          : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 Bus WQP\<3\> field for the LWA request to SSO when written.
-                                                                 On a read, if set, this bit indicates that a previous LWA
-                                                                 request is pending (SSO has not yet given a grant for the
-                                                                 request). */
-#else /* Word 0 - Little Endian */
-        uint64_t wqp_lsb_busy          : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 Bus WQP\<3\> field for the LWA request to SSO when written.
-                                                                 On a read, if set, this bit indicates that a previous LWA
-                                                                 request is pending (SSO has not yet given a grant for the
-                                                                 request). */
-        uint64_t wqp_msbs              : 45; /**< [ 45:  1](WO) Bus WQP\<48:4\> field for the LWA request to SSO when written.
-                                                                 Reads as 0. */
-        uint64_t reserved_46_49        : 4;
-        uint64_t ggrp                  : 10; /**< [ 59: 50](WO) Bus GGRP field for request when written.  Reads as 0. */
-        uint64_t lwa                   : 1;  /**< [ 60: 60](WO) Bus LWA field for request when written.  Reads as 0. */
-        uint64_t reserved_61           : 1;
-        uint64_t ttype                 : 2;  /**< [ 63: 62](WO) Bus ttype field for request when written.  Reads as 0. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pbe_lwa_inject_lo_s cn; */
-};
-typedef union cavm_pki_pbe_lwa_inject_lo cavm_pki_pbe_lwa_inject_lo_t;
-
-#define CAVM_PKI_PBE_LWA_INJECT_LO CAVM_PKI_PBE_LWA_INJECT_LO_FUNC()
-static inline uint64_t CAVM_PKI_PBE_LWA_INJECT_LO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PBE_LWA_INJECT_LO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000fff020ll;
-    __cavm_csr_fatal("PKI_PBE_LWA_INJECT_LO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PBE_LWA_INJECT_LO cavm_pki_pbe_lwa_inject_lo_t
-#define bustype_CAVM_PKI_PBE_LWA_INJECT_LO CSR_TYPE_NCB
-#define basename_CAVM_PKI_PBE_LWA_INJECT_LO "PKI_PBE_LWA_INJECT_LO"
-#define device_bar_CAVM_PKI_PBE_LWA_INJECT_LO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PBE_LWA_INJECT_LO 0
-#define arguments_CAVM_PKI_PBE_LWA_INJECT_LO -1,-1,-1,-1
-
-/**
  * Register (NCB) pki_pbe_pce_flush_detect
  *
  * PKI Flush Detection Register
@@ -8001,235 +6243,6 @@ static inline uint64_t CAVM_PKI_PBE_PCE_FLUSH_DETECT_FUNC(void)
 #define device_bar_CAVM_PKI_PBE_PCE_FLUSH_DETECT 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKI_PBE_PCE_FLUSH_DETECT 0
 #define arguments_CAVM_PKI_PBE_PCE_FLUSH_DETECT -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pbe_x2p_bp_inject
- *
- * INTERNAL: PKI PBE X2P Backpressure Injection Register
- */
-union cavm_pki_pbe_x2p_bp_inject
-{
-    uint64_t u;
-    struct cavm_pki_pbe_x2p_bp_inject_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 1;  /**< [ 63: 63](R/W) Enable injection mode. For diagnostic use only.
-                                                                 If set, during X2P_BP cycling of backpressure information, the
-                                                                 PKI hardware will override a single channel's backpressure value
-                                                                 with [VALUE] during the X2P_BP transfer cycle defined by [CHANNEL]. */
-        uint64_t reserved_13_62        : 50;
-        uint64_t value                 : 1;  /**< [ 12: 12](R/W) Backpressure value. */
-        uint64_t channel               : 12; /**< [ 11:  0](R/W) [CHANNEL]\<11:8\> defines the CHAN_ID on the X2P_BP interface
-                                                                 that will be affected by this logic. The remaining bits of
-                                                                 [CHANNEL] define which channel within the targeted device
-                                                                 will have its backpressure value overridden with [VALUE]. */
-#else /* Word 0 - Little Endian */
-        uint64_t channel               : 12; /**< [ 11:  0](R/W) [CHANNEL]\<11:8\> defines the CHAN_ID on the X2P_BP interface
-                                                                 that will be affected by this logic. The remaining bits of
-                                                                 [CHANNEL] define which channel within the targeted device
-                                                                 will have its backpressure value overridden with [VALUE]. */
-        uint64_t value                 : 1;  /**< [ 12: 12](R/W) Backpressure value. */
-        uint64_t reserved_13_62        : 50;
-        uint64_t enable                : 1;  /**< [ 63: 63](R/W) Enable injection mode. For diagnostic use only.
-                                                                 If set, during X2P_BP cycling of backpressure information, the
-                                                                 PKI hardware will override a single channel's backpressure value
-                                                                 with [VALUE] during the X2P_BP transfer cycle defined by [CHANNEL]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pbe_x2p_bp_inject_s cn; */
-};
-typedef union cavm_pki_pbe_x2p_bp_inject cavm_pki_pbe_x2p_bp_inject_t;
-
-#define CAVM_PKI_PBE_X2P_BP_INJECT CAVM_PKI_PBE_X2P_BP_INJECT_FUNC()
-static inline uint64_t CAVM_PKI_PBE_X2P_BP_INJECT_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PBE_X2P_BP_INJECT_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000280ll;
-    __cavm_csr_fatal("PKI_PBE_X2P_BP_INJECT", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PBE_X2P_BP_INJECT cavm_pki_pbe_x2p_bp_inject_t
-#define bustype_CAVM_PKI_PBE_X2P_BP_INJECT CSR_TYPE_NCB
-#define basename_CAVM_PKI_PBE_X2P_BP_INJECT "PKI_PBE_X2P_BP_INJECT"
-#define device_bar_CAVM_PKI_PBE_X2P_BP_INJECT 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PBE_X2P_BP_INJECT 0
-#define arguments_CAVM_PKI_PBE_X2P_BP_INJECT -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pbe_xfr_inject
- *
- * INTERNAL: PKI PBE XFR Inject Register
- *
- * For diagnostic use only.
- * A write to this register will initiate a pointer request using the fields shown below.
- * A read of this register is 0x0 for all bits except \<0\> which indicates if
- * a previous request is pending (FPA has not yet granted PKI's XFR request).
- */
-union cavm_pki_pbe_xfr_inject
-{
-    uint64_t u;
-    struct cavm_pki_pbe_xfr_inject_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_34_63        : 30;
-        uint64_t red                   : 1;  /**< [ 33: 33](WO) RED field for request when written.  Reads as 0. */
-        uint64_t drop                  : 1;  /**< [ 32: 32](WO) DROP field for request when written.  Reads as 0. */
-        uint64_t gmid                  : 16; /**< [ 31: 16](WO) GMID field for request when written.  Reads as 0. */
-        uint64_t gaura_msbs            : 15; /**< [ 15:  1](WO) GAURA\<15:1\> field for request when written.  Reads as 0. */
-        uint64_t gaura_lsb_busy        : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 GAURA\<0\> field for request when written.  On reads, if set, this bit
-                                                                 indicates a previously initiated request is still waiting for grant. */
-#else /* Word 0 - Little Endian */
-        uint64_t gaura_lsb_busy        : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 GAURA\<0\> field for request when written.  On reads, if set, this bit
-                                                                 indicates a previously initiated request is still waiting for grant. */
-        uint64_t gaura_msbs            : 15; /**< [ 15:  1](WO) GAURA\<15:1\> field for request when written.  Reads as 0. */
-        uint64_t gmid                  : 16; /**< [ 31: 16](WO) GMID field for request when written.  Reads as 0. */
-        uint64_t drop                  : 1;  /**< [ 32: 32](WO) DROP field for request when written.  Reads as 0. */
-        uint64_t red                   : 1;  /**< [ 33: 33](WO) RED field for request when written.  Reads as 0. */
-        uint64_t reserved_34_63        : 30;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pbe_xfr_inject_s cn; */
-};
-typedef union cavm_pki_pbe_xfr_inject cavm_pki_pbe_xfr_inject_t;
-
-#define CAVM_PKI_PBE_XFR_INJECT CAVM_PKI_PBE_XFR_INJECT_FUNC()
-static inline uint64_t CAVM_PKI_PBE_XFR_INJECT_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PBE_XFR_INJECT_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000fff000ll;
-    __cavm_csr_fatal("PKI_PBE_XFR_INJECT", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PBE_XFR_INJECT cavm_pki_pbe_xfr_inject_t
-#define bustype_CAVM_PKI_PBE_XFR_INJECT CSR_TYPE_NCB
-#define basename_CAVM_PKI_PBE_XFR_INJECT "PKI_PBE_XFR_INJECT"
-#define device_bar_CAVM_PKI_PBE_XFR_INJECT 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PBE_XFR_INJECT 0
-#define arguments_CAVM_PKI_PBE_XFR_INJECT -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pbe_xpd_inject_hi
- *
- * INTERNAL: PKI PBE XPD Inject High Register
- *
- * For diagnostic use only.
- * A write to this register will prepare some of the control fields needed to initiate
- * a pointer deallocate request.  The request will not be made until both
- * PKI_PBE_XPD_INJECT_LO and PKI_PBE_XPD_INJECT_HI have been written as a pair.  It is
- * recommended to write PKI_PBE_XPD_INJECT_HI as the second of the two writes.
- * A read of this register is 0x0 for all bits except \<0\> which indicate if
- * a previous deallocate is pending (FPA has not yet granted PKI's XPD request).
- */
-union cavm_pki_pbe_xpd_inject_hi
-{
-    uint64_t u;
-    struct cavm_pki_pbe_xpd_inject_hi_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t gmid                  : 16; /**< [ 63: 48](WO) GMID field for request when written.  Reads as 0. */
-        uint64_t reserved_38_47        : 10;
-        uint64_t abs                   : 1;  /**< [ 37: 37](WO) ABS field for request when written.  Reads as 0. */
-        uint64_t sub                   : 1;  /**< [ 36: 36](WO) SUB field for request when written.  Reads as 0. */
-        uint64_t reserved_33_35        : 3;
-        uint64_t value                 : 17; /**< [ 32: 16](WO) VALUE field for request when written.  Reads as 0. */
-        uint64_t gaura_msbs            : 15; /**< [ 15:  1](WO) GAURA\<15:1\> field for the request when written.  Reads as 0. */
-        uint64_t gaura_lsb_busy        : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 GAURA\<0\> field for the request when written.
-                                                                 On a read, if set, this bit indicates that a previous deallocate
-                                                                 request is pending (FPA has not yet given a grant for the request). */
-#else /* Word 0 - Little Endian */
-        uint64_t gaura_lsb_busy        : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 GAURA\<0\> field for the request when written.
-                                                                 On a read, if set, this bit indicates that a previous deallocate
-                                                                 request is pending (FPA has not yet given a grant for the request). */
-        uint64_t gaura_msbs            : 15; /**< [ 15:  1](WO) GAURA\<15:1\> field for the request when written.  Reads as 0. */
-        uint64_t value                 : 17; /**< [ 32: 16](WO) VALUE field for request when written.  Reads as 0. */
-        uint64_t reserved_33_35        : 3;
-        uint64_t sub                   : 1;  /**< [ 36: 36](WO) SUB field for request when written.  Reads as 0. */
-        uint64_t abs                   : 1;  /**< [ 37: 37](WO) ABS field for request when written.  Reads as 0. */
-        uint64_t reserved_38_47        : 10;
-        uint64_t gmid                  : 16; /**< [ 63: 48](WO) GMID field for request when written.  Reads as 0. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pbe_xpd_inject_hi_s cn; */
-};
-typedef union cavm_pki_pbe_xpd_inject_hi cavm_pki_pbe_xpd_inject_hi_t;
-
-#define CAVM_PKI_PBE_XPD_INJECT_HI CAVM_PKI_PBE_XPD_INJECT_HI_FUNC()
-static inline uint64_t CAVM_PKI_PBE_XPD_INJECT_HI_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PBE_XPD_INJECT_HI_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000fff018ll;
-    __cavm_csr_fatal("PKI_PBE_XPD_INJECT_HI", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PBE_XPD_INJECT_HI cavm_pki_pbe_xpd_inject_hi_t
-#define bustype_CAVM_PKI_PBE_XPD_INJECT_HI CSR_TYPE_NCB
-#define basename_CAVM_PKI_PBE_XPD_INJECT_HI "PKI_PBE_XPD_INJECT_HI"
-#define device_bar_CAVM_PKI_PBE_XPD_INJECT_HI 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PBE_XPD_INJECT_HI 0
-#define arguments_CAVM_PKI_PBE_XPD_INJECT_HI -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pbe_xpd_inject_lo
- *
- * INTERNAL: PKI PBE XPD Inject Low Register
- *
- * For diagnostic use only.
- * A write to this register will prepare some of the control fields needed to initiate
- * a pointer deallocate request.  The request will not be made until both
- * PKI_PBE_XPD_INJECT_LO and PKI_PBE_XPD_INJECT_HI have been written as a pair.  It is
- * recommended to write PKI_PBE_XPD_INJECT_HI as the second of the two writes.
- * A read of this register is 0x0 for all bits except \<0\> which indicates if
- * a previous deallocate is pending (FPA has not yet granted PKI's XPD request).
- */
-union cavm_pki_pbe_xpd_inject_lo
-{
-    uint64_t u;
-    struct cavm_pki_pbe_xpd_inject_lo_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dmode                 : 2;  /**< [ 63: 62](WO) Defines DMODE field for request when written.  Reads as 0. */
-        uint64_t reserved_42_61        : 20;
-        uint64_t pointer_msbs          : 41; /**< [ 41:  1](WO) Defines pointer\<48:8\> for request when written.  Reads as 0. */
-        uint64_t pointer_lsb_busy      : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 Defines pointer\<7\> for request when written.
-                                                                 On a read, if set, this bit indicates that a previous deallocate
-                                                                 request is pending (FPA has not yet given a grant for the request). */
-#else /* Word 0 - Little Endian */
-        uint64_t pointer_lsb_busy      : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 Defines pointer\<7\> for request when written.
-                                                                 On a read, if set, this bit indicates that a previous deallocate
-                                                                 request is pending (FPA has not yet given a grant for the request). */
-        uint64_t pointer_msbs          : 41; /**< [ 41:  1](WO) Defines pointer\<48:8\> for request when written.  Reads as 0. */
-        uint64_t reserved_42_61        : 20;
-        uint64_t dmode                 : 2;  /**< [ 63: 62](WO) Defines DMODE field for request when written.  Reads as 0. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pbe_xpd_inject_lo_s cn; */
-};
-typedef union cavm_pki_pbe_xpd_inject_lo cavm_pki_pbe_xpd_inject_lo_t;
-
-#define CAVM_PKI_PBE_XPD_INJECT_LO CAVM_PKI_PBE_XPD_INJECT_LO_FUNC()
-static inline uint64_t CAVM_PKI_PBE_XPD_INJECT_LO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PBE_XPD_INJECT_LO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000fff010ll;
-    __cavm_csr_fatal("PKI_PBE_XPD_INJECT_LO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PBE_XPD_INJECT_LO cavm_pki_pbe_xpd_inject_lo_t
-#define bustype_CAVM_PKI_PBE_XPD_INJECT_LO CSR_TYPE_NCB
-#define basename_CAVM_PKI_PBE_XPD_INJECT_LO "PKI_PBE_XPD_INJECT_LO"
-#define device_bar_CAVM_PKI_PBE_XPD_INJECT_LO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PBE_XPD_INJECT_LO 0
-#define arguments_CAVM_PKI_PBE_XPD_INJECT_LO -1,-1,-1,-1
 
 /**
  * Register (NCB) pki_pcam_lookup
@@ -8335,200 +6348,6 @@ static inline uint64_t CAVM_PKI_PCAM_RESULT_FUNC(void)
 #define arguments_CAVM_PKI_PCAM_RESULT -1,-1,-1,-1
 
 /**
- * Register (NCB) pki_pfe_diag
- *
- * INTERNAL: PKI PFE Diagnostic Register
- */
-union cavm_pki_pfe_diag
-{
-    uint64_t u;
-    struct cavm_pki_pfe_diag_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t bad_rid               : 1;  /**< [  0:  0](R/W1C/H) Asserted when PFE sees and drops an X2P transaction with a RID \> 95. */
-#else /* Word 0 - Little Endian */
-        uint64_t bad_rid               : 1;  /**< [  0:  0](R/W1C/H) Asserted when PFE sees and drops an X2P transaction with a RID \> 95. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pfe_diag_s cn; */
-};
-typedef union cavm_pki_pfe_diag cavm_pki_pfe_diag_t;
-
-#define CAVM_PKI_PFE_DIAG CAVM_PKI_PFE_DIAG_FUNC()
-static inline uint64_t CAVM_PKI_PFE_DIAG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PFE_DIAG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000560ll;
-    __cavm_csr_fatal("PKI_PFE_DIAG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PFE_DIAG cavm_pki_pfe_diag_t
-#define bustype_CAVM_PKI_PFE_DIAG CSR_TYPE_NCB
-#define basename_CAVM_PKI_PFE_DIAG "PKI_PFE_DIAG"
-#define device_bar_CAVM_PKI_PFE_DIAG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PFE_DIAG 0
-#define arguments_CAVM_PKI_PFE_DIAG -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pfe_eco
- *
- * INTERNAL: PKI PFE ECO Register
- */
-union cavm_pki_pfe_eco
-{
-    uint64_t u;
-    struct cavm_pki_pfe_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pfe_eco_s cn; */
-};
-typedef union cavm_pki_pfe_eco cavm_pki_pfe_eco_t;
-
-#define CAVM_PKI_PFE_ECO CAVM_PKI_PFE_ECO_FUNC()
-static inline uint64_t CAVM_PKI_PFE_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PFE_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000720ll;
-    __cavm_csr_fatal("PKI_PFE_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PFE_ECO cavm_pki_pfe_eco_t
-#define bustype_CAVM_PKI_PFE_ECO CSR_TYPE_NCB
-#define basename_CAVM_PKI_PFE_ECO "PKI_PFE_ECO"
-#define device_bar_CAVM_PKI_PFE_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PFE_ECO 0
-#define arguments_CAVM_PKI_PFE_ECO -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pix_clken
- *
- * INTERNAL: PKI PIX Conditional Clock Enable Register
- */
-union cavm_pki_pix_clken
-{
-    uint64_t u;
-    struct cavm_pki_pix_clken_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_17_63        : 47;
-        uint64_t mech                  : 1;  /**< [ 16: 16](R/W) When set, force the conditional clocks on for mech. */
-        uint64_t reserved_4_15         : 12;
-        uint64_t cls                   : 4;  /**< [  3:  0](R/W) When set, force the conditional clocks on for this cluster. */
-#else /* Word 0 - Little Endian */
-        uint64_t cls                   : 4;  /**< [  3:  0](R/W) When set, force the conditional clocks on for this cluster. */
-        uint64_t reserved_4_15         : 12;
-        uint64_t mech                  : 1;  /**< [ 16: 16](R/W) When set, force the conditional clocks on for mech. */
-        uint64_t reserved_17_63        : 47;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pix_clken_s cn; */
-};
-typedef union cavm_pki_pix_clken cavm_pki_pix_clken_t;
-
-#define CAVM_PKI_PIX_CLKEN CAVM_PKI_PIX_CLKEN_FUNC()
-static inline uint64_t CAVM_PKI_PIX_CLKEN_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PIX_CLKEN_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000600ll;
-    __cavm_csr_fatal("PKI_PIX_CLKEN", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PIX_CLKEN cavm_pki_pix_clken_t
-#define bustype_CAVM_PKI_PIX_CLKEN CSR_TYPE_NCB
-#define basename_CAVM_PKI_PIX_CLKEN "PKI_PIX_CLKEN"
-#define device_bar_CAVM_PKI_PIX_CLKEN 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PIX_CLKEN 0
-#define arguments_CAVM_PKI_PIX_CLKEN -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pix_diag
- *
- * INTERNAL: PKI PIX Diagnostic Register
- */
-union cavm_pki_pix_diag
-{
-    uint64_t u;
-    struct cavm_pki_pix_diag_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_4_63         : 60;
-        uint64_t nosched               : 4;  /**< [  3:  0](R/W1C/H) Asserted when PFE requests an ICG with no enabled CLUSTERS. */
-#else /* Word 0 - Little Endian */
-        uint64_t nosched               : 4;  /**< [  3:  0](R/W1C/H) Asserted when PFE requests an ICG with no enabled CLUSTERS. */
-        uint64_t reserved_4_63         : 60;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pix_diag_s cn; */
-};
-typedef union cavm_pki_pix_diag cavm_pki_pix_diag_t;
-
-#define CAVM_PKI_PIX_DIAG CAVM_PKI_PIX_DIAG_FUNC()
-static inline uint64_t CAVM_PKI_PIX_DIAG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PIX_DIAG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000580ll;
-    __cavm_csr_fatal("PKI_PIX_DIAG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PIX_DIAG cavm_pki_pix_diag_t
-#define bustype_CAVM_PKI_PIX_DIAG CSR_TYPE_NCB
-#define basename_CAVM_PKI_PIX_DIAG "PKI_PIX_DIAG"
-#define device_bar_CAVM_PKI_PIX_DIAG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PIX_DIAG 0
-#define arguments_CAVM_PKI_PIX_DIAG -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pix_eco
- *
- * INTERNAL: PKI PIX ECO Register
- */
-union cavm_pki_pix_eco
-{
-    uint64_t u;
-    struct cavm_pki_pix_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pix_eco_s cn; */
-};
-typedef union cavm_pki_pix_eco cavm_pki_pix_eco_t;
-
-#define CAVM_PKI_PIX_ECO CAVM_PKI_PIX_ECO_FUNC()
-static inline uint64_t CAVM_PKI_PIX_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PIX_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000700ll;
-    __cavm_csr_fatal("PKI_PIX_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PIX_ECO cavm_pki_pix_eco_t
-#define bustype_CAVM_PKI_PIX_ECO CSR_TYPE_NCB
-#define basename_CAVM_PKI_PIX_ECO "PKI_PIX_ECO"
-#define device_bar_CAVM_PKI_PIX_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PIX_ECO 0
-#define arguments_CAVM_PKI_PIX_ECO -1,-1,-1,-1
-
-/**
  * Register (NCB) pki_pkind#_icgsel
  *
  * PKI Per-Pkind Cluster Group Select Register
@@ -8540,15 +6359,9 @@ union cavm_pki_pkindx_icgsel
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_2_63         : 62;
-        uint64_t icg                   : 2;  /**< [  1:  0](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Cluster group that will service traffic on this pkind. See also PKI_ICG()_CFG, the
-                                                                 register to which this field indexes. */
+        uint64_t icg                   : 2;  /**< [  1:  0](R/W) Reserved. Must be zero. */
 #else /* Word 0 - Little Endian */
-        uint64_t icg                   : 2;  /**< [  1:  0](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Cluster group that will service traffic on this pkind. See also PKI_ICG()_CFG, the
-                                                                 register to which this field indexes. */
+        uint64_t icg                   : 2;  /**< [  1:  0](R/W) Reserved. Must be zero. */
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
@@ -8726,242 +6539,10 @@ static inline uint64_t CAVM_PKI_PKT_ERR_FUNC(void)
 #define arguments_CAVM_PKI_PKT_ERR -1,-1,-1,-1
 
 /**
- * Register (NCB) pki_pstat_cfg
- *
- * INTERNAL: PKI Performance Statistics Configuration Register
- *
- * This register configures the performance statistics logic.
- */
-union cavm_pki_pstat_cfg
-{
-    uint64_t u;
-    struct cavm_pki_pstat_cfg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_13_63        : 51;
-        uint64_t mode                  : 1;  /**< [ 12: 12](R/W) Select which pipelines are used for latency sampling:
-
-                                                                 0 = The following PBE pipes are sampled:
-                                                                   * PKI_PSTATA_STAT(0) etc. sample FPA request latency.
-                                                                   * PKI_PSTATA_STAT(1) etc. sample PFE to PBE transfer latency.
-                                                                   * PKI_PSTATA_STAT(2) etc. sample store commit latency.
-
-                                                                 1 = The following PFE pipes are sampled:
-                                                                   * PKI_PSTATA_STAT(0) etc. sample packet load time.
-                                                                   * PKI_PSTATA_STAT(1) etc. sample PIX scheduling time.
-                                                                   * PKI_PSTATA_STAT(2) etc. sample PIX processing time. */
-        uint64_t gran2                 : 4;  /**< [ 11:  8](R/W) Granularity 2. Number of bits to left-shift count inputs to counter 2. */
-        uint64_t gran1                 : 4;  /**< [  7:  4](R/W) Granularity 1. Number of bits to left-shift count inputs to counter 1. */
-        uint64_t gran0                 : 4;  /**< [  3:  0](R/W) Granularity 0. Number of bits to left-shift count inputs to counter 0. */
-#else /* Word 0 - Little Endian */
-        uint64_t gran0                 : 4;  /**< [  3:  0](R/W) Granularity 0. Number of bits to left-shift count inputs to counter 0. */
-        uint64_t gran1                 : 4;  /**< [  7:  4](R/W) Granularity 1. Number of bits to left-shift count inputs to counter 1. */
-        uint64_t gran2                 : 4;  /**< [ 11:  8](R/W) Granularity 2. Number of bits to left-shift count inputs to counter 2. */
-        uint64_t mode                  : 1;  /**< [ 12: 12](R/W) Select which pipelines are used for latency sampling:
-
-                                                                 0 = The following PBE pipes are sampled:
-                                                                   * PKI_PSTATA_STAT(0) etc. sample FPA request latency.
-                                                                   * PKI_PSTATA_STAT(1) etc. sample PFE to PBE transfer latency.
-                                                                   * PKI_PSTATA_STAT(2) etc. sample store commit latency.
-
-                                                                 1 = The following PFE pipes are sampled:
-                                                                   * PKI_PSTATA_STAT(0) etc. sample packet load time.
-                                                                   * PKI_PSTATA_STAT(1) etc. sample PIX scheduling time.
-                                                                   * PKI_PSTATA_STAT(2) etc. sample PIX processing time. */
-        uint64_t reserved_13_63        : 51;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pstat_cfg_s cn; */
-};
-typedef union cavm_pki_pstat_cfg cavm_pki_pstat_cfg_t;
-
-#define CAVM_PKI_PSTAT_CFG CAVM_PKI_PSTAT_CFG_FUNC()
-static inline uint64_t CAVM_PKI_PSTAT_CFG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PSTAT_CFG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000f14200ll;
-    __cavm_csr_fatal("PKI_PSTAT_CFG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PSTAT_CFG cavm_pki_pstat_cfg_t
-#define bustype_CAVM_PKI_PSTAT_CFG CSR_TYPE_NCB
-#define basename_CAVM_PKI_PSTAT_CFG "PKI_PSTAT_CFG"
-#define device_bar_CAVM_PKI_PSTAT_CFG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PSTAT_CFG 0
-#define arguments_CAVM_PKI_PSTAT_CFG -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pstat_cntr
- *
- * INTERNAL: PKI Performance Statistics Counter Register
- */
-union cavm_pki_pstat_cntr
-{
-    uint64_t u;
-    struct cavm_pki_pstat_cntr_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t cntr                  : 64; /**< [ 63:  0](R/W/H) Number of coprocessor-clock cycles over which to sample performance statistics. */
-#else /* Word 0 - Little Endian */
-        uint64_t cntr                  : 64; /**< [ 63:  0](R/W/H) Number of coprocessor-clock cycles over which to sample performance statistics. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pstat_cntr_s cn; */
-};
-typedef union cavm_pki_pstat_cntr cavm_pki_pstat_cntr_t;
-
-#define CAVM_PKI_PSTAT_CNTR CAVM_PKI_PSTAT_CNTR_FUNC()
-static inline uint64_t CAVM_PKI_PSTAT_CNTR_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PSTAT_CNTR_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000f14208ll;
-    __cavm_csr_fatal("PKI_PSTAT_CNTR", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PSTAT_CNTR cavm_pki_pstat_cntr_t
-#define bustype_CAVM_PKI_PSTAT_CNTR CSR_TYPE_NCB
-#define basename_CAVM_PKI_PSTAT_CNTR "PKI_PSTAT_CNTR"
-#define device_bar_CAVM_PKI_PSTAT_CNTR 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PSTAT_CNTR 0
-#define arguments_CAVM_PKI_PSTAT_CNTR -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_pstata_stat#
- *
- * INTERNAL: PKI Performance Statistics Average Registers
- *
- * This register holds statistics for the chosen metrics.
- * See PKI_PSTAT_CFG[MODE] for the meaning of each index.
- */
-union cavm_pki_pstata_statx
-{
-    uint64_t u;
-    struct cavm_pki_pstata_statx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dat                   : 64; /**< [ 63:  0](R/W/H) Accumulated sum of latencies of the selected statistic. */
-#else /* Word 0 - Little Endian */
-        uint64_t dat                   : 64; /**< [ 63:  0](R/W/H) Accumulated sum of latencies of the selected statistic. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pstata_statx_s cn; */
-};
-typedef union cavm_pki_pstata_statx cavm_pki_pstata_statx_t;
-
-static inline uint64_t CAVM_PKI_PSTATA_STATX(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PSTATA_STATX(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
-        return 0x86c000f14000ll + 0x20ll * ((a) & 0x3);
-    __cavm_csr_fatal("PKI_PSTATA_STATX", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PSTATA_STATX(a) cavm_pki_pstata_statx_t
-#define bustype_CAVM_PKI_PSTATA_STATX(a) CSR_TYPE_NCB
-#define basename_CAVM_PKI_PSTATA_STATX(a) "PKI_PSTATA_STATX"
-#define device_bar_CAVM_PKI_PSTATA_STATX(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PSTATA_STATX(a) (a)
-#define arguments_CAVM_PKI_PSTATA_STATX(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pki_pstatb_stat#
- *
- * INTERNAL: PKI Performance Statistics Sampled Registers
- *
- * This register holds statistics for the chosen metrics.
- * See PKI_PSTAT_CFG[MODE] for the meaning of each index.
- */
-union cavm_pki_pstatb_statx
-{
-    uint64_t u;
-    struct cavm_pki_pstatb_statx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dat                   : 64; /**< [ 63:  0](R/W/H) Number of packets sampled for the selected statistic. */
-#else /* Word 0 - Little Endian */
-        uint64_t dat                   : 64; /**< [ 63:  0](R/W/H) Number of packets sampled for the selected statistic. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pstatb_statx_s cn; */
-};
-typedef union cavm_pki_pstatb_statx cavm_pki_pstatb_statx_t;
-
-static inline uint64_t CAVM_PKI_PSTATB_STATX(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PSTATB_STATX(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
-        return 0x86c000f14008ll + 0x20ll * ((a) & 0x3);
-    __cavm_csr_fatal("PKI_PSTATB_STATX", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PSTATB_STATX(a) cavm_pki_pstatb_statx_t
-#define bustype_CAVM_PKI_PSTATB_STATX(a) CSR_TYPE_NCB
-#define basename_CAVM_PKI_PSTATB_STATX(a) "PKI_PSTATB_STATX"
-#define device_bar_CAVM_PKI_PSTATB_STATX(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PSTATB_STATX(a) (a)
-#define arguments_CAVM_PKI_PSTATB_STATX(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pki_pstatc_stat#
- *
- * INTERNAL: PKI Performance Statistics Minimum/Maximum Registers
- *
- * This register holds statistics for the chosen metrics.
- * See PKI_PSTAT_CFG[MODE] for the meaning of each index.
- */
-union cavm_pki_pstatc_statx
-{
-    uint64_t u;
-    struct cavm_pki_pstatc_statx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_43_63        : 21;
-        uint64_t ov                    : 1;  /**< [ 42: 42](R/W/H) Statistic counter overflowed. */
-        uint64_t max_lat               : 21; /**< [ 41: 21](R/W/H) Maximum value of statistic. */
-        uint64_t min_lat               : 21; /**< [ 20:  0](R/W/H) Minimum value of statistic. */
-#else /* Word 0 - Little Endian */
-        uint64_t min_lat               : 21; /**< [ 20:  0](R/W/H) Minimum value of statistic. */
-        uint64_t max_lat               : 21; /**< [ 41: 21](R/W/H) Maximum value of statistic. */
-        uint64_t ov                    : 1;  /**< [ 42: 42](R/W/H) Statistic counter overflowed. */
-        uint64_t reserved_43_63        : 21;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_pstatc_statx_s cn; */
-};
-typedef union cavm_pki_pstatc_statx cavm_pki_pstatc_statx_t;
-
-static inline uint64_t CAVM_PKI_PSTATC_STATX(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PSTATC_STATX(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
-        return 0x86c000f14010ll + 0x20ll * ((a) & 0x3);
-    __cavm_csr_fatal("PKI_PSTATC_STATX", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_PSTATC_STATX(a) cavm_pki_pstatc_statx_t
-#define bustype_CAVM_PKI_PSTATC_STATX(a) CSR_TYPE_NCB
-#define basename_CAVM_PKI_PSTATC_STATX(a) "PKI_PSTATC_STATX"
-#define device_bar_CAVM_PKI_PSTATC_STATX(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_PSTATC_STATX(a) (a)
-#define arguments_CAVM_PKI_PSTATC_STATX(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) pki_ptag_avail
  *
  * PKI PTAG Available Register
  * For diagnostic use only.
- * Internal:
- * This register configures tag management. It is
- * suggested that this register only be written when PKI_BUF_CTL[PKI_EN] is clear and
- * must not be reconfigured without soft resetting PKI. While PKI is tolerant of
- * changes to this register and programming restrictions are not necessary for the
- * general case, the suggestion is to simplify verification. Therefore do not put other
- * fields into this register unless the same constraint applies. When the number of
- * tags available increases, PKI will simply have more resources. When the number of
- * tags available decreases, PKI will use less resources and may begin to assert BP if
- * the current tags in use exceeds the programmed value.
  */
 union cavm_pki_ptag_avail
 {
@@ -9263,9 +6844,6 @@ static inline uint64_t CAVM_PKI_REQ_WGT_FUNC(void)
  * Register (NCB) pki_sft_rst
  *
  * PKI Soft Reset Register
- * Internal:
- * Allows soft reset. See bug18607, PKI_SFT_RST definition, for further definition
- * (http://mcbuggin.caveonetworks.com/bug/18607).
  */
 union cavm_pki_sft_rst
 {
@@ -9274,44 +6852,20 @@ union cavm_pki_sft_rst
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t busy                  : 1;  /**< [ 63: 63](RO/H) When set, PKI is busy completing reset. No access except the reading of this bit should
-                                                                 occur to the PKI until this is clear.
-
-                                                                 Internal:
-                                                                 The BUSY bit for this implementation is a placeholder and is not required to be
-                                                                 implemented in HW. The soft reset pulse is short enough that we can guarantee
-                                                                 that reset will complete below a subsequent RSL reference can be made. It is
-                                                                 still useful for this bit to exist in case that property every changes and the
-                                                                 reset requires a longer duration. For this implementation, software will check
-                                                                 the bit which will always report not BUSY allowing software to proceed with its
-                                                                 flow. */
+                                                                 occur to the PKI until this is clear. */
         uint64_t reserved_33_62        : 30;
         uint64_t active                : 1;  /**< [ 32: 32](RO/H) When set, PKI is actively processing packet traffic. It is recommended that software wait
-                                                                 until ACTIVE is clear before setting RST.
-
-                                                                 Internal:
-                                                                 ACTIVE is an OR of PKI_ACTIVE0..2. */
+                                                                 until ACTIVE is clear before setting RST. */
         uint64_t reserved_1_31         : 31;
         uint64_t rst                   : 1;  /**< [  0:  0](R/W1/H) Reset. When set to 1 by software, PKI will produce an internal reset pulse. */
 #else /* Word 0 - Little Endian */
         uint64_t rst                   : 1;  /**< [  0:  0](R/W1/H) Reset. When set to 1 by software, PKI will produce an internal reset pulse. */
         uint64_t reserved_1_31         : 31;
         uint64_t active                : 1;  /**< [ 32: 32](RO/H) When set, PKI is actively processing packet traffic. It is recommended that software wait
-                                                                 until ACTIVE is clear before setting RST.
-
-                                                                 Internal:
-                                                                 ACTIVE is an OR of PKI_ACTIVE0..2. */
+                                                                 until ACTIVE is clear before setting RST. */
         uint64_t reserved_33_62        : 30;
         uint64_t busy                  : 1;  /**< [ 63: 63](RO/H) When set, PKI is busy completing reset. No access except the reading of this bit should
-                                                                 occur to the PKI until this is clear.
-
-                                                                 Internal:
-                                                                 The BUSY bit for this implementation is a placeholder and is not required to be
-                                                                 implemented in HW. The soft reset pulse is short enough that we can guarantee
-                                                                 that reset will complete below a subsequent RSL reference can be made. It is
-                                                                 still useful for this bit to exist in case that property every changes and the
-                                                                 reset requires a longer duration. For this implementation, software will check
-                                                                 the bit which will always report not BUSY allowing software to proceed with its
-                                                                 flow. */
+                                                                 occur to the PKI until this is clear. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pki_sft_rst_s cn; */
@@ -10576,10 +8130,6 @@ static inline uint64_t CAVM_PKI_STRM_FLTX_INT_W1S(uint64_t a)
  * PKI Per-Style Buffer Configuration Register
  * This register configures the PKI BE skip amounts and other information.
  * It is indexed by final style, PKI_WQE_S[STYLE]\<5:0\>.
- *
- * Internal:
- * This CSR is really indexed by PKI_BEWQ_S[STYLE]\<5:0\>, which should match
- * PKI_WQE_S[STYLE]\<5:0\>.
  */
 union cavm_pki_stylex_buf
 {
@@ -10773,10 +8323,6 @@ static inline uint64_t CAVM_PKI_STYLEX_BUF(uint64_t a)
  * PKI Per-Style Tag Generation Mask Registers
  * This register configures the PKI BE tag algorithm.
  * It is indexed by final style, PKI_WQE_S[STYLE]\<5:0\>.
- *
- * Internal:
- * This CSR is really indexed by PKI_BEWQ_S[STYLE]\<5:0\>, which should match
- * PKI_WQE_S[STYLE]\<5:0\>.
  */
 union cavm_pki_stylex_tag_mask
 {
@@ -10820,10 +8366,6 @@ static inline uint64_t CAVM_PKI_STYLEX_TAG_MASK(uint64_t a)
  * PKI Per-Style Configuration 2 Registers
  * This register configures the PKI BE tag algorithm.
  * It is indexed by final style, PKI_WQE_S[STYLE]\<5:0\>.
- *
- * Internal:
- * This CSR is really indexed by PKI_BEWQ_S[STYLE]\<5:0\>, which should match
- * PKI_WQE_S[STYLE]\<5:0\>.
  */
 union cavm_pki_stylex_tag_sel
 {
@@ -10877,10 +8419,6 @@ static inline uint64_t CAVM_PKI_STYLEX_TAG_SEL(uint64_t a)
  * PKI Per-Style WQ Word 2 Registers
  * This register configures the PKI BE WQE generation.
  * It is indexed by final style, PKI_WQE_S[STYLE]\<5:0\>.
- *
- * Internal:
- * This CSR is really indexed by PKI_BEWQ_S[STYLE]\<5:0\>, which should match
- * PKI_WQE_S[STYLE]\<5:0\>.
  */
 union cavm_pki_stylex_wq2
 {
@@ -10924,10 +8462,6 @@ static inline uint64_t CAVM_PKI_STYLEX_WQ2(uint64_t a)
  * PKI Per-Style WQ Word 4 Registers
  * This register configures the PKI BE WQE generation.
  * It is indexed by final style, PKI_WQE_S[STYLE]\<5:0\>.
- *
- * Internal:
- * This CSR is really indexed by PKI_BEWQ_S[STYLE]\<5:0\>, which should match
- * PKI_WQE_S[STYLE]\<5:0\>.
  */
 union cavm_pki_stylex_wq4
 {
@@ -10995,10 +8529,7 @@ union cavm_pki_tag_incx_ctl
                                                                  0xE = Relative to start of PKI_WQE_S[LGPTR]. LGPTR must be valid (see
                                                                  PKI_WQE_S[LGPTR]) or mask is ignored.
                                                                  0xF = Relative to start of PKI_WQE_S[VLPTR]. VLPTR must be valid (see
-                                                                 PKI_WQE_S[VLPTR]) or mask is ignored.
-
-                                                                 Internal:
-                                                                 Note excluding 0x0, the encoding matches the byte number to read from PKI_WQE_S WORD4. */
+                                                                 PKI_WQE_S[VLPTR]) or mask is ignored. */
         uint64_t offset                : 8;  /**< [  7:  0](R/W) Offset for PKI_TAG_INC()_MASK. Number of bytes to add to the selected pointer before
                                                                  applying the mask. */
 #else /* Word 0 - Little Endian */
@@ -11022,10 +8553,7 @@ union cavm_pki_tag_incx_ctl
                                                                  0xE = Relative to start of PKI_WQE_S[LGPTR]. LGPTR must be valid (see
                                                                  PKI_WQE_S[LGPTR]) or mask is ignored.
                                                                  0xF = Relative to start of PKI_WQE_S[VLPTR]. VLPTR must be valid (see
-                                                                 PKI_WQE_S[VLPTR]) or mask is ignored.
-
-                                                                 Internal:
-                                                                 Note excluding 0x0, the encoding matches the byte number to read from PKI_WQE_S WORD4. */
+                                                                 PKI_WQE_S[VLPTR]) or mask is ignored. */
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } s;
@@ -11138,107 +8666,6 @@ static inline uint64_t CAVM_PKI_TAG_SECRET_FUNC(void)
 #define device_bar_CAVM_PKI_TAG_SECRET 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKI_TAG_SECRET 0
 #define arguments_CAVM_PKI_TAG_SECRET -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_x2p_ctl
- *
- * INTERNAL: PKI X2P Control Insertion and Activation Register
- */
-union cavm_pki_x2p_ctl
-{
-    uint64_t u;
-    struct cavm_pki_x2p_ctl_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_34_63        : 30;
-        uint64_t sop_busy              : 1;  /**< [ 33: 33](R/W/H) X2P SOP signal.
-                                                                 Internal:
-                                                                 X2P SOP signal for inject packet, when written.
-                                                                 On a read, if set, this bit indicates that X2P FIFO is full -
-                                                                 Do not inject new packet. */
-        uint64_t eop                   : 1;  /**< [ 32: 32](WO) X2P EOP signal. */
-        uint64_t reserved_28_31        : 4;
-        uint64_t pnum                  : 12; /**< [ 27: 16](WO) X2P PNUM signal. */
-        uint64_t reserved_14_15        : 2;
-        uint64_t pknd                  : 6;  /**< [ 13:  8](WO) X2P PKND signal. */
-        uint64_t perr                  : 4;  /**< [  7:  4](WO) X2P packet error signal. */
-        uint64_t bval                  : 4;  /**< [  3:  0](WO) X2P BVAL signal. */
-#else /* Word 0 - Little Endian */
-        uint64_t bval                  : 4;  /**< [  3:  0](WO) X2P BVAL signal. */
-        uint64_t perr                  : 4;  /**< [  7:  4](WO) X2P packet error signal. */
-        uint64_t pknd                  : 6;  /**< [ 13:  8](WO) X2P PKND signal. */
-        uint64_t reserved_14_15        : 2;
-        uint64_t pnum                  : 12; /**< [ 27: 16](WO) X2P PNUM signal. */
-        uint64_t reserved_28_31        : 4;
-        uint64_t eop                   : 1;  /**< [ 32: 32](WO) X2P EOP signal. */
-        uint64_t sop_busy              : 1;  /**< [ 33: 33](R/W/H) X2P SOP signal.
-                                                                 Internal:
-                                                                 X2P SOP signal for inject packet, when written.
-                                                                 On a read, if set, this bit indicates that X2P FIFO is full -
-                                                                 Do not inject new packet. */
-        uint64_t reserved_34_63        : 30;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_x2p_ctl_s cn; */
-};
-typedef union cavm_pki_x2p_ctl cavm_pki_x2p_ctl_t;
-
-#define CAVM_PKI_X2P_CTL CAVM_PKI_X2P_CTL_FUNC()
-static inline uint64_t CAVM_PKI_X2P_CTL_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_X2P_CTL_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x86c000000160ll;
-    __cavm_csr_fatal("PKI_X2P_CTL", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_X2P_CTL cavm_pki_x2p_ctl_t
-#define bustype_CAVM_PKI_X2P_CTL CSR_TYPE_NCB
-#define basename_CAVM_PKI_X2P_CTL "PKI_X2P_CTL"
-#define device_bar_CAVM_PKI_X2P_CTL 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_X2P_CTL 0
-#define arguments_CAVM_PKI_X2P_CTL -1,-1,-1,-1
-
-/**
- * Register (NCB) pki_x2p_dat#
- *
- * INTERNAL: PKI X2P Data Insertion Register
- */
-union cavm_pki_x2p_datx
-{
-    uint64_t u;
-    struct cavm_pki_x2p_datx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dat                   : 64; /**< [ 63:  0](WO) X2P data to insert.
-                                                                 Internal:
-                                                                 DAT0: Maps to the x2p big endian bus x2p.data\<63:0\>.
-                                                                 DAT1: Maps to the x2p big endian bus x2p.data\<127:64\>. */
-#else /* Word 0 - Little Endian */
-        uint64_t dat                   : 64; /**< [ 63:  0](WO) X2P data to insert.
-                                                                 Internal:
-                                                                 DAT0: Maps to the x2p big endian bus x2p.data\<63:0\>.
-                                                                 DAT1: Maps to the x2p big endian bus x2p.data\<127:64\>. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pki_x2p_datx_s cn; */
-};
-typedef union cavm_pki_x2p_datx cavm_pki_x2p_datx_t;
-
-static inline uint64_t CAVM_PKI_X2P_DATX(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_X2P_DATX(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
-        return 0x86c000000140ll + 8ll * ((a) & 0x1);
-    __cavm_csr_fatal("PKI_X2P_DATX", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKI_X2P_DATX(a) cavm_pki_x2p_datx_t
-#define bustype_CAVM_PKI_X2P_DATX(a) CSR_TYPE_NCB
-#define basename_CAVM_PKI_X2P_DATX(a) "PKI_X2P_DATX"
-#define device_bar_CAVM_PKI_X2P_DATX(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKI_X2P_DATX(a) (a)
-#define arguments_CAVM_PKI_X2P_DATX(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) pki_x2p_req_ofl

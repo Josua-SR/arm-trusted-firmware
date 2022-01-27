@@ -342,21 +342,13 @@ union cavm_pccbr_xxx_cmd
         uint32_t reserved_21_31        : 11;
         uint32_t cl                    : 1;  /**< [ 20: 20](RO) Capabilities list. Indicates presence of an extended capability item. */
         uint32_t reserved_3_19         : 17;
-        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable.
-                                                                 Internal:
-                                                                 For simplicity always one; we do not disable NCB transactions. */
-        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable.
-                                                                 Internal:
-                                                                 NCB/RSL always decoded; have hardcoded BARs. */
+        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable. */
+        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable. */
         uint32_t reserved_0            : 1;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0            : 1;
-        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable.
-                                                                 Internal:
-                                                                 NCB/RSL always decoded; have hardcoded BARs. */
-        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable.
-                                                                 Internal:
-                                                                 For simplicity always one; we do not disable NCB transactions. */
+        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable. */
+        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable. */
         uint32_t reserved_3_19         : 17;
         uint32_t cl                    : 1;  /**< [ 20: 20](RO) Capabilities list. Indicates presence of an extended capability item. */
         uint32_t reserved_21_31        : 11;
@@ -788,29 +780,20 @@ union cavm_pccbr_xxx_vsec_id
     struct cavm_pccbr_xxx_vsec_id_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCBR_XXX_VSEC_CAP_HDR.
-                                                                 Internal:
-                                                                 Matches PCCPF_XXX_VSEC_ID[LEN], so extra bytes allocated and unused at the end
-                                                                 of the structure. */
+        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCBR_XXX_VSEC_CAP_HDR. */
         uint32_t rev                   : 4;  /**< [ 19: 16](RO) Vendor-specific revision. */
         uint32_t id                    : 16; /**< [ 15:  0](RO) Vendor-specific ID. Indicates the {ProductLine} family bridge VSEC ID. */
 #else /* Word 0 - Little Endian */
         uint32_t id                    : 16; /**< [ 15:  0](RO) Vendor-specific ID. Indicates the {ProductLine} family bridge VSEC ID. */
         uint32_t rev                   : 4;  /**< [ 19: 16](RO) Vendor-specific revision. */
-        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCBR_XXX_VSEC_CAP_HDR.
-                                                                 Internal:
-                                                                 Matches PCCPF_XXX_VSEC_ID[LEN], so extra bytes allocated and unused at the end
-                                                                 of the structure. */
+        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCBR_XXX_VSEC_CAP_HDR. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccbr_xxx_vsec_id_s cn8; */
     struct cavm_pccbr_xxx_vsec_id_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCBR_XXX_VSEC_CAP_HDR.
-                                                                 Internal:
-                                                                 Matches PCCPF_XXX_VSEC_ID[LEN], so extra bytes allocated and unused at the end
-                                                                 of the structure. */
+        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCBR_XXX_VSEC_CAP_HDR. */
         uint32_t rev                   : 4;  /**< [ 19: 16](RO) Vendor-specific revision. */
         uint32_t id                    : 16; /**< [ 15:  0](RO) Vendor-specific ID. Indicates the {ProductLine} family bridge VSEC ID.
                                                                  Enumerated by PCC_VSECID_E. */
@@ -818,10 +801,7 @@ union cavm_pccbr_xxx_vsec_id
         uint32_t id                    : 16; /**< [ 15:  0](RO) Vendor-specific ID. Indicates the {ProductLine} family bridge VSEC ID.
                                                                  Enumerated by PCC_VSECID_E. */
         uint32_t rev                   : 4;  /**< [ 19: 16](RO) Vendor-specific revision. */
-        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCBR_XXX_VSEC_CAP_HDR.
-                                                                 Internal:
-                                                                 Matches PCCPF_XXX_VSEC_ID[LEN], so extra bytes allocated and unused at the end
-                                                                 of the structure. */
+        uint32_t len                   : 12; /**< [ 31: 20](RO) Number of bytes in the entire VSEC structure including PCCBR_XXX_VSEC_CAP_HDR. */
 #endif /* Word 0 - End */
     } cn9;
 };

@@ -230,86 +230,6 @@ static inline uint64_t CAVM_PSBM_APX_HDR(uint64_t a)
 #define arguments_CAVM_PSBM_APX_HDR(a) (a),-1,-1,-1
 
 /**
- * Register (NCB32b) psbm_chain_dbg
- *
- * INTERNAL: PSBM Chain Debug Register
- */
-union cavm_psbm_chain_dbg
-{
-    uint32_t u;
-    struct cavm_psbm_chain_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_15_31        : 17;
-        uint32_t chain_dis             : 15; /**< [ 14:  0](R/W) Setting these bits causes PSBM state machine to ignore corresponding chain
-                                                                 response when waiting for polling done. Bit 0 corresponds to value 0x0 enumerated in
-                                                                 PSBM_AP_CHAIN_E (e.g. AP(0)), followed by all remaining AP chains, then each value
-                                                                 enumerated in PSBM_SYS_CHAIN_E. */
-#else /* Word 0 - Little Endian */
-        uint32_t chain_dis             : 15; /**< [ 14:  0](R/W) Setting these bits causes PSBM state machine to ignore corresponding chain
-                                                                 response when waiting for polling done. Bit 0 corresponds to value 0x0 enumerated in
-                                                                 PSBM_AP_CHAIN_E (e.g. AP(0)), followed by all remaining AP chains, then each value
-                                                                 enumerated in PSBM_SYS_CHAIN_E. */
-        uint32_t reserved_15_31        : 17;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_psbm_chain_dbg_s cn9; */
-    struct cavm_psbm_chain_dbg_cn96xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_12_31        : 20;
-        uint32_t chain_dis             : 12; /**< [ 11:  0](R/W) Setting these bits causes PSBM state machine to ignore corresponding chain
-                                                                 response when waiting for polling done. Bit 0 corresponds to value 0x0 enumerated in
-                                                                 PSBM_AP_CHAIN_E (e.g. AP(0)), followed by all remaining AP chains, then each value
-                                                                 enumerated in PSBM_SYS_CHAIN_E. */
-#else /* Word 0 - Little Endian */
-        uint32_t chain_dis             : 12; /**< [ 11:  0](R/W) Setting these bits causes PSBM state machine to ignore corresponding chain
-                                                                 response when waiting for polling done. Bit 0 corresponds to value 0x0 enumerated in
-                                                                 PSBM_AP_CHAIN_E (e.g. AP(0)), followed by all remaining AP chains, then each value
-                                                                 enumerated in PSBM_SYS_CHAIN_E. */
-        uint32_t reserved_12_31        : 20;
-#endif /* Word 0 - End */
-    } cn96xx;
-    /* struct cavm_psbm_chain_dbg_s cn98xx; */
-    struct cavm_psbm_chain_dbg_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_4_31         : 28;
-        uint32_t chain_dis             : 4;  /**< [  3:  0](R/W) Setting these bits causes PSBM state machine to ignore corresponding chain
-                                                                 response when waiting for polling done. Bit 0 corresponds to value 0x0 enumerated in
-                                                                 PSBM_AP_CHAIN_E (e.g. AP(0)), followed by all remaining AP chains, then each value
-                                                                 enumerated in PSBM_SYS_CHAIN_E. */
-#else /* Word 0 - Little Endian */
-        uint32_t chain_dis             : 4;  /**< [  3:  0](R/W) Setting these bits causes PSBM state machine to ignore corresponding chain
-                                                                 response when waiting for polling done. Bit 0 corresponds to value 0x0 enumerated in
-                                                                 PSBM_AP_CHAIN_E (e.g. AP(0)), followed by all remaining AP chains, then each value
-                                                                 enumerated in PSBM_SYS_CHAIN_E. */
-        uint32_t reserved_4_31         : 28;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_psbm_chain_dbg_cnf95xx f95mm; */
-    /* struct cavm_psbm_chain_dbg_cnf95xx f95o; */
-    /* struct cavm_psbm_chain_dbg_cnf95xx loki; */
-};
-typedef union cavm_psbm_chain_dbg cavm_psbm_chain_dbg_t;
-
-#define CAVM_PSBM_CHAIN_DBG CAVM_PSBM_CHAIN_DBG_FUNC()
-static inline uint64_t CAVM_PSBM_CHAIN_DBG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSBM_CHAIN_DBG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e0de000100ll;
-    __cavm_csr_fatal("PSBM_CHAIN_DBG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PSBM_CHAIN_DBG cavm_psbm_chain_dbg_t
-#define bustype_CAVM_PSBM_CHAIN_DBG CSR_TYPE_NCB32b
-#define basename_CAVM_PSBM_CHAIN_DBG "PSBM_CHAIN_DBG"
-#define device_bar_CAVM_PSBM_CHAIN_DBG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PSBM_CHAIN_DBG 0
-#define arguments_CAVM_PSBM_CHAIN_DBG -1,-1,-1,-1
-
-/**
  * Register (NCB32b) psbm_const
  *
  * PSBM Constants Register
@@ -433,42 +353,6 @@ static inline uint64_t CAVM_PSBM_CTL_FUNC(void)
 #define device_bar_CAVM_PSBM_CTL 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PSBM_CTL 0
 #define arguments_CAVM_PSBM_CTL -1,-1,-1,-1
-
-/**
- * Register (NCB32b) psbm_eco
- *
- * INTERNAL: PSBM ECO Register
- */
-union cavm_psbm_eco
-{
-    uint32_t u;
-    struct cavm_psbm_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint32_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_psbm_eco_s cn; */
-};
-typedef union cavm_psbm_eco cavm_psbm_eco_t;
-
-#define CAVM_PSBM_ECO CAVM_PSBM_ECO_FUNC()
-static inline uint64_t CAVM_PSBM_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSBM_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e0de000018ll;
-    __cavm_csr_fatal("PSBM_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PSBM_ECO cavm_psbm_eco_t
-#define bustype_CAVM_PSBM_ECO CSR_TYPE_NCB32b
-#define basename_CAVM_PSBM_ECO "PSBM_ECO"
-#define device_bar_CAVM_PSBM_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PSBM_ECO 0
-#define arguments_CAVM_PSBM_ECO -1,-1,-1,-1
 
 /**
  * Register (NCB32b) psbm_lint

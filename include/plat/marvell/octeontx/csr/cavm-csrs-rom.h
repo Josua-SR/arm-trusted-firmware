@@ -81,15 +81,11 @@ union cavm_rom_clib_s
                                                                  to indicate a valid ROM_CLIB_S structure. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
         uint64_t reserved_64_119       : 56;
 #else /* Word 1 - Little Endian */
         uint64_t reserved_64_119       : 56;
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t offset                : 64; /**< [191:128] Offset address. The flash address for first byte of image.
@@ -99,12 +95,7 @@ union cavm_rom_clib_s
 
                                                                  In TBL1FW, the first 256 bytes of the image should be
                                                                  random data for cypher security.  The first instruction
-                                                                 executed will be at [OFFSET] + 0x100.
-
-                                                                 Internal:
-                                                                 Future ROM code may allow this to be more flexible.
-                                                                 If so, must be aligned to 1 KB. Must be \>= 1 KB (past the
-                                                                 ROM_CLIB_S and ROM_CSIB_S headers). */
+                                                                 executed will be at [OFFSET] + 0x100. */
 #else /* Word 2 - Little Endian */
         uint64_t offset                : 64; /**< [191:128] Offset address. The flash address for first byte of image.
                                                                  Must be 0x20000 for NBL1FW, 0x50000 for TBL1FW.
@@ -113,29 +104,12 @@ union cavm_rom_clib_s
 
                                                                  In TBL1FW, the first 256 bytes of the image should be
                                                                  random data for cypher security.  The first instruction
-                                                                 executed will be at [OFFSET] + 0x100.
-
-                                                                 Internal:
-                                                                 Future ROM code may allow this to be more flexible.
-                                                                 If so, must be aligned to 1 KB. Must be \>= 1 KB (past the
-                                                                 ROM_CLIB_S and ROM_CSIB_S headers). */
+                                                                 executed will be at [OFFSET] + 0x100. */
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
-        uint64_t size                  : 64; /**< [255:192] Size. The size of the TBL1FW material in bytes.  Must be 192 KB (0x30000).
-                                                                 Internal:
-                                                                 Future ROM code may allow this to be mode flexible.
-                                                                 If so, must be in increments of 1 KB.
-                                                                 For simulation purposes if MIO_FUS_DAT2[ROM_INFO\<5\>] is
-                                                                 set, there is only 4 KB of NBL1FW and TBL1FW code, at
-                                                                 addresses 0x20000 - 0x20FFFF and 0x21000 - 0x21FFFF. */
+        uint64_t size                  : 64; /**< [255:192] Size. The size of the TBL1FW material in bytes.  Must be 192 KB (0x30000). */
 #else /* Word 3 - Little Endian */
-        uint64_t size                  : 64; /**< [255:192] Size. The size of the TBL1FW material in bytes.  Must be 192 KB (0x30000).
-                                                                 Internal:
-                                                                 Future ROM code may allow this to be mode flexible.
-                                                                 If so, must be in increments of 1 KB.
-                                                                 For simulation purposes if MIO_FUS_DAT2[ROM_INFO\<5\>] is
-                                                                 set, there is only 4 KB of NBL1FW and TBL1FW code, at
-                                                                 addresses 0x20000 - 0x20FFFF and 0x21000 - 0x21FFFF. */
+        uint64_t size                  : 64; /**< [255:192] Size. The size of the TBL1FW material in bytes.  Must be 192 KB (0x30000). */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t rom_script_offset     : 32; /**< [319:288] Offset address. The flash address for the first byte of the ROM script.
@@ -308,15 +282,11 @@ union cavm_rom_clib_s
                                                                  to indicate a valid ROM_CLIB_S structure. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
         uint64_t reserved_64_119       : 56;
 #else /* Word 1 - Little Endian */
         uint64_t reserved_64_119       : 56;
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t offset                : 64; /**< [191:128] Offset address. The flash address for first byte of image.
@@ -326,12 +296,7 @@ union cavm_rom_clib_s
 
                                                                  In TBL1FW, the first 256 bytes of the image should be
                                                                  random data for cypher security.  The first instruction
-                                                                 executed will be at [OFFSET] + 0x100.
-
-                                                                 Internal:
-                                                                 Future ROM code may allow this to be more flexible.
-                                                                 If so, must be aligned to 1 KB. Must be \>= 1 KB (past the
-                                                                 ROM_CLIB_S and ROM_CSIB_S headers). */
+                                                                 executed will be at [OFFSET] + 0x100. */
 #else /* Word 2 - Little Endian */
         uint64_t offset                : 64; /**< [191:128] Offset address. The flash address for first byte of image.
                                                                  Must be 0x20000 for NBL1FW, 0x50000 for TBL1FW.
@@ -340,29 +305,12 @@ union cavm_rom_clib_s
 
                                                                  In TBL1FW, the first 256 bytes of the image should be
                                                                  random data for cypher security.  The first instruction
-                                                                 executed will be at [OFFSET] + 0x100.
-
-                                                                 Internal:
-                                                                 Future ROM code may allow this to be more flexible.
-                                                                 If so, must be aligned to 1 KB. Must be \>= 1 KB (past the
-                                                                 ROM_CLIB_S and ROM_CSIB_S headers). */
+                                                                 executed will be at [OFFSET] + 0x100. */
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
-        uint64_t size                  : 64; /**< [255:192] Size. The size of the TBL1FW material in bytes.  Must be 192 KB (0x30000).
-                                                                 Internal:
-                                                                 Future ROM code may allow this to be mode flexible.
-                                                                 If so, must be in increments of 1 KB.
-                                                                 For simulation purposes if MIO_FUS_DAT2[ROM_INFO\<5\>] is
-                                                                 set, there is only 4 KB of NBL1FW and TBL1FW code, at
-                                                                 addresses 0x20000 - 0x20FFFF and 0x21000 - 0x21FFFF. */
+        uint64_t size                  : 64; /**< [255:192] Size. The size of the TBL1FW material in bytes.  Must be 192 KB (0x30000). */
 #else /* Word 3 - Little Endian */
-        uint64_t size                  : 64; /**< [255:192] Size. The size of the TBL1FW material in bytes.  Must be 192 KB (0x30000).
-                                                                 Internal:
-                                                                 Future ROM code may allow this to be mode flexible.
-                                                                 If so, must be in increments of 1 KB.
-                                                                 For simulation purposes if MIO_FUS_DAT2[ROM_INFO\<5\>] is
-                                                                 set, there is only 4 KB of NBL1FW and TBL1FW code, at
-                                                                 addresses 0x20000 - 0x20FFFF and 0x21000 - 0x21FFFF. */
+        uint64_t size                  : 64; /**< [255:192] Size. The size of the TBL1FW material in bytes.  Must be 192 KB (0x30000). */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t reserved_256_319      : 64;
@@ -523,15 +471,11 @@ union cavm_rom_clib_s
                                                                  to indicate a valid ROM_CLIB_S structure. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
         uint64_t reserved_64_119       : 56;
 #else /* Word 1 - Little Endian */
         uint64_t reserved_64_119       : 56;
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t offset                : 64; /**< [191:128] Offset address. The flash address for first byte of SCP BL1 image.
@@ -741,14 +685,9 @@ union cavm_rom_csib_s
                                                                  to indicate a valid ROM_CSIB_S structure. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
         uint64_t nvcnt                 : 8;  /**< [119:112] Trusted firmware NV counter to avoid replay attacks.
-                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved.
-
-                                                                 Internal:
-                                                                 In TBSA this is the TrustedFirmwareNVCounter. */
+                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved. */
         uint64_t reserved_72_111       : 40;
         uint64_t expose                : 1;  /**< [ 71: 71] Exposure of HUK/EK.
                                                                  0 = Hide HUK/EK exposure to TBL1FW and later. TBL1FW will be booted similar to
@@ -783,13 +722,8 @@ union cavm_rom_csib_s
                                                                  secure boot. */
         uint64_t reserved_72_111       : 40;
         uint64_t nvcnt                 : 8;  /**< [119:112] Trusted firmware NV counter to avoid replay attacks.
-                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved.
-
-                                                                 Internal:
-                                                                 In TBSA this is the TrustedFirmwareNVCounter. */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t reserved_128_191      : 64;
@@ -969,14 +903,9 @@ union cavm_rom_csib_s
                                                                  to indicate a valid ROM_CSIB_S structure. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
         uint64_t nvcnt                 : 8;  /**< [119:112] Trusted firmware NV counter to avoid replay attacks.
-                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved.
-
-                                                                 Internal:
-                                                                 In TBSA this is the TrustedFirmwareNVCounter. */
+                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved. */
         uint64_t reserved_72_111       : 40;
         uint64_t expose                : 1;  /**< [ 71: 71] Exposure of HUK/EK.
                                                                  0 = Hide HUK/EK exposure to TSCP_BL1 and later. TSCP_BL1 will be booted similar to
@@ -1021,13 +950,8 @@ union cavm_rom_csib_s
                                                                  secure boot. */
         uint64_t reserved_72_111       : 40;
         uint64_t nvcnt                 : 8;  /**< [119:112] Trusted firmware NV counter to avoid replay attacks.
-                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved.
-
-                                                                 Internal:
-                                                                 In TBSA this is the TrustedFirmwareNVCounter. */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t reserved_128_191      : 64;
@@ -1207,14 +1131,9 @@ union cavm_rom_csib_s
                                                                  to indicate a valid ROM_CSIB_S structure. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
         uint64_t nvcnt                 : 8;  /**< [119:112] Trusted firmware NV counter to avoid replay attacks.
-                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved.
-
-                                                                 Internal:
-                                                                 In TBSA this is the TrustedFirmwareNVCounter. */
+                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved. */
         uint64_t reserved_72_111       : 40;
         uint64_t expose                : 1;  /**< [ 71: 71] Exposure of HUK/EK.
                                                                  0 = Hide HUK/EK exposure to TSCP_BL1 and later. TSCP_BL1 will be booted similar to
@@ -1259,13 +1178,8 @@ union cavm_rom_csib_s
                                                                  secure boot. */
         uint64_t reserved_72_111       : 40;
         uint64_t nvcnt                 : 8;  /**< [119:112] Trusted firmware NV counter to avoid replay attacks.
-                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved.
-
-                                                                 Internal:
-                                                                 In TBSA this is the TrustedFirmwareNVCounter. */
-        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format.
-                                                                 Internal:
-                                                                 Opaque to ROM, until we have a second version. */
+                                                                 Compared to population_count(FUSF_CTL[ROM_T_CNT]).  Values \> 31 are reserved. */
+        uint64_t ver                   : 8;  /**< [127:120] Version number.  0x0 to indicate first version of this format. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t reserved_128_191      : 64;

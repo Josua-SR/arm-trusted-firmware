@@ -1949,10 +1949,7 @@ union cavm_denc_pdcch_gen_cfg_s
         uint64_t reserved_63           : 1;
         uint64_t c_init                : 31; /**< [ 62: 32] The initialization value C_init for the scrambler. */
         uint64_t reserved_30_31        : 2;
-        uint64_t byps_pdcch            : 1;  /**< [ 29: 29] Must be set to 0.
-                                                                 Internal:
-                                                                 When set to 1, encoded bits are streamed out in the same order DCIs
-                                                                 have been fed in, and other PDCCH functionality is bypassed. */
+        uint64_t byps_pdcch            : 1;  /**< [ 29: 29] Must be set to 0. */
         uint64_t reg_pat               : 5;  /**< [ 28: 24] Index into the REG order pattern table. Valid range is [0,8]. */
         uint64_t dci                   : 8;  /**< [ 23: 16] The number of DCI to multiplex. Valid range is [1,88]. */
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
@@ -1960,10 +1957,7 @@ union cavm_denc_pdcch_gen_cfg_s
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
         uint64_t dci                   : 8;  /**< [ 23: 16] The number of DCI to multiplex. Valid range is [1,88]. */
         uint64_t reg_pat               : 5;  /**< [ 28: 24] Index into the REG order pattern table. Valid range is [0,8]. */
-        uint64_t byps_pdcch            : 1;  /**< [ 29: 29] Must be set to 0.
-                                                                 Internal:
-                                                                 When set to 1, encoded bits are streamed out in the same order DCIs
-                                                                 have been fed in, and other PDCCH functionality is bypassed. */
+        uint64_t byps_pdcch            : 1;  /**< [ 29: 29] Must be set to 0. */
         uint64_t reserved_30_31        : 2;
         uint64_t c_init                : 31; /**< [ 62: 32] The initialization value C_init for the scrambler. */
         uint64_t reserved_63           : 1;
@@ -2107,10 +2101,7 @@ union cavm_denc_pdcch_gen_cfg_s
         uint64_t reserved_63           : 1;
         uint64_t c_init                : 31; /**< [ 62: 32] The initialization value C_init for the scrambler. */
         uint64_t reserved_30_31        : 2;
-        uint64_t byps_pdcch            : 1;  /**< [ 29: 29] Must be set to 0.
-                                                                 Internal:
-                                                                 When set to 1, encoded bits are streamed out in the same order DCIs
-                                                                 have been fed in, and other PDCCH functionality is bypassed. */
+        uint64_t byps_pdcch            : 1;  /**< [ 29: 29] Must be set to 0. */
         uint64_t reg_pat               : 5;  /**< [ 28: 24] Index into the REG order pattern table. Valid range is [0x0, 0x8]. */
         uint64_t dci                   : 8;  /**< [ 23: 16] The number of DCI to multiplex. Valid range is [0x1, 0x58]. */
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
@@ -2118,10 +2109,7 @@ union cavm_denc_pdcch_gen_cfg_s
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
         uint64_t dci                   : 8;  /**< [ 23: 16] The number of DCI to multiplex. Valid range is [0x1, 0x58]. */
         uint64_t reg_pat               : 5;  /**< [ 28: 24] Index into the REG order pattern table. Valid range is [0x0, 0x8]. */
-        uint64_t byps_pdcch            : 1;  /**< [ 29: 29] Must be set to 0.
-                                                                 Internal:
-                                                                 When set to 1, encoded bits are streamed out in the same order DCIs
-                                                                 have been fed in, and other PDCCH functionality is bypassed. */
+        uint64_t byps_pdcch            : 1;  /**< [ 29: 29] Must be set to 0. */
         uint64_t reserved_30_31        : 2;
         uint64_t c_init                : 31; /**< [ 62: 32] The initialization value C_init for the scrambler. */
         uint64_t reserved_63           : 1;
@@ -2963,10 +2951,7 @@ union cavm_denc_rpdcch_gen_cfg_s
         uint64_t reserved_63           : 1;
         uint64_t c_init                : 31; /**< [ 62: 32] The initialization value C_init for the scrambler. */
         uint64_t reserved_30_31        : 2;
-        uint64_t byps_rpdcch           : 1;  /**< [ 29: 29] Must be set to 0.
-                                                                 Internal:
-                                                                 When set to 1, encoded bits are streamed out in the same order DCIs
-                                                                 have been fed in, and other R-PDCCH functionality is bypassed. */
+        uint64_t byps_rpdcch           : 1;  /**< [ 29: 29] Must be set to 0. */
         uint64_t reg_pat               : 5;  /**< [ 28: 24] Index into the REG order pattern table. Valid range is [0,8]. */
         uint64_t dci                   : 8;  /**< [ 23: 16] The number of DCI to multiplex. Valid range is [1,88]. */
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
@@ -2974,10 +2959,7 @@ union cavm_denc_rpdcch_gen_cfg_s
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
         uint64_t dci                   : 8;  /**< [ 23: 16] The number of DCI to multiplex. Valid range is [1,88]. */
         uint64_t reg_pat               : 5;  /**< [ 28: 24] Index into the REG order pattern table. Valid range is [0,8]. */
-        uint64_t byps_rpdcch           : 1;  /**< [ 29: 29] Must be set to 0.
-                                                                 Internal:
-                                                                 When set to 1, encoded bits are streamed out in the same order DCIs
-                                                                 have been fed in, and other R-PDCCH functionality is bypassed. */
+        uint64_t byps_rpdcch           : 1;  /**< [ 29: 29] Must be set to 0. */
         uint64_t reserved_30_31        : 2;
         uint64_t c_init                : 31; /**< [ 62: 32] The initialization value C_init for the scrambler. */
         uint64_t reserved_63           : 1;
@@ -3018,10 +3000,7 @@ union cavm_denc_rpdcch_gen_cfg_s
         uint64_t reserved_63           : 1;
         uint64_t c_init                : 31; /**< [ 62: 32] The initialization value C_init for the scrambler. */
         uint64_t reserved_30_31        : 2;
-        uint64_t byps_rpdcch           : 1;  /**< [ 29: 29] Must be set to 0.
-                                                                 Internal:
-                                                                 When set to 1, encoded bits are streamed out in the same order DCIs
-                                                                 have been fed in, and other R-PDCCH functionality is bypassed. */
+        uint64_t byps_rpdcch           : 1;  /**< [ 29: 29] Must be set to 0. */
         uint64_t reg_pat               : 5;  /**< [ 28: 24] Index into the REG order pattern table. Valid range is [0x0, 0x8]. */
         uint64_t dci                   : 8;  /**< [ 23: 16] The number of DCI to multiplex. Valid range is [0x1, 0x58]. */
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
@@ -3029,10 +3008,7 @@ union cavm_denc_rpdcch_gen_cfg_s
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
         uint64_t dci                   : 8;  /**< [ 23: 16] The number of DCI to multiplex. Valid range is [0x1, 0x58]. */
         uint64_t reg_pat               : 5;  /**< [ 28: 24] Index into the REG order pattern table. Valid range is [0x0, 0x8]. */
-        uint64_t byps_rpdcch           : 1;  /**< [ 29: 29] Must be set to 0.
-                                                                 Internal:
-                                                                 When set to 1, encoded bits are streamed out in the same order DCIs
-                                                                 have been fed in, and other R-PDCCH functionality is bypassed. */
+        uint64_t byps_rpdcch           : 1;  /**< [ 29: 29] Must be set to 0. */
         uint64_t reserved_30_31        : 2;
         uint64_t c_init                : 31; /**< [ 62: 32] The initialization value C_init for the scrambler. */
         uint64_t reserved_63           : 1;
@@ -3118,48 +3094,6 @@ static inline uint64_t CAVM_DENCX_CONTROL(uint64_t a)
 #define basename_CAVM_DENCX_CONTROL(a) "DENCX_CONTROL"
 #define busnum_CAVM_DENCX_CONTROL(a) (a)
 #define arguments_CAVM_DENCX_CONTROL(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) denc#_eco
- *
- * INTERNAL: DENC ECO Register
- */
-union cavm_dencx_eco
-{
-    uint64_t u;
-    struct cavm_dencx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dencx_eco_s cn; */
-};
-typedef union cavm_dencx_eco cavm_dencx_eco_t;
-
-static inline uint64_t CAVM_DENCX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DENCX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
-        return 0x87e043480008ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
-        return 0x87e043480008ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
-        return 0x87e043480008ll + 0x8000ll * ((a) & 0x3);
-    __cavm_csr_fatal("DENCX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DENCX_ECO(a) cavm_dencx_eco_t
-#define bustype_CAVM_DENCX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_DENCX_ECO(a) "DENCX_ECO"
-#define busnum_CAVM_DENCX_ECO(a) (a)
-#define arguments_CAVM_DENCX_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) denc#_error_enable0
@@ -3381,46 +3315,6 @@ static inline uint64_t CAVM_DENCX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b)
 #define basename_CAVM_DENCX_HAB_JCFG2_RAMX_DATA(a,b) "DENCX_HAB_JCFG2_RAMX_DATA"
 #define busnum_CAVM_DENCX_HAB_JCFG2_RAMX_DATA(a,b) (a)
 #define arguments_CAVM_DENCX_HAB_JCFG2_RAMX_DATA(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) denc#_scratch
- *
- * INTERNAL: Scratch Register
- *
- * Scratch register.
- */
-union cavm_dencx_scratch
-{
-    uint64_t u;
-    struct cavm_dencx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dencx_scratch_s cn; */
-};
-typedef union cavm_dencx_scratch cavm_dencx_scratch_t;
-
-static inline uint64_t CAVM_DENCX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DENCX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
-        return 0x87e043480080ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
-        return 0x87e043480080ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
-        return 0x87e043480080ll + 0x8000ll * ((a) & 0x3);
-    __cavm_csr_fatal("DENCX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DENCX_SCRATCH(a) cavm_dencx_scratch_t
-#define bustype_CAVM_DENCX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_DENCX_SCRATCH(a) "DENCX_SCRATCH"
-#define busnum_CAVM_DENCX_SCRATCH(a) (a)
-#define arguments_CAVM_DENCX_SCRATCH(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) denc#_status
@@ -3807,57 +3701,6 @@ static inline uint64_t CAVM_DENCX_TC_CONFIG_ERR_FLAGS_REG(uint64_t a)
 #define arguments_CAVM_DENCX_TC_CONFIG_ERR_FLAGS_REG(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) denc#_tc_config_reg#
- *
- * INTERNAL: TC Task Config Registers
- *
- * TC task config registers.
- */
-union cavm_dencx_tc_config_regx
-{
-    uint64_t u;
-    struct cavm_dencx_tc_config_regx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W) Config bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W) Config bits. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dencx_tc_config_regx_s cn9; */
-    /* struct cavm_dencx_tc_config_regx_s cnf95xxp1; */
-    struct cavm_dencx_tc_config_regx_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_dencx_tc_config_regx_cnf95xxp2 f95o; */
-    /* struct cavm_dencx_tc_config_regx_cnf95xxp2 loki; */
-};
-typedef union cavm_dencx_tc_config_regx cavm_dencx_tc_config_regx_t;
-
-static inline uint64_t CAVM_DENCX_TC_CONFIG_REGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DENCX_TC_CONFIG_REGX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=44)))
-        return 0x87e043481400ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=44)))
-        return 0x87e043481400ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=44)))
-        return 0x87e043481400ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x3f);
-    __cavm_csr_fatal("DENCX_TC_CONFIG_REGX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DENCX_TC_CONFIG_REGX(a,b) cavm_dencx_tc_config_regx_t
-#define bustype_CAVM_DENCX_TC_CONFIG_REGX(a,b) CSR_TYPE_RSL
-#define basename_CAVM_DENCX_TC_CONFIG_REGX(a,b) "DENCX_TC_CONFIG_REGX"
-#define busnum_CAVM_DENCX_TC_CONFIG_REGX(a,b) (a)
-#define arguments_CAVM_DENCX_TC_CONFIG_REGX(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) denc#_tc_control_reg
  *
  * DENC Encoder Control Register
@@ -4141,103 +3984,6 @@ static inline uint64_t CAVM_DENCX_TC_MAIN_RESET_REG(uint64_t a)
 #define arguments_CAVM_DENCX_TC_MAIN_RESET_REG(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) denc#_tc_main_start_reg
- *
- * INTERNAL: TC Start Register
- *
- * TC start register.
- */
-union cavm_dencx_tc_main_start_reg
-{
-    uint64_t u;
-    struct cavm_dencx_tc_main_start_reg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t start                 : 1;  /**< [  0:  0](R/W/H) Start bit. */
-#else /* Word 0 - Little Endian */
-        uint64_t start                 : 1;  /**< [  0:  0](R/W/H) Start bit. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dencx_tc_main_start_reg_s cn; */
-};
-typedef union cavm_dencx_tc_main_start_reg cavm_dencx_tc_main_start_reg_t;
-
-static inline uint64_t CAVM_DENCX_TC_MAIN_START_REG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DENCX_TC_MAIN_START_REG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
-        return 0x87e043481008ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
-        return 0x87e043481008ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
-        return 0x87e043481008ll + 0x8000ll * ((a) & 0x3);
-    __cavm_csr_fatal("DENCX_TC_MAIN_START_REG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DENCX_TC_MAIN_START_REG(a) cavm_dencx_tc_main_start_reg_t
-#define bustype_CAVM_DENCX_TC_MAIN_START_REG(a) CSR_TYPE_RSL
-#define basename_CAVM_DENCX_TC_MAIN_START_REG(a) "DENCX_TC_MAIN_START_REG"
-#define busnum_CAVM_DENCX_TC_MAIN_START_REG(a) (a)
-#define arguments_CAVM_DENCX_TC_MAIN_START_REG(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) denc#_tc_mon_reg
- *
- * INTERNAL: TC Monitoring Registers
- *
- * TC mon registers.
- */
-union cavm_dencx_tc_mon_reg
-{
-    uint64_t u;
-    struct cavm_dencx_tc_mon_reg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO) Output bus monitoring values. */
-#else /* Word 0 - Little Endian */
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO) Output bus monitoring values. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dencx_tc_mon_reg_s cn9; */
-    /* struct cavm_dencx_tc_mon_reg_s cnf95xxp1; */
-    struct cavm_dencx_tc_mon_reg_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO/H) Output bus monitoring values. */
-#else /* Word 0 - Little Endian */
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO/H) Output bus monitoring values. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_dencx_tc_mon_reg_cnf95xxp2 f95o; */
-    /* struct cavm_dencx_tc_mon_reg_cnf95xxp2 loki; */
-};
-typedef union cavm_dencx_tc_mon_reg cavm_dencx_tc_mon_reg_t;
-
-static inline uint64_t CAVM_DENCX_TC_MON_REG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DENCX_TC_MON_REG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
-        return 0x87e043481300ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
-        return 0x87e043481300ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
-        return 0x87e043481300ll + 0x8000ll * ((a) & 0x3);
-    __cavm_csr_fatal("DENCX_TC_MON_REG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DENCX_TC_MON_REG(a) cavm_dencx_tc_mon_reg_t
-#define bustype_CAVM_DENCX_TC_MON_REG(a) CSR_TYPE_RSL
-#define basename_CAVM_DENCX_TC_MON_REG(a) "DENCX_TC_MON_REG"
-#define busnum_CAVM_DENCX_TC_MON_REG(a) (a)
-#define arguments_CAVM_DENCX_TC_MON_REG(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) denc#_tc_static_epdcch_reg#
  *
  * TC Static E-PDCCH Config Registers
@@ -4373,17 +4119,13 @@ union cavm_dencx_tc_status0_reg
     struct cavm_dencx_tc_status0_reg_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) reserved
-                                                                 Internal:
-                                                                 undocumented, core-dependent status bits. */
+        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) reserved */
         uint64_t reserved_1_31         : 31;
         uint64_t idle                  : 1;  /**< [  0:  0](R/W/H) When set to 1, the encoder is idle. */
 #else /* Word 0 - Little Endian */
         uint64_t idle                  : 1;  /**< [  0:  0](R/W/H) When set to 1, the encoder is idle. */
         uint64_t reserved_1_31         : 31;
-        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) reserved
-                                                                 Internal:
-                                                                 undocumented, core-dependent status bits. */
+        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) reserved */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dencx_tc_status0_reg_s cn9; */
@@ -4391,17 +4133,13 @@ union cavm_dencx_tc_status0_reg
     struct cavm_dencx_tc_status0_reg_cnf95xxp2
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 undocumented, core-dependent status bits. */
+        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved. */
         uint64_t reserved_1_31         : 31;
         uint64_t idle                  : 1;  /**< [  0:  0](RO/H) When set to 1, the encoder is idle. */
 #else /* Word 0 - Little Endian */
         uint64_t idle                  : 1;  /**< [  0:  0](RO/H) When set to 1, the encoder is idle. */
         uint64_t reserved_1_31         : 31;
-        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 undocumented, core-dependent status bits. */
+        uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_dencx_tc_status0_reg_cnf95xxp2 f95o; */
@@ -4426,45 +4164,5 @@ static inline uint64_t CAVM_DENCX_TC_STATUS0_REG(uint64_t a)
 #define basename_CAVM_DENCX_TC_STATUS0_REG(a) "DENCX_TC_STATUS0_REG"
 #define busnum_CAVM_DENCX_TC_STATUS0_REG(a) (a)
 #define arguments_CAVM_DENCX_TC_STATUS0_REG(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) denc#_tc_status1_reg
- *
- * INTERNAL: TC Status 1 Register
- *
- * TC status 1 register.
- */
-union cavm_dencx_tc_status1_reg
-{
-    uint64_t u;
-    struct cavm_dencx_tc_status1_reg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t core_stat             : 64; /**< [ 63:  0](RO/H) Core-dependent bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t core_stat             : 64; /**< [ 63:  0](RO/H) Core-dependent bits. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dencx_tc_status1_reg_s cn; */
-};
-typedef union cavm_dencx_tc_status1_reg cavm_dencx_tc_status1_reg_t;
-
-static inline uint64_t CAVM_DENCX_TC_STATUS1_REG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DENCX_TC_STATUS1_REG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
-        return 0x87e043481028ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
-        return 0x87e043481028ll + 0x8000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
-        return 0x87e043481028ll + 0x8000ll * ((a) & 0x3);
-    __cavm_csr_fatal("DENCX_TC_STATUS1_REG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DENCX_TC_STATUS1_REG(a) cavm_dencx_tc_status1_reg_t
-#define bustype_CAVM_DENCX_TC_STATUS1_REG(a) CSR_TYPE_RSL
-#define basename_CAVM_DENCX_TC_STATUS1_REG(a) "DENCX_TC_STATUS1_REG"
-#define busnum_CAVM_DENCX_TC_STATUS1_REG(a) (a)
-#define arguments_CAVM_DENCX_TC_STATUS1_REG(a) (a),-1,-1,-1
 
 #endif /* __CAVM_CSRS_DENC_H__ */

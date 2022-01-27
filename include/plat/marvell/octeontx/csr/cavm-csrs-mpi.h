@@ -91,12 +91,7 @@ union cavm_mpix_cfg
                                                                  end of transaction and then check the CRC on response and if there is an error the
                                                                  MPI()_STS[CRC_ERR] bit will be set.
                                                                  * The turn around time (TAR in the ESPI spec) is set to two cycles.
-                                                                 * Parsing for special state is enabled.
-
-                                                                 Internal:
-                                                                 Regarding CRCs: On a write, It would actually internally increase the tx_count and
-                                                                 total_count by 1.  On a read (tx count != total_count) it would add 1 to tx_count and 2
-                                                                 to total_count) so it would get the recieve CRC as well. */
+                                                                 * Parsing for special state is enabled. */
         uint64_t reserved_36_43        : 8;
         uint64_t iomode                : 2;  /**< [ 35: 34](R/W) I/O bus configuration mode.
                                                                  Used when [LEGACY_DIS] is set.
@@ -221,12 +216,7 @@ union cavm_mpix_cfg
                                                                  end of transaction and then check the CRC on response and if there is an error the
                                                                  MPI()_STS[CRC_ERR] bit will be set.
                                                                  * The turn around time (TAR in the ESPI spec) is set to two cycles.
-                                                                 * Parsing for special state is enabled.
-
-                                                                 Internal:
-                                                                 Regarding CRCs: On a write, It would actually internally increase the tx_count and
-                                                                 total_count by 1.  On a read (tx count != total_count) it would add 1 to tx_count and 2
-                                                                 to total_count) so it would get the recieve CRC as well. */
+                                                                 * Parsing for special state is enabled. */
         uint64_t reserved_48           : 1;
         uint64_t tb100_en              : 1;  /**< [ 49: 49](R/W) SPI 100 MHz clock enable. See [CLKDIV].
                                                                  0 = Use system clock as base frequency. This provides higher granularity, but
@@ -264,12 +254,7 @@ union cavm_mpix_cfg
                                                                  end of transaction and then check the CRC on response and if there is an error the
                                                                  MPI()_STS[CRC_ERR] bit will be set.
                                                                  * The turn around time (TAR in the ESPI spec) is set to two cycles.
-                                                                 * Parsing for special state is enabled.
-
-                                                                 Internal:
-                                                                 Regarding CRCs: On a write, It would actually internally increase the tx_count and
-                                                                 total_count by 1.  On a read (tx count != total_count) it would add 1 to tx_count and 2
-                                                                 to total_count) so it would get the recieve CRC as well. */
+                                                                 * Parsing for special state is enabled. */
         uint64_t reserved_36_43        : 8;
         uint64_t iomode                : 2;  /**< [ 35: 34](R/W) I/O bus configuration mode.
                                                                  Used when [LEGACY_DIS] is set.
@@ -394,12 +379,7 @@ union cavm_mpix_cfg
                                                                  end of transaction and then check the CRC on response and if there is an error the
                                                                  MPI()_STS[CRC_ERR] bit will be set.
                                                                  * The turn around time (TAR in the ESPI spec) is set to two cycles.
-                                                                 * Parsing for special state is enabled.
-
-                                                                 Internal:
-                                                                 Regarding CRCs: On a write, It would actually internally increase the tx_count and
-                                                                 total_count by 1.  On a read (tx count != total_count) it would add 1 to tx_count and 2
-                                                                 to total_count) so it would get the recieve CRC as well. */
+                                                                 * Parsing for special state is enabled. */
         uint64_t reserved_48           : 1;
         uint64_t tb100_en              : 1;  /**< [ 49: 49](R/W) SPI 100 MHz clock enable. See [CLKDIV].
                                                                  0 = Use system clock as base frequency. This provides higher granularity, but
@@ -436,12 +416,7 @@ union cavm_mpix_cfg
                                                                  end of transaction and then check the CRC on response and if there is an error the
                                                                  MPI()_STS[CRC_ERR] bit will be set.
                                                                  * The turn around time (TAR in the ESPI spec) is set to two cycles.
-                                                                 * Parsing for special state is enabled.
-
-                                                                 Internal:
-                                                                 Regarding CRCs: On a write, It would actually internally increase the tx_count and
-                                                                 total_count by 1.  On a read (tx count != total_count) it would add 1 to tx_count and 2
-                                                                 to total_count) so it would get the recieve CRC as well. */
+                                                                 * Parsing for special state is enabled. */
         uint64_t reserved_36_43        : 8;
         uint64_t iomode                : 2;  /**< [ 35: 34](R/W) I/O bus configuration mode.
                                                                  Used when [LEGACY_DIS] is set.
@@ -566,12 +541,7 @@ union cavm_mpix_cfg
                                                                  end of transaction and then check the CRC on response and if there is an error the
                                                                  MPI()_STS[CRC_ERR] bit will be set.
                                                                  * The turn around time (TAR in the ESPI spec) is set to two cycles.
-                                                                 * Parsing for special state is enabled.
-
-                                                                 Internal:
-                                                                 Regarding CRCs: On a write, It would actually internally increase the tx_count and
-                                                                 total_count by 1.  On a read (tx count != total_count) it would add 1 to tx_count and 2
-                                                                 to total_count) so it would get the recieve CRC as well. */
+                                                                 * Parsing for special state is enabled. */
         uint64_t reserved_48           : 1;
         uint64_t tb100_en              : 1;  /**< [ 49: 49](R/W) SPI 100 MHz clock enable. See [CLKDIV].
                                                                  0 = Use system clock as base frequency. This provides higher granularity, but
@@ -610,12 +580,7 @@ union cavm_mpix_cfg
                                                                  end of transaction and then check the CRC on response and if there is an error the
                                                                  MPI()_STS[CRC_ERR] bit will be set.
                                                                  * The turn around time (TAR in the ESPI spec) is set to two cycles.
-                                                                 * Parsing for special state is enabled.
-
-                                                                 Internal:
-                                                                 Regarding CRCs: On a write, It would actually internally increase the tx_count and
-                                                                 total_count by 1.  On a read (tx count != total_count) it would add 1 to tx_count and 2
-                                                                 to total_count) so it would get the recieve CRC as well. */
+                                                                 * Parsing for special state is enabled. */
         uint64_t reserved_36_43        : 8;
         uint64_t iomode                : 2;  /**< [ 35: 34](R/W) I/O bus configuration mode.
                                                                  Used when [LEGACY_DIS] is set.
@@ -740,12 +705,7 @@ union cavm_mpix_cfg
                                                                  end of transaction and then check the CRC on response and if there is an error the
                                                                  MPI()_STS[CRC_ERR] bit will be set.
                                                                  * The turn around time (TAR in the ESPI spec) is set to two cycles.
-                                                                 * Parsing for special state is enabled.
-
-                                                                 Internal:
-                                                                 Regarding CRCs: On a write, It would actually internally increase the tx_count and
-                                                                 total_count by 1.  On a read (tx count != total_count) it would add 1 to tx_count and 2
-                                                                 to total_count) so it would get the recieve CRC as well. */
+                                                                 * Parsing for special state is enabled. */
         uint64_t reserved_48           : 1;
         uint64_t tb100_en              : 1;  /**< [ 49: 49](R/W) SPI 100 MHz clock enable. See [CLKDIV].
                                                                  0 = Use system clock as base frequency. This provides higher granularity, but

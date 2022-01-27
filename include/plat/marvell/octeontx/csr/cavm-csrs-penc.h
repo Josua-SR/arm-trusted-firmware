@@ -935,48 +935,6 @@ static inline uint64_t CAVM_PENCX_CONTROL(uint64_t a)
 #define arguments_CAVM_PENCX_CONTROL(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) penc#_eco
- *
- * INTERNAL: PENC ECO Register
- */
-union cavm_pencx_eco
-{
-    uint64_t u;
-    struct cavm_pencx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pencx_eco_s cn; */
-};
-typedef union cavm_pencx_eco cavm_pencx_eco_t;
-
-static inline uint64_t CAVM_PENCX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PENCX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043280008ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043280008ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043280008ll + 0x8000ll * ((a) & 0x1);
-    __cavm_csr_fatal("PENCX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PENCX_ECO(a) cavm_pencx_eco_t
-#define bustype_CAVM_PENCX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_PENCX_ECO(a) "PENCX_ECO"
-#define busnum_CAVM_PENCX_ECO(a) (a)
-#define arguments_CAVM_PENCX_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) penc#_error_enable0
  *
  * Error Enable 0 Register
@@ -1223,46 +1181,6 @@ static inline uint64_t CAVM_PENCX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b)
 #define arguments_CAVM_PENCX_HAB_JCFG2_RAMX_DATA(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) penc#_scratch
- *
- * INTERNAL: Scratch Register
- *
- * Scratch register.
- */
-union cavm_pencx_scratch
-{
-    uint64_t u;
-    struct cavm_pencx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pencx_scratch_s cn; */
-};
-typedef union cavm_pencx_scratch cavm_pencx_scratch_t;
-
-static inline uint64_t CAVM_PENCX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PENCX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043280080ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043280080ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043280080ll + 0x8000ll * ((a) & 0x1);
-    __cavm_csr_fatal("PENCX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PENCX_SCRATCH(a) cavm_pencx_scratch_t
-#define bustype_CAVM_PENCX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_PENCX_SCRATCH(a) "PENCX_SCRATCH"
-#define busnum_CAVM_PENCX_SCRATCH(a) (a)
-#define arguments_CAVM_PENCX_SCRATCH(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) penc#_status
  *
  * PENC Status Register
@@ -1339,113 +1257,45 @@ union cavm_pencx_tc_config_err_flags_reg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
-        uint64_t error18               : 1;  /**< [ 18: 18](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for vm_pbch_1st_scrm. */
-        uint64_t error17               : 1;  /**< [ 17: 17](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for dci_crc_mask */
+        uint64_t error18               : 1;  /**< [ 18: 18](R/W) Reserved. */
+        uint64_t error17               : 1;  /**< [ 17: 17](R/W) Reserved. */
         uint64_t error16               : 1;  /**< [ 16: 16](R/W) Reserved. */
-        uint64_t error15               : 1;  /**< [ 15: 15](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for pbch_1st_scrm_init. */
-        uint64_t error14               : 1;  /**< [ 14: 14](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for scrm_init. */
-        uint64_t error13               : 1;  /**< [ 13: 13](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for v_pbch_2nd_scrm. */
-        uint64_t error12               : 1;  /**< [ 12: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for symb_aligned. */
-        uint64_t error11               : 1;  /**< [ 11: 11](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for mod_order. */
-        uint64_t error10               : 1;  /**< [ 10: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for output_data_order. */
-        uint64_t error9                : 1;  /**< [  9:  9](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_pbch_1st_scrm. */
-        uint64_t error8                : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for scrm_offset. */
-        uint64_t error7                : 1;  /**< [  7:  7](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_scrm. */
-        uint64_t error6                : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_dcrc_intlv. */
-        uint64_t error5                : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_crc. */
-        uint64_t error4                : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for input_data_order. */
-        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for ch_selection. */
-        uint64_t error2                : 1;  /**< [  2:  2](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for e_size. */
-        uint64_t error1                : 1;  /**< [  1:  1](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for k_size. */
+        uint64_t error15               : 1;  /**< [ 15: 15](R/W) Reserved. */
+        uint64_t error14               : 1;  /**< [ 14: 14](R/W) Reserved. */
+        uint64_t error13               : 1;  /**< [ 13: 13](R/W) Reserved. */
+        uint64_t error12               : 1;  /**< [ 12: 12](R/W) Reserved. */
+        uint64_t error11               : 1;  /**< [ 11: 11](R/W) Reserved. */
+        uint64_t error10               : 1;  /**< [ 10: 10](R/W) Reserved. */
+        uint64_t error9                : 1;  /**< [  9:  9](R/W) Reserved. */
+        uint64_t error8                : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t error7                : 1;  /**< [  7:  7](R/W) Reserved. */
+        uint64_t error6                : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t error5                : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t error4                : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved. */
+        uint64_t error2                : 1;  /**< [  2:  2](R/W) Reserved. */
+        uint64_t error1                : 1;  /**< [  1:  1](R/W) Reserved. */
         uint64_t error0                : 1;  /**< [  0:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
         uint64_t error0                : 1;  /**< [  0:  0](R/W) Reserved. */
-        uint64_t error1                : 1;  /**< [  1:  1](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for k_size. */
-        uint64_t error2                : 1;  /**< [  2:  2](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for e_size. */
-        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for ch_selection. */
-        uint64_t error4                : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for input_data_order. */
-        uint64_t error5                : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_crc. */
-        uint64_t error6                : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_dcrc_intlv. */
-        uint64_t error7                : 1;  /**< [  7:  7](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_scrm. */
-        uint64_t error8                : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for scrm_offset. */
-        uint64_t error9                : 1;  /**< [  9:  9](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_pbch_1st_scrm. */
-        uint64_t error10               : 1;  /**< [ 10: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for output_data_order. */
-        uint64_t error11               : 1;  /**< [ 11: 11](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for mod_order. */
-        uint64_t error12               : 1;  /**< [ 12: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for symb_aligned. */
-        uint64_t error13               : 1;  /**< [ 13: 13](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for v_pbch_2nd_scrm. */
-        uint64_t error14               : 1;  /**< [ 14: 14](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for scrm_init. */
-        uint64_t error15               : 1;  /**< [ 15: 15](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for pbch_1st_scrm_init. */
+        uint64_t error1                : 1;  /**< [  1:  1](R/W) Reserved. */
+        uint64_t error2                : 1;  /**< [  2:  2](R/W) Reserved. */
+        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved. */
+        uint64_t error4                : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t error5                : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t error6                : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t error7                : 1;  /**< [  7:  7](R/W) Reserved. */
+        uint64_t error8                : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t error9                : 1;  /**< [  9:  9](R/W) Reserved. */
+        uint64_t error10               : 1;  /**< [ 10: 10](R/W) Reserved. */
+        uint64_t error11               : 1;  /**< [ 11: 11](R/W) Reserved. */
+        uint64_t error12               : 1;  /**< [ 12: 12](R/W) Reserved. */
+        uint64_t error13               : 1;  /**< [ 13: 13](R/W) Reserved. */
+        uint64_t error14               : 1;  /**< [ 14: 14](R/W) Reserved. */
+        uint64_t error15               : 1;  /**< [ 15: 15](R/W) Reserved. */
         uint64_t error16               : 1;  /**< [ 16: 16](R/W) Reserved. */
-        uint64_t error17               : 1;  /**< [ 17: 17](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for dci_crc_mask */
-        uint64_t error18               : 1;  /**< [ 18: 18](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for vm_pbch_1st_scrm. */
+        uint64_t error17               : 1;  /**< [ 17: 17](R/W) Reserved. */
+        uint64_t error18               : 1;  /**< [ 18: 18](R/W) Reserved. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } cnf95xxp1;
@@ -1517,57 +1367,6 @@ static inline uint64_t CAVM_PENCX_TC_CONFIG_ERR_FLAGS_REG(uint64_t a)
 #define basename_CAVM_PENCX_TC_CONFIG_ERR_FLAGS_REG(a) "PENCX_TC_CONFIG_ERR_FLAGS_REG"
 #define busnum_CAVM_PENCX_TC_CONFIG_ERR_FLAGS_REG(a) (a)
 #define arguments_CAVM_PENCX_TC_CONFIG_ERR_FLAGS_REG(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) penc#_tc_config_reg#
- *
- * INTERNAL: TC Task Config Registers
- *
- * TC task config registers.
- */
-union cavm_pencx_tc_config_regx
-{
-    uint64_t u;
-    struct cavm_pencx_tc_config_regx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W) Config bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W) Config bits. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pencx_tc_config_regx_s cn9; */
-    /* struct cavm_pencx_tc_config_regx_s cnf95xxp1; */
-    struct cavm_pencx_tc_config_regx_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_pencx_tc_config_regx_cnf95xxp2 f95o; */
-    /* struct cavm_pencx_tc_config_regx_cnf95xxp2 loki; */
-};
-typedef union cavm_pencx_tc_config_regx cavm_pencx_tc_config_regx_t;
-
-static inline uint64_t CAVM_PENCX_TC_CONFIG_REGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PENCX_TC_CONFIG_REGX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=2)))
-        return 0x87e043281400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=2)))
-        return 0x87e043281400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=2)))
-        return 0x87e043281400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    __cavm_csr_fatal("PENCX_TC_CONFIG_REGX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PENCX_TC_CONFIG_REGX(a,b) cavm_pencx_tc_config_regx_t
-#define bustype_CAVM_PENCX_TC_CONFIG_REGX(a,b) CSR_TYPE_RSL
-#define basename_CAVM_PENCX_TC_CONFIG_REGX(a,b) "PENCX_TC_CONFIG_REGX"
-#define busnum_CAVM_PENCX_TC_CONFIG_REGX(a,b) (a)
-#define arguments_CAVM_PENCX_TC_CONFIG_REGX(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) penc#_tc_control_reg
@@ -1858,120 +1657,6 @@ static inline uint64_t CAVM_PENCX_TC_MAIN_RESET_REG(uint64_t a)
 #define basename_CAVM_PENCX_TC_MAIN_RESET_REG(a) "PENCX_TC_MAIN_RESET_REG"
 #define busnum_CAVM_PENCX_TC_MAIN_RESET_REG(a) (a)
 #define arguments_CAVM_PENCX_TC_MAIN_RESET_REG(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) penc#_tc_main_start_reg
- *
- * INTERNAL: TC Start Register
- *
- * TC start register.
- */
-union cavm_pencx_tc_main_start_reg
-{
-    uint64_t u;
-    struct cavm_pencx_tc_main_start_reg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t start                 : 1;  /**< [  0:  0](R/W) Start bit. */
-#else /* Word 0 - Little Endian */
-        uint64_t start                 : 1;  /**< [  0:  0](R/W) Start bit. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pencx_tc_main_start_reg_s cn9; */
-    /* struct cavm_pencx_tc_main_start_reg_s cnf95xxp1; */
-    struct cavm_pencx_tc_main_start_reg_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t start                 : 1;  /**< [  0:  0](R/W/H) Start bit. */
-#else /* Word 0 - Little Endian */
-        uint64_t start                 : 1;  /**< [  0:  0](R/W/H) Start bit. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_pencx_tc_main_start_reg_cnf95xxp2 f95o; */
-    /* struct cavm_pencx_tc_main_start_reg_cnf95xxp2 loki; */
-};
-typedef union cavm_pencx_tc_main_start_reg cavm_pencx_tc_main_start_reg_t;
-
-static inline uint64_t CAVM_PENCX_TC_MAIN_START_REG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PENCX_TC_MAIN_START_REG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043281008ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043281008ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043281008ll + 0x8000ll * ((a) & 0x1);
-    __cavm_csr_fatal("PENCX_TC_MAIN_START_REG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PENCX_TC_MAIN_START_REG(a) cavm_pencx_tc_main_start_reg_t
-#define bustype_CAVM_PENCX_TC_MAIN_START_REG(a) CSR_TYPE_RSL
-#define basename_CAVM_PENCX_TC_MAIN_START_REG(a) "PENCX_TC_MAIN_START_REG"
-#define busnum_CAVM_PENCX_TC_MAIN_START_REG(a) (a)
-#define arguments_CAVM_PENCX_TC_MAIN_START_REG(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) penc#_tc_mon_reg
- *
- * INTERNAL: TC Monitoring Registers
- *
- * TC mon registers.
- */
-union cavm_pencx_tc_mon_reg
-{
-    uint64_t u;
-    struct cavm_pencx_tc_mon_reg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO) tc1840 task output monitoring values.
-                                                                 mon_reg0_bus = Identifier associated to the Q output interface. Valid when q_avl is HIGH. */
-#else /* Word 0 - Little Endian */
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO) tc1840 task output monitoring values.
-                                                                 mon_reg0_bus = Identifier associated to the Q output interface. Valid when q_avl is HIGH. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pencx_tc_mon_reg_s cn9; */
-    /* struct cavm_pencx_tc_mon_reg_s cnf95xxp1; */
-    struct cavm_pencx_tc_mon_reg_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO/H) Encoder core task output monitoring values.
-                                                                 mon_reg0_bus = Identifier associated to the Q output interface. Valid when q_avl is HIGH. */
-#else /* Word 0 - Little Endian */
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO/H) Encoder core task output monitoring values.
-                                                                 mon_reg0_bus = Identifier associated to the Q output interface. Valid when q_avl is HIGH. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_pencx_tc_mon_reg_cnf95xxp2 f95o; */
-    /* struct cavm_pencx_tc_mon_reg_cnf95xxp2 loki; */
-};
-typedef union cavm_pencx_tc_mon_reg cavm_pencx_tc_mon_reg_t;
-
-static inline uint64_t CAVM_PENCX_TC_MON_REG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PENCX_TC_MON_REG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043281300ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043281300ll + 0x8000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043281300ll + 0x8000ll * ((a) & 0x1);
-    __cavm_csr_fatal("PENCX_TC_MON_REG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PENCX_TC_MON_REG(a) cavm_pencx_tc_mon_reg_t
-#define bustype_CAVM_PENCX_TC_MON_REG(a) CSR_TYPE_RSL
-#define basename_CAVM_PENCX_TC_MON_REG(a) "PENCX_TC_MON_REG"
-#define busnum_CAVM_PENCX_TC_MON_REG(a) (a)
-#define arguments_CAVM_PENCX_TC_MON_REG(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) penc#_tc_status_reg

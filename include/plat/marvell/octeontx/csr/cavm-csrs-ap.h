@@ -931,10 +931,7 @@ union cavm_ap_clidr_el1
 
                                                                  Enumerated by AP_CLIDR_EL1_CTYPE_E.
 
-                                                                 For CNXXXX, L2 cache is an instruction cache only.
-
-                                                                 Internal:
-                                                                 L2 can be NONE if fused-off. */
+                                                                 For CNXXXX, L2 cache is an instruction cache only. */
         uint32_t ctype1                : 3;  /**< [  2:  0](RO) Cache type fields. Indicate the type of cache implemented at
                                                                      each level, from Level 1 up to a maximum of seven levels of
                                                                      cache hierarchy.
@@ -956,10 +953,7 @@ union cavm_ap_clidr_el1
 
                                                                  Enumerated by AP_CLIDR_EL1_CTYPE_E.
 
-                                                                 For CNXXXX, L2 cache is an instruction cache only.
-
-                                                                 Internal:
-                                                                 L2 can be NONE if fused-off. */
+                                                                 For CNXXXX, L2 cache is an instruction cache only. */
         uint32_t ctype3                : 3;  /**< [  8:  6](RO) Cache type fields. Indicate the type of cache implemented at
                                                                      each level, from Level 1 up to a maximum of seven levels of
                                                                      cache hierarchy.
@@ -3341,11 +3335,6 @@ static inline uint64_t CAVM_AP_CURRENTEL_FUNC(void)
  *
  * A 1 in the appropriate bit in the AP_CVM_ACCESS_ELn register prevents
  * any access at lower exception levels.
- *
- * Internal:
- * If access is denied at multiple exception levels then the
- * trap occurs at the lowest. This is similar to Arm's
- * AP_CPACR_EL1/AP_CPTR_EL2/AP_CPTR_EL3.
  */
 union cavm_ap_cvm_access_el1
 {
@@ -3630,11 +3619,6 @@ static inline uint64_t CAVM_AP_CVM_ACCESS_EL2_FUNC(void)
  * Register (SYSREG) ap_cvm_access_el3
  *
  * AP Marvell Access EL3 Register
- * Internal:
- * Software should expose the CvmCACHE instruction to EL2 or
- * EL1 with extreme caution. Exposing this instruction to lower
- * exception levels may cause nonsecure state to mess with secure
- * state, which would cause a security hole.
  */
 union cavm_ap_cvm_access_el3
 {
@@ -4486,136 +4470,6 @@ static inline uint64_t CAVM_AP_CVM_DCACHEVTAG1_EL1_FUNC(void)
 #define arguments_CAVM_AP_CVM_DCACHEVTAG1_EL1 -1,-1,-1,-1
 
 /**
- * Register (SYSREG) ap_cvm_debug0_el3
- *
- * INTERNAL: AP Marvell Debug 0 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug0_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug0_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    struct cavm_ap_cvm_debug0_el3_cn8
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t current_pc            : 64; /**< [ 63:  0](RO) Current PC. */
-#else /* Word 0 - Little Endian */
-        uint64_t current_pc            : 64; /**< [ 63:  0](RO) Current PC. */
-#endif /* Word 0 - End */
-    } cn8;
-    struct cavm_ap_cvm_debug0_el3_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ibuf_read             : 1;  /**< [ 63: 63](RO) ibuf read happened. */
-        uint64_t ibuf_el               : 2;  /**< [ 62: 61](WO) ibuf el. */
-        uint64_t ibuf_mid              : 9;  /**< [ 60: 52](WO) ibuf mapper id. */
-        uint64_t ibuf_pc               : 52; /**< [ 51:  0](WO) ibuf pc. */
-#else /* Word 0 - Little Endian */
-        uint64_t ibuf_pc               : 52; /**< [ 51:  0](WO) ibuf pc. */
-        uint64_t ibuf_mid              : 9;  /**< [ 60: 52](WO) ibuf mapper id. */
-        uint64_t ibuf_el               : 2;  /**< [ 62: 61](WO) ibuf el. */
-        uint64_t ibuf_read             : 1;  /**< [ 63: 63](RO) ibuf read happened. */
-#endif /* Word 0 - End */
-    } cn9;
-};
-typedef union cavm_ap_cvm_debug0_el3 cavm_ap_cvm_debug0_el3_t;
-
-#define CAVM_AP_CVM_DEBUG0_EL3 CAVM_AP_CVM_DEBUG0_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG0_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG0_EL3_FUNC(void)
-{
-    return 0x3060b040000ll;
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG0_EL3 cavm_ap_cvm_debug0_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG0_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG0_EL3 "AP_CVM_DEBUG0_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG0_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG0_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_debug10_el3
- *
- * INTERNAL: AP Marvell Debug 10 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug10_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug10_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](R/W) Reserved. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_debug10_el3_s cn; */
-};
-typedef union cavm_ap_cvm_debug10_el3 cavm_ap_cvm_debug10_el3_t;
-
-#define CAVM_AP_CVM_DEBUG10_EL3 CAVM_AP_CVM_DEBUG10_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG10_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG10_EL3_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x3060b070200ll;
-    __cavm_csr_fatal("AP_CVM_DEBUG10_EL3", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG10_EL3 cavm_ap_cvm_debug10_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG10_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG10_EL3 "AP_CVM_DEBUG10_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG10_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG10_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_debug11_el3
- *
- * INTERNAL: AP Marvell Debug 11 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug11_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug11_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](R/W) Reserved. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_debug11_el3_s cn; */
-};
-typedef union cavm_ap_cvm_debug11_el3 cavm_ap_cvm_debug11_el3_t;
-
-#define CAVM_AP_CVM_DEBUG11_EL3 CAVM_AP_CVM_DEBUG11_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG11_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG11_EL3_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x3060b070300ll;
-    __cavm_csr_fatal("AP_CVM_DEBUG11_EL3", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG11_EL3 cavm_ap_cvm_debug11_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG11_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG11_EL3 "AP_CVM_DEBUG11_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG11_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG11_EL3 -1,-1,-1,-1
-
-/**
  * Register (SYSREG) ap_cvm_debug1_el3
  *
  * INTERNAL: AP Marvell Debug 1 Register
@@ -4674,41 +4528,6 @@ static inline uint64_t CAVM_AP_CVM_DEBUG1_EL3_FUNC(void)
 #define basename_CAVM_AP_CVM_DEBUG1_EL3 "AP_CVM_DEBUG1_EL3"
 #define busnum_CAVM_AP_CVM_DEBUG1_EL3 0
 #define arguments_CAVM_AP_CVM_DEBUG1_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_debug2_el3
- *
- * INTERNAL: AP Marvell Debug 2 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug2_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug2_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t last_ifill            : 64; /**< [ 63:  0](RO) Last ifill address. */
-#else /* Word 0 - Little Endian */
-        uint64_t last_ifill            : 64; /**< [ 63:  0](RO) Last ifill address. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_debug2_el3_s cn; */
-};
-typedef union cavm_ap_cvm_debug2_el3 cavm_ap_cvm_debug2_el3_t;
-
-#define CAVM_AP_CVM_DEBUG2_EL3 CAVM_AP_CVM_DEBUG2_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG2_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG2_EL3_FUNC(void)
-{
-    return 0x3060b040200ll;
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG2_EL3 cavm_ap_cvm_debug2_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG2_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG2_EL3 "AP_CVM_DEBUG2_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG2_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG2_EL3 -1,-1,-1,-1
 
 /**
  * Register (SYSREG) ap_cvm_debug3_el3
@@ -4811,454 +4630,6 @@ static inline uint64_t CAVM_AP_CVM_DEBUG3_EL3_FUNC(void)
 #define basename_CAVM_AP_CVM_DEBUG3_EL3 "AP_CVM_DEBUG3_EL3"
 #define busnum_CAVM_AP_CVM_DEBUG3_EL3 0
 #define arguments_CAVM_AP_CVM_DEBUG3_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_debug4_el3
- *
- * INTERNAL: AP Marvell Debug 4 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug4_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug4_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t rsvd_52_63            : 12; /**< [ 63: 52](RO) Reserved. */
-        uint64_t skid_depth            : 4;  /**< [ 51: 48](RO) skid depth. */
-        uint64_t fetch_valid           : 4;  /**< [ 47: 44](RO) fetch valid. */
-        uint64_t fis_credit            : 4;  /**< [ 43: 40](RO) fis credit. */
-        uint64_t rsvd_38_39            : 2;  /**< [ 39: 38](RO) Reserved. */
-        uint64_t stop_fetching         : 1;  /**< [ 37: 37](RO) stop fetching. */
-        uint64_t global_sync_in_progress : 1;/**< [ 36: 36](RO) global sync in progress. */
-        uint64_t trace_sync_in_progress : 1; /**< [ 35: 35](RO) trace sync in progress. */
-        uint64_t tlbi_in_progress      : 1;  /**< [ 34: 34](RO) tlbi in progress. */
-        uint64_t fis_empty             : 1;  /**< [ 33: 33](RO) fis empty. */
-        uint64_t fis_stall             : 1;  /**< [ 32: 32](RO) fis stall. */
-        uint64_t rsvd_24_31            : 8;  /**< [ 31: 24](RO) Reserved. */
-        uint64_t reserved_8_23         : 16;
-        uint64_t fdiv_in_progress      : 1;  /**< [  7:  7](RO) fdiv in progress. */
-        uint64_t empty                 : 1;  /**< [  6:  6](RO) empty. */
-        uint64_t psb_stall             : 1;  /**< [  5:  5](RO) psb stall. */
-        uint64_t reserved_0_4          : 5;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_4          : 5;
-        uint64_t psb_stall             : 1;  /**< [  5:  5](RO) psb stall. */
-        uint64_t empty                 : 1;  /**< [  6:  6](RO) empty. */
-        uint64_t fdiv_in_progress      : 1;  /**< [  7:  7](RO) fdiv in progress. */
-        uint64_t reserved_8_23         : 16;
-        uint64_t rsvd_24_31            : 8;  /**< [ 31: 24](RO) Reserved. */
-        uint64_t fis_stall             : 1;  /**< [ 32: 32](RO) fis stall. */
-        uint64_t fis_empty             : 1;  /**< [ 33: 33](RO) fis empty. */
-        uint64_t tlbi_in_progress      : 1;  /**< [ 34: 34](RO) tlbi in progress. */
-        uint64_t trace_sync_in_progress : 1; /**< [ 35: 35](RO) trace sync in progress. */
-        uint64_t global_sync_in_progress : 1;/**< [ 36: 36](RO) global sync in progress. */
-        uint64_t stop_fetching         : 1;  /**< [ 37: 37](RO) stop fetching. */
-        uint64_t rsvd_38_39            : 2;  /**< [ 39: 38](RO) Reserved. */
-        uint64_t fis_credit            : 4;  /**< [ 43: 40](RO) fis credit. */
-        uint64_t fetch_valid           : 4;  /**< [ 47: 44](RO) fetch valid. */
-        uint64_t skid_depth            : 4;  /**< [ 51: 48](RO) skid depth. */
-        uint64_t rsvd_52_63            : 12; /**< [ 63: 52](RO) Reserved. */
-#endif /* Word 0 - End */
-    } s;
-    struct cavm_ap_cvm_debug4_el3_cn8
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_24_63        : 40;
-        uint64_t dual_issue_reason     : 8;  /**< [ 23: 16](RO) Reason dual issue didn't occur. */
-        uint64_t issue_reason          : 8;  /**< [ 15:  8](RO) Reason issue didn't occur. */
-        uint64_t reserved_5_7          : 3;
-        uint64_t mem_stall_4a          : 1;  /**< [  4:  4](RO) Memory Stall stage 4a. */
-        uint64_t waiting_for_pfill_4a  : 1;  /**< [  3:  3](RO) Waiting for PFILL stage 4a. */
-        uint64_t waiting_for_ifill_4a  : 1;  /**< [  2:  2](RO) Waiting for IFILL stage 4a. */
-        uint64_t exception_level       : 2;  /**< [  1:  0](RO) Current exception level. */
-#else /* Word 0 - Little Endian */
-        uint64_t exception_level       : 2;  /**< [  1:  0](RO) Current exception level. */
-        uint64_t waiting_for_ifill_4a  : 1;  /**< [  2:  2](RO) Waiting for IFILL stage 4a. */
-        uint64_t waiting_for_pfill_4a  : 1;  /**< [  3:  3](RO) Waiting for PFILL stage 4a. */
-        uint64_t mem_stall_4a          : 1;  /**< [  4:  4](RO) Memory Stall stage 4a. */
-        uint64_t reserved_5_7          : 3;
-        uint64_t issue_reason          : 8;  /**< [ 15:  8](RO) Reason issue didn't occur. */
-        uint64_t dual_issue_reason     : 8;  /**< [ 23: 16](RO) Reason dual issue didn't occur. */
-        uint64_t reserved_24_63        : 40;
-#endif /* Word 0 - End */
-    } cn8;
-    struct cavm_ap_cvm_debug4_el3_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t rsvd_52_63            : 12; /**< [ 63: 52](RO) Reserved. */
-        uint64_t skid_depth            : 4;  /**< [ 51: 48](RO) skid depth. */
-        uint64_t fetch_valid           : 4;  /**< [ 47: 44](RO) fetch valid. */
-        uint64_t fis_credit            : 4;  /**< [ 43: 40](RO) fis credit. */
-        uint64_t rsvd_38_39            : 2;  /**< [ 39: 38](RO) Reserved. */
-        uint64_t stop_fetching         : 1;  /**< [ 37: 37](RO) stop fetching. */
-        uint64_t global_sync_in_progress : 1;/**< [ 36: 36](RO) global sync in progress. */
-        uint64_t trace_sync_in_progress : 1; /**< [ 35: 35](RO) trace sync in progress. */
-        uint64_t tlbi_in_progress      : 1;  /**< [ 34: 34](RO) tlbi in progress. */
-        uint64_t fis_empty             : 1;  /**< [ 33: 33](RO) fis empty. */
-        uint64_t fis_stall             : 1;  /**< [ 32: 32](RO) fis stall. */
-        uint64_t rsvd_24_31            : 8;  /**< [ 31: 24](RO) Reserved. */
-        uint64_t spc_sample_active     : 1;  /**< [ 23: 23](RO) spc sample active. */
-        uint64_t machine_is_idle       : 1;  /**< [ 22: 22](RO) machine is idle. */
-        uint64_t oldest_is_dsb         : 1;  /**< [ 21: 21](RO) oldest is dsb. */
-        uint64_t last_fill_maf_num     : 4;  /**< [ 20: 17](RO) last fill maf */
-        uint64_t oldest_mapper_id      : 9;  /**< [ 16:  8](RO) oldest mapper id. */
-        uint64_t fdiv_in_progress      : 1;  /**< [  7:  7](RO) fdiv in progress. */
-        uint64_t empty                 : 1;  /**< [  6:  6](RO) empty. */
-        uint64_t psb_stall             : 1;  /**< [  5:  5](RO) psb stall. */
-        uint64_t generic_stall         : 1;  /**< [  4:  4](RO) generic stall. */
-        uint64_t system_stall          : 1;  /**< [  3:  3](RO) system stall. */
-        uint64_t ptw_stall             : 1;  /**< [  2:  2](RO) ptw stall. */
-        uint64_t mtlb_stall            : 1;  /**< [  1:  1](RO) mtlb stall. */
-        uint64_t misc_stall            : 1;  /**< [  0:  0](RO) misc stall. */
-#else /* Word 0 - Little Endian */
-        uint64_t misc_stall            : 1;  /**< [  0:  0](RO) misc stall. */
-        uint64_t mtlb_stall            : 1;  /**< [  1:  1](RO) mtlb stall. */
-        uint64_t ptw_stall             : 1;  /**< [  2:  2](RO) ptw stall. */
-        uint64_t system_stall          : 1;  /**< [  3:  3](RO) system stall. */
-        uint64_t generic_stall         : 1;  /**< [  4:  4](RO) generic stall. */
-        uint64_t psb_stall             : 1;  /**< [  5:  5](RO) psb stall. */
-        uint64_t empty                 : 1;  /**< [  6:  6](RO) empty. */
-        uint64_t fdiv_in_progress      : 1;  /**< [  7:  7](RO) fdiv in progress. */
-        uint64_t oldest_mapper_id      : 9;  /**< [ 16:  8](RO) oldest mapper id. */
-        uint64_t last_fill_maf_num     : 4;  /**< [ 20: 17](RO) last fill maf */
-        uint64_t oldest_is_dsb         : 1;  /**< [ 21: 21](RO) oldest is dsb. */
-        uint64_t machine_is_idle       : 1;  /**< [ 22: 22](RO) machine is idle. */
-        uint64_t spc_sample_active     : 1;  /**< [ 23: 23](RO) spc sample active. */
-        uint64_t rsvd_24_31            : 8;  /**< [ 31: 24](RO) Reserved. */
-        uint64_t fis_stall             : 1;  /**< [ 32: 32](RO) fis stall. */
-        uint64_t fis_empty             : 1;  /**< [ 33: 33](RO) fis empty. */
-        uint64_t tlbi_in_progress      : 1;  /**< [ 34: 34](RO) tlbi in progress. */
-        uint64_t trace_sync_in_progress : 1; /**< [ 35: 35](RO) trace sync in progress. */
-        uint64_t global_sync_in_progress : 1;/**< [ 36: 36](RO) global sync in progress. */
-        uint64_t stop_fetching         : 1;  /**< [ 37: 37](RO) stop fetching. */
-        uint64_t rsvd_38_39            : 2;  /**< [ 39: 38](RO) Reserved. */
-        uint64_t fis_credit            : 4;  /**< [ 43: 40](RO) fis credit. */
-        uint64_t fetch_valid           : 4;  /**< [ 47: 44](RO) fetch valid. */
-        uint64_t skid_depth            : 4;  /**< [ 51: 48](RO) skid depth. */
-        uint64_t rsvd_52_63            : 12; /**< [ 63: 52](RO) Reserved. */
-#endif /* Word 0 - End */
-    } cn9;
-};
-typedef union cavm_ap_cvm_debug4_el3 cavm_ap_cvm_debug4_el3_t;
-
-#define CAVM_AP_CVM_DEBUG4_EL3 CAVM_AP_CVM_DEBUG4_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG4_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG4_EL3_FUNC(void)
-{
-    return 0x3060b050000ll;
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG4_EL3 cavm_ap_cvm_debug4_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG4_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG4_EL3 "AP_CVM_DEBUG4_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG4_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG4_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_debug6_el3
- *
- * INTERNAL: AP Marvell Debug 6 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug6_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug6_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_41_63        : 23;
-        uint64_t power_off             : 1;  /**< [ 40: 40](RO)  */
-        uint64_t power_longterm        : 8;  /**< [ 39: 32](RO)  */
-        uint64_t power_setting         : 8;  /**< [ 31: 24](RO)  */
-        uint64_t reserved_22_23        : 2;
-        uint64_t interval_power        : 22; /**< [ 21:  0](RO)  */
-#else /* Word 0 - Little Endian */
-        uint64_t interval_power        : 22; /**< [ 21:  0](RO)  */
-        uint64_t reserved_22_23        : 2;
-        uint64_t power_setting         : 8;  /**< [ 31: 24](RO)  */
-        uint64_t power_longterm        : 8;  /**< [ 39: 32](RO)  */
-        uint64_t power_off             : 1;  /**< [ 40: 40](RO)  */
-        uint64_t reserved_41_63        : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_debug6_el3_s cn; */
-};
-typedef union cavm_ap_cvm_debug6_el3 cavm_ap_cvm_debug6_el3_t;
-
-#define CAVM_AP_CVM_DEBUG6_EL3 CAVM_AP_CVM_DEBUG6_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG6_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG6_EL3_FUNC(void)
-{
-    return 0x3060b050200ll;
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG6_EL3 cavm_ap_cvm_debug6_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG6_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG6_EL3 "AP_CVM_DEBUG6_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG6_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG6_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_debug7_el3
- *
- * INTERNAL: AP Marvell Debug 7 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug7_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug7_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t last_restart_reason   : 3;  /**< [ 63: 61](RO) last restart reason. */
-        uint64_t last_restart_address  : 29; /**< [ 60: 32](RO) last restart address [30:2]. */
-        uint64_t rsvd_31               : 1;  /**< [ 31: 31](RO) Reserved. */
-        uint64_t free_has_caught_up    : 1;  /**< [ 30: 30](RO) free has caught up. */
-        uint64_t livelock_detected     : 1;  /**< [ 29: 29](RO) livelock detected. */
-        uint64_t out_of_iregs          : 1;  /**< [ 28: 28](RO) out of iregs. */
-        uint64_t out_of_fregs          : 1;  /**< [ 27: 27](RO) out of fregs. */
-        uint64_t out_of_rob            : 1;  /**< [ 26: 26](RO) out of rob. */
-        uint64_t out_of_mem            : 1;  /**< [ 25: 25](RO) out of mem. */
-        uint64_t free_mapper_id        : 9;  /**< [ 24: 16](RO) free_mapper_id. */
-        uint64_t fis0_valid            : 1;  /**< [ 15: 15](RO) fis0.valid. */
-        uint64_t mapper_credit         : 6;  /**< [ 14:  9](RO) mapper credit. */
-        uint64_t mapper_id             : 9;  /**< [  8:  0](RO) mapper_id. */
-#else /* Word 0 - Little Endian */
-        uint64_t mapper_id             : 9;  /**< [  8:  0](RO) mapper_id. */
-        uint64_t mapper_credit         : 6;  /**< [ 14:  9](RO) mapper credit. */
-        uint64_t fis0_valid            : 1;  /**< [ 15: 15](RO) fis0.valid. */
-        uint64_t free_mapper_id        : 9;  /**< [ 24: 16](RO) free_mapper_id. */
-        uint64_t out_of_mem            : 1;  /**< [ 25: 25](RO) out of mem. */
-        uint64_t out_of_rob            : 1;  /**< [ 26: 26](RO) out of rob. */
-        uint64_t out_of_fregs          : 1;  /**< [ 27: 27](RO) out of fregs. */
-        uint64_t out_of_iregs          : 1;  /**< [ 28: 28](RO) out of iregs. */
-        uint64_t livelock_detected     : 1;  /**< [ 29: 29](RO) livelock detected. */
-        uint64_t free_has_caught_up    : 1;  /**< [ 30: 30](RO) free has caught up. */
-        uint64_t rsvd_31               : 1;  /**< [ 31: 31](RO) Reserved. */
-        uint64_t last_restart_address  : 29; /**< [ 60: 32](RO) last restart address [30:2]. */
-        uint64_t last_restart_reason   : 3;  /**< [ 63: 61](RO) last restart reason. */
-#endif /* Word 0 - End */
-    } s;
-    struct cavm_ap_cvm_debug7_el3_cn8
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } cn8;
-    /* struct cavm_ap_cvm_debug7_el3_s cn9; */
-    /* struct cavm_ap_cvm_debug7_el3_s cn96xxp1; */
-    struct cavm_ap_cvm_debug7_el3_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t last_restart_reason   : 3;  /**< [ 63: 61](RO) last restart reason. */
-        uint64_t last_restart_address  : 29; /**< [ 60: 32](RO) last restart address [30:2]. */
-        uint64_t rsvd_31               : 1;  /**< [ 31: 31](RO) Reserved. */
-        uint64_t free_has_caught_up    : 1;  /**< [ 30: 30](RO) free has caught up. */
-        uint64_t livelock_detected     : 1;  /**< [ 29: 29](RO) Livelock detected. */
-        uint64_t out_of_iregs          : 1;  /**< [ 28: 28](RO) out of iregs. */
-        uint64_t out_of_fregs          : 1;  /**< [ 27: 27](RO) out of fregs. */
-        uint64_t out_of_rob            : 1;  /**< [ 26: 26](RO) out of rob. */
-        uint64_t out_of_mem            : 1;  /**< [ 25: 25](RO) out of mem. */
-        uint64_t free_mapper_id        : 9;  /**< [ 24: 16](RO) free_mapper_id. */
-        uint64_t fis0_valid            : 1;  /**< [ 15: 15](RO) fis0.valid. */
-        uint64_t mapper_credit         : 6;  /**< [ 14:  9](RO) mapper credit. */
-        uint64_t mapper_id             : 9;  /**< [  8:  0](RO) mapper_id. */
-#else /* Word 0 - Little Endian */
-        uint64_t mapper_id             : 9;  /**< [  8:  0](RO) mapper_id. */
-        uint64_t mapper_credit         : 6;  /**< [ 14:  9](RO) mapper credit. */
-        uint64_t fis0_valid            : 1;  /**< [ 15: 15](RO) fis0.valid. */
-        uint64_t free_mapper_id        : 9;  /**< [ 24: 16](RO) free_mapper_id. */
-        uint64_t out_of_mem            : 1;  /**< [ 25: 25](RO) out of mem. */
-        uint64_t out_of_rob            : 1;  /**< [ 26: 26](RO) out of rob. */
-        uint64_t out_of_fregs          : 1;  /**< [ 27: 27](RO) out of fregs. */
-        uint64_t out_of_iregs          : 1;  /**< [ 28: 28](RO) out of iregs. */
-        uint64_t livelock_detected     : 1;  /**< [ 29: 29](RO) Livelock detected. */
-        uint64_t free_has_caught_up    : 1;  /**< [ 30: 30](RO) free has caught up. */
-        uint64_t rsvd_31               : 1;  /**< [ 31: 31](RO) Reserved. */
-        uint64_t last_restart_address  : 29; /**< [ 60: 32](RO) last restart address [30:2]. */
-        uint64_t last_restart_reason   : 3;  /**< [ 63: 61](RO) last restart reason. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 cn98xx; */
-    /* struct cavm_ap_cvm_debug7_el3_s cnf95xxp1; */
-    /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 cnf95xxp2; */
-    /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 f95mm; */
-    /* struct cavm_ap_cvm_debug7_el3_s f95o; */
-    /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 loki; */
-};
-typedef union cavm_ap_cvm_debug7_el3 cavm_ap_cvm_debug7_el3_t;
-
-#define CAVM_AP_CVM_DEBUG7_EL3 CAVM_AP_CVM_DEBUG7_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG7_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG7_EL3_FUNC(void)
-{
-    return 0x3060b050300ll;
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG7_EL3 cavm_ap_cvm_debug7_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG7_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG7_EL3 "AP_CVM_DEBUG7_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG7_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG7_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_debug8_el3
- *
- * INTERNAL: AP Marvell Debug 8 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug8_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug8_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t rdb_dsc_set_arry_1    : 18; /**< [ 63: 46](RO) Bits 17..0 of rdb_dsc_set_arry[1]. */
-        uint64_t rdb_dsc_set_arry_0    : 36; /**< [ 45: 10](RO) Rdb_dsc_set_arry[0]. */
-        uint64_t uwr_ack_def_cnt       : 2;  /**< [  9:  8](RO) Upstream write message ack count. */
-        uint64_t sgi_ack_def_cnt       : 2;  /**< [  7:  6](RO) SGI generate message ack count. */
-        uint64_t dct_ack_def_cnt       : 2;  /**< [  5:  4](RO) Deactivate message ack count. */
-        uint64_t act_ack_def_cnt       : 2;  /**< [  3:  2](RO) Activate message ack count. */
-        uint64_t clr_ack_def_cnt       : 2;  /**< [  1:  0](RO) Clear message ack count. */
-#else /* Word 0 - Little Endian */
-        uint64_t clr_ack_def_cnt       : 2;  /**< [  1:  0](RO) Clear message ack count. */
-        uint64_t act_ack_def_cnt       : 2;  /**< [  3:  2](RO) Activate message ack count. */
-        uint64_t dct_ack_def_cnt       : 2;  /**< [  5:  4](RO) Deactivate message ack count. */
-        uint64_t sgi_ack_def_cnt       : 2;  /**< [  7:  6](RO) SGI generate message ack count. */
-        uint64_t uwr_ack_def_cnt       : 2;  /**< [  9:  8](RO) Upstream write message ack count. */
-        uint64_t rdb_dsc_set_arry_0    : 36; /**< [ 45: 10](RO) Rdb_dsc_set_arry[0]. */
-        uint64_t rdb_dsc_set_arry_1    : 18; /**< [ 63: 46](RO) Bits 17..0 of rdb_dsc_set_arry[1]. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_debug8_el3_s cn; */
-};
-typedef union cavm_ap_cvm_debug8_el3 cavm_ap_cvm_debug8_el3_t;
-
-#define CAVM_AP_CVM_DEBUG8_EL3 CAVM_AP_CVM_DEBUG8_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG8_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG8_EL3_FUNC(void)
-{
-    return 0x3060b070000ll;
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG8_EL3 cavm_ap_cvm_debug8_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG8_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG8_EL3 "AP_CVM_DEBUG8_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG8_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG8_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_debug9_el3
- *
- * INTERNAL: AP Marvell Debug 9 Register
- *
- * This register is for diagnostic use only.
- */
-union cavm_ap_cvm_debug9_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_debug9_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t dsc_fsm_enc_state_1   : 4;  /**< [ 47: 44](RO) DSC FSM ENC state\<1\>. */
-        uint64_t dsc_fsm_enc_state_0   : 4;  /**< [ 43: 40](RO) DSC FSM ENC state\<0\>. */
-        uint64_t clr_fsm_enc_state     : 3;  /**< [ 39: 37](RO) CLR FSM ENC state. */
-        uint64_t qsc_fsm_enc_state     : 3;  /**< [ 36: 34](RO) QSC FSM ENC state. */
-        uint64_t dsc_fifo              : 4;  /**< [ 33: 30](RO) DSC FIFO. */
-        uint64_t ppi_fifo              : 4;  /**< [ 29: 26](RO) PPI FIFO. */
-        uint64_t cdc_fifo              : 4;  /**< [ 25: 22](RO) CDC FIFO. */
-        uint64_t eac_fifo              : 4;  /**< [ 21: 18](RO) EAC FIFO. */
-        uint64_t rdb_dsc_set_arry_1    : 18; /**< [ 17:  0](RO) rdb_dsc_set_arry[1]\<35:18\>. */
-#else /* Word 0 - Little Endian */
-        uint64_t rdb_dsc_set_arry_1    : 18; /**< [ 17:  0](RO) rdb_dsc_set_arry[1]\<35:18\>. */
-        uint64_t eac_fifo              : 4;  /**< [ 21: 18](RO) EAC FIFO. */
-        uint64_t cdc_fifo              : 4;  /**< [ 25: 22](RO) CDC FIFO. */
-        uint64_t ppi_fifo              : 4;  /**< [ 29: 26](RO) PPI FIFO. */
-        uint64_t dsc_fifo              : 4;  /**< [ 33: 30](RO) DSC FIFO. */
-        uint64_t qsc_fsm_enc_state     : 3;  /**< [ 36: 34](RO) QSC FSM ENC state. */
-        uint64_t clr_fsm_enc_state     : 3;  /**< [ 39: 37](RO) CLR FSM ENC state. */
-        uint64_t dsc_fsm_enc_state_0   : 4;  /**< [ 43: 40](RO) DSC FSM ENC state\<0\>. */
-        uint64_t dsc_fsm_enc_state_1   : 4;  /**< [ 47: 44](RO) DSC FSM ENC state\<1\>. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_debug9_el3_s cn; */
-};
-typedef union cavm_ap_cvm_debug9_el3 cavm_ap_cvm_debug9_el3_t;
-
-#define CAVM_AP_CVM_DEBUG9_EL3 CAVM_AP_CVM_DEBUG9_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DEBUG9_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DEBUG9_EL3_FUNC(void)
-{
-    return 0x3060b070100ll;
-}
-
-#define typedef_CAVM_AP_CVM_DEBUG9_EL3 cavm_ap_cvm_debug9_el3_t
-#define bustype_CAVM_AP_CVM_DEBUG9_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DEBUG9_EL3 "AP_CVM_DEBUG9_EL3"
-#define busnum_CAVM_AP_CVM_DEBUG9_EL3 0
-#define arguments_CAVM_AP_CVM_DEBUG9_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_dll_observabilty_el3
- *
- * INTERNAL: AP Marvell DLL Observability Register
- */
-union cavm_ap_cvm_dll_observabilty_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_dll_observabilty_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_60_63        : 4;
-        uint64_t max_seen              : 12; /**< [ 59: 48](RO) Maximum setting seen. */
-        uint64_t min_seen              : 12; /**< [ 47: 36](RO) Minimum setting seen. */
-        uint64_t rclk_dll_lock         : 1;  /**< [ 35: 35](RO) rclk_dll__lock. */
-        uint64_t dll_state             : 3;  /**< [ 34: 32](RO) dll_state\<2:0\>. */
-        uint64_t dll_setting           : 12; /**< [ 31: 20](RO) dll_setting\<11:0\>. */
-        uint64_t raw_dly_elem_enable   : 16; /**< [ 19:  4](RO) raw_dly_elem_enable\<15:0\>. */
-        uint64_t clk_invert            : 1;  /**< [  3:  3](RO) clk_invert. */
-        uint64_t pd_pos_rclk_refclk    : 1;  /**< [  2:  2](RO) pd_pos_rclk_refclk. */
-        uint64_t pdl_rclk_refclk       : 1;  /**< [  1:  1](RO) pdl_rclk_refclk. */
-        uint64_t pdr_rclk_refclk       : 1;  /**< [  0:  0](RO) pdr_rclk_refclk. */
-#else /* Word 0 - Little Endian */
-        uint64_t pdr_rclk_refclk       : 1;  /**< [  0:  0](RO) pdr_rclk_refclk. */
-        uint64_t pdl_rclk_refclk       : 1;  /**< [  1:  1](RO) pdl_rclk_refclk. */
-        uint64_t pd_pos_rclk_refclk    : 1;  /**< [  2:  2](RO) pd_pos_rclk_refclk. */
-        uint64_t clk_invert            : 1;  /**< [  3:  3](RO) clk_invert. */
-        uint64_t raw_dly_elem_enable   : 16; /**< [ 19:  4](RO) raw_dly_elem_enable\<15:0\>. */
-        uint64_t dll_setting           : 12; /**< [ 31: 20](RO) dll_setting\<11:0\>. */
-        uint64_t dll_state             : 3;  /**< [ 34: 32](RO) dll_state\<2:0\>. */
-        uint64_t rclk_dll_lock         : 1;  /**< [ 35: 35](RO) rclk_dll__lock. */
-        uint64_t min_seen              : 12; /**< [ 47: 36](RO) Minimum setting seen. */
-        uint64_t max_seen              : 12; /**< [ 59: 48](RO) Maximum setting seen. */
-        uint64_t reserved_60_63        : 4;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_dll_observabilty_el3_s cn; */
-};
-typedef union cavm_ap_cvm_dll_observabilty_el3 cavm_ap_cvm_dll_observabilty_el3_t;
-
-#define CAVM_AP_CVM_DLL_OBSERVABILTY_EL3 CAVM_AP_CVM_DLL_OBSERVABILTY_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_DLL_OBSERVABILTY_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_DLL_OBSERVABILTY_EL3_FUNC(void)
-{
-    return 0x3060b050100ll;
-}
-
-#define typedef_CAVM_AP_CVM_DLL_OBSERVABILTY_EL3 cavm_ap_cvm_dll_observabilty_el3_t
-#define bustype_CAVM_AP_CVM_DLL_OBSERVABILTY_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_DLL_OBSERVABILTY_EL3 "AP_CVM_DLL_OBSERVABILTY_EL3"
-#define busnum_CAVM_AP_CVM_DLL_OBSERVABILTY_EL3 0
-#define arguments_CAVM_AP_CVM_DLL_OBSERVABILTY_EL3 -1,-1,-1,-1
 
 /**
  * Register (SYSREG) ap_cvm_erricache_el1
@@ -5745,396 +5116,6 @@ static inline uint64_t CAVM_AP_CVM_EVATTID_EL1_FUNC(void)
 #define arguments_CAVM_AP_CVM_EVATTID_EL1 -1,-1,-1,-1
 
 /**
- * Register (SYSREG) ap_cvm_icachedata0_el1
- *
- * INTERNAL: AP Marvell Icache Data 0 Register
- */
-union cavm_ap_cvm_icachedata0_el1
-{
-    uint64_t u;
-    struct cavm_ap_cvm_icachedata0_el1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](RO) Icache data\<63:0\> from an Icache read operation. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](RO) Icache data\<63:0\> from an Icache read operation. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_icachedata0_el1_s cn; */
-};
-typedef union cavm_ap_cvm_icachedata0_el1 cavm_ap_cvm_icachedata0_el1_t;
-
-#define CAVM_AP_CVM_ICACHEDATA0_EL1 CAVM_AP_CVM_ICACHEDATA0_EL1_FUNC()
-static inline uint64_t CAVM_AP_CVM_ICACHEDATA0_EL1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_ICACHEDATA0_EL1_FUNC(void)
-{
-    return 0x3000b030000ll;
-}
-
-#define typedef_CAVM_AP_CVM_ICACHEDATA0_EL1 cavm_ap_cvm_icachedata0_el1_t
-#define bustype_CAVM_AP_CVM_ICACHEDATA0_EL1 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_ICACHEDATA0_EL1 "AP_CVM_ICACHEDATA0_EL1"
-#define busnum_CAVM_AP_CVM_ICACHEDATA0_EL1 0
-#define arguments_CAVM_AP_CVM_ICACHEDATA0_EL1 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_icachedata1_el1
- *
- * INTERNAL: AP Marvell Icache Data 1 Register
- */
-union cavm_ap_cvm_icachedata1_el1
-{
-    uint64_t u;
-    struct cavm_ap_cvm_icachedata1_el1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t data                  : 2;  /**< [  1:  0](RO) Icache data\<65:64\> from an Icache read operation. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 2;  /**< [  1:  0](RO) Icache data\<65:64\> from an Icache read operation. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_icachedata1_el1_s cn; */
-};
-typedef union cavm_ap_cvm_icachedata1_el1 cavm_ap_cvm_icachedata1_el1_t;
-
-#define CAVM_AP_CVM_ICACHEDATA1_EL1 CAVM_AP_CVM_ICACHEDATA1_EL1_FUNC()
-static inline uint64_t CAVM_AP_CVM_ICACHEDATA1_EL1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_ICACHEDATA1_EL1_FUNC(void)
-{
-    return 0x3000b030100ll;
-}
-
-#define typedef_CAVM_AP_CVM_ICACHEDATA1_EL1 cavm_ap_cvm_icachedata1_el1_t
-#define bustype_CAVM_AP_CVM_ICACHEDATA1_EL1 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_ICACHEDATA1_EL1 "AP_CVM_ICACHEDATA1_EL1"
-#define busnum_CAVM_AP_CVM_ICACHEDATA1_EL1 0
-#define arguments_CAVM_AP_CVM_ICACHEDATA1_EL1 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_icachetag0_el1
- *
- * INTERNAL: AP Marvell Icache Tag 0 Register
- */
-union cavm_ap_cvm_icachetag0_el1
-{
-    uint64_t u;
-    struct cavm_ap_cvm_icachetag0_el1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t valid                 : 1;  /**< [ 51: 51](RO) Valid. */
-        uint64_t va                    : 40; /**< [ 50: 11](RO) VA in tags. */
-        uint64_t asid_valid_ignored    : 1;  /**< [ 10: 10](RO) ASID valid is ignored. */
-        uint64_t asid_index            : 6;  /**< [  9:  4](RO) ASID index. */
-        uint64_t vmid_index            : 4;  /**< [  3:  0](RO) VMID index. */
-#else /* Word 0 - Little Endian */
-        uint64_t vmid_index            : 4;  /**< [  3:  0](RO) VMID index. */
-        uint64_t asid_index            : 6;  /**< [  9:  4](RO) ASID index. */
-        uint64_t asid_valid_ignored    : 1;  /**< [ 10: 10](RO) ASID valid is ignored. */
-        uint64_t va                    : 40; /**< [ 50: 11](RO) VA in tags. */
-        uint64_t valid                 : 1;  /**< [ 51: 51](RO) Valid. */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_icachetag0_el1_s cn; */
-};
-typedef union cavm_ap_cvm_icachetag0_el1 cavm_ap_cvm_icachetag0_el1_t;
-
-#define CAVM_AP_CVM_ICACHETAG0_EL1 CAVM_AP_CVM_ICACHETAG0_EL1_FUNC()
-static inline uint64_t CAVM_AP_CVM_ICACHETAG0_EL1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_ICACHETAG0_EL1_FUNC(void)
-{
-    return 0x3000b030200ll;
-}
-
-#define typedef_CAVM_AP_CVM_ICACHETAG0_EL1 cavm_ap_cvm_icachetag0_el1_t
-#define bustype_CAVM_AP_CVM_ICACHETAG0_EL1 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_ICACHETAG0_EL1 "AP_CVM_ICACHETAG0_EL1"
-#define busnum_CAVM_AP_CVM_ICACHETAG0_EL1 0
-#define arguments_CAVM_AP_CVM_ICACHETAG0_EL1 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_memdebug0_el3
- *
- * INTERNAL: AP Marvell Memory Debug 0 Register
- */
-union cavm_ap_cvm_memdebug0_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_memdebug0_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    struct cavm_ap_cvm_memdebug0_el3_cn8
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#endif /* Word 0 - End */
-    } cn8;
-    struct cavm_ap_cvm_memdebug0_el3_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t assertion_checkers    : 64; /**< [ 63:  0](R/W1C) Various assertion checkers. For diagnostic use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t assertion_checkers    : 64; /**< [ 63:  0](R/W1C) Various assertion checkers. For diagnostic use only. */
-#endif /* Word 0 - End */
-    } cn9;
-};
-typedef union cavm_ap_cvm_memdebug0_el3 cavm_ap_cvm_memdebug0_el3_t;
-
-#define CAVM_AP_CVM_MEMDEBUG0_EL3 CAVM_AP_CVM_MEMDEBUG0_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG0_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG0_EL3_FUNC(void)
-{
-    return 0x3060b040400ll;
-}
-
-#define typedef_CAVM_AP_CVM_MEMDEBUG0_EL3 cavm_ap_cvm_memdebug0_el3_t
-#define bustype_CAVM_AP_CVM_MEMDEBUG0_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_MEMDEBUG0_EL3 "AP_CVM_MEMDEBUG0_EL3"
-#define busnum_CAVM_AP_CVM_MEMDEBUG0_EL3 0
-#define arguments_CAVM_AP_CVM_MEMDEBUG0_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_memdebug1_el3
- *
- * INTERNAL: AP Marvell Memory Debug 1 Register
- */
-union cavm_ap_cvm_memdebug1_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_memdebug1_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_memdebug1_el3_s cn; */
-};
-typedef union cavm_ap_cvm_memdebug1_el3 cavm_ap_cvm_memdebug1_el3_t;
-
-#define CAVM_AP_CVM_MEMDEBUG1_EL3 CAVM_AP_CVM_MEMDEBUG1_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG1_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG1_EL3_FUNC(void)
-{
-    return 0x3060b040500ll;
-}
-
-#define typedef_CAVM_AP_CVM_MEMDEBUG1_EL3 cavm_ap_cvm_memdebug1_el3_t
-#define bustype_CAVM_AP_CVM_MEMDEBUG1_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_MEMDEBUG1_EL3 "AP_CVM_MEMDEBUG1_EL3"
-#define busnum_CAVM_AP_CVM_MEMDEBUG1_EL3 0
-#define arguments_CAVM_AP_CVM_MEMDEBUG1_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_memdebug2_el3
- *
- * INTERNAL: AP Marvell Memory Debug 2 Register
- */
-union cavm_ap_cvm_memdebug2_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_memdebug2_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_memdebug2_el3_s cn; */
-};
-typedef union cavm_ap_cvm_memdebug2_el3 cavm_ap_cvm_memdebug2_el3_t;
-
-#define CAVM_AP_CVM_MEMDEBUG2_EL3 CAVM_AP_CVM_MEMDEBUG2_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG2_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG2_EL3_FUNC(void)
-{
-    return 0x3060b040600ll;
-}
-
-#define typedef_CAVM_AP_CVM_MEMDEBUG2_EL3 cavm_ap_cvm_memdebug2_el3_t
-#define bustype_CAVM_AP_CVM_MEMDEBUG2_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_MEMDEBUG2_EL3 "AP_CVM_MEMDEBUG2_EL3"
-#define busnum_CAVM_AP_CVM_MEMDEBUG2_EL3 0
-#define arguments_CAVM_AP_CVM_MEMDEBUG2_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_memdebug3_el3
- *
- * INTERNAL: AP Marvell Memory Debug 3 Register
- */
-union cavm_ap_cvm_memdebug3_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_memdebug3_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_memdebug3_el3_s cn; */
-};
-typedef union cavm_ap_cvm_memdebug3_el3 cavm_ap_cvm_memdebug3_el3_t;
-
-#define CAVM_AP_CVM_MEMDEBUG3_EL3 CAVM_AP_CVM_MEMDEBUG3_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG3_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG3_EL3_FUNC(void)
-{
-    return 0x3060b040700ll;
-}
-
-#define typedef_CAVM_AP_CVM_MEMDEBUG3_EL3 cavm_ap_cvm_memdebug3_el3_t
-#define bustype_CAVM_AP_CVM_MEMDEBUG3_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_MEMDEBUG3_EL3 "AP_CVM_MEMDEBUG3_EL3"
-#define busnum_CAVM_AP_CVM_MEMDEBUG3_EL3 0
-#define arguments_CAVM_AP_CVM_MEMDEBUG3_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_memdebug4_el3
- *
- * INTERNAL: AP Marvell Memory Debug 4 Register
- */
-union cavm_ap_cvm_memdebug4_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_memdebug4_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_memdebug4_el3_s cn; */
-};
-typedef union cavm_ap_cvm_memdebug4_el3 cavm_ap_cvm_memdebug4_el3_t;
-
-#define CAVM_AP_CVM_MEMDEBUG4_EL3 CAVM_AP_CVM_MEMDEBUG4_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG4_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG4_EL3_FUNC(void)
-{
-    return 0x3060b050400ll;
-}
-
-#define typedef_CAVM_AP_CVM_MEMDEBUG4_EL3 cavm_ap_cvm_memdebug4_el3_t
-#define bustype_CAVM_AP_CVM_MEMDEBUG4_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_MEMDEBUG4_EL3 "AP_CVM_MEMDEBUG4_EL3"
-#define busnum_CAVM_AP_CVM_MEMDEBUG4_EL3 0
-#define arguments_CAVM_AP_CVM_MEMDEBUG4_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_memdebug5_el3
- *
- * INTERNAL: AP Marvell Memory Debug 5 Register
- */
-union cavm_ap_cvm_memdebug5_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_memdebug5_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_memdebug5_el3_s cn; */
-};
-typedef union cavm_ap_cvm_memdebug5_el3 cavm_ap_cvm_memdebug5_el3_t;
-
-#define CAVM_AP_CVM_MEMDEBUG5_EL3 CAVM_AP_CVM_MEMDEBUG5_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG5_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG5_EL3_FUNC(void)
-{
-    return 0x3060b050500ll;
-}
-
-#define typedef_CAVM_AP_CVM_MEMDEBUG5_EL3 cavm_ap_cvm_memdebug5_el3_t
-#define bustype_CAVM_AP_CVM_MEMDEBUG5_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_MEMDEBUG5_EL3 "AP_CVM_MEMDEBUG5_EL3"
-#define busnum_CAVM_AP_CVM_MEMDEBUG5_EL3 0
-#define arguments_CAVM_AP_CVM_MEMDEBUG5_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_memdebug6_el3
- *
- * INTERNAL: AP Marvell Memory Debug 6 Register
- */
-union cavm_ap_cvm_memdebug6_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_memdebug6_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_memdebug6_el3_s cn; */
-};
-typedef union cavm_ap_cvm_memdebug6_el3 cavm_ap_cvm_memdebug6_el3_t;
-
-#define CAVM_AP_CVM_MEMDEBUG6_EL3 CAVM_AP_CVM_MEMDEBUG6_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG6_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG6_EL3_FUNC(void)
-{
-    return 0x3060b050600ll;
-}
-
-#define typedef_CAVM_AP_CVM_MEMDEBUG6_EL3 cavm_ap_cvm_memdebug6_el3_t
-#define bustype_CAVM_AP_CVM_MEMDEBUG6_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_MEMDEBUG6_EL3 "AP_CVM_MEMDEBUG6_EL3"
-#define busnum_CAVM_AP_CVM_MEMDEBUG6_EL3 0
-#define arguments_CAVM_AP_CVM_MEMDEBUG6_EL3 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_cvm_memdebug7_el3
- *
- * INTERNAL: AP Marvell Memory Debug 7 Register
- */
-union cavm_ap_cvm_memdebug7_el3
-{
-    uint64_t u;
-    struct cavm_ap_cvm_memdebug7_el3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#else /* Word 0 - Little Endian */
-        uint64_t debug                 : 64; /**< [ 63:  0](RO) Undocumented debug. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvm_memdebug7_el3_s cn; */
-};
-typedef union cavm_ap_cvm_memdebug7_el3 cavm_ap_cvm_memdebug7_el3_t;
-
-#define CAVM_AP_CVM_MEMDEBUG7_EL3 CAVM_AP_CVM_MEMDEBUG7_EL3_FUNC()
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG7_EL3_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_MEMDEBUG7_EL3_FUNC(void)
-{
-    return 0x3060b050700ll;
-}
-
-#define typedef_CAVM_AP_CVM_MEMDEBUG7_EL3 cavm_ap_cvm_memdebug7_el3_t
-#define bustype_CAVM_AP_CVM_MEMDEBUG7_EL3 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_CVM_MEMDEBUG7_EL3 "AP_CVM_MEMDEBUG7_EL3"
-#define busnum_CAVM_AP_CVM_MEMDEBUG7_EL3 0
-#define arguments_CAVM_AP_CVM_MEMDEBUG7_EL3 -1,-1,-1,-1
-
-/**
  * Register (SYSREG) ap_cvm_nvbar_el3
  *
  * AP Marvell DEL3T Address Register
@@ -6233,9 +5214,7 @@ union cavm_ap_cvm_power_el1
     struct cavm_ap_cvm_power_el1_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t maxpow                : 8;  /**< [ 63: 56](R/W) Reserved.
-                                                                 Internal:
-                                                                 Maximum power. */
+        uint64_t maxpow                : 8;  /**< [ 63: 56](R/W) Reserved. */
         uint64_t average_power         : 8;  /**< [ 55: 48](R/W) Average power.
                                                                  Time-averaged dynamic-power estimate for this core, in mA/GHz.
                                                                  An approximation of this core's power is calculated with:
@@ -6254,57 +5233,25 @@ union cavm_ap_cvm_power_el1
                                                                  _ voltage is determined by the platform, perhaps by reading a VRM setting.
 
                                                                  _ freq is in GHz and is from RST_BOOT[C_MUL] * 0.050, assuming standard 50 MHz ref-clock. */
-        uint64_t current_setting       : 8;  /**< [ 47: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 Current setting. */
-        uint64_t hrm_adjustment        : 8;  /**< [ 39: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 HRM adjustment. */
+        uint64_t current_setting       : 8;  /**< [ 47: 40](R/W) Reserved. */
+        uint64_t hrm_adjustment        : 8;  /**< [ 39: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t override              : 1;  /**< [ 28: 28](R/W) Reserved.
-                                                                 Internal:
-                                                                 Override. */
-        uint64_t disable_stagger       : 1;  /**< [ 27: 27](R/W) Reserved.
-                                                                 Internal:
-                                                                 Disable stagger. */
-        uint64_t period                : 3;  /**< [ 26: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Period. */
-        uint64_t powlim                : 8;  /**< [ 23: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Power limit. */
-        uint64_t max_setting           : 8;  /**< [ 15:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Maximum setting. */
-        uint64_t min_setting           : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Minimum setting. */
+        uint64_t override              : 1;  /**< [ 28: 28](R/W) Reserved. */
+        uint64_t disable_stagger       : 1;  /**< [ 27: 27](R/W) Reserved. */
+        uint64_t period                : 3;  /**< [ 26: 24](R/W) Reserved. */
+        uint64_t powlim                : 8;  /**< [ 23: 16](R/W) Reserved. */
+        uint64_t max_setting           : 8;  /**< [ 15:  8](R/W) Reserved. */
+        uint64_t min_setting           : 8;  /**< [  7:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t min_setting           : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Minimum setting. */
-        uint64_t max_setting           : 8;  /**< [ 15:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Maximum setting. */
-        uint64_t powlim                : 8;  /**< [ 23: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Power limit. */
-        uint64_t period                : 3;  /**< [ 26: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Period. */
-        uint64_t disable_stagger       : 1;  /**< [ 27: 27](R/W) Reserved.
-                                                                 Internal:
-                                                                 Disable stagger. */
-        uint64_t override              : 1;  /**< [ 28: 28](R/W) Reserved.
-                                                                 Internal:
-                                                                 Override. */
+        uint64_t min_setting           : 8;  /**< [  7:  0](R/W) Reserved. */
+        uint64_t max_setting           : 8;  /**< [ 15:  8](R/W) Reserved. */
+        uint64_t powlim                : 8;  /**< [ 23: 16](R/W) Reserved. */
+        uint64_t period                : 3;  /**< [ 26: 24](R/W) Reserved. */
+        uint64_t disable_stagger       : 1;  /**< [ 27: 27](R/W) Reserved. */
+        uint64_t override              : 1;  /**< [ 28: 28](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t hrm_adjustment        : 8;  /**< [ 39: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 HRM adjustment. */
-        uint64_t current_setting       : 8;  /**< [ 47: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 Current setting. */
+        uint64_t hrm_adjustment        : 8;  /**< [ 39: 32](R/W) Reserved. */
+        uint64_t current_setting       : 8;  /**< [ 47: 40](R/W) Reserved. */
         uint64_t average_power         : 8;  /**< [ 55: 48](R/W) Average power.
                                                                  Time-averaged dynamic-power estimate for this core, in mA/GHz.
                                                                  An approximation of this core's power is calculated with:
@@ -6323,18 +5270,14 @@ union cavm_ap_cvm_power_el1
                                                                  _ voltage is determined by the platform, perhaps by reading a VRM setting.
 
                                                                  _ freq is in GHz and is from RST_BOOT[C_MUL] * 0.050, assuming standard 50 MHz ref-clock. */
-        uint64_t maxpow                : 8;  /**< [ 63: 56](R/W) Reserved.
-                                                                 Internal:
-                                                                 Maximum power. */
+        uint64_t maxpow                : 8;  /**< [ 63: 56](R/W) Reserved. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_ap_cvm_power_el1_s cn8; */
     struct cavm_ap_cvm_power_el1_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t maxpow                : 8;  /**< [ 63: 56](R/W) Reserved.
-                                                                 Internal:
-                                                                 Maximum power. */
+        uint64_t maxpow                : 8;  /**< [ 63: 56](R/W) Reserved. */
         uint64_t average_power         : 8;  /**< [ 55: 48](R/W) Average power.
                                                                  Time-averaged dynamic-power estimate for this core, in mA/GHz.
                                                                  An approximation of this core's power is calculated with:
@@ -6353,57 +5296,25 @@ union cavm_ap_cvm_power_el1
                                                                  _ voltage is determined by the platform, perhaps by reading a AVS setting.
 
                                                                  _ freq is in GHz and is from RST_BOOT[C_MUL] * 0.050, assuming standard 50 MHz ref-clock. */
-        uint64_t current_setting       : 8;  /**< [ 47: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 Current setting. */
-        uint64_t hrm_adjustment        : 8;  /**< [ 39: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 HRM adjustment. */
+        uint64_t current_setting       : 8;  /**< [ 47: 40](R/W) Reserved. */
+        uint64_t hrm_adjustment        : 8;  /**< [ 39: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t override              : 1;  /**< [ 28: 28](R/W) Reserved.
-                                                                 Internal:
-                                                                 Override. */
-        uint64_t disable_stagger       : 1;  /**< [ 27: 27](R/W) Reserved.
-                                                                 Internal:
-                                                                 Disable stagger. */
-        uint64_t period                : 3;  /**< [ 26: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Period. */
-        uint64_t powlim                : 8;  /**< [ 23: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Power limit. */
-        uint64_t max_setting           : 8;  /**< [ 15:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Maximum setting. */
-        uint64_t min_setting           : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Minimum setting. */
+        uint64_t override              : 1;  /**< [ 28: 28](R/W) Reserved. */
+        uint64_t disable_stagger       : 1;  /**< [ 27: 27](R/W) Reserved. */
+        uint64_t period                : 3;  /**< [ 26: 24](R/W) Reserved. */
+        uint64_t powlim                : 8;  /**< [ 23: 16](R/W) Reserved. */
+        uint64_t max_setting           : 8;  /**< [ 15:  8](R/W) Reserved. */
+        uint64_t min_setting           : 8;  /**< [  7:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t min_setting           : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Minimum setting. */
-        uint64_t max_setting           : 8;  /**< [ 15:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Maximum setting. */
-        uint64_t powlim                : 8;  /**< [ 23: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Power limit. */
-        uint64_t period                : 3;  /**< [ 26: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Period. */
-        uint64_t disable_stagger       : 1;  /**< [ 27: 27](R/W) Reserved.
-                                                                 Internal:
-                                                                 Disable stagger. */
-        uint64_t override              : 1;  /**< [ 28: 28](R/W) Reserved.
-                                                                 Internal:
-                                                                 Override. */
+        uint64_t min_setting           : 8;  /**< [  7:  0](R/W) Reserved. */
+        uint64_t max_setting           : 8;  /**< [ 15:  8](R/W) Reserved. */
+        uint64_t powlim                : 8;  /**< [ 23: 16](R/W) Reserved. */
+        uint64_t period                : 3;  /**< [ 26: 24](R/W) Reserved. */
+        uint64_t disable_stagger       : 1;  /**< [ 27: 27](R/W) Reserved. */
+        uint64_t override              : 1;  /**< [ 28: 28](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t hrm_adjustment        : 8;  /**< [ 39: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 HRM adjustment. */
-        uint64_t current_setting       : 8;  /**< [ 47: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 Current setting. */
+        uint64_t hrm_adjustment        : 8;  /**< [ 39: 32](R/W) Reserved. */
+        uint64_t current_setting       : 8;  /**< [ 47: 40](R/W) Reserved. */
         uint64_t average_power         : 8;  /**< [ 55: 48](R/W) Average power.
                                                                  Time-averaged dynamic-power estimate for this core, in mA/GHz.
                                                                  An approximation of this core's power is calculated with:
@@ -6422,9 +5333,7 @@ union cavm_ap_cvm_power_el1
                                                                  _ voltage is determined by the platform, perhaps by reading a AVS setting.
 
                                                                  _ freq is in GHz and is from RST_BOOT[C_MUL] * 0.050, assuming standard 50 MHz ref-clock. */
-        uint64_t maxpow                : 8;  /**< [ 63: 56](R/W) Reserved.
-                                                                 Internal:
-                                                                 Maximum power. */
+        uint64_t maxpow                : 8;  /**< [ 63: 56](R/W) Reserved. */
 #endif /* Word 0 - End */
     } cn9;
 };
@@ -7647,10 +6556,7 @@ union cavm_ap_cvmctl_el1
         uint64_t reserved_47           : 1;
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
         uint64_t reserved_40_43        : 4;
@@ -7716,10 +6622,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t reserved_47           : 1;
         uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
         uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
@@ -7835,10 +6738,7 @@ union cavm_ap_cvmctl_el1
         uint64_t reserved_47           : 1;
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
         uint64_t reserved_40_43        : 4;
@@ -7848,9 +6748,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
         uint64_t reserved_35           : 1;
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
@@ -7866,17 +6764,13 @@ union cavm_ap_cvmctl_el1
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
 #else /* Word 0 - Little Endian */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
@@ -7892,9 +6786,7 @@ union cavm_ap_cvmctl_el1
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
         uint64_t reserved_35           : 1;
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
@@ -7906,10 +6798,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t reserved_47           : 1;
         uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
         uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
@@ -7949,10 +6838,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_load2         : 1;  /**< [ 47: 47](R/W) Disable second load port. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
         uint64_t dpref                 : 4;  /**< [ 43: 40](R/W) Here are the meaningful values of these bits.  Values not described here result
@@ -7970,9 +6856,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
         uint64_t reserved_35           : 1;
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
@@ -7990,17 +6874,13 @@ union cavm_ap_cvmctl_el1
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
 #else /* Word 0 - Little Endian */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
@@ -8018,9 +6898,7 @@ union cavm_ap_cvmctl_el1
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
         uint64_t reserved_35           : 1;
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
@@ -8040,10 +6918,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_load2         : 1;  /**< [ 47: 47](R/W) Disable second load port. */
         uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
         uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
@@ -8083,10 +6958,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_load2         : 1;  /**< [ 47: 47](R/W) Disable second load port. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
         uint64_t dpref                 : 4;  /**< [ 43: 40](R/W) Here are the meaningful values of these bits.  Values not described here result
@@ -8104,9 +6976,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
         uint64_t reserved_35           : 1;
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
@@ -8124,17 +6994,13 @@ union cavm_ap_cvmctl_el1
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
 #else /* Word 0 - Little Endian */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
@@ -8152,9 +7018,7 @@ union cavm_ap_cvmctl_el1
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
         uint64_t reserved_35           : 1;
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
@@ -8174,10 +7038,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_load2         : 1;  /**< [ 47: 47](R/W) Disable second load port. */
         uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
         uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
@@ -8221,10 +7082,7 @@ union cavm_ap_cvmctl_el1
         uint64_t rsvd_47               : 1;  /**< [ 47: 47](R/W) Reserved. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
         uint64_t dpref                 : 4;  /**< [ 43: 40](R/W) Dstream prefetch control.
@@ -8247,9 +7105,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
         uint64_t reserved_35           : 1;
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
@@ -8267,17 +7123,13 @@ union cavm_ap_cvmctl_el1
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
 #else /* Word 0 - Little Endian */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
@@ -8295,9 +7147,7 @@ union cavm_ap_cvmctl_el1
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
         uint64_t reserved_35           : 1;
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
@@ -8322,10 +7172,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t rsvd_47               : 1;  /**< [ 47: 47](R/W) Reserved. */
         uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
         uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
@@ -8370,10 +7217,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_load2         : 1;  /**< [ 47: 47](R/W) Disable second load port. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
         uint64_t dpref_bp_dis          : 1;  /**< [ 43: 43](R/W) When set, hardware data prefetcher ignores memory system backpressure for next line prefetcher. */
@@ -8386,9 +7230,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
         uint64_t reserved_35           : 1;
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
@@ -8406,17 +7248,13 @@ union cavm_ap_cvmctl_el1
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
 #else /* Word 0 - Little Endian */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
@@ -8434,9 +7272,7 @@ union cavm_ap_cvmctl_el1
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
         uint64_t reserved_35           : 1;
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
@@ -8451,10 +7287,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_load2         : 1;  /**< [ 47: 47](R/W) Disable second load port. */
         uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
         uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
@@ -8500,10 +7333,7 @@ union cavm_ap_cvmctl_el1
         uint64_t rsvd_47               : 1;  /**< [ 47: 47](R/W) Reserved. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
         uint64_t dpref                 : 4;  /**< [ 43: 40](R/W) Dstream prefetch control.
@@ -8526,9 +7356,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
         uint64_t reserved_35           : 1;
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
@@ -8546,17 +7374,13 @@ union cavm_ap_cvmctl_el1
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
 #else /* Word 0 - Little Endian */
         uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
         uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
-        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
-                                                                 Internal:
-                                                                 CN88XX-like mode. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained). */
         uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
         uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
         uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
@@ -8574,9 +7398,7 @@ union cavm_ap_cvmctl_el1
         uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
                                                                  WFE_DEFER\<7:4\>. */
         uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
-        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
-                                                                 Internal:
-                                                                 FIXME does this go away with CN98XX. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1. */
         uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
         uint64_t reserved_35           : 1;
         uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
@@ -8601,10 +7423,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
         uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
                                                                  0 = Weak ordering.
-                                                                 1 = Strong ordering.
-
-                                                                 Internal:
-                                                                 CN8XXX is always strong ordering. */
+                                                                 1 = Strong ordering. */
         uint64_t rsvd_47               : 1;  /**< [ 47: 47](R/W) Reserved. */
         uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
         uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
@@ -8713,9 +7532,7 @@ union cavm_ap_cvmmemctl0_el1
                                                                  changed. */
         uint64_t stexl2cforce          : 1;  /**< [ 43: 43](R/W) Send all store-exclusive instructions to L2 cache.  uTLB is not flushed with this value is
                                                                  changed. */
-        uint64_t ioglobalforce         : 1;  /**< [ 42: 42](R/W) Reserved.
-                                                                 Internal:
-                                                                 Force global order for IO references. */
+        uint64_t ioglobalforce         : 1;  /**< [ 42: 42](R/W) Reserved. */
         uint64_t wcumissforce          : 1;  /**< [ 41: 41](R/W) Force all walker cache lookups to miss.  uTLB is not flushed with this value is changed. */
         uint64_t replayprefdis         : 1;  /**< [ 40: 40](R/W) Replay PREF disable. uTLB miss PREF instruction behavior (see chapter body).
                                                                  0 = PREF instructions do attempt a replay for MTLB to uTLB refill.
@@ -8803,9 +7620,7 @@ union cavm_ap_cvmmemctl0_el1
 
                                                                  uTLB is not flushed with this value is changed. */
         uint64_t wcumissforce          : 1;  /**< [ 41: 41](R/W) Force all walker cache lookups to miss.  uTLB is not flushed with this value is changed. */
-        uint64_t ioglobalforce         : 1;  /**< [ 42: 42](R/W) Reserved.
-                                                                 Internal:
-                                                                 Force global order for IO references. */
+        uint64_t ioglobalforce         : 1;  /**< [ 42: 42](R/W) Reserved. */
         uint64_t stexl2cforce          : 1;  /**< [ 43: 43](R/W) Send all store-exclusive instructions to L2 cache.  uTLB is not flushed with this value is
                                                                  changed. */
         uint64_t wbfdmbflushnext       : 1;  /**< [ 44: 44](R/W) DMB instruction to !NSH flushes next ST to !NSH.  uTLB is not flushed with this value is
@@ -8930,9 +7745,7 @@ union cavm_ap_cvmmemctl0_el1
                                                                  changed. */
         uint64_t stexl2cforce          : 1;  /**< [ 43: 43](R/W) Send all store-exclusive instructions to LLC.  uTLB is not flushed with this value is
                                                                  changed. */
-        uint64_t ioglobalforce         : 1;  /**< [ 42: 42](R/W) Reserved.
-                                                                 Internal:
-                                                                 Force global order for IO references. */
+        uint64_t ioglobalforce         : 1;  /**< [ 42: 42](R/W) Reserved. */
         uint64_t wcumissforce          : 1;  /**< [ 41: 41](R/W) Force all walker cache lookups to miss.  uTLB is not flushed with this value is changed. */
         uint64_t replayprefdis         : 1;  /**< [ 40: 40](R/W) Replay PREF disable. uTLB miss PREF instruction behavior (see chapter body).
                                                                  0 = PREF instructions do attempt a replay for MTLB to uTLB refill.
@@ -9020,9 +7833,7 @@ union cavm_ap_cvmmemctl0_el1
 
                                                                  uTLB is not flushed with this value is changed. */
         uint64_t wcumissforce          : 1;  /**< [ 41: 41](R/W) Force all walker cache lookups to miss.  uTLB is not flushed with this value is changed. */
-        uint64_t ioglobalforce         : 1;  /**< [ 42: 42](R/W) Reserved.
-                                                                 Internal:
-                                                                 Force global order for IO references. */
+        uint64_t ioglobalforce         : 1;  /**< [ 42: 42](R/W) Reserved. */
         uint64_t stexl2cforce          : 1;  /**< [ 43: 43](R/W) Send all store-exclusive instructions to LLC.  uTLB is not flushed with this value is
                                                                  changed. */
         uint64_t wbfdmbflushnext       : 1;  /**< [ 44: 44](R/W) DMB instruction to !NSH flushes next ST to !NSH.  uTLB is not flushed with this value is
@@ -9105,8 +7916,6 @@ static inline uint64_t CAVM_AP_CVMMEMCTL0_EL1_FUNC(void)
  *
  * AP Marvell Memory Control 1 Register
  * This register controls additional memory-unit features.
- * Internal:
- * Back-end, non-debug.
  */
 union cavm_ap_cvmmemctl1_el1
 {
@@ -9149,33 +7958,14 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for L2C hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for L2C miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
-        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Enable SSO switch-tag. */
-        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Trap any access to nonzero node id. */
-        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable I/O SSO and PKO address region. */
-        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Enable/disable LMTST(a). */
+        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Reserved. */
         uint64_t lodignoresh           : 1;  /**< [  2:  2](R/W) LocalOrderDomain DMB/DSB_NSH{ST} ignores shareability (applies to both nsh and ish pages). */
         uint64_t lodishena             : 1;  /**< [  1:  1](R/W) LocalOrderDomain DMB/DSB_ISH{ST} enable. */
         uint64_t lodnshena             : 1;  /**< [  0:  0](R/W) LocalOrderDomain DMB/DSB_NSH{ST} enable. */
@@ -9183,33 +7973,14 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t lodnshena             : 1;  /**< [  0:  0](R/W) LocalOrderDomain DMB/DSB_NSH{ST} enable. */
         uint64_t lodishena             : 1;  /**< [  1:  1](R/W) LocalOrderDomain DMB/DSB_ISH{ST} enable. */
         uint64_t lodignoresh           : 1;  /**< [  2:  2](R/W) LocalOrderDomain DMB/DSB_NSH{ST} ignores shareability (applies to both nsh and ish pages). */
-        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Enable/disable LMTST(a). */
-        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable I/O SSO and PKO address region. */
-        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Trap any access to nonzero node id. */
-        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Enable SSO switch-tag. */
+        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Reserved. */
+        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Reserved. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for L2C miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for L2C hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -9260,33 +8031,14 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for L2C hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for L2C miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
-        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Enable SSO switch-tag. */
-        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Trap any access to nonzero node id. */
-        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable I/O SSO and PKO address region. */
-        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Enable/disable LMTST(a). */
+        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Reserved. */
         uint64_t lodignoresh           : 1;  /**< [  2:  2](R/W) LocalOrderDomain DMB/DSB_NSH{ST} ignores shareability (applies to both nsh and ish pages). */
         uint64_t lodishena             : 1;  /**< [  1:  1](R/W) LocalOrderDomain DMB/DSB_ISH{ST} enable. */
         uint64_t lodnshena             : 1;  /**< [  0:  0](R/W) LocalOrderDomain DMB/DSB_NSH{ST} enable. */
@@ -9294,33 +8046,14 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t lodnshena             : 1;  /**< [  0:  0](R/W) LocalOrderDomain DMB/DSB_NSH{ST} enable. */
         uint64_t lodishena             : 1;  /**< [  1:  1](R/W) LocalOrderDomain DMB/DSB_ISH{ST} enable. */
         uint64_t lodignoresh           : 1;  /**< [  2:  2](R/W) LocalOrderDomain DMB/DSB_NSH{ST} ignores shareability (applies to both nsh and ish pages). */
-        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Enable/disable LMTST(a). */
-        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable I/O SSO and PKO address region. */
-        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Trap any access to nonzero node id. */
-        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 83xx: Enable SSO switch-tag. */
+        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Reserved. */
+        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Reserved. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for L2C miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for L2C hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -9347,18 +8080,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for L2C hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for L2C miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -9394,18 +8116,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for L2C miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for L2C hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -9456,18 +8167,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -9503,18 +8203,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -9590,18 +8279,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -9637,18 +8315,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -9724,18 +8391,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -9771,18 +8427,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -9861,18 +8506,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -9908,18 +8542,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -9999,18 +8622,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -10046,18 +8658,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -10138,18 +8739,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -10185,18 +8775,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
-        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
-                                                                 Internal:
-                                                                 Backpressure is applied if:
-                                                                 \<pre\>
-                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
-                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
-                                                                 \</pre\>
-
-                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
-                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode. */
         uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
                                                                  0 = Single counter mode (combined hit and miss latency counter).
                                                                  1 = Dual counter mode (separate hit and miss latency counters). */
@@ -10258,8 +8837,6 @@ static inline uint64_t CAVM_AP_CVMMEMCTL1_EL1_FUNC(void)
  *
  * AP Marvell Memory Control 2 Register
  * This register controls additional memory-unit features.
- * Internal:
- * Back-end, non-debug.
  */
 union cavm_ap_cvmmemctl2_el1
 {
@@ -10539,8 +9116,6 @@ static inline uint64_t CAVM_AP_CVMMEMCTL2_EL1_FUNC(void)
  *
  * AP Marvell Memory Control 3 Register
  * This register controls additional memory-unit features.
- * Internal:
- * Back-end, non-debug.
  */
 union cavm_ap_cvmmemctl3_el1
 {
@@ -12526,20 +11101,14 @@ union cavm_ap_erxfr_el1
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
                                                                  overwritten. If the counter overflows, RAS()_ERR\<n\>STATUS[OF] is set to 1.
 
-                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0. */
         uint64_t dui                   : 2;  /**< [ 17: 16](RO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature separately.  See [FI].
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t rp                    : 1;  /**< [ 15: 15](RO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
@@ -12547,20 +11116,14 @@ union cavm_ap_erxfr_el1
 
                                                                  If [CEC] = 0x0, this bit is 0.
 
-                                                                 For CNXXXX no CEC in any records, always 0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0. */
         uint64_t cec                   : 3;  /**< [ 14: 12](RO) Indicates a standard correctable error counter mechanism in CDC_ERR()_MISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in CDC_ERR()_MISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in CDC_ERR()_MISC0\<47:32\>.
                                                                  _ All other values are reserved.
 
-                                                                 For CNXXXX no CEC in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0x0. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -12570,10 +11133,7 @@ union cavm_ap_erxfr_el1
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) Uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -12582,26 +11142,17 @@ union cavm_ap_erxfr_el1
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ui                    : 2;  /**< [  5:  4](RO) Uncorrected error recovery interrupt.
                                                                  0x0 = Does not support feature. See [FI].
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -12615,19 +11166,13 @@ union cavm_ap_erxfr_el1
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 2;  /**< [  1:  0](RO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -12641,18 +11186,12 @@ union cavm_ap_erxfr_el1
                                                                  0x0 = Does not support feature. See [FI].
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) Uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -12661,10 +11200,7 @@ union cavm_ap_erxfr_el1
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -12674,20 +11210,14 @@ union cavm_ap_erxfr_el1
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cec                   : 3;  /**< [ 14: 12](RO) Indicates a standard correctable error counter mechanism in CDC_ERR()_MISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in CDC_ERR()_MISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in CDC_ERR()_MISC0\<47:32\>.
                                                                  _ All other values are reserved.
 
-                                                                 For CNXXXX no CEC in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0x0. */
         uint64_t rp                    : 1;  /**< [ 15: 15](RO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
@@ -12695,20 +11225,14 @@ union cavm_ap_erxfr_el1
 
                                                                  If [CEC] = 0x0, this bit is 0.
 
-                                                                 For CNXXXX no CEC in any records, always 0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX no CEC in any records, always 0. */
         uint64_t dui                   : 2;  /**< [ 17: 16](RO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature separately.  See [FI].
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ceo                   : 2;  /**< [ 19: 18](RO) Corrected error overwrite. Indicates the behavior when a second corrected error
                                                                  is detected after a first corrected error has been recorded by the node.
                                                                  0x0 = Count corrected error if a counter is implemented. Keep the previous error
@@ -12718,10 +11242,7 @@ union cavm_ap_erxfr_el1
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
                                                                  overwritten. If the counter overflows, RAS()_ERR\<n\>STATUS[OF] is set to 1.
 
-                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 In CNXXXX, no corrected error counter is implemented in any records, always 0x0. */
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } s;
@@ -13383,11 +11904,7 @@ union cavm_ap_esr_elx
                                                                      that     might have been used at the Exception level from
                                                                      which the     exception was taken.  The value 0b11111.
 
-                                                                 When the EC field is RES0.
-
-                                                                 Internal:
-                                                                 For Marvell IO traps bit 10 is opposite general conventions - what should be
-                                                                 FAR_EL3_Not_valid is FAR_EL3_Valid; see bug35575. */
+                                                                 When the EC field is RES0. */
 #else /* Word 0 - Little Endian */
         uint32_t iss                   : 25; /**< [ 24:  0](R/W) Instruction Specific Syndrome. Architecturally, this field can
                                                                      be defined independently for each defined Exception class.
@@ -13409,11 +11926,7 @@ union cavm_ap_esr_elx
                                                                      that     might have been used at the Exception level from
                                                                      which the     exception was taken.  The value 0b11111.
 
-                                                                 When the EC field is RES0.
-
-                                                                 Internal:
-                                                                 For Marvell IO traps bit 10 is opposite general conventions - what should be
-                                                                 FAR_EL3_Not_valid is FAR_EL3_Valid; see bug35575. */
+                                                                 When the EC field is RES0. */
         uint32_t il                    : 1;  /**< [ 25: 25](R/W) Instruction Length for synchronous exceptions.
                                                                  0 = 16-bit instruction trapped.
                                                                  1 = 32-bit instruction trapped. This value is also used when the
@@ -18392,9 +16905,6 @@ static inline uint64_t CAVM_AP_ICH_EISR_EL2_FUNC(void)
  * AP Interrupt Controller Empty List Register Status Register
  * This register can be used to locate a usable List register
  *     when the hypervisor is delivering an interrupt to a Guest OS.
- *
- * Internal:
- * This register was renamed ICH_ELRSR_EL2 in OBAN of 2014-06-13 after release v20 of GIC v3.
  */
 union cavm_ap_ich_elrsr_el2
 {
@@ -19404,45 +17914,6 @@ static inline uint64_t CAVM_AP_ICH_VTR_EL2_FUNC(void)
 #define arguments_CAVM_AP_ICH_VTR_EL2 -1,-1,-1,-1
 
 /**
- * Register (SYSREG) ap_id_aa64afr#_el1_res0
- *
- * INTERNAL: AP AArch64 Reserved Register
- *
- * Reserved for future expansion of information about the
- *     implementation defined features of the processor in AArch64.
- *     Arm doesn't actually assign a name to these registers, so
- *     for CNXXXX a made up one.
- */
-union cavm_ap_id_aa64afrx_el1_res0
-{
-    uint64_t u;
-    struct cavm_ap_id_aa64afrx_el1_res0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_id_aa64afrx_el1_res0_s cn; */
-};
-typedef union cavm_ap_id_aa64afrx_el1_res0 cavm_ap_id_aa64afrx_el1_res0_t;
-
-static inline uint64_t CAVM_AP_ID_AA64AFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64AFRX_EL1_RES0(uint64_t a)
-{
-    if ((a>=2)&&(a<=3))
-        return 0x30000050400ll + 0x100ll * ((a) & 0x3);
-    __cavm_csr_fatal("AP_ID_AA64AFRX_EL1_RES0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_ID_AA64AFRX_EL1_RES0(a) cavm_ap_id_aa64afrx_el1_res0_t
-#define bustype_CAVM_AP_ID_AA64AFRX_EL1_RES0(a) CSR_TYPE_SYSREG
-#define basename_CAVM_AP_ID_AA64AFRX_EL1_RES0(a) "AP_ID_AA64AFRX_EL1_RES0"
-#define busnum_CAVM_AP_ID_AA64AFRX_EL1_RES0(a) (a)
-#define arguments_CAVM_AP_ID_AA64AFRX_EL1_RES0(a) (a),-1,-1,-1
-
-/**
  * Register (SYSREG) ap_id_aa64afr0_el1
  *
  * AP AArch64 Auxiliary Feature Register 0
@@ -19511,44 +17982,6 @@ static inline uint64_t CAVM_AP_ID_AA64AFR1_EL1_FUNC(void)
 #define basename_CAVM_AP_ID_AA64AFR1_EL1 "AP_ID_AA64AFR1_EL1"
 #define busnum_CAVM_AP_ID_AA64AFR1_EL1 0
 #define arguments_CAVM_AP_ID_AA64AFR1_EL1 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_id_aa64dfr#_el1_res0
- *
- * INTERNAL: AP AArch64 Reserved Register
- *
- * Reserved for future expansion of top level information about
- *     the debug system in AArch64. Arm doesn't actually assign
- *     a name to these registers, so CNXXXX made up one.
- */
-union cavm_ap_id_aa64dfrx_el1_res0
-{
-    uint64_t u;
-    struct cavm_ap_id_aa64dfrx_el1_res0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_id_aa64dfrx_el1_res0_s cn; */
-};
-typedef union cavm_ap_id_aa64dfrx_el1_res0 cavm_ap_id_aa64dfrx_el1_res0_t;
-
-static inline uint64_t CAVM_AP_ID_AA64DFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64DFRX_EL1_RES0(uint64_t a)
-{
-    if ((a>=2)&&(a<=3))
-        return 0x30000050000ll + 0x100ll * ((a) & 0x3);
-    __cavm_csr_fatal("AP_ID_AA64DFRX_EL1_RES0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_ID_AA64DFRX_EL1_RES0(a) cavm_ap_id_aa64dfrx_el1_res0_t
-#define bustype_CAVM_AP_ID_AA64DFRX_EL1_RES0(a) CSR_TYPE_SYSREG
-#define basename_CAVM_AP_ID_AA64DFRX_EL1_RES0(a) "AP_ID_AA64DFRX_EL1_RES0"
-#define busnum_CAVM_AP_ID_AA64DFRX_EL1_RES0(a) (a)
-#define arguments_CAVM_AP_ID_AA64DFRX_EL1_RES0(a) (a),-1,-1,-1
 
 /**
  * Register (SYSREG) ap_id_aa64dfr0_el1
@@ -19796,45 +18229,6 @@ static inline uint64_t CAVM_AP_ID_AA64DFR1_EL1_FUNC(void)
 #define arguments_CAVM_AP_ID_AA64DFR1_EL1 -1,-1,-1,-1
 
 /**
- * Register (SYSREG) ap_id_aa64isar#_el1_res0
- *
- * INTERNAL: AP AArch64 Reserved Register
- *
- * Reserved for future expansion of the information about the
- *     instruction sets implemented by the processor in AArch64.
- *     Arm doesn't actually assign a name to these registers, so
- *     CNXXXX made up one.
- */
-union cavm_ap_id_aa64isarx_el1_res0
-{
-    uint64_t u;
-    struct cavm_ap_id_aa64isarx_el1_res0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_id_aa64isarx_el1_res0_s cn; */
-};
-typedef union cavm_ap_id_aa64isarx_el1_res0 cavm_ap_id_aa64isarx_el1_res0_t;
-
-static inline uint64_t CAVM_AP_ID_AA64ISARX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64ISARX_EL1_RES0(uint64_t a)
-{
-    if ((a>=2)&&(a<=7))
-        return 0x30000060000ll + 0x100ll * ((a) & 0x7);
-    __cavm_csr_fatal("AP_ID_AA64ISARX_EL1_RES0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_ID_AA64ISARX_EL1_RES0(a) cavm_ap_id_aa64isarx_el1_res0_t
-#define bustype_CAVM_AP_ID_AA64ISARX_EL1_RES0(a) CSR_TYPE_SYSREG
-#define basename_CAVM_AP_ID_AA64ISARX_EL1_RES0(a) "AP_ID_AA64ISARX_EL1_RES0"
-#define busnum_CAVM_AP_ID_AA64ISARX_EL1_RES0(a) (a)
-#define arguments_CAVM_AP_ID_AA64ISARX_EL1_RES0(a) (a),-1,-1,-1
-
-/**
  * Register (SYSREG) ap_id_aa64isar0_el1
  *
  * AP AArch64 Instruction Set Attribute Register 0
@@ -19970,26 +18364,17 @@ union cavm_ap_id_aa64isar0_el1
                                                                      states.
                                                                  0x0 = No CRC32 instructions implemented.
                                                                  0x1 = CRC32B, CRC32H, CRC32W, CRC32X, CRC32CB, CRC32CH, CRC32CW, and
-                                                                     CRC32CX instructions implemented.
-
-                                                                 Internal:
-                                                                 In CNXXXX, supported unless crypto disabled by FUS_FUSE_NUM_E::AP_NOCRYPTO(). */
+                                                                     CRC32CX instructions implemented. */
         uint64_t sha2                  : 4;  /**< [ 15: 12](RO) SHA2 instructions in AArch64.
                                                                  All other values are reserved.
                                                                  0x0 = No SHA2 instructions implemented.
                                                                  0x1 = SHA256H, SHA256H2, SHA256SU0, and SHA256SU1 instructions
-                                                                     implemented.
-
-                                                                 Internal:
-                                                                 In CNXXXX, supported unless crypto disabled by FUS_FUSE_NUM_E::AP_NOCRYPTO(). */
+                                                                     implemented. */
         uint64_t sha1                  : 4;  /**< [ 11:  8](RO) SHA1 instructions in AArch64.
                                                                  All other values are reserved.
                                                                  0x0 = No SHA1 instructions implemented.
                                                                  0x1 = SHA1C, SHA1P, SHA1M, SHA1H, SHA1SU0, and SHA1SU1 instructions
-                                                                     implemented.
-
-                                                                 Internal:
-                                                                 In CNXXXX, supported unless crypto disabled by FUS_FUSE_NUM_E::AP_NOCRYPTO(). */
+                                                                     implemented. */
         uint64_t aes                   : 4;  /**< [  7:  4](RO) AES instructions in AArch64.
                                                                  0x0 = No AES instructions implemented.
                                                                  0x1 = AESE, AESD, AESMC, and AESIMC instructions implemented.
@@ -20011,18 +18396,12 @@ union cavm_ap_id_aa64isar0_el1
                                                                  All other values are reserved.
                                                                  0x0 = No SHA1 instructions implemented.
                                                                  0x1 = SHA1C, SHA1P, SHA1M, SHA1H, SHA1SU0, and SHA1SU1 instructions
-                                                                     implemented.
-
-                                                                 Internal:
-                                                                 In CNXXXX, supported unless crypto disabled by FUS_FUSE_NUM_E::AP_NOCRYPTO(). */
+                                                                     implemented. */
         uint64_t sha2                  : 4;  /**< [ 15: 12](RO) SHA2 instructions in AArch64.
                                                                  All other values are reserved.
                                                                  0x0 = No SHA2 instructions implemented.
                                                                  0x1 = SHA256H, SHA256H2, SHA256SU0, and SHA256SU1 instructions
-                                                                     implemented.
-
-                                                                 Internal:
-                                                                 In CNXXXX, supported unless crypto disabled by FUS_FUSE_NUM_E::AP_NOCRYPTO(). */
+                                                                     implemented. */
         uint64_t crc32                 : 4;  /**< [ 19: 16](RO) CRC32 instructions in AArch64.
                                                                  All other values are reserved.
                                                                  This field must have the same value as ID_ISAR5[CRC32]. The
@@ -20031,10 +18410,7 @@ union cavm_ap_id_aa64isar0_el1
                                                                      states.
                                                                  0x0 = No CRC32 instructions implemented.
                                                                  0x1 = CRC32B, CRC32H, CRC32W, CRC32X, CRC32CB, CRC32CH, CRC32CW, and
-                                                                     CRC32CX instructions implemented.
-
-                                                                 Internal:
-                                                                 In CNXXXX, supported unless crypto disabled by FUS_FUSE_NUM_E::AP_NOCRYPTO(). */
+                                                                     CRC32CX instructions implemented. */
         uint64_t atomic                : 4;  /**< [ 23: 20](RO) Atomic instructions in AArch64
                                                                      0x0 = No Atomic instructions implemented.
                                                                      0x1 = Reserved.
@@ -20144,47 +18520,6 @@ static inline uint64_t CAVM_AP_ID_AA64ISAR1_EL1_FUNC(void)
 #define basename_CAVM_AP_ID_AA64ISAR1_EL1 "AP_ID_AA64ISAR1_EL1"
 #define busnum_CAVM_AP_ID_AA64ISAR1_EL1 0
 #define arguments_CAVM_AP_ID_AA64ISAR1_EL1 -1,-1,-1,-1
-
-/**
- * Register (SYSREG) ap_id_aa64mmfr#_el1_res0
- *
- * INTERNAL: AP AArch64 Reserved Register
- *
- * Reserved for future expansion of the information about the
- *     implemented memory model and memory management support in
- *     AArch64. Arm doesn't actually assign a name to these
- *     registers, so CNXXXX made up one.
- */
-union cavm_ap_id_aa64mmfrx_el1_res0
-{
-    uint64_t u;
-    struct cavm_ap_id_aa64mmfrx_el1_res0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_id_aa64mmfrx_el1_res0_s cn; */
-};
-typedef union cavm_ap_id_aa64mmfrx_el1_res0 cavm_ap_id_aa64mmfrx_el1_res0_t;
-
-static inline uint64_t CAVM_AP_ID_AA64MMFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64MMFRX_EL1_RES0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && ((a>=2)&&(a<=7)))
-        return 0x30000070000ll + 0x100ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_CN9XXX) && ((a>=3)&&(a<=7)))
-        return 0x30000070000ll + 0x100ll * ((a) & 0x7);
-    __cavm_csr_fatal("AP_ID_AA64MMFRX_EL1_RES0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_ID_AA64MMFRX_EL1_RES0(a) cavm_ap_id_aa64mmfrx_el1_res0_t
-#define bustype_CAVM_AP_ID_AA64MMFRX_EL1_RES0(a) CSR_TYPE_SYSREG
-#define basename_CAVM_AP_ID_AA64MMFRX_EL1_RES0(a) "AP_ID_AA64MMFRX_EL1_RES0"
-#define busnum_CAVM_AP_ID_AA64MMFRX_EL1_RES0(a) (a)
-#define arguments_CAVM_AP_ID_AA64MMFRX_EL1_RES0(a) (a),-1,-1,-1
 
 /**
  * Register (SYSREG) ap_id_aa64mmfr0_el1
@@ -20909,44 +19244,6 @@ static inline uint64_t CAVM_AP_ID_AA64MMFR2_EL1_FUNC(void)
 #define arguments_CAVM_AP_ID_AA64MMFR2_EL1 -1,-1,-1,-1
 
 /**
- * Register (SYSREG) ap_id_aa64pfr#_el1_res0
- *
- * INTERNAL: AP AArch64 Reserved Register
- *
- * Reserved for future expansion of information about implemented
- *     processor features in AArch64. Arm doesn't actually assign
- *     a name to these registers, so CNXXXX made up one.
- */
-union cavm_ap_id_aa64pfrx_el1_res0
-{
-    uint64_t u;
-    struct cavm_ap_id_aa64pfrx_el1_res0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_id_aa64pfrx_el1_res0_s cn; */
-};
-typedef union cavm_ap_id_aa64pfrx_el1_res0 cavm_ap_id_aa64pfrx_el1_res0_t;
-
-static inline uint64_t CAVM_AP_ID_AA64PFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64PFRX_EL1_RES0(uint64_t a)
-{
-    if ((a>=2)&&(a<=7))
-        return 0x30000040000ll + 0x100ll * ((a) & 0x7);
-    __cavm_csr_fatal("AP_ID_AA64PFRX_EL1_RES0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_ID_AA64PFRX_EL1_RES0(a) cavm_ap_id_aa64pfrx_el1_res0_t
-#define bustype_CAVM_AP_ID_AA64PFRX_EL1_RES0(a) CSR_TYPE_SYSREG
-#define basename_CAVM_AP_ID_AA64PFRX_EL1_RES0(a) "AP_ID_AA64PFRX_EL1_RES0"
-#define busnum_CAVM_AP_ID_AA64PFRX_EL1_RES0(a) (a)
-#define arguments_CAVM_AP_ID_AA64PFRX_EL1_RES0(a) (a),-1,-1,-1
-
-/**
  * Register (SYSREG) ap_id_aa64pfr0_el1
  *
  * AP AArch64 Processor Feature Register 0
@@ -21446,81 +19743,6 @@ static inline uint64_t CAVM_AP_ID_ISARX_EL1(uint64_t a)
 #define basename_CAVM_AP_ID_ISARX_EL1(a) "AP_ID_ISARX_EL1"
 #define busnum_CAVM_AP_ID_ISARX_EL1(a) (a)
 #define arguments_CAVM_AP_ID_ISARX_EL1(a) (a),-1,-1,-1
-
-/**
- * Register (SYSREG) ap_id_isar#_el1_res0
- *
- * INTERNAL: AP ARM32 Instruction Set Attribute Register
- *
- * Instruction set attribute register. Arm doesn't actually assign a name to these registers, so
- * CNXXXX made up one.
- */
-union cavm_ap_id_isarx_el1_res0
-{
-    uint32_t u;
-    struct cavm_ap_id_isarx_el1_res0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_0_31         : 32;
-#else /* Word 0 - Little Endian */
-        uint32_t reserved_0_31         : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_id_isarx_el1_res0_s cn; */
-};
-typedef union cavm_ap_id_isarx_el1_res0 cavm_ap_id_isarx_el1_res0_t;
-
-static inline uint64_t CAVM_AP_ID_ISARX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_ISARX_EL1_RES0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && ((a>=6)&&(a<=7)))
-        return 0x30000020000ll + 0x100ll * ((a) & 0x7);
-    __cavm_csr_fatal("AP_ID_ISARX_EL1_RES0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_ID_ISARX_EL1_RES0(a) cavm_ap_id_isarx_el1_res0_t
-#define bustype_CAVM_AP_ID_ISARX_EL1_RES0(a) CSR_TYPE_SYSREG
-#define basename_CAVM_AP_ID_ISARX_EL1_RES0(a) "AP_ID_ISARX_EL1_RES0"
-#define busnum_CAVM_AP_ID_ISARX_EL1_RES0(a) (a)
-#define arguments_CAVM_AP_ID_ISARX_EL1_RES0(a) (a),-1,-1,-1
-
-/**
- * Register (SYSREG) ap_id_isar7_el1_res0
- *
- * INTERNAL: AP ARM32 Instruction Set Attribute Register
- *
- * Instruction set attribute register. Arm doesn't actually assign a name to these registers, so
- * CNXXXX made up one.
- */
-union cavm_ap_id_isar7_el1_res0
-{
-    uint32_t u;
-    struct cavm_ap_id_isar7_el1_res0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_0_31         : 32;
-#else /* Word 0 - Little Endian */
-        uint32_t reserved_0_31         : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_id_isar7_el1_res0_s cn; */
-};
-typedef union cavm_ap_id_isar7_el1_res0 cavm_ap_id_isar7_el1_res0_t;
-
-#define CAVM_AP_ID_ISAR7_EL1_RES0 CAVM_AP_ID_ISAR7_EL1_RES0_FUNC()
-static inline uint64_t CAVM_AP_ID_ISAR7_EL1_RES0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_ISAR7_EL1_RES0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x30000020700ll;
-    __cavm_csr_fatal("AP_ID_ISAR7_EL1_RES0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_ID_ISAR7_EL1_RES0 cavm_ap_id_isar7_el1_res0_t
-#define bustype_CAVM_AP_ID_ISAR7_EL1_RES0 CSR_TYPE_SYSREG
-#define basename_CAVM_AP_ID_ISAR7_EL1_RES0 "AP_ID_ISAR7_EL1_RES0"
-#define busnum_CAVM_AP_ID_ISAR7_EL1_RES0 0
-#define arguments_CAVM_AP_ID_ISAR7_EL1_RES0 -1,-1,-1,-1
 
 /**
  * Register (SYSREG) ap_id_mmfr#_el1
@@ -24962,42 +23184,6 @@ static inline uint64_t CAVM_AP_MVFRX_EL1(uint64_t a)
 #define basename_CAVM_AP_MVFRX_EL1(a) "AP_MVFRX_EL1"
 #define busnum_CAVM_AP_MVFRX_EL1(a) (a)
 #define arguments_CAVM_AP_MVFRX_EL1(a) (a),-1,-1,-1
-
-/**
- * Register (SYSREG) ap_mvfr#_el1_res0
- *
- * INTERNAL: AP AArch64 Reserved Register
- *
- * Reserved for future expansion.
- */
-union cavm_ap_mvfrx_el1_res0
-{
-    uint64_t u;
-    struct cavm_ap_mvfrx_el1_res0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_mvfrx_el1_res0_s cn; */
-};
-typedef union cavm_ap_mvfrx_el1_res0 cavm_ap_mvfrx_el1_res0_t;
-
-static inline uint64_t CAVM_AP_MVFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_MVFRX_EL1_RES0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX) && ((a>=3)&&(a<=7)))
-        return 0x30000030000ll + 0x100ll * ((a) & 0x7);
-    __cavm_csr_fatal("AP_MVFRX_EL1_RES0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AP_MVFRX_EL1_RES0(a) cavm_ap_mvfrx_el1_res0_t
-#define bustype_CAVM_AP_MVFRX_EL1_RES0(a) CSR_TYPE_SYSREG
-#define basename_CAVM_AP_MVFRX_EL1_RES0(a) "AP_MVFRX_EL1_RES0"
-#define busnum_CAVM_AP_MVFRX_EL1_RES0(a) (a)
-#define arguments_CAVM_AP_MVFRX_EL1_RES0(a) (a),-1,-1,-1
 
 /**
  * Register (SYSREG) ap_nzcv

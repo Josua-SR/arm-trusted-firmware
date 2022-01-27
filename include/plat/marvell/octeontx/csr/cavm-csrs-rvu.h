@@ -24,9 +24,6 @@
  *
  * RVU Admin Function Interrupt Vector Enumeration
  * Enumerates the MSI-X interrupt vectors.
- * Internal:
- * RVU maintains the state of these vectors internally, and generates GIB
- * messages for it without accessing the MSI-X table region in LLC/DRAM.
  */
 #define CAVM_RVU_AF_INT_VEC_E_GEN (3)
 #define CAVM_RVU_AF_INT_VEC_E_MBOX (4)
@@ -39,8 +36,6 @@
  *
  * RVU Base Address Register Enumeration
  * Enumerates the base address registers.
- * Internal:
- * For documentation only.
  */
 #define CAVM_RVU_BAR_E_RVU_PFX_BAR0(a) (0x840000000000ll + 0x1000000000ll * (a))
 #define CAVM_RVU_BAR_E_RVU_PFX_BAR0_SIZE 0x10000000ull
@@ -95,72 +90,14 @@
 #define CAVM_RVU_BLOCK_TYPE_E_ZIP (0xc)
 
 /**
- * Enumeration rvu_bus_lf_e
- *
- * INTERNAL: RVU Bus LF Range Enumeration
- *
- * Enumerates the LF range for the RVU bus.
- * Internal:
- * This is an enum used in csr3 virtual equations.
- */
-#define CAVM_RVU_BUS_LF_E_RVU_BUS_LFX(a) (0 + 0x2000000 * (a))
-
-/**
- * Enumeration rvu_bus_lf_slot_e
- *
- * INTERNAL: RVU Bus LF Slot Range Enumeration
- *
- * Enumerates the LF and Slot range for the RVU bus.
- * Internal:
- * This is an enum used in csr3 virtual equations.
- */
-#define CAVM_RVU_BUS_LF_SLOT_E_RVU_BUS_LFX_SLOTX(a,b) (0 + 0x2000000 * (a) + 0x1000 * (b))
-
-/**
- * Enumeration rvu_bus_pf_e
- *
- * INTERNAL: RVU Bus PF Range Enumeration
- *
- * Enumerates the PF range for the RVU bus.
- * Internal:
- * This is an enum used in csr3 virtual equations.
- */
-#define CAVM_RVU_BUS_PF_E_RVU_BUS_PFX(a) (0ll + 0x1000000000ll * (a))
-
-/**
- * Enumeration rvu_bus_pfvf_e
- *
- * INTERNAL: RVU Bus PFVF Range Enumeration
- *
- * Enumerates the PF and VF ranges for the RVU bus.
- * Internal:
- * This is an enum used in csr3 virtual equations.
- */
-#define CAVM_RVU_BUS_PFVF_E_RVU_BUS_PFX(a) (0 + 0x2000000 * (a))
-#define CAVM_RVU_BUS_PFVF_E_RVU_BUS_VFX(a) (0 + 0x2000000 * (a))
-
-/**
  * Enumeration rvu_busbar_e
  *
  * INTERNAL: RVU Bus Base Address Region Enumeration
  *
  * Enumerates the base address region for the RVU bus.
- * Internal:
- * This is an enum used in csr3 virtual equations.
  */
 #define CAVM_RVU_BUSBAR_E_RVU_BUSBAR0 (0)
 #define CAVM_RVU_BUSBAR_E_RVU_BUSBAR2 (0x200000000ll)
-
-/**
- * Enumeration rvu_busdid_e
- *
- * INTERNAL: RVU Bus DID Enumeration
- *
- * Enumerates the DID offset for the RVU bus.
- * Internal:
- * This is an enum used in csr3 virtual equations.
- */
-#define CAVM_RVU_BUSDID_E_RVU_BUSDID (0x840000000000ll)
 
 /**
  * Enumeration rvu_pf_int_vec_e
@@ -275,10 +212,6 @@ union cavm_rvu_msix_vec_s
  * RVU PF Function Identification Structure
  * Identifies an RVU PF/VF, and format of *_PRIV_LF()_CFG[PF_FUNC] in RVU
  * resource blocks, e.g. NPA_PRIV_LF()_CFG[PF_FUNC].
- *
- * Internal:
- * Also used for PF/VF identification on inter-coprocessor hardware
- * interfaces (NPA, SSO, CPT, ...).
  */
 union cavm_rvu_pf_func_s
 {
@@ -360,13 +293,9 @@ static inline uint64_t CAVM_RVU_AF_AFPFX_MBOXX(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) rvu_af_bar2_alias#
  *
- * INTERNAL: RVU Admin Function  BAR2 Alias Registers
- *
+ * RVU Admin Function  BAR2 Alias Registers
  * These registers alias to the RVU BAR2 registers for the PF and function
  * selected by RVU_AF_BAR2_SEL[PF_FUNC].
- *
- * Internal:
- * Not implemented. Placeholder for bug33464.
  */
 union cavm_rvu_af_bar2_aliasx
 {
@@ -386,7 +315,9 @@ typedef union cavm_rvu_af_bar2_aliasx cavm_rvu_af_bar2_aliasx_t;
 static inline uint64_t CAVM_RVU_AF_BAR2_ALIASX(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_RVU_AF_BAR2_ALIASX(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=131071))
+    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=131071))
+        return 0x840009100000ll + 8ll * ((a) & 0x1ffff);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=131071))
         return 0x840009100000ll + 8ll * ((a) & 0x1ffff);
     __cavm_csr_fatal("RVU_AF_BAR2_ALIASX", 1, a, 0, 0, 0, 0, 0);
 }
@@ -401,11 +332,8 @@ static inline uint64_t CAVM_RVU_AF_BAR2_ALIASX(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) rvu_af_bar2_sel
  *
- * INTERNAL: RVU Admin Function BAR2 Select Register
- *
+ * RVU Admin Function BAR2 Select Register
  * This register configures BAR2 accesses from the RVU_AF_BAR2_ALIAS() registers in BAR0.
- * Internal:
- * Not implemented. Placeholder for bug33464.
  */
 union cavm_rvu_af_bar2_sel
 {
@@ -432,7 +360,9 @@ typedef union cavm_rvu_af_bar2_sel cavm_rvu_af_bar2_sel_t;
 static inline uint64_t CAVM_RVU_AF_BAR2_SEL_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_RVU_AF_BAR2_SEL_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX))
+    if (cavm_is_model(OCTEONTX_CN96XX))
+        return 0x840009000000ll;
+    if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x840009000000ll;
     __cavm_csr_fatal("RVU_AF_BAR2_SEL", 0, 0, 0, 0, 0, 0, 0);
 }
@@ -487,134 +417,6 @@ static inline uint64_t CAVM_RVU_AF_BLK_RST_FUNC(void)
 #define device_bar_CAVM_RVU_AF_BLK_RST 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_RVU_AF_BLK_RST 0
 #define arguments_CAVM_RVU_AF_BLK_RST -1,-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) rvu_af_bp_test
- *
- * INTERNAL: RVUM Backpressure Test Registers
- */
-union cavm_rvu_af_bp_test
-{
-    uint64_t u;
-    struct cavm_rvu_af_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_40_63        : 24;
-        uint64_t enable                : 8;  /**< [ 39: 32](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<39\> = Reserved.
-                                                                 \<38\> = Reserved.
-                                                                 \<37\> = pf_cfg_req.
-                                                                 \<36\> = pf_int_pibx_gen.
-                                                                 \<35\> = msix_pibx.
-                                                                 \<34\> = msix_gib.
-                                                                 \<33\> = ncbif_noncsr.
-                                                                 \<32\> = ncbif_csr. */
-        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<31:30\> = Reserved.
-                                                                 \<29:28\> = Reserved.
-                                                                 \<27:26\> = pf_cfg_req.
-                                                                 \<25:24\> = pf_int_pibx_gen.
-                                                                 \<23:22\> = msix_pibx.
-                                                                 \<21:20\> = msix_gib.
-                                                                 \<19:18\> = ncbif_noncsr.
-                                                                 \<17:16\> = ncbif_csr. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<31:30\> = Reserved.
-                                                                 \<29:28\> = Reserved.
-                                                                 \<27:26\> = pf_cfg_req.
-                                                                 \<25:24\> = pf_int_pibx_gen.
-                                                                 \<23:22\> = msix_pibx.
-                                                                 \<21:20\> = msix_gib.
-                                                                 \<19:18\> = ncbif_noncsr.
-                                                                 \<17:16\> = ncbif_csr. */
-        uint64_t enable                : 8;  /**< [ 39: 32](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<39\> = Reserved.
-                                                                 \<38\> = Reserved.
-                                                                 \<37\> = pf_cfg_req.
-                                                                 \<36\> = pf_int_pibx_gen.
-                                                                 \<35\> = msix_pibx.
-                                                                 \<34\> = msix_gib.
-                                                                 \<33\> = ncbif_noncsr.
-                                                                 \<32\> = ncbif_csr. */
-        uint64_t reserved_40_63        : 24;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rvu_af_bp_test_s cn; */
-};
-typedef union cavm_rvu_af_bp_test cavm_rvu_af_bp_test_t;
-
-#define CAVM_RVU_AF_BP_TEST CAVM_RVU_AF_BP_TEST_FUNC()
-static inline uint64_t CAVM_RVU_AF_BP_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RVU_AF_BP_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840000004000ll;
-    __cavm_csr_fatal("RVU_AF_BP_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RVU_AF_BP_TEST cavm_rvu_af_bp_test_t
-#define bustype_CAVM_RVU_AF_BP_TEST CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_RVU_AF_BP_TEST "RVU_AF_BP_TEST"
-#define device_bar_CAVM_RVU_AF_BP_TEST 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_RVU_AF_BP_TEST 0
-#define arguments_CAVM_RVU_AF_BP_TEST -1,-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) rvu_af_eco
- *
- * INTERNAL: RVU Admin Function ECO Register
- */
-union cavm_rvu_af_eco
-{
-    uint64_t u;
-    struct cavm_rvu_af_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rvu_af_eco_s cn; */
-};
-typedef union cavm_rvu_af_eco cavm_rvu_af_eco_t;
-
-#define CAVM_RVU_AF_ECO CAVM_RVU_AF_ECO_FUNC()
-static inline uint64_t CAVM_RVU_AF_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RVU_AF_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840000000020ll;
-    __cavm_csr_fatal("RVU_AF_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RVU_AF_ECO cavm_rvu_af_eco_t
-#define bustype_CAVM_RVU_AF_ECO CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_RVU_AF_ECO "RVU_AF_ECO"
-#define device_bar_CAVM_RVU_AF_ECO 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_RVU_AF_ECO 0
-#define arguments_CAVM_RVU_AF_ECO -1,-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) rvu_af_gen_int
@@ -2364,28 +2166,7 @@ union cavm_rvu_pf_block_addrx_disc
         uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
         uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
                                                                  enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
-                                                                 remaining fields in the register are RAZ.
-
-                                                                 Internal:
-                                                                 Returns zero if the block is implemented but disabled or fused out.
-
-                                                                 CN93XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0) = ~disable_crypto(0)
-                                                                 _ All others = 0.
-
-                                                                 CNF95XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ All others = 0.
-
-                                                                 CN98XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0..1) = ~disable_crypto(0..1).
-                                                                 _ REE(0..1) = 1.
-                                                                 _ All others = 0. */
+                                                                 remaining fields in the register are RAZ. */
         uint64_t reserved_9_10         : 2;
         uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
                                                                  When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
@@ -2401,111 +2182,13 @@ union cavm_rvu_pf_block_addrx_disc
         uint64_t reserved_9_10         : 2;
         uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
                                                                  enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
-                                                                 remaining fields in the register are RAZ.
-
-                                                                 Internal:
-                                                                 Returns zero if the block is implemented but disabled or fused out.
-
-                                                                 CN93XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0) = ~disable_crypto(0)
-                                                                 _ All others = 0.
-
-                                                                 CNF95XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ All others = 0.
-
-                                                                 CN98XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0..1) = ~disable_crypto(0..1).
-                                                                 _ REE(0..1) = 1.
-                                                                 _ All others = 0. */
+                                                                 remaining fields in the register are RAZ. */
         uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
         uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_rvu_pf_block_addrx_disc_s cn9; */
-    /* struct cavm_rvu_pf_block_addrx_disc_s cn96xx; */
-    struct cavm_rvu_pf_block_addrx_disc_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
-        uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
-        uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
-                                                                 enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
-                                                                 remaining fields in the register are RAZ.
-
-                                                                 Internal:
-                                                                 Returns zero if the block is implemented but disabled or fused out.
-
-                                                                 CN93XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0) = ~disable_crypto(0).
-                                                                 _ All others = 0.
-
-                                                                 CNF95XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ All others = 0.
-
-                                                                 CN98XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0..1) = ~disable_crypto.
-                                                                 _ REE(0..1) = ~ree_cripple(0..1).
-                                                                 _ All others = 0. */
-        uint64_t reserved_9_10         : 2;
-        uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
-                                                                 When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
-                                                                 the block.
-                                                                 Returns 0 for block types that do not have local functions, 0 or 1 for
-                                                                 single-slot blocks; see RVU_BLOCK_TYPE_E. */
-#else /* Word 0 - Little Endian */
-        uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
-                                                                 When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
-                                                                 the block.
-                                                                 Returns 0 for block types that do not have local functions, 0 or 1 for
-                                                                 single-slot blocks; see RVU_BLOCK_TYPE_E. */
-        uint64_t reserved_9_10         : 2;
-        uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
-                                                                 enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
-                                                                 remaining fields in the register are RAZ.
-
-                                                                 Internal:
-                                                                 Returns zero if the block is implemented but disabled or fused out.
-
-                                                                 CN93XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0) = ~disable_crypto(0).
-                                                                 _ All others = 0.
-
-                                                                 CNF95XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ All others = 0.
-
-                                                                 CN98XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0..1) = ~disable_crypto.
-                                                                 _ REE(0..1) = ~ree_cripple(0..1).
-                                                                 _ All others = 0. */
-        uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
-        uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_rvu_pf_block_addrx_disc_s cnf95xx; */
-    /* struct cavm_rvu_pf_block_addrx_disc_s f95mm; */
-    /* struct cavm_rvu_pf_block_addrx_disc_s f95o; */
-    /* struct cavm_rvu_pf_block_addrx_disc_s loki; */
+    /* struct cavm_rvu_pf_block_addrx_disc_s cn; */
 };
 typedef union cavm_rvu_pf_block_addrx_disc cavm_rvu_pf_block_addrx_disc_t;
 
@@ -3875,78 +3558,7 @@ union cavm_rvu_priv_const
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_rvu_priv_const_s cn9; */
-    /* struct cavm_rvu_priv_const_s cn96xx; */
-    struct cavm_rvu_priv_const_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t max_vfs_per_pf        : 8;  /**< [ 47: 40](RO) Maximum number of VFs per RVU PF. */
-        uint64_t pfs                   : 8;  /**< [ 39: 32](RO) Number of RVU PFs. */
-        uint64_t hwvfs                 : 12; /**< [ 31: 20](RO) Number of RVU hardware VFs (HWVFs). */
-        uint64_t max_msix              : 20; /**< [ 19:  0](RO) Combined maximum number of MSI-X vectors that may be provisioned to the RVU
-                                                                 PFs and VFs. Also the maximum number of 16-byte RVU_MSIX_VEC_S structures
-                                                                 in RVU's MSI-X table region in LLC/DRAM. See RVU_PRIV_PF()_MSIX_CFG.
-
-                                                                 Internal:
-                                                                 Also, size of RVU's internal PBA memory.
-
-                                                                 Sized as follows:
-                                                                 \<pre\>
-                                                                 AP cores                     24
-                                                                 Vectors per LF:
-                                                                    NIX CINT                  32
-                                                                    NIX QINT                  32
-                                                                    NIX GINT                  1
-                                                                    NPA QINT                  32
-                                                                    NPA GINT                  1
-                                                                    SSO                       1
-                                                                    TIM                       1
-                                                                    CPT                       1
-                                                                    RVU                       1
-                                                                    Total per LF:             \<128
-                                                                 Num LFs                      256
-                                                                 Total LF vectors             \<32K
-                                                                 Total AF vectors             64 (budget 16 blocks * 4)
-                                                                 Total vectors budget         32K
-                                                                 \</pre\> */
-#else /* Word 0 - Little Endian */
-        uint64_t max_msix              : 20; /**< [ 19:  0](RO) Combined maximum number of MSI-X vectors that may be provisioned to the RVU
-                                                                 PFs and VFs. Also the maximum number of 16-byte RVU_MSIX_VEC_S structures
-                                                                 in RVU's MSI-X table region in LLC/DRAM. See RVU_PRIV_PF()_MSIX_CFG.
-
-                                                                 Internal:
-                                                                 Also, size of RVU's internal PBA memory.
-
-                                                                 Sized as follows:
-                                                                 \<pre\>
-                                                                 AP cores                     24
-                                                                 Vectors per LF:
-                                                                    NIX CINT                  32
-                                                                    NIX QINT                  32
-                                                                    NIX GINT                  1
-                                                                    NPA QINT                  32
-                                                                    NPA GINT                  1
-                                                                    SSO                       1
-                                                                    TIM                       1
-                                                                    CPT                       1
-                                                                    RVU                       1
-                                                                    Total per LF:             \<128
-                                                                 Num LFs                      256
-                                                                 Total LF vectors             \<32K
-                                                                 Total AF vectors             64 (budget 16 blocks * 4)
-                                                                 Total vectors budget         32K
-                                                                 \</pre\> */
-        uint64_t hwvfs                 : 12; /**< [ 31: 20](RO) Number of RVU hardware VFs (HWVFs). */
-        uint64_t pfs                   : 8;  /**< [ 39: 32](RO) Number of RVU PFs. */
-        uint64_t max_vfs_per_pf        : 8;  /**< [ 47: 40](RO) Maximum number of VFs per RVU PF. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_rvu_priv_const_cn98xx cnf95xx; */
-    /* struct cavm_rvu_priv_const_cn98xx f95mm; */
-    /* struct cavm_rvu_priv_const_s f95o; */
-    /* struct cavm_rvu_priv_const_s loki; */
+    /* struct cavm_rvu_priv_const_s cn; */
 };
 typedef union cavm_rvu_priv_const cavm_rvu_priv_const_t;
 
@@ -4382,15 +3994,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RVU_AF_PF()_VF_BAR4_ADDR. The VF's BAR4 in the PCIe EA capability header
                                                                  points to the VF's BAR4 (RVU_BAR_E::RVU_PF()_FUNC()_BAR4). The PF driver
                                                                  directly accesses the mailbox memory in LLC/DRAM, but the VF driver
-                                                                 accesses the mailbox memory through RVU hardware.
-
-                                                                 Internal:
-                                                                 "* When set, RVU hardware aliases a VF BAR4 access to a physical memory access
-                                                                 (ncbi_cmd.paddr = 1) relative to RVU_AF_PF()_VF_BAR4_ADDR + vf_num*64K.
-                                                                 * When RVU_PRIV_PF()_CFG[PF_VF_IO_BAR4] is set, RVU_AF_PF()_VF_BAR4_ADDR is
-                                                                 used instead of RVU_PF_VF_BAR4_ADDR for security reasons. An EL0 PF driver
-                                                                 could write an arbitrary PA to RVU_PF_VF_BAR4_ADDR, and using it would have
-                                                                 allowed an EL0 VF driver to access a 64KB region at that PA." */
+                                                                 accesses the mailbox memory through RVU hardware. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4408,11 +4012,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t ena                   : 1;  /**< [ 20: 20](R/W) Enable the PF. When clear, the PF is unused and hidden in the PCI config
                                                                  space. A BAR2 access to any function in the PF is RAZ/WI and sets
                                                                  RVU_AF_GEN_INT[UNMAPPED].
@@ -4450,11 +4050,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4480,15 +4076,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RVU_AF_PF()_VF_BAR4_ADDR. The VF's BAR4 in the PCIe EA capability header
                                                                  points to the VF's BAR4 (RVU_BAR_E::RVU_PF()_FUNC()_BAR4). The PF driver
                                                                  directly accesses the mailbox memory in LLC/DRAM, but the VF driver
-                                                                 accesses the mailbox memory through RVU hardware.
-
-                                                                 Internal:
-                                                                 "* When set, RVU hardware aliases a VF BAR4 access to a physical memory access
-                                                                 (ncbi_cmd.paddr = 1) relative to RVU_AF_PF()_VF_BAR4_ADDR + vf_num*64K.
-                                                                 * When RVU_PRIV_PF()_CFG[PF_VF_IO_BAR4] is set, RVU_AF_PF()_VF_BAR4_ADDR is
-                                                                 used instead of RVU_PF_VF_BAR4_ADDR for security reasons. An EL0 PF driver
-                                                                 could write an arbitrary PA to RVU_PF_VF_BAR4_ADDR, and using it would have
-                                                                 allowed an EL0 VF driver to access a 64KB region at that PA." */
+                                                                 accesses the mailbox memory through RVU hardware. */
         uint64_t reserved_24_63        : 40;
 #endif /* Word 0 - End */
     } s;
@@ -4514,11 +4102,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t ena                   : 1;  /**< [ 20: 20](R/W) Enable the PF. When clear, the PF is unused and hidden in the PCI config
                                                                  space. A BAR2 access to any function in the PF is RAZ/WI and sets
                                                                  RVU_AF_GEN_INT[UNMAPPED].
@@ -4556,11 +4140,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4593,15 +4173,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RVU_AF_PF()_VF_BAR4_ADDR. The VF's BAR4 in the PCIe EA capability header
                                                                  points to the VF's BAR4 (RVU_BAR_E::RVU_PF()_FUNC()_BAR4). The PF driver
                                                                  directly accesses the mailbox memory in LLC/DRAM, but the VF driver
-                                                                 accesses the mailbox memory through RVU hardware.
-
-                                                                 Internal:
-                                                                 "* When set, RVU hardware aliases a VF BAR4 access to a physical memory access
-                                                                 (ncbi_cmd.paddr = 1) relative to RVU_AF_PF()_VF_BAR4_ADDR + vf_num*64K.
-                                                                 * When RVU_PRIV_PF()_CFG[PF_VF_IO_BAR4] is set, RVU_AF_PF()_VF_BAR4_ADDR is
-                                                                 used instead of RVU_PF_VF_BAR4_ADDR for security reasons. An EL0 PF driver
-                                                                 could write an arbitrary PA to RVU_PF_VF_BAR4_ADDR, and using it would have
-                                                                 allowed an EL0 VF driver to access a 64KB region at that PA." */
+                                                                 accesses the mailbox memory through RVU hardware. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4612,21 +4184,14 @@ union cavm_rvu_priv_pfx_cfg
                                                                  When set, hardware updates to the following registers in response to ME/FLR
                                                                  events are additionally enabled:
                                                                  RVU_PF_VFTRPEND(), RVU_PF_VFFLR_INT(), RVU_PF_VFME_INT(),
-                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT.
-
-                                                                 Internal:
-                                                                 Hardware should not clear this bit during the FLR flow. */
+                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT. */
         uint64_t af_ena                : 1;  /**< [ 21: 21](R/W) Admin function enable. When set, the PF is allowed to access AF (RVU PF
                                                                  BAR0) registers in all RVU blocks. When clear, BAR0 is hidden in the PF's
                                                                  PCI configuration EA capability header, and accesses to the PF's BAR0 are
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t ena                   : 1;  /**< [ 20: 20](R/W) Enable the PF. When clear, the PF is unused and hidden in the PCI config
                                                                  space. A BAR2 access to any function in the PF is RAZ/WI and sets
                                                                  RVU_AF_GEN_INT[UNMAPPED].
@@ -4664,11 +4229,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4679,10 +4240,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  When set, hardware updates to the following registers in response to ME/FLR
                                                                  events are additionally enabled:
                                                                  RVU_PF_VFTRPEND(), RVU_PF_VFFLR_INT(), RVU_PF_VFME_INT(),
-                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT.
-
-                                                                 Internal:
-                                                                 Hardware should not clear this bit during the FLR flow. */
+                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT. */
         uint64_t pf_vf_io_bar4         : 1;  /**< [ 23: 23](R/W) Selects how the PF/VF mailbox memory in LLC/DRAM is configured accessed by
                                                                  the VFs. The mailbox memory consists of RVU_PRIV_PF()_CFG[NVF] consecutive
                                                                  64 KB pages in LLC/DRAM (one page per VF).
@@ -4697,15 +4255,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RVU_AF_PF()_VF_BAR4_ADDR. The VF's BAR4 in the PCIe EA capability header
                                                                  points to the VF's BAR4 (RVU_BAR_E::RVU_PF()_FUNC()_BAR4). The PF driver
                                                                  directly accesses the mailbox memory in LLC/DRAM, but the VF driver
-                                                                 accesses the mailbox memory through RVU hardware.
-
-                                                                 Internal:
-                                                                 "* When set, RVU hardware aliases a VF BAR4 access to a physical memory access
-                                                                 (ncbi_cmd.paddr = 1) relative to RVU_AF_PF()_VF_BAR4_ADDR + vf_num*64K.
-                                                                 * When RVU_PRIV_PF()_CFG[PF_VF_IO_BAR4] is set, RVU_AF_PF()_VF_BAR4_ADDR is
-                                                                 used instead of RVU_PF_VF_BAR4_ADDR for security reasons. An EL0 PF driver
-                                                                 could write an arbitrary PA to RVU_PF_VF_BAR4_ADDR, and using it would have
-                                                                 allowed an EL0 VF driver to access a 64KB region at that PA." */
+                                                                 accesses the mailbox memory through RVU hardware. */
         uint64_t reserved_24_63        : 40;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -4725,21 +4275,14 @@ union cavm_rvu_priv_pfx_cfg
                                                                  When set, hardware updates to the following registers in response to ME/FLR
                                                                  events are additionally enabled:
                                                                  RVU_PF_VFTRPEND(), RVU_PF_VFFLR_INT(), RVU_PF_VFME_INT(),
-                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT.
-
-                                                                 Internal:
-                                                                 Hardware should not clear this bit during the FLR flow. */
+                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT. */
         uint64_t af_ena                : 1;  /**< [ 21: 21](R/W) Admin function enable. When set, the PF is allowed to access AF (RVU PF
                                                                  BAR0) registers in all RVU blocks. When clear, BAR0 is hidden in the PF's
                                                                  PCI configuration EA capability header, and accesses to the PF's BAR0 are
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t ena                   : 1;  /**< [ 20: 20](R/W) Enable the PF. When clear, the PF is unused and hidden in the PCI config
                                                                  space. A BAR2 access to any function in the PF is RAZ/WI and sets
                                                                  RVU_AF_GEN_INT[UNMAPPED].
@@ -4777,11 +4320,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4792,10 +4331,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  When set, hardware updates to the following registers in response to ME/FLR
                                                                  events are additionally enabled:
                                                                  RVU_PF_VFTRPEND(), RVU_PF_VFFLR_INT(), RVU_PF_VFME_INT(),
-                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT.
-
-                                                                 Internal:
-                                                                 Hardware should not clear this bit during the FLR flow. */
+                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cnf95xxp2;
@@ -4816,15 +4352,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RVU_AF_PF()_VF_BAR4_ADDR. The VF's BAR4 in the PCIe EA capability header
                                                                  points to the VF's BAR4 (RVU_BAR_E::RVU_PF()_FUNC()_BAR4). The PF driver
                                                                  directly accesses the mailbox memory in LLC/DRAM, but the VF driver
-                                                                 accesses the mailbox memory through RVU hardware.
-
-                                                                 Internal:
-                                                                 "* When set, RVU hardware aliases a VF BAR4 access to a physical memory access
-                                                                 (ncbi_cmd.paddr = 1) relative to RVU_AF_PF()_VF_BAR4_ADDR + vf_num*64K.
-                                                                 * When RVU_PRIV_PF()_CFG[PF_VF_IO_BAR4] is set, RVU_AF_PF()_VF_BAR4_ADDR is
-                                                                 used instead of RVU_PF_VF_BAR4_ADDR for security reasons. An EL0 PF driver
-                                                                 could write an arbitrary PA to RVU_PF_VF_BAR4_ADDR, and using it would have
-                                                                 allowed an EL0 VF driver to access a 64KB region at that PA." */
+                                                                 accesses the mailbox memory through RVU hardware. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4842,11 +4370,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t ena                   : 1;  /**< [ 20: 20](R/W) Enable the PF. When clear, the PF is unused and hidden in the PCI config
                                                                  space. A BAR2 access to any function in the PF is RAZ/WI and sets
                                                                  RVU_AF_GEN_INT[UNMAPPED].
@@ -4884,11 +4408,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4912,15 +4432,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RVU_AF_PF()_VF_BAR4_ADDR. The VF's BAR4 in the PCIe EA capability header
                                                                  points to the VF's BAR4 (RVU_BAR_E::RVU_PF()_FUNC()_BAR4). The PF driver
                                                                  directly accesses the mailbox memory in LLC/DRAM, but the VF driver
-                                                                 accesses the mailbox memory through RVU hardware.
-
-                                                                 Internal:
-                                                                 "* When set, RVU hardware aliases a VF BAR4 access to a physical memory access
-                                                                 (ncbi_cmd.paddr = 1) relative to RVU_AF_PF()_VF_BAR4_ADDR + vf_num*64K.
-                                                                 * When RVU_PRIV_PF()_CFG[PF_VF_IO_BAR4] is set, RVU_AF_PF()_VF_BAR4_ADDR is
-                                                                 used instead of RVU_PF_VF_BAR4_ADDR for security reasons. An EL0 PF driver
-                                                                 could write an arbitrary PA to RVU_PF_VF_BAR4_ADDR, and using it would have
-                                                                 allowed an EL0 VF driver to access a 64KB region at that PA." */
+                                                                 accesses the mailbox memory through RVU hardware. */
         uint64_t reserved_24_63        : 40;
 #endif /* Word 0 - End */
     } f95o;
@@ -4940,15 +4452,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RVU_AF_PF()_VF_BAR4_ADDR. The VF's BAR4 in the PCIe EA capability header
                                                                  points to the VF's BAR4 (RVU_BAR_E::RVU_PF()_FUNC()_BAR4). The PF driver
                                                                  directly accesses the mailbox memory in LLC/DRAM, but the VF driver
-                                                                 accesses the mailbox memory through RVU hardware.
-
-                                                                 Internal:
-                                                                 "* When set, RVU hardware aliases a VF BAR4 access to a physical memory access
-                                                                 (ncbi_cmd.paddr = 1) relative to RVU_AF_PF()_VF_BAR4_ADDR + vf_num*64K.
-                                                                 * When RVU_PRIV_PF()_CFG[PF_VF_IO_BAR4] is set, RVU_AF_PF()_VF_BAR4_ADDR is
-                                                                 used instead of RVU_PF_VF_BAR4_ADDR for security reasons. An EL0 PF driver
-                                                                 could write an arbitrary PA to RVU_PF_VF_BAR4_ADDR, and using it would have
-                                                                 allowed an EL0 VF driver to access a 64KB region at that PA." */
+                                                                 accesses the mailbox memory through RVU hardware. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -4959,21 +4463,14 @@ union cavm_rvu_priv_pfx_cfg
                                                                  When set, hardware updates to the following registers in response to ME/FLR
                                                                  events are additionally enabled:
                                                                  RVU_PF_VFTRPEND(), RVU_PF_VFFLR_INT(), RVU_PF_VFME_INT(),
-                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT.
-
-                                                                 Internal:
-                                                                 Hardware should not clear this bit during the FLR flow. */
+                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT. */
         uint64_t af_ena                : 1;  /**< [ 21: 21](R/W) Admin function enable. When set, the PF is allowed to access AF (RVU PF
                                                                  BAR0) registers in all RVU blocks. When clear, BAR0 is hidden in the PF's
                                                                  PCI configuration EA capability header, and accesses to the PF's BAR0 are
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t ena                   : 1;  /**< [ 20: 20](R/W) Enable the PF. When clear, the PF is unused and hidden in the PCI config
                                                                  space. A BAR2 access to any function in the PF is RAZ/WI and sets
                                                                  RVU_AF_GEN_INT[UNMAPPED].
@@ -5011,11 +4508,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RAZ/WI or will fault.
 
                                                                  Must be clear when [ENA] is clear. Software should keep this bit set for
-                                                                 PF(0) when RVU is used.
-
-                                                                 Internal:
-                                                                 BAR0 accesses to RVUM registers are RAZ/WI. BAR0 accesses to all other RVU
-                                                                 blocks will fault. */
+                                                                 PF(0) when RVU is used. */
         uint64_t me_flr_ena            : 1;  /**< [ 22: 22](R/W) Bus master enable (ME) and function level reset (FLR) enable. This bit
                                                                  should be set when the PF is configured and associated PF and/or AF drivers
                                                                  that manage VF and/or PF ME/FLR are loaded.
@@ -5026,10 +4519,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  When set, hardware updates to the following registers in response to ME/FLR
                                                                  events are additionally enabled:
                                                                  RVU_PF_VFTRPEND(), RVU_PF_VFFLR_INT(), RVU_PF_VFME_INT(),
-                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT.
-
-                                                                 Internal:
-                                                                 Hardware should not clear this bit during the FLR flow. */
+                                                                 RVU_AF_PFTRPEND, RVU_AF_PFFLR_INT, and RVU_AF_PFFLR_INT. */
         uint64_t pf_vf_io_bar4         : 1;  /**< [ 23: 23](R/W) Selects how the PF/VF mailbox memory in LLC/DRAM is configured accessed by
                                                                  the VFs. The mailbox memory consists of RVU_PRIV_PF()_CFG[NVF] consecutive
                                                                  64 KB pages in LLC/DRAM (one page per VF).
@@ -5042,15 +4532,7 @@ union cavm_rvu_priv_pfx_cfg
                                                                  RVU_AF_PF()_VF_BAR4_ADDR. The VF's BAR4 in the PCIe EA capability header
                                                                  points to the VF's BAR4 (RVU_BAR_E::RVU_PF()_FUNC()_BAR4). The PF driver
                                                                  directly accesses the mailbox memory in LLC/DRAM, but the VF driver
-                                                                 accesses the mailbox memory through RVU hardware.
-
-                                                                 Internal:
-                                                                 "* When set, RVU hardware aliases a VF BAR4 access to a physical memory access
-                                                                 (ncbi_cmd.paddr = 1) relative to RVU_AF_PF()_VF_BAR4_ADDR + vf_num*64K.
-                                                                 * When RVU_PRIV_PF()_CFG[PF_VF_IO_BAR4] is set, RVU_AF_PF()_VF_BAR4_ADDR is
-                                                                 used instead of RVU_PF_VF_BAR4_ADDR for security reasons. An EL0 PF driver
-                                                                 could write an arbitrary PA to RVU_PF_VF_BAR4_ADDR, and using it would have
-                                                                 allowed an EL0 VF driver to access a 64KB region at that PA." */
+                                                                 accesses the mailbox memory through RVU hardware. */
         uint64_t reserved_24_63        : 40;
 #endif /* Word 0 - End */
     } loki;
@@ -5292,29 +4774,19 @@ union cavm_rvu_priv_pfx_msix_cfg
     struct cavm_rvu_priv_pfx_msix_cfg_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t pf_msixt_offset       : 20; /**< [ 63: 44](R/W) Starting offset of PF's MSI-X table in the RVU MSI-X table region.
-                                                                 Internal:
-                                                                 Also, bit offset of the PF's PBA table in RVU's internal PBA memory. */
+        uint64_t pf_msixt_offset       : 20; /**< [ 63: 44](R/W) Starting offset of PF's MSI-X table in the RVU MSI-X table region. */
         uint64_t pf_msixt_sizem1       : 12; /**< [ 43: 32](R/W) PF's MSI-X table size (number of MSI-X vectors) minus one. */
         uint64_t vf_msixt_offset       : 20; /**< [ 31: 12](R/W) Starting offset of first VF's MSI-X table in the RVU MSI-X table region.
-                                                                 Valid when RVU_PRIV_PF()_CFG[NVF] is nonzero.
-
-                                                                 Internal:
-                                                                 Also, bit offset of the first VF's PBA table in RVU's internal PBA memory. */
+                                                                 Valid when RVU_PRIV_PF()_CFG[NVF] is nonzero. */
         uint64_t vf_msixt_sizem1       : 12; /**< [ 11:  0](R/W) Each VF's MSI-X table size (number of MSI-X vectors) minus one.
                                                                  Valid when RVU_PRIV_PF()_CFG[NVF] is nonzero. */
 #else /* Word 0 - Little Endian */
         uint64_t vf_msixt_sizem1       : 12; /**< [ 11:  0](R/W) Each VF's MSI-X table size (number of MSI-X vectors) minus one.
                                                                  Valid when RVU_PRIV_PF()_CFG[NVF] is nonzero. */
         uint64_t vf_msixt_offset       : 20; /**< [ 31: 12](R/W) Starting offset of first VF's MSI-X table in the RVU MSI-X table region.
-                                                                 Valid when RVU_PRIV_PF()_CFG[NVF] is nonzero.
-
-                                                                 Internal:
-                                                                 Also, bit offset of the first VF's PBA table in RVU's internal PBA memory. */
+                                                                 Valid when RVU_PRIV_PF()_CFG[NVF] is nonzero. */
         uint64_t pf_msixt_sizem1       : 12; /**< [ 43: 32](R/W) PF's MSI-X table size (number of MSI-X vectors) minus one. */
-        uint64_t pf_msixt_offset       : 20; /**< [ 63: 44](R/W) Starting offset of PF's MSI-X table in the RVU MSI-X table region.
-                                                                 Internal:
-                                                                 Also, bit offset of the PF's PBA table in RVU's internal PBA memory. */
+        uint64_t pf_msixt_offset       : 20; /**< [ 63: 44](R/W) Starting offset of PF's MSI-X table in the RVU MSI-X table region. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_rvu_priv_pfx_msix_cfg_s cn; */
@@ -5654,28 +5126,7 @@ union cavm_rvu_vf_block_addrx_disc
         uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
         uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
                                                                  enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
-                                                                 remaining fields in the register are RAZ.
-
-                                                                 Internal:
-                                                                 Returns zero if the block is implemented but disabled or fused out.
-
-                                                                 CN93XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0) = ~disable_crypto(0)
-                                                                 _ All others = 0.
-
-                                                                 CNF95XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ All others = 0.
-
-                                                                 CN98XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0..1) = ~disable_crypto(0..1).
-                                                                 _ REE(0..1) = 1.
-                                                                 _ All others = 0. */
+                                                                 remaining fields in the register are RAZ. */
         uint64_t reserved_9_10         : 2;
         uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
                                                                  When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
@@ -5691,111 +5142,13 @@ union cavm_rvu_vf_block_addrx_disc
         uint64_t reserved_9_10         : 2;
         uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
                                                                  enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
-                                                                 remaining fields in the register are RAZ.
-
-                                                                 Internal:
-                                                                 Returns zero if the block is implemented but disabled or fused out.
-
-                                                                 CN93XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0) = ~disable_crypto(0)
-                                                                 _ All others = 0.
-
-                                                                 CNF95XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ All others = 0.
-
-                                                                 CN98XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0..1) = ~disable_crypto(0..1).
-                                                                 _ REE(0..1) = 1.
-                                                                 _ All others = 0. */
+                                                                 remaining fields in the register are RAZ. */
         uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
         uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_rvu_vf_block_addrx_disc_s cn9; */
-    /* struct cavm_rvu_vf_block_addrx_disc_s cn96xx; */
-    struct cavm_rvu_vf_block_addrx_disc_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
-        uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
-        uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
-                                                                 enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
-                                                                 remaining fields in the register are RAZ.
-
-                                                                 Internal:
-                                                                 Returns zero if the block is implemented but disabled or fused out.
-
-                                                                 CN93XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0) = ~disable_crypto(0).
-                                                                 _ All others = 0.
-
-                                                                 CNF95XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ All others = 0.
-
-                                                                 CN98XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0..1) = ~disable_crypto.
-                                                                 _ REE(0..1) = ~ree_cripple(0..1).
-                                                                 _ All others = 0. */
-        uint64_t reserved_9_10         : 2;
-        uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
-                                                                 When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
-                                                                 the block.
-                                                                 Returns 0 for block types that do not have local functions, 0 or 1 for
-                                                                 single-slot blocks; see RVU_BLOCK_TYPE_E. */
-#else /* Word 0 - Little Endian */
-        uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
-                                                                 When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
-                                                                 the block.
-                                                                 Returns 0 for block types that do not have local functions, 0 or 1 for
-                                                                 single-slot blocks; see RVU_BLOCK_TYPE_E. */
-        uint64_t reserved_9_10         : 2;
-        uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
-                                                                 enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
-                                                                 remaining fields in the register are RAZ.
-
-                                                                 Internal:
-                                                                 Returns zero if the block is implemented but disabled or fused out.
-
-                                                                 CN93XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0) = ~disable_crypto(0).
-                                                                 _ All others = 0.
-
-                                                                 CNF95XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ All others = 0.
-
-                                                                 CN98XX:
-                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
-                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
-                                                                 _ CPT(0..1) = ~disable_crypto.
-                                                                 _ REE(0..1) = ~ree_cripple(0..1).
-                                                                 _ All others = 0. */
-        uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
-        uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_rvu_vf_block_addrx_disc_s cnf95xx; */
-    /* struct cavm_rvu_vf_block_addrx_disc_s f95mm; */
-    /* struct cavm_rvu_vf_block_addrx_disc_s f95o; */
-    /* struct cavm_rvu_vf_block_addrx_disc_s loki; */
+    /* struct cavm_rvu_vf_block_addrx_disc_s cn; */
 };
 typedef union cavm_rvu_vf_block_addrx_disc cavm_rvu_vf_block_addrx_disc_t;
 

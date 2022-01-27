@@ -174,9 +174,7 @@ union cavm_fusf_ctl
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t rom_t_cnt             : 32; /**< [ 63: 32](SRO) ROM trusted counter. Reads field fuses FUSF_FUSE_NUM_E::ROM_T_CNT(). */
-        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved.
-                                                                 Internal:
-                                                                 SPI safemode. Reads field fuses FUSF_FUSE_NUM_E::SPI_SAFEMODE. */
+        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved. */
         uint64_t rom_script_disable    : 1;  /**< [ 30: 30](SRO) ROM script disable. Reads field fuses FUSF_FUSE_NUM_E::ROM_SCRIPT_DISABLE. */
         uint64_t reserved_16_29        : 14;
         uint64_t crypt_ssk_dis         : 1;  /**< [ 15: 15](SRO) SSK crypt disable. Reads field fuse FUSF_FUSE_NUM_E::CRYPT_SSK_DIS. */
@@ -212,9 +210,7 @@ union cavm_fusf_ctl
         uint64_t crypt_ssk_dis         : 1;  /**< [ 15: 15](SRO) SSK crypt disable. Reads field fuse FUSF_FUSE_NUM_E::CRYPT_SSK_DIS. */
         uint64_t reserved_16_29        : 14;
         uint64_t rom_script_disable    : 1;  /**< [ 30: 30](SRO) ROM script disable. Reads field fuses FUSF_FUSE_NUM_E::ROM_SCRIPT_DISABLE. */
-        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved.
-                                                                 Internal:
-                                                                 SPI safemode. Reads field fuses FUSF_FUSE_NUM_E::SPI_SAFEMODE. */
+        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved. */
         uint64_t rom_t_cnt             : 32; /**< [ 63: 32](SRO) ROM trusted counter. Reads field fuses FUSF_FUSE_NUM_E::ROM_T_CNT(). */
 #endif /* Word 0 - End */
     } s;
@@ -256,9 +252,7 @@ union cavm_fusf_ctl
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t rom_t_cnt             : 32; /**< [ 63: 32](SRO) ROM trusted counter. Reads field fuses FUSF_FUSE_NUM_E::ROM_T_CNT(). */
-        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved.
-                                                                 Internal:
-                                                                 SPI safemode. Reads field fuses FUSF_FUSE_NUM_E::SPI_SAFEMODE. */
+        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved. */
         uint64_t rom_script_disable    : 1;  /**< [ 30: 30](SRO) ROM script disable. Reads field fuses FUSF_FUSE_NUM_E::ROM_SCRIPT_DISABLE. */
         uint64_t reserved_16_29        : 14;
         uint64_t crypt_ssk_dis         : 1;  /**< [ 15: 15](SRO) SSK crypt disable. Reads field fuse FUSF_FUSE_NUM_E::CRYPT_SSK_DIS. */
@@ -294,9 +288,7 @@ union cavm_fusf_ctl
         uint64_t crypt_ssk_dis         : 1;  /**< [ 15: 15](SRO) SSK crypt disable. Reads field fuse FUSF_FUSE_NUM_E::CRYPT_SSK_DIS. */
         uint64_t reserved_16_29        : 14;
         uint64_t rom_script_disable    : 1;  /**< [ 30: 30](SRO) ROM script disable. Reads field fuses FUSF_FUSE_NUM_E::ROM_SCRIPT_DISABLE. */
-        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved.
-                                                                 Internal:
-                                                                 SPI safemode. Reads field fuses FUSF_FUSE_NUM_E::SPI_SAFEMODE. */
+        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved. */
         uint64_t rom_t_cnt             : 32; /**< [ 63: 32](SRO) ROM trusted counter. Reads field fuses FUSF_FUSE_NUM_E::ROM_T_CNT(). */
 #endif /* Word 0 - End */
     } cn9;
@@ -304,9 +296,7 @@ union cavm_fusf_ctl
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t rom_t_cnt             : 32; /**< [ 63: 32](SRO) ROM trusted counter. Reads field fuses FUSF_FUSE_NUM_E::ROM_T_CNT(). */
-        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved.
-                                                                 Internal:
-                                                                 SPI safemode. Reads field fuses FUSF_FUSE_NUM_E::SPI_SAFEMODE. */
+        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved. */
         uint64_t rom_script_disable    : 1;  /**< [ 30: 30](SRO) ROM script disable. Reads field fuses FUSF_FUSE_NUM_E::ROM_SCRIPT_DISABLE. */
         uint64_t fuse16                : 14; /**< [ 29: 16](SRO) Reserved. */
         uint64_t crypt_ssk_dis         : 1;  /**< [ 15: 15](SRO) SSK crypt disable. Reads field fuse FUSF_FUSE_NUM_E::CRYPT_SSK_DIS. */
@@ -342,9 +332,7 @@ union cavm_fusf_ctl
         uint64_t crypt_ssk_dis         : 1;  /**< [ 15: 15](SRO) SSK crypt disable. Reads field fuse FUSF_FUSE_NUM_E::CRYPT_SSK_DIS. */
         uint64_t fuse16                : 14; /**< [ 29: 16](SRO) Reserved. */
         uint64_t rom_script_disable    : 1;  /**< [ 30: 30](SRO) ROM script disable. Reads field fuses FUSF_FUSE_NUM_E::ROM_SCRIPT_DISABLE. */
-        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved.
-                                                                 Internal:
-                                                                 SPI safemode. Reads field fuses FUSF_FUSE_NUM_E::SPI_SAFEMODE. */
+        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved. */
         uint64_t rom_t_cnt             : 32; /**< [ 63: 32](SRO) ROM trusted counter. Reads field fuses FUSF_FUSE_NUM_E::ROM_T_CNT(). */
 #endif /* Word 0 - End */
     } cn96xxp1;
@@ -352,9 +340,7 @@ union cavm_fusf_ctl
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t rom_t_cnt             : 32; /**< [ 63: 32](SRO) ROM trusted counter. Reads field fuses FUSF_FUSE_NUM_E::ROM_T_CNT(). */
-        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved.
-                                                                 Internal:
-                                                                 SPI safemode. Reads field fuses FUSF_FUSE_NUM_E::SPI_SAFEMODE. */
+        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved. */
         uint64_t rom_script_disable    : 1;  /**< [ 30: 30](SRO) ROM script disable. Reads field fuses FUSF_FUSE_NUM_E::ROM_SCRIPT_DISABLE. */
         uint64_t fuse17                : 13; /**< [ 29: 17](SRO) Reserved. */
         uint64_t scan_disable          : 1;  /**< [ 16: 16](SRO) Scan disable.  Reads field fuse FUSF_FUSE_NUM_E::SCAN_DISABLE. */
@@ -392,9 +378,7 @@ union cavm_fusf_ctl
         uint64_t scan_disable          : 1;  /**< [ 16: 16](SRO) Scan disable.  Reads field fuse FUSF_FUSE_NUM_E::SCAN_DISABLE. */
         uint64_t fuse17                : 13; /**< [ 29: 17](SRO) Reserved. */
         uint64_t rom_script_disable    : 1;  /**< [ 30: 30](SRO) ROM script disable. Reads field fuses FUSF_FUSE_NUM_E::ROM_SCRIPT_DISABLE. */
-        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved.
-                                                                 Internal:
-                                                                 SPI safemode. Reads field fuses FUSF_FUSE_NUM_E::SPI_SAFEMODE. */
+        uint64_t spi_safemode          : 1;  /**< [ 31: 31](SRO) Reserved. */
         uint64_t rom_t_cnt             : 32; /**< [ 63: 32](SRO) ROM trusted counter. Reads field fuses FUSF_FUSE_NUM_E::ROM_T_CNT(). */
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -419,46 +403,6 @@ static inline uint64_t CAVM_FUSF_CTL_FUNC(void)
 #define device_bar_CAVM_FUSF_CTL 0x0 /* PF_BAR0 */
 #define busnum_CAVM_FUSF_CTL 0
 #define arguments_CAVM_FUSF_CTL -1,-1,-1,-1
-
-/**
- * Register (RSL) fusf_eco
- *
- * INTERNAL: FUSF ECO Register
- */
-union cavm_fusf_eco
-{
-    uint64_t u;
-    struct cavm_fusf_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) ECO flops.
-                                                                 This field is always reinitialized on a chip domain reset. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) ECO flops.
-                                                                 This field is always reinitialized on a chip domain reset. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_fusf_eco_s cn; */
-};
-typedef union cavm_fusf_eco cavm_fusf_eco_t;
-
-#define CAVM_FUSF_ECO CAVM_FUSF_ECO_FUNC()
-static inline uint64_t CAVM_FUSF_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FUSF_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e004000118ll;
-    __cavm_csr_fatal("FUSF_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_FUSF_ECO cavm_fusf_eco_t
-#define bustype_CAVM_FUSF_ECO CSR_TYPE_RSL
-#define basename_CAVM_FUSF_ECO "FUSF_ECO"
-#define device_bar_CAVM_FUSF_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_FUSF_ECO 0
-#define arguments_CAVM_FUSF_ECO -1,-1,-1,-1
 
 /**
  * Register (RSL) fusf_ek#
@@ -554,9 +498,7 @@ union cavm_fusf_prog
         uint64_t addr                  : 4;  /**< [  7:  4](SR/W) Indicates which of bank of 128 fuses to blow. Software
                                                                  should not change this field while the FUSF_PROG[PROG] bit is set. */
         uint64_t reserved_3            : 1;
-        uint64_t prog_pin              : 1;  /**< [  2:  2](SRO) Efuse program voltage (EFUS_PROG) is applied.
-                                                                 Internal:
-                                                                 Indicates state of pi_efuse_pgm_ext not pi_efuse_pgm_int. */
+        uint64_t prog_pin              : 1;  /**< [  2:  2](SRO) Efuse program voltage (EFUS_PROG) is applied. */
         uint64_t sft                   : 1;  /**< [  1:  1](SR/W/H) When set with [PROG], causes only the local storage to change and will not blow
                                                                  any fuses. Hardware will clear when the program operation is complete. */
         uint64_t reserved_0            : 1;
@@ -564,9 +506,7 @@ union cavm_fusf_prog
         uint64_t reserved_0            : 1;
         uint64_t sft                   : 1;  /**< [  1:  1](SR/W/H) When set with [PROG], causes only the local storage to change and will not blow
                                                                  any fuses. Hardware will clear when the program operation is complete. */
-        uint64_t prog_pin              : 1;  /**< [  2:  2](SRO) Efuse program voltage (EFUS_PROG) is applied.
-                                                                 Internal:
-                                                                 Indicates state of pi_efuse_pgm_ext not pi_efuse_pgm_int. */
+        uint64_t prog_pin              : 1;  /**< [  2:  2](SRO) Efuse program voltage (EFUS_PROG) is applied. */
         uint64_t reserved_3            : 1;
         uint64_t addr                  : 4;  /**< [  7:  4](SR/W) Indicates which of bank of 128 fuses to blow. Software
                                                                  should not change this field while the FUSF_PROG[PROG] bit is set. */
@@ -587,9 +527,7 @@ union cavm_fusf_prog
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
         uint64_t volt_en               : 1;  /**< [  3:  3](SR/W) Enable programming voltage.  Asserts EFUSE_ENABLE_L open-drain output pin. */
-        uint64_t prog_pin              : 1;  /**< [  2:  2](SRO) Efuse program voltage (EFUS_PROG) is applied.
-                                                                 Internal:
-                                                                 Indicates state of pi_efuse_pgm_ext not pi_efuse_pgm_int. */
+        uint64_t prog_pin              : 1;  /**< [  2:  2](SRO) Efuse program voltage (EFUS_PROG) is applied. */
         uint64_t sft                   : 1;  /**< [  1:  1](SR/W/H) When set with [PROG], causes only the local storage to change and will not blow
                                                                  any fuses. Hardware will clear when the program operation is complete. */
         uint64_t prog                  : 1;  /**< [  0:  0](SR/W/H) When written to 1 by software, blow the fuse bank. Hardware clears this bit when
@@ -619,9 +557,7 @@ union cavm_fusf_prog
                                                                  cold reset restores the actual fuse values. */
         uint64_t sft                   : 1;  /**< [  1:  1](SR/W/H) When set with [PROG], causes only the local storage to change and will not blow
                                                                  any fuses. Hardware will clear when the program operation is complete. */
-        uint64_t prog_pin              : 1;  /**< [  2:  2](SRO) Efuse program voltage (EFUS_PROG) is applied.
-                                                                 Internal:
-                                                                 Indicates state of pi_efuse_pgm_ext not pi_efuse_pgm_int. */
+        uint64_t prog_pin              : 1;  /**< [  2:  2](SRO) Efuse program voltage (EFUS_PROG) is applied. */
         uint64_t volt_en               : 1;  /**< [  3:  3](SR/W) Enable programming voltage.  Asserts EFUSE_ENABLE_L open-drain output pin. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */

@@ -55,137 +55,6 @@
 #define CAVM_SSO_LF_INT_VEC_E_GRP (0)
 
 /**
- * Enumeration sso_op_e
- *
- * INTERNAL: SSO Operation Code Enumeration
- *
- * Enumerates the different SSO operation codes.  For RTL use only.
- */
-#define CAVM_SSO_OP_E_ADDWQ_CN8 (4)
-#define CAVM_SSO_OP_E_ADDWQ_CN96XX (8)
-#define CAVM_SSO_OP_E_ADDWQ_CN98XX (7)
-#define CAVM_SSO_OP_E_ADDWQ_CNF95XX (8)
-#define CAVM_SSO_OP_E_ADDWQ_F95MM (8)
-#define CAVM_SSO_OP_E_ADDWQ_F95O (8)
-#define CAVM_SSO_OP_E_ADDWQ_LOKI (8)
-#define CAVM_SSO_OP_E_ALLOC_WE_CN96XX (0xc)
-#define CAVM_SSO_OP_E_ALLOC_WE_CN98XX (0xa)
-#define CAVM_SSO_OP_E_ALLOC_WE_CNF95XX (0xc)
-#define CAVM_SSO_OP_E_ALLOC_WE_F95MM (0xc)
-#define CAVM_SSO_OP_E_ALLOC_WE_F95O (0xc)
-#define CAVM_SSO_OP_E_ALLOC_WE_LOKI (0xc)
-#define CAVM_SSO_OP_E_CLR_NSCHED_CN8 (7)
-#define CAVM_SSO_OP_E_CLR_NSCHED_CN96XX (0xa)
-#define CAVM_SSO_OP_E_CLR_NSCHED_CN98XX (0xb)
-#define CAVM_SSO_OP_E_CLR_NSCHED_CNF95XX (0xa)
-#define CAVM_SSO_OP_E_CLR_NSCHED_F95MM (0xa)
-#define CAVM_SSO_OP_E_CLR_NSCHED_F95O (0xa)
-#define CAVM_SSO_OP_E_CLR_NSCHED_LOKI (0xa)
-#define CAVM_SSO_OP_E_DESCH_CN8 (3)
-#define CAVM_SSO_OP_E_DESCH_CN96XX (6)
-#define CAVM_SSO_OP_E_DESCH_CN98XX (8)
-#define CAVM_SSO_OP_E_DESCH_CNF95XX (6)
-#define CAVM_SSO_OP_E_DESCH_F95MM (6)
-#define CAVM_SSO_OP_E_DESCH_F95O (6)
-#define CAVM_SSO_OP_E_DESCH_LOKI (6)
-#define CAVM_SSO_OP_E_GET_WORK_CN96XX (0xb)
-#define CAVM_SSO_OP_E_GET_WORK_CN98XX (0xc)
-#define CAVM_SSO_OP_E_GET_WORK_CNF95XX (0xb)
-#define CAVM_SSO_OP_E_GET_WORK_F95MM (0xb)
-#define CAVM_SSO_OP_E_GET_WORK_F95O (0xb)
-#define CAVM_SSO_OP_E_GET_WORK_LOKI (0xb)
-#define CAVM_SSO_OP_E_GWC_INVAL_CN96XX (0xd)
-#define CAVM_SSO_OP_E_GWC_INVAL_CN98XX (0x11)
-#define CAVM_SSO_OP_E_GWC_INVAL_CNF95XX (0xd)
-#define CAVM_SSO_OP_E_GWC_INVAL_F95MM (0xd)
-#define CAVM_SSO_OP_E_GWC_INVAL_F95O (0xd)
-#define CAVM_SSO_OP_E_GWC_INVAL_LOKI (0xd)
-#define CAVM_SSO_OP_E_NOP_CN8 (0xf)
-#define CAVM_SSO_OP_E_NOP_CN96XX (0x13)
-#define CAVM_SSO_OP_E_NOP_CN98XX (0)
-#define CAVM_SSO_OP_E_NOP_CNF95XX (0x13)
-#define CAVM_SSO_OP_E_NOP_F95MM (0x13)
-#define CAVM_SSO_OP_E_NOP_F95O (0x13)
-#define CAVM_SSO_OP_E_NOP_LOKI (0x13)
-#define CAVM_SSO_OP_E_NOSCH_CN96XX (7)
-#define CAVM_SSO_OP_E_NOSCH_CN98XX (9)
-#define CAVM_SSO_OP_E_NOSCH_CNF95XX (7)
-#define CAVM_SSO_OP_E_NOSCH_F95MM (7)
-#define CAVM_SSO_OP_E_NOSCH_F95O (7)
-#define CAVM_SSO_OP_E_NOSCH_LOKI (7)
-#define CAVM_SSO_OP_E_RST (0x10)
-#define CAVM_SSO_OP_E_SWTAG_CN8 (0)
-#define CAVM_SSO_OP_E_SWTAG_CN96XX (0)
-#define CAVM_SSO_OP_E_SWTAG_CN98XX (1)
-#define CAVM_SSO_OP_E_SWTAG_CNF95XX (0)
-#define CAVM_SSO_OP_E_SWTAG_F95MM (0)
-#define CAVM_SSO_OP_E_SWTAG_F95O (0)
-#define CAVM_SSO_OP_E_SWTAG_LOKI (0)
-#define CAVM_SSO_OP_E_SWTAG_DESCH_CN8 (2)
-#define CAVM_SSO_OP_E_SWTAG_DESCH_CN96XX (3)
-#define CAVM_SSO_OP_E_SWTAG_DESCH_CN98XX (4)
-#define CAVM_SSO_OP_E_SWTAG_DESCH_CNF95XX (3)
-#define CAVM_SSO_OP_E_SWTAG_DESCH_F95MM (3)
-#define CAVM_SSO_OP_E_SWTAG_DESCH_F95O (3)
-#define CAVM_SSO_OP_E_SWTAG_DESCH_LOKI (3)
-#define CAVM_SSO_OP_E_SWTAG_FLUSH_CN96XX (2)
-#define CAVM_SSO_OP_E_SWTAG_FLUSH_CN98XX (3)
-#define CAVM_SSO_OP_E_SWTAG_FLUSH_CNF95XX (2)
-#define CAVM_SSO_OP_E_SWTAG_FLUSH_F95MM (2)
-#define CAVM_SSO_OP_E_SWTAG_FLUSH_F95O (2)
-#define CAVM_SSO_OP_E_SWTAG_FLUSH_LOKI (2)
-#define CAVM_SSO_OP_E_SWTAG_FULL_CN8 (1)
-#define CAVM_SSO_OP_E_SWTAG_FULL_CN96XX (1)
-#define CAVM_SSO_OP_E_SWTAG_FULL_CN98XX (2)
-#define CAVM_SSO_OP_E_SWTAG_FULL_CNF95XX (1)
-#define CAVM_SSO_OP_E_SWTAG_FULL_F95MM (1)
-#define CAVM_SSO_OP_E_SWTAG_FULL_F95O (1)
-#define CAVM_SSO_OP_E_SWTAG_FULL_LOKI (1)
-#define CAVM_SSO_OP_E_SWTAG_NOSCH_CN96XX (4)
-#define CAVM_SSO_OP_E_SWTAG_NOSCH_CN98XX (5)
-#define CAVM_SSO_OP_E_SWTAG_NOSCH_CNF95XX (4)
-#define CAVM_SSO_OP_E_SWTAG_NOSCH_F95MM (4)
-#define CAVM_SSO_OP_E_SWTAG_NOSCH_F95O (4)
-#define CAVM_SSO_OP_E_SWTAG_NOSCH_LOKI (4)
-#define CAVM_SSO_OP_E_SWTAG_UNTAG_CN96XX (5)
-#define CAVM_SSO_OP_E_SWTAG_UNTAG_CN98XX (6)
-#define CAVM_SSO_OP_E_SWTAG_UNTAG_CNF95XX (5)
-#define CAVM_SSO_OP_E_SWTAG_UNTAG_F95MM (5)
-#define CAVM_SSO_OP_E_SWTAG_UNTAG_F95O (5)
-#define CAVM_SSO_OP_E_SWTAG_UNTAG_LOKI (5)
-#define CAVM_SSO_OP_E_SWTP_CLR_CN96XX (0xe)
-#define CAVM_SSO_OP_E_SWTP_CLR_CN98XX (0x12)
-#define CAVM_SSO_OP_E_SWTP_CLR_CNF95XX (0xe)
-#define CAVM_SSO_OP_E_SWTP_CLR_F95MM (0xe)
-#define CAVM_SSO_OP_E_SWTP_CLR_F95O (0xe)
-#define CAVM_SSO_OP_E_SWTP_CLR_LOKI (0xe)
-#define CAVM_SSO_OP_E_SWTP_SET_CN96XX (0xf)
-#define CAVM_SSO_OP_E_SWTP_SET_CN98XX (0x13)
-#define CAVM_SSO_OP_E_SWTP_SET_CNF95XX (0xf)
-#define CAVM_SSO_OP_E_SWTP_SET_F95MM (0xf)
-#define CAVM_SSO_OP_E_SWTP_SET_F95O (0xf)
-#define CAVM_SSO_OP_E_SWTP_SET_LOKI (0xf)
-#define CAVM_SSO_OP_E_UPD_GRP_CN96XX (0x11)
-#define CAVM_SSO_OP_E_UPD_GRP_CN98XX (0xd)
-#define CAVM_SSO_OP_E_UPD_GRP_CNF95XX (0x11)
-#define CAVM_SSO_OP_E_UPD_GRP_F95MM (0x11)
-#define CAVM_SSO_OP_E_UPD_GRP_F95O (0x11)
-#define CAVM_SSO_OP_E_UPD_GRP_LOKI (0x11)
-#define CAVM_SSO_OP_E_UPD_WQP_CN96XX (0x12)
-#define CAVM_SSO_OP_E_UPD_WQP_CN98XX (0xe)
-#define CAVM_SSO_OP_E_UPD_WQP_CNF95XX (0x12)
-#define CAVM_SSO_OP_E_UPD_WQP_F95MM (0x12)
-#define CAVM_SSO_OP_E_UPD_WQP_F95O (0x12)
-#define CAVM_SSO_OP_E_UPD_WQP_LOKI (0x12)
-#define CAVM_SSO_OP_E_UPD_WQP_GRP_CN8 (5)
-#define CAVM_SSO_OP_E_UPD_WQP_GRP_CN96XX (9)
-#define CAVM_SSO_OP_E_UPD_WQP_GRP_CN98XX (0xf)
-#define CAVM_SSO_OP_E_UPD_WQP_GRP_CNF95XX (9)
-#define CAVM_SSO_OP_E_UPD_WQP_GRP_F95MM (9)
-#define CAVM_SSO_OP_E_UPD_WQP_GRP_F95O (9)
-#define CAVM_SSO_OP_E_UPD_WQP_GRP_LOKI (9)
-
-/**
  * Enumeration sso_pf_int_vec_e
  *
  * SSO MSI-X Vector Enumeration
@@ -195,19 +64,6 @@
 #define CAVM_SSO_PF_INT_VEC_E_ERR1 (1)
 #define CAVM_SSO_PF_INT_VEC_E_ERR2 (2)
 #define CAVM_SSO_PF_INT_VEC_E_MBOXX(a) (3 + (a))
-
-/**
- * Enumeration sso_sai_op_e
- *
- * INTERNAL: SSO AP Interconnect Opcode Enumeration
- *
- * Enumerates the SAI opcodes. For RTL use only.
- */
-#define CAVM_SSO_SAI_OP_E_FLUSH (4)
-#define CAVM_SSO_SAI_OP_E_GW_RESP (1)
-#define CAVM_SSO_SAI_OP_E_INVAL (3)
-#define CAVM_SSO_SAI_OP_E_SET_HEAD (2)
-#define CAVM_SSO_SAI_OP_E_SWTP_CLR (0)
 
 /**
  * Enumeration sso_tt_e
@@ -573,9 +429,7 @@ union cavm_sso_af_aw_cfg
         uint64_t reserved_8            : 1;
         uint64_t reserved_7            : 1;
         uint64_t reserved_6            : 1;
-        uint64_t ocla_bp               : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 OCLA backpressure enable. When OCLA FIFOs are near full, allow OCLA to backpressure AW pipeline. */
+        uint64_t ocla_bp               : 1;  /**< [  5:  5](R/W) Reserved. */
         uint64_t reserved_4            : 1;
         uint64_t reserved_3            : 1;
         uint64_t reserved_2            : 1;
@@ -587,9 +441,7 @@ union cavm_sso_af_aw_cfg
         uint64_t reserved_2            : 1;
         uint64_t reserved_3            : 1;
         uint64_t reserved_4            : 1;
-        uint64_t ocla_bp               : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 OCLA backpressure enable. When OCLA FIFOs are near full, allow OCLA to backpressure AW pipeline. */
+        uint64_t ocla_bp               : 1;  /**< [  5:  5](R/W) Reserved. */
         uint64_t reserved_6            : 1;
         uint64_t reserved_7            : 1;
         uint64_t reserved_8            : 1;
@@ -694,44 +546,6 @@ static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX_W1S(uint64_t a)
 #define arguments_CAVM_SSO_AF_AW_DROPPED_DIGESTX_W1S(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) sso_af_aw_eco
- *
- * INTERNAL: SSO AF AW ECO Register
- */
-union cavm_sso_af_aw_eco
-{
-    uint64_t u;
-    struct cavm_sso_af_aw_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_af_aw_eco_s cn; */
-};
-typedef union cavm_sso_af_aw_eco cavm_sso_af_aw_eco_t;
-
-#define CAVM_SSO_AF_AW_ECO CAVM_SSO_AF_AW_ECO_FUNC()
-static inline uint64_t CAVM_SSO_AF_AW_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_AW_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840070001030ll;
-    __cavm_csr_fatal("SSO_AF_AW_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_AF_AW_ECO cavm_sso_af_aw_eco_t
-#define bustype_CAVM_SSO_AF_AW_ECO CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_SSO_AF_AW_ECO "SSO_AF_AW_ECO"
-#define device_bar_CAVM_SSO_AF_AW_ECO 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_SSO_AF_AW_ECO 0
-#define arguments_CAVM_SSO_AF_AW_ECO -1,-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) sso_af_aw_inp_ctl
  *
  * SSO AF Add-Work Input Control Register
@@ -810,23 +624,13 @@ union cavm_sso_af_aw_read_arb
         uint64_t xaq_min               : 5;  /**< [ 20: 16](R/W) Number of read slots reserved for XAQ exclusive use. Values \> 16 will not result in
                                                                  additional XAQ reads in flight, but will reduce maximum AW tag reads in flight. */
         uint64_t reserved_14_15        : 2;
-        uint64_t aw_tag_lev            : 6;  /**< [ 13:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Current number of tag reads outstanding.  This is for short-form, and will be removed. */
+        uint64_t aw_tag_lev            : 6;  /**< [ 13:  8](RO/H) Reserved. */
         uint64_t reserved_5_7          : 3;
-        uint64_t aw_tag_min            : 5;  /**< [  4:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Number of read slots reserved for AQ tag read exclusive use.  This is for short-
-                                                                 form, and will be removed. */
+        uint64_t aw_tag_min            : 5;  /**< [  4:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t aw_tag_min            : 5;  /**< [  4:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Number of read slots reserved for AQ tag read exclusive use.  This is for short-
-                                                                 form, and will be removed. */
+        uint64_t aw_tag_min            : 5;  /**< [  4:  0](R/W) Reserved. */
         uint64_t reserved_5_7          : 3;
-        uint64_t aw_tag_lev            : 6;  /**< [ 13:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Current number of tag reads outstanding.  This is for short-form, and will be removed. */
+        uint64_t aw_tag_lev            : 6;  /**< [ 13:  8](RO/H) Reserved. */
         uint64_t reserved_14_15        : 2;
         uint64_t xaq_min               : 5;  /**< [ 20: 16](R/W) Number of read slots reserved for XAQ exclusive use. Values \> 16 will not result in
                                                                  additional XAQ reads in flight, but will reduce maximum AW tag reads in flight. */
@@ -958,46 +762,7 @@ union cavm_sso_af_aw_we
         uint64_t reserved_30_63        : 34;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_aw_we_s cn9; */
-    /* struct cavm_sso_af_aw_we_s cn96xx; */
-    struct cavm_sso_af_aw_we_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_30_63        : 34;
-        uint64_t rsvd_free             : 14; /**< [ 29: 16](R/W/H) Number of free reserved entries. Used to ensure that each hardware group can get
-                                                                 a specific number of entries. Must always be greater than or equal to the sum
-                                                                 across all SSO_AF_HWGRP()_IAQ_THR[RSVD_THR], and will generally be equal to that sum
-                                                                 unless changes to SSO_AF_HWGRP()_IAQ_THR[RSVD_THR] are going to be made. To
-                                                                 prevent races, software should not change this register when SSO is being used;
-                                                                 instead use SSO_AF_AW_ADD[RSVD_FREE].
-
-                                                                 Internal:
-                                                                 (16..`SSO_IDX_W+16) */
-        uint64_t reserved_14_15        : 2;
-        uint64_t free_cnt              : 14; /**< [ 13:  0](RO/H) Number of total free entries.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) and fix reset value */
-#else /* Word 0 - Little Endian */
-        uint64_t free_cnt              : 14; /**< [ 13:  0](RO/H) Number of total free entries.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) and fix reset value */
-        uint64_t reserved_14_15        : 2;
-        uint64_t rsvd_free             : 14; /**< [ 29: 16](R/W/H) Number of free reserved entries. Used to ensure that each hardware group can get
-                                                                 a specific number of entries. Must always be greater than or equal to the sum
-                                                                 across all SSO_AF_HWGRP()_IAQ_THR[RSVD_THR], and will generally be equal to that sum
-                                                                 unless changes to SSO_AF_HWGRP()_IAQ_THR[RSVD_THR] are going to be made. To
-                                                                 prevent races, software should not change this register when SSO is being used;
-                                                                 instead use SSO_AF_AW_ADD[RSVD_FREE].
-
-                                                                 Internal:
-                                                                 (16..`SSO_IDX_W+16) */
-        uint64_t reserved_30_63        : 34;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_aw_we_s cnf95xx; */
-    /* struct cavm_sso_af_aw_we_s f95mm; */
-    /* struct cavm_sso_af_aw_we_s f95o; */
-    /* struct cavm_sso_af_aw_we_s loki; */
+    /* struct cavm_sso_af_aw_we_s cn; */
 };
 typedef union cavm_sso_af_aw_we cavm_sso_af_aw_we_t;
 
@@ -1092,13 +857,9 @@ static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX_W1S(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) sso_af_bar2_alias#
  *
- * INTERNAL: SSO Admin Function  BAR2 Alias Registers
- *
+ * SSO Admin Function  BAR2 Alias Registers
  * These registers alias to the SSO BAR2 registers for the PF and function
  * selected by SSO_AF_BAR2_SEL[PF_FUNC].
- *
- * Internal:
- * Not implemented. Placeholder for bug33464.
  */
 union cavm_sso_af_bar2_aliasx
 {
@@ -1118,7 +879,9 @@ typedef union cavm_sso_af_bar2_aliasx cavm_sso_af_bar2_aliasx_t;
 static inline uint64_t CAVM_SSO_AF_BAR2_ALIASX(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_SSO_AF_BAR2_ALIASX(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=131071))
+    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=131071))
+        return 0x840079100000ll + 8ll * ((a) & 0x1ffff);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=131071))
         return 0x840079100000ll + 8ll * ((a) & 0x1ffff);
     __cavm_csr_fatal("SSO_AF_BAR2_ALIASX", 1, a, 0, 0, 0, 0, 0);
 }
@@ -1133,11 +896,8 @@ static inline uint64_t CAVM_SSO_AF_BAR2_ALIASX(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) sso_af_bar2_sel
  *
- * INTERNAL: SSO Admin Function BAR2 Select Register
- *
+ * SSO Admin Function BAR2 Select Register
  * This register configures BAR2 accesses from the SSO_AF_BAR2_ALIAS() registers in BAR0.
- * Internal:
- * Not implemented. Placeholder for bug33464.
  */
 union cavm_sso_af_bar2_sel
 {
@@ -1164,7 +924,9 @@ typedef union cavm_sso_af_bar2_sel cavm_sso_af_bar2_sel_t;
 static inline uint64_t CAVM_SSO_AF_BAR2_SEL_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_SSO_AF_BAR2_SEL_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX))
+    if (cavm_is_model(OCTEONTX_CN96XX))
+        return 0x840079000000ll;
+    if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x840079000000ll;
     __cavm_csr_fatal("SSO_AF_BAR2_SEL", 0, 0, 0, 0, 0, 0, 0);
 }
@@ -1372,313 +1134,6 @@ static inline uint64_t CAVM_SSO_AF_BLK_RST_FUNC(void)
 #define arguments_CAVM_SSO_AF_BLK_RST -1,-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) sso_af_bp_test0
- *
- * INTERNAL: SSO AF Backpressure Test Register 0
- */
-union cavm_sso_af_bp_test0
-{
-    uint64_t u;
-    struct cavm_sso_af_bp_test0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit the egs.totq.totq_rd fifo pop.
-                                                                 \<62\> = Limit the emc.rlreq.ptr_fifo pop.
-                                                                 \<61\> = Limit the sso_aw_fffwrap fill fifo pop.
-                                                                 \<60\> = Limit the aw aq credit decrement returns. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Limit the egs.totq.totq_rd fifo pop.
-                                                                 \<62\> = Limit the emc.rlreq.ptr_fifo pop.
-                                                                 \<61\> = Limit the sso_aw_fffwrap fill fifo pop.
-                                                                 \<60\> = Limit the aw aq credit decrement returns. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_af_bp_test0_s cn; */
-};
-typedef union cavm_sso_af_bp_test0 cavm_sso_af_bp_test0_t;
-
-#define CAVM_SSO_AF_BP_TEST0 CAVM_SSO_AF_BP_TEST0_FUNC()
-static inline uint64_t CAVM_SSO_AF_BP_TEST0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_BP_TEST0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840070001380ll;
-    __cavm_csr_fatal("SSO_AF_BP_TEST0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_AF_BP_TEST0 cavm_sso_af_bp_test0_t
-#define bustype_CAVM_SSO_AF_BP_TEST0 CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_SSO_AF_BP_TEST0 "SSO_AF_BP_TEST0"
-#define device_bar_CAVM_SSO_AF_BP_TEST0 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_SSO_AF_BP_TEST0 0
-#define arguments_CAVM_SSO_AF_BP_TEST0 -1,-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) sso_af_bp_test1
- *
- * INTERNAL: SSO AF Backpressure Test Register 1
- */
-union cavm_sso_af_bp_test1
-{
-    uint64_t u;
-    struct cavm_sso_af_bp_test1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Limit the gw_csr_rxfifo from asserting valid for the next request. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Limit the gw_csr_rxfifo from asserting valid for the next request. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_af_bp_test1_s cn; */
-};
-typedef union cavm_sso_af_bp_test1 cavm_sso_af_bp_test1_t;
-
-#define CAVM_SSO_AF_BP_TEST1 CAVM_SSO_AF_BP_TEST1_FUNC()
-static inline uint64_t CAVM_SSO_AF_BP_TEST1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_BP_TEST1_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840070001390ll;
-    __cavm_csr_fatal("SSO_AF_BP_TEST1", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_AF_BP_TEST1 cavm_sso_af_bp_test1_t
-#define bustype_CAVM_SSO_AF_BP_TEST1 CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_SSO_AF_BP_TEST1 "SSO_AF_BP_TEST1"
-#define device_bar_CAVM_SSO_AF_BP_TEST1 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_SSO_AF_BP_TEST1 0
-#define arguments_CAVM_SSO_AF_BP_TEST1 -1,-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) sso_af_bp_test2
- *
- * INTERNAL: SSO AF Backpressure Test Register 2
- */
-union cavm_sso_af_bp_test2
-{
-    uint64_t u;
-    struct cavm_sso_af_bp_test2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 8;  /**< [ 63: 56](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = SAI bus stall.
-                                                                 \<61\> = GWMGR unit, getwork request stall.
-                                                                 \<60\> = Issue unit, pipeline issue stall.
-                                                                 \<59\> = ACDQ unit; cq dq stall.
-                                                                 \<58\> = ACDQ unit; addwork stall.
-                                                                 \<57\> = Reduce the rate at which NCB/RSL requests are dispatched.
-                                                                 \<56\> = Starve the NCBO fifo of credits, forcing it to fill. */
-        uint64_t reserved_32_55        : 24;
-        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1 (NCB/RSL).
-                                                                   \<17:16\> = Config 0 (NCBO). */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1 (NCB/RSL).
-                                                                   \<17:16\> = Config 0 (NCBO). */
-        uint64_t reserved_32_55        : 24;
-        uint64_t enable                : 8;  /**< [ 63: 56](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = SAI bus stall.
-                                                                 \<61\> = GWMGR unit, getwork request stall.
-                                                                 \<60\> = Issue unit, pipeline issue stall.
-                                                                 \<59\> = ACDQ unit; cq dq stall.
-                                                                 \<58\> = ACDQ unit; addwork stall.
-                                                                 \<57\> = Reduce the rate at which NCB/RSL requests are dispatched.
-                                                                 \<56\> = Starve the NCBO fifo of credits, forcing it to fill. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_af_bp_test2_s cn9; */
-    /* struct cavm_sso_af_bp_test2_s cn96xxp1; */
-    struct cavm_sso_af_bp_test2_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 8;  /**< [ 63: 56](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = SAI bus stall.
-                                                                 \<61\> = GWMGR unit, GET_WORK request stall.
-                                                                 \<60\> = Issue unit, pipeline issue stall.
-                                                                 \<59\> = ACDQ unit; cq dq stall.
-                                                                 \<58\> = ACDQ unit; addwork stall.
-                                                                 \<57\> = Reduce the rate at which NCB/RSL requests are dispatched.
-                                                                 \<56\> = Starve the NCBO fifo of credits, forcing it to fill. */
-        uint64_t reserved_32_55        : 24;
-        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1 (NCB/RSL).
-                                                                   \<17:16\> = Config 0 (NCBO). */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1 (NCB/RSL).
-                                                                   \<17:16\> = Config 0 (NCBO). */
-        uint64_t reserved_32_55        : 24;
-        uint64_t enable                : 8;  /**< [ 63: 56](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = SAI bus stall.
-                                                                 \<61\> = GWMGR unit, GET_WORK request stall.
-                                                                 \<60\> = Issue unit, pipeline issue stall.
-                                                                 \<59\> = ACDQ unit; cq dq stall.
-                                                                 \<58\> = ACDQ unit; addwork stall.
-                                                                 \<57\> = Reduce the rate at which NCB/RSL requests are dispatched.
-                                                                 \<56\> = Starve the NCBO fifo of credits, forcing it to fill. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_sso_af_bp_test2_cn96xxp3 cn98xx; */
-    /* struct cavm_sso_af_bp_test2_s cnf95xxp1; */
-    /* struct cavm_sso_af_bp_test2_cn96xxp3 cnf95xxp2; */
-    /* struct cavm_sso_af_bp_test2_cn96xxp3 f95mm; */
-    /* struct cavm_sso_af_bp_test2_s f95o; */
-    /* struct cavm_sso_af_bp_test2_cn96xxp3 loki; */
-};
-typedef union cavm_sso_af_bp_test2 cavm_sso_af_bp_test2_t;
-
-#define CAVM_SSO_AF_BP_TEST2 CAVM_SSO_AF_BP_TEST2_FUNC()
-static inline uint64_t CAVM_SSO_AF_BP_TEST2_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_BP_TEST2_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x8400700013a0ll;
-    __cavm_csr_fatal("SSO_AF_BP_TEST2", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_AF_BP_TEST2 cavm_sso_af_bp_test2_t
-#define bustype_CAVM_SSO_AF_BP_TEST2 CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_SSO_AF_BP_TEST2 "SSO_AF_BP_TEST2"
-#define device_bar_CAVM_SSO_AF_BP_TEST2 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_SSO_AF_BP_TEST2 0
-#define arguments_CAVM_SSO_AF_BP_TEST2 -1,-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) sso_af_const
  *
  * SSO AF Constants Register
@@ -1705,38 +1160,7 @@ union cavm_sso_af_const
         uint64_t hws                   : 8;  /**< [ 63: 56](RO) Number of hardware workslots. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_const_s cn9; */
-    /* struct cavm_sso_af_const_s cn96xx; */
-    struct cavm_sso_af_const_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t hws                   : 8;  /**< [ 63: 56](RO) Number of hardware workslots.
-                                                                 Internal:
-                                                                 reset and typical `SSO_NUM_WS */
-        uint64_t taq_b                 : 8;  /**< [ 55: 48](RO) Number of TAQ entries per line.  Multiply [TAQ_A] times [TAQ_B] to find total entries.
-                                                                 A value of 0x0 should be interpreted to mean 0xb. */
-        uint64_t taq_a                 : 16; /**< [ 47: 32](RO) Number of TAQ lines.  Multiply [TAQ_A] times [TAQ_B] to find total entries. */
-        uint64_t iue                   : 16; /**< [ 31: 16](RO) Number of in-unit entries.
-                                                                 Internal:
-                                                                 reset and typical `SSO_IDX_CNT */
-        uint64_t grp                   : 16; /**< [ 15:  0](RO) Number of hardware groups. */
-#else /* Word 0 - Little Endian */
-        uint64_t grp                   : 16; /**< [ 15:  0](RO) Number of hardware groups. */
-        uint64_t iue                   : 16; /**< [ 31: 16](RO) Number of in-unit entries.
-                                                                 Internal:
-                                                                 reset and typical `SSO_IDX_CNT */
-        uint64_t taq_a                 : 16; /**< [ 47: 32](RO) Number of TAQ lines.  Multiply [TAQ_A] times [TAQ_B] to find total entries. */
-        uint64_t taq_b                 : 8;  /**< [ 55: 48](RO) Number of TAQ entries per line.  Multiply [TAQ_A] times [TAQ_B] to find total entries.
-                                                                 A value of 0x0 should be interpreted to mean 0xb. */
-        uint64_t hws                   : 8;  /**< [ 63: 56](RO) Number of hardware workslots.
-                                                                 Internal:
-                                                                 reset and typical `SSO_NUM_WS */
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_const_s cnf95xx; */
-    /* struct cavm_sso_af_const_s f95mm; */
-    /* struct cavm_sso_af_const_s f95o; */
-    /* struct cavm_sso_af_const_s loki; */
+    /* struct cavm_sso_af_const_s cn; */
 };
 typedef union cavm_sso_af_const cavm_sso_af_const_t;
 
@@ -2711,44 +2135,6 @@ static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX_W1S(uint64_t a)
 #define arguments_CAVM_SSO_AF_GRPDIS_DIGESTX_W1S(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) sso_af_gw_eco
- *
- * INTERNAL: SSO AF GW ECO Register
- */
-union cavm_sso_af_gw_eco
-{
-    uint64_t u;
-    struct cavm_sso_af_gw_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_af_gw_eco_s cn; */
-};
-typedef union cavm_sso_af_gw_eco cavm_sso_af_gw_eco_t;
-
-#define CAVM_SSO_AF_GW_ECO CAVM_SSO_AF_GW_ECO_FUNC()
-static inline uint64_t CAVM_SSO_AF_GW_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_GW_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840070001038ll;
-    __cavm_csr_fatal("SSO_AF_GW_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_AF_GW_ECO cavm_sso_af_gw_eco_t
-#define bustype_CAVM_SSO_AF_GW_ECO CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_SSO_AF_GW_ECO "SSO_AF_GW_ECO"
-#define device_bar_CAVM_SSO_AF_GW_ECO 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_SSO_AF_GW_ECO 0
-#define arguments_CAVM_SSO_AF_GW_ECO -1,-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) sso_af_gwe_cfg
  *
  * SSO AF Get-Work Examiner Configuration Register
@@ -2808,43 +2194,11 @@ union cavm_sso_af_gwe_random
         uint64_t reserved_16_63        : 48;
         uint64_t rnd                   : 16; /**< [ 15:  0](R/W/H) Current random value, with low eight bits indicating first hardware group to start
                                                                  next get-work search at. Implementation defined as to when changes.
-                                                                 For diagnostic use only, must not be zero.
-
-                                                                 Internal:
-                                                                 Changes on each work search, even if unsuccessful or retried.
-
-                                                                 Uses 16, 15, 13, 4 tap LFSR (this choice is important to
-                                                                 ensure even hardware group probabilities) with the formula:
-                                                                 _ grp_to_start_arb_at = RND[7:0].
-                                                                 _ RND_next[15:8] = RND[7:0].
-                                                                 _ RND_next[7] = ^(RND[15:0] & 0xd008).
-                                                                 _ RND_next[6] = ^(RND[15:0] & 0x6804).
-                                                                 _ RND_next[5] = ^(RND[15:0] & 0x3402).
-                                                                 _ RND_next[4] = ^(RND[15:0] & 0x1a01).
-                                                                 _ RND_next[3] = ^(RND[15:0] & 0xdd08).
-                                                                 _ RND_next[2] = ^(RND[15:0] & 0x6e84).
-                                                                 _ RND_next[1] = ^(RND[15:0] & 0x3742).
-                                                                 _ RND_next[0] = ^(RND[15:0] & 0x1ba1). */
+                                                                 For diagnostic use only, must not be zero. */
 #else /* Word 0 - Little Endian */
         uint64_t rnd                   : 16; /**< [ 15:  0](R/W/H) Current random value, with low eight bits indicating first hardware group to start
                                                                  next get-work search at. Implementation defined as to when changes.
-                                                                 For diagnostic use only, must not be zero.
-
-                                                                 Internal:
-                                                                 Changes on each work search, even if unsuccessful or retried.
-
-                                                                 Uses 16, 15, 13, 4 tap LFSR (this choice is important to
-                                                                 ensure even hardware group probabilities) with the formula:
-                                                                 _ grp_to_start_arb_at = RND[7:0].
-                                                                 _ RND_next[15:8] = RND[7:0].
-                                                                 _ RND_next[7] = ^(RND[15:0] & 0xd008).
-                                                                 _ RND_next[6] = ^(RND[15:0] & 0x6804).
-                                                                 _ RND_next[5] = ^(RND[15:0] & 0x3402).
-                                                                 _ RND_next[4] = ^(RND[15:0] & 0x1a01).
-                                                                 _ RND_next[3] = ^(RND[15:0] & 0xdd08).
-                                                                 _ RND_next[2] = ^(RND[15:0] & 0x6e84).
-                                                                 _ RND_next[1] = ^(RND[15:0] & 0x3742).
-                                                                 _ RND_next[0] = ^(RND[15:0] & 0x1ba1). */
+                                                                 For diagnostic use only, must not be zero. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -3360,11 +2714,7 @@ union cavm_sso_af_hwgrpx_iaq_thr
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_62_63        : 2;
         uint64_t grp_cnt               : 14; /**< [ 61: 48](RO/H) Hardware group's entry count. Number of internal entries allocated to IAQ,
-                                                                 conflicted work, or CQ in this hardware group.
-
-                                                                 Internal:
-                                                                 Increments on admission to IAQ, decrements on scheduling into
-                                                                 work slot. */
+                                                                 conflicted work, or CQ in this hardware group. */
         uint64_t reserved_46_47        : 2;
         uint64_t max_thr               : 14; /**< [ 45: 32](R/W) Max threshold for this internal admission queue. If nonzero, must be \>= [RSVD_THR] + 4.
                                                                  To ensure full streaming performance to all cores, should be at least 208. Must not be
@@ -3387,72 +2737,11 @@ union cavm_sso_af_hwgrpx_iaq_thr
                                                                  changed after traffic is sent to this hardware group. */
         uint64_t reserved_46_47        : 2;
         uint64_t grp_cnt               : 14; /**< [ 61: 48](RO/H) Hardware group's entry count. Number of internal entries allocated to IAQ,
-                                                                 conflicted work, or CQ in this hardware group.
-
-                                                                 Internal:
-                                                                 Increments on admission to IAQ, decrements on scheduling into
-                                                                 work slot. */
+                                                                 conflicted work, or CQ in this hardware group. */
         uint64_t reserved_62_63        : 2;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_hwgrpx_iaq_thr_s cn9; */
-    /* struct cavm_sso_af_hwgrpx_iaq_thr_s cn96xx; */
-    struct cavm_sso_af_hwgrpx_iaq_thr_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_62_63        : 2;
-        uint64_t grp_cnt               : 14; /**< [ 61: 48](RO/H) Hardware group's entry count. Number of internal entries allocated to IAQ,
-                                                                 conflicted work, or CQ in this hardware group.
-
-                                                                 Internal:
-                                                                 Increments on admission to IAQ, decrements on scheduling into
-                                                                 work slot. (48..`SSO_IDX_W+48) */
-        uint64_t reserved_46_47        : 2;
-        uint64_t max_thr               : 14; /**< [ 45: 32](R/W) Max threshold for this internal admission queue. If nonzero, must be \>= [RSVD_THR] + 4.
-                                                                 To ensure full streaming performance to all cores, should be at least 208. Must not be
-                                                                 changed after traffic is sent to this hardware group.
-
-                                                                 Internal:
-                                                                 (32..`SSO_IDX_W+32) */
-        uint64_t reserved_14_31        : 18;
-        uint64_t rsvd_thr              : 14; /**< [ 13:  0](R/W) Threshold for reserved entries for this internal hardware group queue. Should be
-                                                                 at least 0x1 for any hardware groups that must make forward progress when other
-                                                                 hardware group's work is pending. Updates to this field must also update
-                                                                 SSO_AF_AW_ADD[RSVD_FREE]. Must not be changed after traffic is sent to this
-                                                                 hardware group.
-
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) */
-#else /* Word 0 - Little Endian */
-        uint64_t rsvd_thr              : 14; /**< [ 13:  0](R/W) Threshold for reserved entries for this internal hardware group queue. Should be
-                                                                 at least 0x1 for any hardware groups that must make forward progress when other
-                                                                 hardware group's work is pending. Updates to this field must also update
-                                                                 SSO_AF_AW_ADD[RSVD_FREE]. Must not be changed after traffic is sent to this
-                                                                 hardware group.
-
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) */
-        uint64_t reserved_14_31        : 18;
-        uint64_t max_thr               : 14; /**< [ 45: 32](R/W) Max threshold for this internal admission queue. If nonzero, must be \>= [RSVD_THR] + 4.
-                                                                 To ensure full streaming performance to all cores, should be at least 208. Must not be
-                                                                 changed after traffic is sent to this hardware group.
-
-                                                                 Internal:
-                                                                 (32..`SSO_IDX_W+32) */
-        uint64_t reserved_46_47        : 2;
-        uint64_t grp_cnt               : 14; /**< [ 61: 48](RO/H) Hardware group's entry count. Number of internal entries allocated to IAQ,
-                                                                 conflicted work, or CQ in this hardware group.
-
-                                                                 Internal:
-                                                                 Increments on admission to IAQ, decrements on scheduling into
-                                                                 work slot. (48..`SSO_IDX_W+48) */
-        uint64_t reserved_62_63        : 2;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_hwgrpx_iaq_thr_s cnf95xx; */
-    /* struct cavm_sso_af_hwgrpx_iaq_thr_s f95mm; */
-    /* struct cavm_sso_af_hwgrpx_iaq_thr_s f95o; */
-    /* struct cavm_sso_af_hwgrpx_iaq_thr_s loki; */
+    /* struct cavm_sso_af_hwgrpx_iaq_thr_s cn; */
 };
 typedef union cavm_sso_af_hwgrpx_iaq_thr cavm_sso_af_hwgrpx_iaq_thr_t;
 
@@ -4132,46 +3421,7 @@ union cavm_sso_af_hwsx_sx_grpmskx
                                                                  Individual changes must use SSOW_LF_GWS_GRPMSK_CHG. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_hwsx_sx_grpmskx_s cn9; */
-    /* struct cavm_sso_af_hwsx_sx_grpmskx_s cn96xx; */
-    struct cavm_sso_af_hwsx_sx_grpmskx_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t grp_msk               : 64; /**< [ 63:  0](R/W) HWS hardware group mask. A one in any bit position sets the HWS's membership in
-                                                                 the corresponding hardware group for hardware groups \<255:0\>.
-
-                                                                 A value of 0x0 in GRPMSK for a given HWS prevents the HWS from receiving new
-                                                                 work. HWSs that will never receive work should use GRPMSK=0x0; while this
-                                                                 setting is not special in SSO, for backward and forward compatibility this may
-                                                                 enable reallocation of internal resources to the remaining (nonzero-mask)
-                                                                 hardware workslots.
-
-                                                                 This register is intended only for large-scale save-restore of masks by the AF.
-                                                                 Individual changes must use SSOW_LF_GWS_GRPMSK_CHG.
-
-                                                                 Internal:
-                                                                 (0..`SSO_NUM_WS-1) */
-#else /* Word 0 - Little Endian */
-        uint64_t grp_msk               : 64; /**< [ 63:  0](R/W) HWS hardware group mask. A one in any bit position sets the HWS's membership in
-                                                                 the corresponding hardware group for hardware groups \<255:0\>.
-
-                                                                 A value of 0x0 in GRPMSK for a given HWS prevents the HWS from receiving new
-                                                                 work. HWSs that will never receive work should use GRPMSK=0x0; while this
-                                                                 setting is not special in SSO, for backward and forward compatibility this may
-                                                                 enable reallocation of internal resources to the remaining (nonzero-mask)
-                                                                 hardware workslots.
-
-                                                                 This register is intended only for large-scale save-restore of masks by the AF.
-                                                                 Individual changes must use SSOW_LF_GWS_GRPMSK_CHG.
-
-                                                                 Internal:
-                                                                 (0..`SSO_NUM_WS-1) */
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_hwsx_sx_grpmskx_s cnf95xx; */
-    /* struct cavm_sso_af_hwsx_sx_grpmskx_s f95mm; */
-    /* struct cavm_sso_af_hwsx_sx_grpmskx_s f95o; */
-    /* struct cavm_sso_af_hwsx_sx_grpmskx_s loki; */
+    /* struct cavm_sso_af_hwsx_sx_grpmskx_s cn; */
 };
 typedef union cavm_sso_af_hwsx_sx_grpmskx cavm_sso_af_hwsx_sx_grpmskx_t;
 
@@ -4279,48 +3529,7 @@ union cavm_sso_af_ientx_links
         uint64_t reserved_29_63        : 35;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_ientx_links_s cn9; */
-    /* struct cavm_sso_af_ientx_links_s cn96xx; */
-    struct cavm_sso_af_ientx_links_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_29_63        : 35;
-        uint64_t prev_index            : 13; /**< [ 28: 16](RO/H) The previous entry in the tag chain. Unpredictable if the entry is at the head of the list
-                                                                 or the head of a conflicted tag chain.
-
-                                                                 Internal:
-                                                                 (16..`SSO_IDX_W+16-1) */
-        uint64_t reserved_14_15        : 2;
-        uint64_t next_index_vld        : 1;  /**< [ 13: 13](RO/H) The [NEXT_INDEX] is valid. Unpredictable unless the entry is the tail entry of an atomic tag chain.
-                                                                 Internal:
-                                                                 (`SSO_IDX_W) */
-        uint64_t next_index            : 13; /**< [ 12:  0](RO/H) The next entry in the tag chain or conflicted tag chain. Unpredictable if the entry is at
-                                                                 the tail of the list.
-
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-#else /* Word 0 - Little Endian */
-        uint64_t next_index            : 13; /**< [ 12:  0](RO/H) The next entry in the tag chain or conflicted tag chain. Unpredictable if the entry is at
-                                                                 the tail of the list.
-
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-        uint64_t next_index_vld        : 1;  /**< [ 13: 13](RO/H) The [NEXT_INDEX] is valid. Unpredictable unless the entry is the tail entry of an atomic tag chain.
-                                                                 Internal:
-                                                                 (`SSO_IDX_W) */
-        uint64_t reserved_14_15        : 2;
-        uint64_t prev_index            : 13; /**< [ 28: 16](RO/H) The previous entry in the tag chain. Unpredictable if the entry is at the head of the list
-                                                                 or the head of a conflicted tag chain.
-
-                                                                 Internal:
-                                                                 (16..`SSO_IDX_W+16-1) */
-        uint64_t reserved_29_63        : 35;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_ientx_links_s cnf95xx; */
-    /* struct cavm_sso_af_ientx_links_s f95mm; */
-    /* struct cavm_sso_af_ientx_links_s f95o; */
-    /* struct cavm_sso_af_ientx_links_s loki; */
+    /* struct cavm_sso_af_ientx_links_s cn; */
 };
 typedef union cavm_sso_af_ientx_links cavm_sso_af_ientx_links_t;
 
@@ -4404,26 +3613,7 @@ union cavm_sso_af_ientx_qlinks
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_ientx_qlinks_s cn9; */
-    /* struct cavm_sso_af_ientx_qlinks_s cn96xx; */
-    struct cavm_sso_af_ientx_qlinks_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_13_63        : 51;
-        uint64_t next_index            : 13; /**< [ 12:  0](RO/H) The next entry in the AQ/CQ/DQ.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-#else /* Word 0 - Little Endian */
-        uint64_t next_index            : 13; /**< [ 12:  0](RO/H) The next entry in the AQ/CQ/DQ.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-        uint64_t reserved_13_63        : 51;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_ientx_qlinks_s cnf95xx; */
-    /* struct cavm_sso_af_ientx_qlinks_s f95mm; */
-    /* struct cavm_sso_af_ientx_qlinks_s f95o; */
-    /* struct cavm_sso_af_ientx_qlinks_s loki; */
+    /* struct cavm_sso_af_ientx_qlinks_s cn; */
 };
 typedef union cavm_sso_af_ientx_qlinks cavm_sso_af_ientx_qlinks_t;
 
@@ -4457,9 +3647,7 @@ union cavm_sso_af_ientx_tag
         uint64_t reserved_39_63        : 25;
         uint64_t tailc                 : 1;  /**< [ 38: 38](RO/H) The SSO entry is the tail of tag chain that is conflicted. No conflicted chain exists if
                                                                  [TAIL] is also set on the same entry. */
-        uint64_t tail                  : 1;  /**< [ 37: 37](RO/H) The SSO entry is the tail of tag chain that is descheduled.
-                                                                 Internal:
-                                                                 Read from the SOC. */
+        uint64_t tail                  : 1;  /**< [ 37: 37](RO/H) The SSO entry is the tail of tag chain that is descheduled. */
         uint64_t reserved_34_36        : 3;
         uint64_t tt                    : 2;  /**< [ 33: 32](RO/H) The tag type of the SSO entry. Enumerated by SSO_TT_E. */
         uint64_t tag                   : 32; /**< [ 31:  0](RO/H) The tag of the SSO entry. */
@@ -4467,9 +3655,7 @@ union cavm_sso_af_ientx_tag
         uint64_t tag                   : 32; /**< [ 31:  0](RO/H) The tag of the SSO entry. */
         uint64_t tt                    : 2;  /**< [ 33: 32](RO/H) The tag type of the SSO entry. Enumerated by SSO_TT_E. */
         uint64_t reserved_34_36        : 3;
-        uint64_t tail                  : 1;  /**< [ 37: 37](RO/H) The SSO entry is the tail of tag chain that is descheduled.
-                                                                 Internal:
-                                                                 Read from the SOC. */
+        uint64_t tail                  : 1;  /**< [ 37: 37](RO/H) The SSO entry is the tail of tag chain that is descheduled. */
         uint64_t tailc                 : 1;  /**< [ 38: 38](RO/H) The SSO entry is the tail of tag chain that is conflicted. No conflicted chain exists if
                                                                  [TAIL] is also set on the same entry. */
         uint64_t reserved_39_63        : 25;
@@ -4558,36 +3744,7 @@ union cavm_sso_af_ipl_confx
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_ipl_confx_s cn9; */
-    /* struct cavm_sso_af_ipl_confx_s cn96xx; */
-    struct cavm_sso_af_ipl_confx_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t queue_val             : 1;  /**< [ 27: 27](RO/H) One or more valid entries are in the queue. */
-        uint64_t queue_one             : 1;  /**< [ 26: 26](RO/H) Exactly one valid entry is in the queue. */
-        uint64_t queue_head            : 13; /**< [ 25: 13](RO/H) Index of entry at the head of the queue.
-                                                                 Internal:
-                                                                 (13..`SSO_IDX_W+13-1) */
-        uint64_t queue_tail            : 13; /**< [ 12:  0](RO/H) Index of entry at the tail of the queue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-#else /* Word 0 - Little Endian */
-        uint64_t queue_tail            : 13; /**< [ 12:  0](RO/H) Index of entry at the tail of the queue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-        uint64_t queue_head            : 13; /**< [ 25: 13](RO/H) Index of entry at the head of the queue.
-                                                                 Internal:
-                                                                 (13..`SSO_IDX_W+13-1) */
-        uint64_t queue_one             : 1;  /**< [ 26: 26](RO/H) Exactly one valid entry is in the queue. */
-        uint64_t queue_val             : 1;  /**< [ 27: 27](RO/H) One or more valid entries are in the queue. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_ipl_confx_s cnf95xx; */
-    /* struct cavm_sso_af_ipl_confx_s f95mm; */
-    /* struct cavm_sso_af_ipl_confx_s f95o; */
-    /* struct cavm_sso_af_ipl_confx_s loki; */
+    /* struct cavm_sso_af_ipl_confx_s cn; */
 };
 typedef union cavm_sso_af_ipl_confx cavm_sso_af_ipl_confx_t;
 
@@ -4632,36 +3789,7 @@ union cavm_sso_af_ipl_deschedx
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_ipl_deschedx_s cn9; */
-    /* struct cavm_sso_af_ipl_deschedx_s cn96xx; */
-    struct cavm_sso_af_ipl_deschedx_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t queue_val             : 1;  /**< [ 27: 27](RO/H) One or more valid entries are in the queue. */
-        uint64_t queue_one             : 1;  /**< [ 26: 26](RO/H) Exactly one valid entry is in the queue. */
-        uint64_t queue_head            : 13; /**< [ 25: 13](RO/H) Index of entry at the head of the queue.
-                                                                 Internal:
-                                                                 (13..`SSO_IDX_W+13-1) */
-        uint64_t queue_tail            : 13; /**< [ 12:  0](RO/H) Index of entry at the tail of the queue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-#else /* Word 0 - Little Endian */
-        uint64_t queue_tail            : 13; /**< [ 12:  0](RO/H) Index of entry at the tail of the queue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-        uint64_t queue_head            : 13; /**< [ 25: 13](RO/H) Index of entry at the head of the queue.
-                                                                 Internal:
-                                                                 (13..`SSO_IDX_W+13-1) */
-        uint64_t queue_one             : 1;  /**< [ 26: 26](RO/H) Exactly one valid entry is in the queue. */
-        uint64_t queue_val             : 1;  /**< [ 27: 27](RO/H) One or more valid entries are in the queue. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_ipl_deschedx_s cnf95xx; */
-    /* struct cavm_sso_af_ipl_deschedx_s f95mm; */
-    /* struct cavm_sso_af_ipl_deschedx_s f95o; */
-    /* struct cavm_sso_af_ipl_deschedx_s loki; */
+    /* struct cavm_sso_af_ipl_deschedx_s cn; */
 };
 typedef union cavm_sso_af_ipl_deschedx cavm_sso_af_ipl_deschedx_t;
 
@@ -4711,46 +3839,7 @@ union cavm_sso_af_ipl_freex
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_ipl_freex_s cn9; */
-    /* struct cavm_sso_af_ipl_freex_s cn96xx; */
-    struct cavm_sso_af_ipl_freex_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_60_63        : 4;
-        uint64_t qnum_head             : 2;  /**< [ 59: 58](RO/H) Subqueue with current head. */
-        uint64_t qnum_tail             : 2;  /**< [ 57: 56](RO/H) Subqueue for next tail. */
-        uint64_t reserved_41_55        : 15;
-        uint64_t queue_val             : 1;  /**< [ 40: 40](RO/H) One or more valid entries are in this subqueue. */
-        uint64_t queue_cnt             : 14; /**< [ 39: 26](RO/H) Number of valid entries in this subqueue.
-                                                                 Internal:
-                                                                 (26..`SSO_IDX_W+26) */
-        uint64_t queue_head            : 13; /**< [ 25: 13](RO/H) Index of entry at the head of this subqueue.
-                                                                 Internal:
-                                                                 (13..`SSO_IDX_W+13-1) */
-        uint64_t queue_tail            : 13; /**< [ 12:  0](RO/H) Index of entry at the tail of this subqueue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-#else /* Word 0 - Little Endian */
-        uint64_t queue_tail            : 13; /**< [ 12:  0](RO/H) Index of entry at the tail of this subqueue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-        uint64_t queue_head            : 13; /**< [ 25: 13](RO/H) Index of entry at the head of this subqueue.
-                                                                 Internal:
-                                                                 (13..`SSO_IDX_W+13-1) */
-        uint64_t queue_cnt             : 14; /**< [ 39: 26](RO/H) Number of valid entries in this subqueue.
-                                                                 Internal:
-                                                                 (26..`SSO_IDX_W+26) */
-        uint64_t queue_val             : 1;  /**< [ 40: 40](RO/H) One or more valid entries are in this subqueue. */
-        uint64_t reserved_41_55        : 15;
-        uint64_t qnum_tail             : 2;  /**< [ 57: 56](RO/H) Subqueue for next tail. */
-        uint64_t qnum_head             : 2;  /**< [ 59: 58](RO/H) Subqueue with current head. */
-        uint64_t reserved_60_63        : 4;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_ipl_freex_s cnf95xx; */
-    /* struct cavm_sso_af_ipl_freex_s f95mm; */
-    /* struct cavm_sso_af_ipl_freex_s f95o; */
-    /* struct cavm_sso_af_ipl_freex_s loki; */
+    /* struct cavm_sso_af_ipl_freex_s cn; */
 };
 typedef union cavm_sso_af_ipl_freex cavm_sso_af_ipl_freex_t;
 
@@ -4794,36 +3883,7 @@ union cavm_sso_af_ipl_iaqx
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_ipl_iaqx_s cn9; */
-    /* struct cavm_sso_af_ipl_iaqx_s cn96xx; */
-    struct cavm_sso_af_ipl_iaqx_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t queue_val             : 1;  /**< [ 27: 27](RO/H) One or more valid entries are in the queue. */
-        uint64_t queue_one             : 1;  /**< [ 26: 26](RO/H) Exactly one valid entry is in the queue. */
-        uint64_t queue_head            : 13; /**< [ 25: 13](RO/H) Index of entry at the head of the queue.
-                                                                 Internal:
-                                                                 (13..`SSO_IDX_W+13-1) */
-        uint64_t queue_tail            : 13; /**< [ 12:  0](RO/H) Index of entry at the tail of the queue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-#else /* Word 0 - Little Endian */
-        uint64_t queue_tail            : 13; /**< [ 12:  0](RO/H) Index of entry at the tail of the queue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-        uint64_t queue_head            : 13; /**< [ 25: 13](RO/H) Index of entry at the head of the queue.
-                                                                 Internal:
-                                                                 (13..`SSO_IDX_W+13-1) */
-        uint64_t queue_one             : 1;  /**< [ 26: 26](RO/H) Exactly one valid entry is in the queue. */
-        uint64_t queue_val             : 1;  /**< [ 27: 27](RO/H) One or more valid entries are in the queue. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_ipl_iaqx_s cnf95xx; */
-    /* struct cavm_sso_af_ipl_iaqx_s f95mm; */
-    /* struct cavm_sso_af_ipl_iaqx_s f95o; */
-    /* struct cavm_sso_af_ipl_iaqx_s loki; */
+    /* struct cavm_sso_af_ipl_iaqx_s cn; */
 };
 typedef union cavm_sso_af_ipl_iaqx cavm_sso_af_ipl_iaqx_t;
 
@@ -4940,17 +4000,7 @@ union cavm_sso_af_lf_hwgrp_rst
         uint64_t reserved_13_63        : 51;
         uint64_t exec                  : 1;  /**< [ 12: 12](R/W1S/H) Execute LF software-initiated reset. When software writes a one to set this bit, hardware
                                                                  resets the local function selected by [LF]. Hardware clears this bit when
-                                                                 done.
-
-                                                                 Internal:
-                                                                 This comment applies to all blocks that refer to this register:
-
-                                                                 This should preferrably reset all registers/state associated with the LF, including
-                                                                 any BLK_LF_* and BLK_AF_LF()_* registers. It would also be nice to reset any per-LF
-                                                                 bits in other registers but its OK to have exceptions as long as the AF software has
-                                                                 another way to reset them, e.g. by writing to the bits. Such additional steps
-                                                                 expected from software should be documented in the HRM, e.g. in section 19.11.5
-                                                                 "VF Function Level Reset". */
+                                                                 done. */
         uint64_t reserved_8_11         : 4;
         uint64_t lf                    : 8;  /**< [  7:  0](R/W) Local function that is reset when [EXEC] is set. */
 #else /* Word 0 - Little Endian */
@@ -4958,17 +4008,7 @@ union cavm_sso_af_lf_hwgrp_rst
         uint64_t reserved_8_11         : 4;
         uint64_t exec                  : 1;  /**< [ 12: 12](R/W1S/H) Execute LF software-initiated reset. When software writes a one to set this bit, hardware
                                                                  resets the local function selected by [LF]. Hardware clears this bit when
-                                                                 done.
-
-                                                                 Internal:
-                                                                 This comment applies to all blocks that refer to this register:
-
-                                                                 This should preferrably reset all registers/state associated with the LF, including
-                                                                 any BLK_LF_* and BLK_AF_LF()_* registers. It would also be nice to reset any per-LF
-                                                                 bits in other registers but its OK to have exceptions as long as the AF software has
-                                                                 another way to reset them, e.g. by writing to the bits. Such additional steps
-                                                                 expected from software should be documented in the HRM, e.g. in section 19.11.5
-                                                                 "VF Function Level Reset". */
+                                                                 done. */
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } s;
@@ -5011,26 +4051,7 @@ union cavm_sso_af_nos_cnt
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_nos_cnt_s cn9; */
-    /* struct cavm_sso_af_nos_cnt_s cn96xx; */
-    struct cavm_sso_af_nos_cnt_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_13_63        : 51;
-        uint64_t nos_cnt               : 13; /**< [ 12:  0](RO/H) Number of work-queue entries on the no-schedule list.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-#else /* Word 0 - Little Endian */
-        uint64_t nos_cnt               : 13; /**< [ 12:  0](RO/H) Number of work-queue entries on the no-schedule list.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W-1) */
-        uint64_t reserved_13_63        : 51;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_nos_cnt_s cnf95xx; */
-    /* struct cavm_sso_af_nos_cnt_s f95mm; */
-    /* struct cavm_sso_af_nos_cnt_s f95o; */
-    /* struct cavm_sso_af_nos_cnt_s loki; */
+    /* struct cavm_sso_af_nos_cnt_s cn; */
 };
 typedef union cavm_sso_af_nos_cnt cavm_sso_af_nos_cnt_t;
 
@@ -6298,56 +5319,7 @@ union cavm_sso_af_unmap_info3
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_unmap_info3_s cn9; */
-    /* struct cavm_sso_af_unmap_info3_s cn96xx; */
-    struct cavm_sso_af_unmap_info3_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_35_63        : 29;
-        uint64_t cam_src               : 3;  /**< [ 34: 32](RO/H) Failing WCAM error path. This field is updated when one of the following errors
-                                                                 occur: SSO_AF_ERR2[WS_UNMAP] or SSO_AF_ERR2[WS_MULTI] and is held until both
-                                                                 errors are cleared from SSO_AF_ERR2. */
-        uint64_t reserved_30_31        : 2;
-        uint64_t ws_multi              : 1;  /**< [ 29: 29](RO/H) PF_FUNC map had double-hit error. Set when SSO_AF_ERR2[WS_MULTI] is set
-                                                                 and held until SSO_AF_ERR2[WS_MULTI] and SSO_AF_ERR2[WS_UNMAP] are cleared. */
-        uint64_t ws_unmap              : 1;  /**< [ 28: 28](RO/H) PF_FUNC mapping not found error. Set when SSO_AF_ERR2[WS_UNMAP] is set and held
-                                                                 until SSO_AF_ERR2[WS_UNMAP] and SSO_AF_ERR2[WS_MULTI] are cleared. */
-        uint64_t reserved_23_27        : 5;
-        uint64_t gws                   : 7;  /**< [ 22: 16](RO/H) This field indicates the failing GWS. This field is updated when any
-                                                                 of he following errors occur: SSO_AF_ERR2[WS_UNMAP] or SSO_AF_ERR2[WS_MULTI]
-                                                                 and is held until all both errors are cleared in SSO_AF_ERR2.
-
-                                                                 Internal:
-                                                                 (16..`SSO_NUM_WS-1+16) */
-        uint64_t pf_func               : 16; /**< [ 15:  0](RO/H) Failing PF_FUNC. This field is updated when any of the following errors occur:
-                                                                 SSO_AF_ERR2[WS_UNMAP] or SSO_AF_ERR2[WS_MULTI] and is held until both errors
-                                                                 are cleared from SSO_AF_ERR2. */
-#else /* Word 0 - Little Endian */
-        uint64_t pf_func               : 16; /**< [ 15:  0](RO/H) Failing PF_FUNC. This field is updated when any of the following errors occur:
-                                                                 SSO_AF_ERR2[WS_UNMAP] or SSO_AF_ERR2[WS_MULTI] and is held until both errors
-                                                                 are cleared from SSO_AF_ERR2. */
-        uint64_t gws                   : 7;  /**< [ 22: 16](RO/H) This field indicates the failing GWS. This field is updated when any
-                                                                 of he following errors occur: SSO_AF_ERR2[WS_UNMAP] or SSO_AF_ERR2[WS_MULTI]
-                                                                 and is held until all both errors are cleared in SSO_AF_ERR2.
-
-                                                                 Internal:
-                                                                 (16..`SSO_NUM_WS-1+16) */
-        uint64_t reserved_23_27        : 5;
-        uint64_t ws_unmap              : 1;  /**< [ 28: 28](RO/H) PF_FUNC mapping not found error. Set when SSO_AF_ERR2[WS_UNMAP] is set and held
-                                                                 until SSO_AF_ERR2[WS_UNMAP] and SSO_AF_ERR2[WS_MULTI] are cleared. */
-        uint64_t ws_multi              : 1;  /**< [ 29: 29](RO/H) PF_FUNC map had double-hit error. Set when SSO_AF_ERR2[WS_MULTI] is set
-                                                                 and held until SSO_AF_ERR2[WS_MULTI] and SSO_AF_ERR2[WS_UNMAP] are cleared. */
-        uint64_t reserved_30_31        : 2;
-        uint64_t cam_src               : 3;  /**< [ 34: 32](RO/H) Failing WCAM error path. This field is updated when one of the following errors
-                                                                 occur: SSO_AF_ERR2[WS_UNMAP] or SSO_AF_ERR2[WS_MULTI] and is held until both
-                                                                 errors are cleared from SSO_AF_ERR2. */
-        uint64_t reserved_35_63        : 29;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_af_unmap_info3_s cnf95xx; */
-    /* struct cavm_sso_af_unmap_info3_s f95mm; */
-    /* struct cavm_sso_af_unmap_info3_s f95o; */
-    /* struct cavm_sso_af_unmap_info3_s loki; */
+    /* struct cavm_sso_af_unmap_info3_s cn; */
 };
 typedef union cavm_sso_af_unmap_info3 cavm_sso_af_unmap_info3_t;
 
@@ -6630,16 +5602,7 @@ union cavm_sso_af_ws_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
-        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Enable OCLA backpressure stalls. For diagnostic use only.
-                                                                 Internal:
-                                                                 \<55\> = NCBB input fifo stall (ncbo).
-                                                                 \<54\> = Work-slot response. (arbrsp).
-                                                                 \<53\> = Reserved.
-                                                                 \<52\> = Work-slot SWTAG response. (arbs).
-                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
-                                                                 \<50\> = Reserved.
-                                                                 \<49\> = Reserved.
-                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Enable OCLA backpressure stalls. For diagnostic use only. */
         uint64_t reserved_31_47        : 17;
         uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
                                                                  For diagnostic use only.
@@ -6687,16 +5650,7 @@ union cavm_sso_af_ws_cfg
                                                                  0x6 = 2048 cycles.
                                                                  0x7 = 4096 cycles. */
         uint64_t reserved_31_47        : 17;
-        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Enable OCLA backpressure stalls. For diagnostic use only.
-                                                                 Internal:
-                                                                 \<55\> = NCBB input fifo stall (ncbo).
-                                                                 \<54\> = Work-slot response. (arbrsp).
-                                                                 \<53\> = Reserved.
-                                                                 \<52\> = Work-slot SWTAG response. (arbs).
-                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
-                                                                 \<50\> = Reserved.
-                                                                 \<49\> = Reserved.
-                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Enable OCLA backpressure stalls. For diagnostic use only. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } s;
@@ -6706,17 +5660,7 @@ union cavm_sso_af_ws_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
-        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable OCLA backpressure stalls. For diagnostic use only.
-                                                                 \<55\> = NCBB input fifo stall (ncbo).
-                                                                 \<54\> = Work-slot response. (arbrsp).
-                                                                 \<53\> = Reserved.
-                                                                 \<52\> = Work-slot SWTAG response. (arbs).
-                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
-                                                                 \<50\> = Reserved.
-                                                                 \<49\> = Reserved.
-                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_31_47        : 17;
         uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
                                                                  For diagnostic use only.
@@ -6764,17 +5708,7 @@ union cavm_sso_af_ws_cfg
                                                                  0x6 = 2048 cycles.
                                                                  0x7 = 4096 cycles. */
         uint64_t reserved_31_47        : 17;
-        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable OCLA backpressure stalls. For diagnostic use only.
-                                                                 \<55\> = NCBB input fifo stall (ncbo).
-                                                                 \<54\> = Work-slot response. (arbrsp).
-                                                                 \<53\> = Reserved.
-                                                                 \<52\> = Work-slot SWTAG response. (arbs).
-                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
-                                                                 \<50\> = Reserved.
-                                                                 \<49\> = Reserved.
-                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -6786,17 +5720,7 @@ union cavm_sso_af_ws_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
-        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable OCLA backpressure stalls. For diagnostic use only.
-                                                                 \<55\> = NCBB input fifo stall (ncbo).
-                                                                 \<54\> = Work-slot response. (arbrsp).
-                                                                 \<53\> = Reserved.
-                                                                 \<52\> = Work-slot SWTAG response. (arbs).
-                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
-                                                                 \<50\> = Reserved.
-                                                                 \<49\> = Reserved.
-                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_31_47        : 17;
         uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
                                                                  For diagnostic use only.
@@ -6844,17 +5768,7 @@ union cavm_sso_af_ws_cfg
                                                                  0x6 = 2048 cycles.
                                                                  0x7 = 4096 cycles. */
         uint64_t reserved_31_47        : 17;
-        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable OCLA backpressure stalls. For diagnostic use only.
-                                                                 \<55\> = NCBB input fifo stall (ncbo).
-                                                                 \<54\> = Work-slot response. (arbrsp).
-                                                                 \<53\> = Reserved.
-                                                                 \<52\> = Work-slot SWTAG response. (arbs).
-                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
-                                                                 \<50\> = Reserved.
-                                                                 \<49\> = Reserved.
-                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } f95o;
@@ -6877,44 +5791,6 @@ static inline uint64_t CAVM_SSO_AF_WS_CFG_FUNC(void)
 #define device_bar_CAVM_SSO_AF_WS_CFG 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_SSO_AF_WS_CFG 0
 #define arguments_CAVM_SSO_AF_WS_CFG -1,-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) sso_af_ws_eco
- *
- * INTERNAL: SSO AF WS ECO Register
- */
-union cavm_sso_af_ws_eco
-{
-    uint64_t u;
-    struct cavm_sso_af_ws_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_af_ws_eco_s cn; */
-};
-typedef union cavm_sso_af_ws_eco cavm_sso_af_ws_eco_t;
-
-#define CAVM_SSO_AF_WS_ECO CAVM_SSO_AF_WS_ECO_FUNC()
-static inline uint64_t CAVM_SSO_AF_WS_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840070001040ll;
-    __cavm_csr_fatal("SSO_AF_WS_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_AF_WS_ECO cavm_sso_af_ws_eco_t
-#define bustype_CAVM_SSO_AF_WS_ECO CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_SSO_AF_WS_ECO "SSO_AF_WS_ECO"
-#define device_bar_CAVM_SSO_AF_WS_ECO 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_SSO_AF_WS_ECO 0
-#define arguments_CAVM_SSO_AF_WS_ECO -1,-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) sso_af_ws_gmulti_digest#
@@ -7616,15 +6492,11 @@ union cavm_sso_af_xaqx_head_next
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_53_63        : 11;
-        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_0_6          : 7;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_6          : 7;
-        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } s;
@@ -7663,17 +6535,13 @@ union cavm_sso_af_xaqx_head_ptr
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_53_63        : 11;
-        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_5_6          : 2;
         uint64_t cl                    : 5;  /**< [  4:  0](R/W/H) Cache line number in buffer. Cache line zero contains the next pointer. */
 #else /* Word 0 - Little Endian */
         uint64_t cl                    : 5;  /**< [  4:  0](R/W/H) Cache line number in buffer. Cache line zero contains the next pointer. */
         uint64_t reserved_5_6          : 2;
-        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } s;
@@ -7713,15 +6581,11 @@ union cavm_sso_af_xaqx_tail_next
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_53_63        : 11;
-        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_0_6          : 7;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_6          : 7;
-        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } s;
@@ -7764,17 +6628,13 @@ union cavm_sso_af_xaqx_tail_ptr
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_53_63        : 11;
-        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_5_6          : 2;
         uint64_t cl                    : 5;  /**< [  4:  0](R/W/H) Cache line number in buffer. Cache line zero contains the next pointer. */
 #else /* Word 0 - Little Endian */
         uint64_t cl                    : 5;  /**< [  4:  0](R/W/H) Cache line number in buffer. Cache line zero contains the next pointer. */
         uint64_t reserved_5_6          : 2;
-        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 46; /**< [ 52:  7](R/W/H) LF IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } s;
@@ -8051,44 +6911,6 @@ static inline uint64_t CAVM_SSO_AW_CFG_FUNC(void)
 #define arguments_CAVM_SSO_AW_CFG -1,-1,-1,-1
 
 /**
- * Register (NCB) sso_aw_eco
- *
- * INTERNAL: SSO PF AW ECO Register
- */
-union cavm_sso_aw_eco
-{
-    uint64_t u;
-    struct cavm_sso_aw_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_aw_eco_s cn; */
-};
-typedef union cavm_sso_aw_eco cavm_sso_aw_eco_t;
-
-#define CAVM_SSO_AW_ECO CAVM_SSO_AW_ECO_FUNC()
-static inline uint64_t CAVM_SSO_AW_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AW_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x860000001030ll;
-    __cavm_csr_fatal("SSO_AW_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_AW_ECO cavm_sso_aw_eco_t
-#define bustype_CAVM_SSO_AW_ECO CSR_TYPE_NCB
-#define basename_CAVM_SSO_AW_ECO "SSO_AW_ECO"
-#define device_bar_CAVM_SSO_AW_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_SSO_AW_ECO 0
-#define arguments_CAVM_SSO_AW_ECO -1,-1,-1,-1
-
-/**
  * Register (NCB) sso_aw_inp_ctl
  *
  * SSO PF Add-Work Input Control Register
@@ -8363,39 +7185,11 @@ union cavm_sso_bist_status0
         uint64_t reserved_12_63        : 52;
         uint64_t bist                  : 12; /**< [ 11:  0](RO/H) Memory BIST status.
                                                                  0 = Pass.
-                                                                 1 = Fail.
-
-                                                                 Internal:
-                                                                 \<11\> = XAQ_CNT.
-                                                                 \<10\> = XAQ_LIMIT.
-                                                                  \<9\> = WES.
-                                                                  \<8\> = FFF.
-                                                                  \<7\> = XAQ.
-                                                                  \<6\> = QTC.
-                                                                  \<5\> = INP.
-                                                                  \<4\> = LLM.
-                                                                  \<3\> = TIAQ_HPTR.
-                                                                  \<2\> = TIAQ_TPTR.
-                                                                  \<1\> = TOAQ_HPTR.
-                                                                  \<0\> = TOAQ_TPTR. */
+                                                                 1 = Fail. */
 #else /* Word 0 - Little Endian */
         uint64_t bist                  : 12; /**< [ 11:  0](RO/H) Memory BIST status.
                                                                  0 = Pass.
-                                                                 1 = Fail.
-
-                                                                 Internal:
-                                                                 \<11\> = XAQ_CNT.
-                                                                 \<10\> = XAQ_LIMIT.
-                                                                  \<9\> = WES.
-                                                                  \<8\> = FFF.
-                                                                  \<7\> = XAQ.
-                                                                  \<6\> = QTC.
-                                                                  \<5\> = INP.
-                                                                  \<4\> = LLM.
-                                                                  \<3\> = TIAQ_HPTR.
-                                                                  \<2\> = TIAQ_TPTR.
-                                                                  \<1\> = TOAQ_HPTR.
-                                                                  \<0\> = TOAQ_TPTR. */
+                                                                 1 = Fail. */
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } s;
@@ -8434,31 +7228,11 @@ union cavm_sso_bist_status1
         uint64_t reserved_8_63         : 56;
         uint64_t bist                  : 8;  /**< [  7:  0](RO/H) Memory BIST status.
                                                                  0 = Pass.
-                                                                 1 = Fail.
-
-                                                                 Internal:
-                                                                 \<7\> = MBOX_MEM,
-                                                                 \<6\> = THRINT.
-                                                                 \<5\> = MASK.
-                                                                 \<4\> = GDW.
-                                                                 \<3\> = QIDX.
-                                                                 \<2\> = TPTR.
-                                                                 \<1\> = HPTR.
-                                                                 \<0\> = CNTR. */
+                                                                 1 = Fail. */
 #else /* Word 0 - Little Endian */
         uint64_t bist                  : 8;  /**< [  7:  0](RO/H) Memory BIST status.
                                                                  0 = Pass.
-                                                                 1 = Fail.
-
-                                                                 Internal:
-                                                                 \<7\> = MBOX_MEM,
-                                                                 \<6\> = THRINT.
-                                                                 \<5\> = MASK.
-                                                                 \<4\> = GDW.
-                                                                 \<3\> = QIDX.
-                                                                 \<2\> = TPTR.
-                                                                 \<1\> = HPTR.
-                                                                 \<0\> = CNTR. */
+                                                                 1 = Fail. */
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } s;
@@ -8497,39 +7271,11 @@ union cavm_sso_bist_status2
         uint64_t reserved_12_63        : 52;
         uint64_t bist                  : 12; /**< [ 11:  0](RO/H) Memory BIST status.
                                                                  0 = Pass.
-                                                                 1 = Fail.
-
-                                                                 Internal:
-                                                                 \<11\> = VHGRP.
-                                                                 \<10\> = HWSX_GMCTL.
-                                                                 \<9\>  = PCC.
-                                                                 \<8\>  = PC_WS.
-                                                                 \<7\>  = PC_WA.
-                                                                 \<6\>  = PC_TS.
-                                                                 \<5\>  = PC_DS.
-                                                                 \<4\>  = NCB0.
-                                                                 \<3\>  = PND.
-                                                                 \<2\>  = OTH.
-                                                                 \<1\>  = NIDX.
-                                                                 \<0\>  = PIDX. */
+                                                                 1 = Fail. */
 #else /* Word 0 - Little Endian */
         uint64_t bist                  : 12; /**< [ 11:  0](RO/H) Memory BIST status.
                                                                  0 = Pass.
-                                                                 1 = Fail.
-
-                                                                 Internal:
-                                                                 \<11\> = VHGRP.
-                                                                 \<10\> = HWSX_GMCTL.
-                                                                 \<9\>  = PCC.
-                                                                 \<8\>  = PC_WS.
-                                                                 \<7\>  = PC_WA.
-                                                                 \<6\>  = PC_TS.
-                                                                 \<5\>  = PC_DS.
-                                                                 \<4\>  = NCB0.
-                                                                 \<3\>  = PND.
-                                                                 \<2\>  = OTH.
-                                                                 \<1\>  = NIDX.
-                                                                 \<0\>  = PIDX. */
+                                                                 1 = Fail. */
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } s;
@@ -8552,228 +7298,6 @@ static inline uint64_t CAVM_SSO_BIST_STATUS2_FUNC(void)
 #define device_bar_CAVM_SSO_BIST_STATUS2 0x0 /* PF_BAR0 */
 #define busnum_CAVM_SSO_BIST_STATUS2 0
 #define arguments_CAVM_SSO_BIST_STATUS2 -1,-1,-1,-1
-
-/**
- * Register (NCB) sso_bp_test0
- *
- * INTERNAL: SSO PF Backpressure Test Register 0
- */
-union cavm_sso_bp_test0
-{
-    uint64_t u;
-    struct cavm_sso_bp_test0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Limit the aw aq credit decrement returns */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Limit the aw aq credit decrement returns */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_bp_test0_s cn; */
-};
-typedef union cavm_sso_bp_test0 cavm_sso_bp_test0_t;
-
-#define CAVM_SSO_BP_TEST0 CAVM_SSO_BP_TEST0_FUNC()
-static inline uint64_t CAVM_SSO_BP_TEST0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_BP_TEST0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x860000001380ll;
-    __cavm_csr_fatal("SSO_BP_TEST0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_BP_TEST0 cavm_sso_bp_test0_t
-#define bustype_CAVM_SSO_BP_TEST0 CSR_TYPE_NCB
-#define basename_CAVM_SSO_BP_TEST0 "SSO_BP_TEST0"
-#define device_bar_CAVM_SSO_BP_TEST0 0x0 /* PF_BAR0 */
-#define busnum_CAVM_SSO_BP_TEST0 0
-#define arguments_CAVM_SSO_BP_TEST0 -1,-1,-1,-1
-
-/**
- * Register (NCB) sso_bp_test1
- *
- * INTERNAL: SSO PF Backpressure Test Register 1
- */
-union cavm_sso_bp_test1
-{
-    uint64_t u;
-    struct cavm_sso_bp_test1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Limit the gw_csr_rxfifo from asserting valid for the next request. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Limit the gw_csr_rxfifo from asserting valid for the next request. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_bp_test1_s cn; */
-};
-typedef union cavm_sso_bp_test1 cavm_sso_bp_test1_t;
-
-#define CAVM_SSO_BP_TEST1 CAVM_SSO_BP_TEST1_FUNC()
-static inline uint64_t CAVM_SSO_BP_TEST1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_BP_TEST1_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x860000001390ll;
-    __cavm_csr_fatal("SSO_BP_TEST1", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_BP_TEST1 cavm_sso_bp_test1_t
-#define bustype_CAVM_SSO_BP_TEST1 CSR_TYPE_NCB
-#define basename_CAVM_SSO_BP_TEST1 "SSO_BP_TEST1"
-#define device_bar_CAVM_SSO_BP_TEST1 0x0 /* PF_BAR0 */
-#define busnum_CAVM_SSO_BP_TEST1 0
-#define arguments_CAVM_SSO_BP_TEST1 -1,-1,-1,-1
-
-/**
- * Register (NCB) sso_bp_test2
- *
- * INTERNAL: SSO PF Backpressure Test Register 2
- */
-union cavm_sso_bp_test2
-{
-    uint64_t u;
-    struct cavm_sso_bp_test2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Limit the ncbo FIFO from asserting valid for the next request. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = BP_CFG3.
-                                                                   \<21:20\> = BP_CFG2.
-                                                                   \<19:18\> = BP_CFG1.
-                                                                   \<17:16\> = BP_CFG0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Reserved.
-                                                                 \<60\> = Limit the ncbo FIFO from asserting valid for the next request. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_bp_test2_s cn; */
-};
-typedef union cavm_sso_bp_test2 cavm_sso_bp_test2_t;
-
-#define CAVM_SSO_BP_TEST2 CAVM_SSO_BP_TEST2_FUNC()
-static inline uint64_t CAVM_SSO_BP_TEST2_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_BP_TEST2_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8600000013a0ll;
-    __cavm_csr_fatal("SSO_BP_TEST2", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_BP_TEST2 cavm_sso_bp_test2_t
-#define bustype_CAVM_SSO_BP_TEST2 CSR_TYPE_NCB
-#define basename_CAVM_SSO_BP_TEST2 "SSO_BP_TEST2"
-#define device_bar_CAVM_SSO_BP_TEST2 0x0 /* PF_BAR0 */
-#define busnum_CAVM_SSO_BP_TEST2 0
-#define arguments_CAVM_SSO_BP_TEST2 -1,-1,-1,-1
 
 /**
  * Register (NCB) sso_const
@@ -10317,11 +8841,7 @@ union cavm_sso_grpx_iaq_thr
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_61_63        : 3;
         uint64_t grp_cnt               : 13; /**< [ 60: 48](RO/H) Hardware-group's entry count. Number of internal entries allocated to IAQ,
-                                                                 conflicted work, or CQ in this hardware-group.
-
-                                                                 Internal:
-                                                                 Increments on admission to IAQ, decrements on scheduling into
-                                                                 work slot. */
+                                                                 conflicted work, or CQ in this hardware-group. */
         uint64_t reserved_45_47        : 3;
         uint64_t max_thr               : 13; /**< [ 44: 32](R/W) Max threshold for this internal admission queue. If nonzero, must be \>= [RSVD_THR] + 4.
                                                                  To ensure full streaming performance to all cores, should be at least 208. Must not be
@@ -10344,11 +8864,7 @@ union cavm_sso_grpx_iaq_thr
                                                                  changed after traffic is sent to this hardware-group. */
         uint64_t reserved_45_47        : 3;
         uint64_t grp_cnt               : 13; /**< [ 60: 48](RO/H) Hardware-group's entry count. Number of internal entries allocated to IAQ,
-                                                                 conflicted work, or CQ in this hardware-group.
-
-                                                                 Internal:
-                                                                 Increments on admission to IAQ, decrements on scheduling into
-                                                                 work slot. */
+                                                                 conflicted work, or CQ in this hardware-group. */
         uint64_t reserved_61_63        : 3;
 #endif /* Word 0 - End */
     } s;
@@ -10669,46 +9185,6 @@ static inline uint64_t CAVM_SSO_GRPX_XAQ_LIMIT(uint64_t a)
 #define arguments_CAVM_SSO_GRPX_XAQ_LIMIT(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) sso_gw_eco
- *
- * INTERNAL: SSO PF GW ECO Register
- */
-union cavm_sso_gw_eco
-{
-    uint64_t u;
-    struct cavm_sso_gw_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_gw_eco_s cn; */
-};
-typedef union cavm_sso_gw_eco cavm_sso_gw_eco_t;
-
-#define CAVM_SSO_GW_ECO CAVM_SSO_GW_ECO_FUNC()
-static inline uint64_t CAVM_SSO_GW_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GW_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x860000001038ll;
-    __cavm_csr_fatal("SSO_GW_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_GW_ECO cavm_sso_gw_eco_t
-#define bustype_CAVM_SSO_GW_ECO CSR_TYPE_NCB
-#define basename_CAVM_SSO_GW_ECO "SSO_GW_ECO"
-#define device_bar_CAVM_SSO_GW_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_SSO_GW_ECO 0
-#define arguments_CAVM_SSO_GW_ECO -1,-1,-1,-1
-
-/**
  * Register (NCB) sso_gwe_cfg
  *
  * SSO PF Get-Work Examiner Configuration Register
@@ -10768,43 +9244,11 @@ union cavm_sso_gwe_random
         uint64_t reserved_16_63        : 48;
         uint64_t rnd                   : 16; /**< [ 15:  0](R/W/H) Current random value, with low eight bits indicating first hardware-group to start
                                                                  next get-work search at. Implementation defined as to when changes.
-                                                                 For diagnostic use only, must not be zero.
-
-                                                                 Internal:
-                                                                 Changes on each work search, even if unsuccessful or retried.
-
-                                                                 Uses 16, 15, 13, 4 tap LFSR (this choice is important to
-                                                                 insure even hardware-group probabilities) with the formula:
-                                                                 _ grp_to_start_arb_at = RND[7:0];
-                                                                 _ RND_next[15:8] = RND[7:0];
-                                                                 _ RND_next[7] = ^(RND[15:0] & 0xd008);
-                                                                 _ RND_next[6] = ^(RND[15:0] & 0x6804);
-                                                                 _ RND_next[5] = ^(RND[15:0] & 0x3402);
-                                                                 _ RND_next[4] = ^(RND[15:0] & 0x1a01);
-                                                                 _ RND_next[3] = ^(RND[15:0] & 0xdd08);
-                                                                 _ RND_next[2] = ^(RND[15:0] & 0x6e84);
-                                                                 _ RND_next[1] = ^(RND[15:0] & 0x3742);
-                                                                 _ RND_next[0] = ^(RND[15:0] & 0x1ba1); */
+                                                                 For diagnostic use only, must not be zero. */
 #else /* Word 0 - Little Endian */
         uint64_t rnd                   : 16; /**< [ 15:  0](R/W/H) Current random value, with low eight bits indicating first hardware-group to start
                                                                  next get-work search at. Implementation defined as to when changes.
-                                                                 For diagnostic use only, must not be zero.
-
-                                                                 Internal:
-                                                                 Changes on each work search, even if unsuccessful or retried.
-
-                                                                 Uses 16, 15, 13, 4 tap LFSR (this choice is important to
-                                                                 insure even hardware-group probabilities) with the formula:
-                                                                 _ grp_to_start_arb_at = RND[7:0];
-                                                                 _ RND_next[15:8] = RND[7:0];
-                                                                 _ RND_next[7] = ^(RND[15:0] & 0xd008);
-                                                                 _ RND_next[6] = ^(RND[15:0] & 0x6804);
-                                                                 _ RND_next[5] = ^(RND[15:0] & 0x3402);
-                                                                 _ RND_next[4] = ^(RND[15:0] & 0x1a01);
-                                                                 _ RND_next[3] = ^(RND[15:0] & 0xdd08);
-                                                                 _ RND_next[2] = ^(RND[15:0] & 0x6e84);
-                                                                 _ RND_next[1] = ^(RND[15:0] & 0x3742);
-                                                                 _ RND_next[0] = ^(RND[15:0] & 0x1ba1); */
+                                                                 For diagnostic use only, must not be zero. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -10991,11 +9435,7 @@ union cavm_sso_hwsx_sx_grpmskx
                                                                  hardware work-slots.
 
                                                                  This register is intended only for large-scale save-restore of masks.
-                                                                 Individual changes should use SSOW_VHWS()_GRPMSK_CHG().
-
-                                                                 Internal:
-                                                                 SSO virtualization will only allow PF access; this register will only be used
-                                                                 for paging HWS in or out.  Guests must use SSOW_VHWS()_GRPMSK_CHG(). */
+                                                                 Individual changes should use SSOW_VHWS()_GRPMSK_CHG(). */
 #else /* Word 0 - Little Endian */
         uint64_t grp_msk               : 64; /**< [ 63:  0](R/W) HWS hardware-group mask. A one in any bit position sets the HWS's membership in
                                                                  the corresponding hardware-group for hardware-groups \<63:0\>.
@@ -11007,11 +9447,7 @@ union cavm_sso_hwsx_sx_grpmskx
                                                                  hardware work-slots.
 
                                                                  This register is intended only for large-scale save-restore of masks.
-                                                                 Individual changes should use SSOW_VHWS()_GRPMSK_CHG().
-
-                                                                 Internal:
-                                                                 SSO virtualization will only allow PF access; this register will only be used
-                                                                 for paging HWS in or out.  Guests must use SSOW_VHWS()_GRPMSK_CHG(). */
+                                                                 Individual changes should use SSOW_VHWS()_GRPMSK_CHG(). */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_sso_hwsx_sx_grpmskx_s cn; */
@@ -11230,9 +9666,7 @@ union cavm_sso_ientx_tag
         uint64_t reserved_39_63        : 25;
         uint64_t tailc                 : 1;  /**< [ 38: 38](RO/H) The SSO entry is the tail of tag chain that is conflicted. No conflicted chain exists if
                                                                  [TAIL] is also set on the same entry. */
-        uint64_t tail                  : 1;  /**< [ 37: 37](RO/H) The SSO entry is the tail of tag chain that is descheduled.
-                                                                 Internal:
-                                                                 Read from the SOC. */
+        uint64_t tail                  : 1;  /**< [ 37: 37](RO/H) The SSO entry is the tail of tag chain that is descheduled. */
         uint64_t reserved_34_36        : 3;
         uint64_t tt                    : 2;  /**< [ 33: 32](RO/H) The tag type of the SSO entry. Enumerated by SSO_TT_E. */
         uint64_t tag                   : 32; /**< [ 31:  0](RO/H) The tag of the SSO entry. */
@@ -11240,9 +9674,7 @@ union cavm_sso_ientx_tag
         uint64_t tag                   : 32; /**< [ 31:  0](RO/H) The tag of the SSO entry. */
         uint64_t tt                    : 2;  /**< [ 33: 32](RO/H) The tag type of the SSO entry. Enumerated by SSO_TT_E. */
         uint64_t reserved_34_36        : 3;
-        uint64_t tail                  : 1;  /**< [ 37: 37](RO/H) The SSO entry is the tail of tag chain that is descheduled.
-                                                                 Internal:
-                                                                 Read from the SOC. */
+        uint64_t tail                  : 1;  /**< [ 37: 37](RO/H) The SSO entry is the tail of tag chain that is descheduled. */
         uint64_t tailc                 : 1;  /**< [ 38: 38](RO/H) The SSO entry is the tail of tag chain that is conflicted. No conflicted chain exists if
                                                                  [TAIL] is also set on the same entry. */
         uint64_t reserved_39_63        : 25;
@@ -11764,70 +10196,7 @@ union cavm_sso_lf_ggrp_int_cnt
         uint64_t reserved_62_63        : 2;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_lf_ggrp_int_cnt_s cn9; */
-    /* struct cavm_sso_lf_ggrp_int_cnt_s cn96xx; */
-    struct cavm_sso_lf_ggrp_int_cnt_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_62_63        : 2;
-        uint64_t tc_cnt                : 14; /**< [ 61: 48](RO/H) Time counter current value. Hardware sets this field to the value of
-                                                                 SSO_LF_GGRP_INT_THR[TC_THR] whenever:
-                                                                 * Corresponding SSO_LF_GGRP_INT_CNT[IAQ_CNT, DS_CNT, CQ_CNT] are all equal to zero.
-                                                                 * Corresponding SSO_LF_GGRP_INT[EXE_INT] is written with a one to clear by software.
-                                                                 * Corresponding SSO_LF_GGRP_EXE_DIS[EXE_DIS] is written with a one to set by software.
-                                                                 * Corresponding SSO_LF_GGRP_INT_THR is written by software.
-                                                                 * [TC_CNT] is equal to one and periodic counter SSO_AF_WQ_INT_PC[PC] is equal to zero.
-
-                                                                 Otherwise, hardware decrements this field whenever the periodic counter SSO_AF_WQ_INT_PC[PC]
-                                                                 is equal to zero. This field is zero whenever SSO_LF_GGRP_INT_THR[TC_THR] is equal to zero.
-
-                                                                 Internal:
-                                                                 (48..`SSO_IDX_W+48) */
-        uint64_t reserved_46_47        : 2;
-        uint64_t cq_cnt                : 14; /**< [ 45: 32](RO/H) Conflicted queue executable count.
-                                                                 Internal:
-                                                                 (32..`SSO_IDX_W+32) */
-        uint64_t reserved_30_31        : 2;
-        uint64_t ds_cnt                : 14; /**< [ 29: 16](RO/H) Deschedule executable count.
-                                                                 Internal:
-                                                                 (16..`SSO_IDX_W+16) */
-        uint64_t reserved_14_15        : 2;
-        uint64_t iaq_cnt               : 14; /**< [ 13:  0](RO/H) Work-queue entries for this in-unit admission queue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) */
-#else /* Word 0 - Little Endian */
-        uint64_t iaq_cnt               : 14; /**< [ 13:  0](RO/H) Work-queue entries for this in-unit admission queue.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) */
-        uint64_t reserved_14_15        : 2;
-        uint64_t ds_cnt                : 14; /**< [ 29: 16](RO/H) Deschedule executable count.
-                                                                 Internal:
-                                                                 (16..`SSO_IDX_W+16) */
-        uint64_t reserved_30_31        : 2;
-        uint64_t cq_cnt                : 14; /**< [ 45: 32](RO/H) Conflicted queue executable count.
-                                                                 Internal:
-                                                                 (32..`SSO_IDX_W+32) */
-        uint64_t reserved_46_47        : 2;
-        uint64_t tc_cnt                : 14; /**< [ 61: 48](RO/H) Time counter current value. Hardware sets this field to the value of
-                                                                 SSO_LF_GGRP_INT_THR[TC_THR] whenever:
-                                                                 * Corresponding SSO_LF_GGRP_INT_CNT[IAQ_CNT, DS_CNT, CQ_CNT] are all equal to zero.
-                                                                 * Corresponding SSO_LF_GGRP_INT[EXE_INT] is written with a one to clear by software.
-                                                                 * Corresponding SSO_LF_GGRP_EXE_DIS[EXE_DIS] is written with a one to set by software.
-                                                                 * Corresponding SSO_LF_GGRP_INT_THR is written by software.
-                                                                 * [TC_CNT] is equal to one and periodic counter SSO_AF_WQ_INT_PC[PC] is equal to zero.
-
-                                                                 Otherwise, hardware decrements this field whenever the periodic counter SSO_AF_WQ_INT_PC[PC]
-                                                                 is equal to zero. This field is zero whenever SSO_LF_GGRP_INT_THR[TC_THR] is equal to zero.
-
-                                                                 Internal:
-                                                                 (48..`SSO_IDX_W+48) */
-        uint64_t reserved_62_63        : 2;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_lf_ggrp_int_cnt_s cnf95xx; */
-    /* struct cavm_sso_lf_ggrp_int_cnt_s f95mm; */
-    /* struct cavm_sso_lf_ggrp_int_cnt_s f95o; */
-    /* struct cavm_sso_lf_ggrp_int_cnt_s loki; */
+    /* struct cavm_sso_lf_ggrp_int_cnt_s cn; */
 };
 typedef union cavm_sso_lf_ggrp_int_cnt cavm_sso_lf_ggrp_int_cnt_t;
 
@@ -11985,78 +10354,7 @@ union cavm_sso_lf_ggrp_int_thr
                                                                  when [TC_THR] is zero. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_lf_ggrp_int_thr_s cn9; */
-    /* struct cavm_sso_lf_ggrp_int_thr_s cn96xx; */
-    struct cavm_sso_lf_ggrp_int_thr_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t tc_en                 : 1;  /**< [ 63: 63](R/W) Time counter interrupt enable for this guest group. This field must be zero
-                                                                 when [TC_THR] is zero. */
-        uint64_t reserved_61_62        : 2;
-        uint64_t tc_thr                : 13; /**< [ 60: 48](R/W) Time counter interrupt threshold for this guest group. Compared against
-                                                                 SSO_LF_GGRP_INT_CNT[TC_CNT]. When this field is equal to zero,
-                                                                 SSO_LF_GGRP_INT_CNT[TC_CNT] is zero.
-
-                                                                 Internal:
-                                                                 (48..`SSO_IDX_W+48-1) */
-        uint64_t reserved_46_47        : 2;
-        uint64_t cq_thr                : 14; /**< [ 45: 32](R/W) Conflicted queue count threshold for this guest group. Compared against
-                                                                 SSO_LF_GGRP_INT_CNT[CQ_CNT]. When this field is zero, the threshold interrupt is
-                                                                 disabled.
-
-                                                                 Internal:
-                                                                 (32..`SSO_IDX_W+32) */
-        uint64_t reserved_30_31        : 2;
-        uint64_t ds_thr                : 14; /**< [ 29: 16](R/W) Deschedule count threshold for this guest group. Compared against
-                                                                 SSO_LF_GGRP_INT_CNT[DS_CNT]. When
-                                                                 this field is zero, the threshold interrupt is disabled.
-
-                                                                 Internal:
-                                                                 (16..`SSO_IDX_W+16) */
-        uint64_t reserved_14_15        : 2;
-        uint64_t iaq_thr               : 14; /**< [ 13:  0](R/W) In-unit admission queue threshold for this guest group. Compared against
-                                                                 SSO_LF_GGRP_INT_CNT[IAQ_CNT]. When this field is zero, the threshold interrupt is
-                                                                 disabled.
-
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) */
-#else /* Word 0 - Little Endian */
-        uint64_t iaq_thr               : 14; /**< [ 13:  0](R/W) In-unit admission queue threshold for this guest group. Compared against
-                                                                 SSO_LF_GGRP_INT_CNT[IAQ_CNT]. When this field is zero, the threshold interrupt is
-                                                                 disabled.
-
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) */
-        uint64_t reserved_14_15        : 2;
-        uint64_t ds_thr                : 14; /**< [ 29: 16](R/W) Deschedule count threshold for this guest group. Compared against
-                                                                 SSO_LF_GGRP_INT_CNT[DS_CNT]. When
-                                                                 this field is zero, the threshold interrupt is disabled.
-
-                                                                 Internal:
-                                                                 (16..`SSO_IDX_W+16) */
-        uint64_t reserved_30_31        : 2;
-        uint64_t cq_thr                : 14; /**< [ 45: 32](R/W) Conflicted queue count threshold for this guest group. Compared against
-                                                                 SSO_LF_GGRP_INT_CNT[CQ_CNT]. When this field is zero, the threshold interrupt is
-                                                                 disabled.
-
-                                                                 Internal:
-                                                                 (32..`SSO_IDX_W+32) */
-        uint64_t reserved_46_47        : 2;
-        uint64_t tc_thr                : 13; /**< [ 60: 48](R/W) Time counter interrupt threshold for this guest group. Compared against
-                                                                 SSO_LF_GGRP_INT_CNT[TC_CNT]. When this field is equal to zero,
-                                                                 SSO_LF_GGRP_INT_CNT[TC_CNT] is zero.
-
-                                                                 Internal:
-                                                                 (48..`SSO_IDX_W+48-1) */
-        uint64_t reserved_61_62        : 2;
-        uint64_t tc_en                 : 1;  /**< [ 63: 63](R/W) Time counter interrupt enable for this guest group. This field must be zero
-                                                                 when [TC_THR] is zero. */
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_lf_ggrp_int_thr_s cnf95xx; */
-    /* struct cavm_sso_lf_ggrp_int_thr_s f95mm; */
-    /* struct cavm_sso_lf_ggrp_int_thr_s f95o; */
-    /* struct cavm_sso_lf_ggrp_int_thr_s loki; */
+    /* struct cavm_sso_lf_ggrp_int_thr_s cn; */
 };
 typedef union cavm_sso_lf_ggrp_int_thr cavm_sso_lf_ggrp_int_thr_t;
 
@@ -12137,26 +10435,7 @@ union cavm_sso_lf_ggrp_misc_cnt
         uint64_t reserved_14_63        : 50;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_lf_ggrp_misc_cnt_s cn9; */
-    /* struct cavm_sso_lf_ggrp_misc_cnt_s cn96xx; */
-    struct cavm_sso_lf_ggrp_misc_cnt_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_14_63        : 50;
-        uint64_t ds_pend_sw            : 14; /**< [ 13:  0](R/W/H) Number of descheduled pending switches.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) */
-#else /* Word 0 - Little Endian */
-        uint64_t ds_pend_sw            : 14; /**< [ 13:  0](R/W/H) Number of descheduled pending switches.
-                                                                 Internal:
-                                                                 (0..`SSO_IDX_W) */
-        uint64_t reserved_14_63        : 50;
-#endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_sso_lf_ggrp_misc_cnt_s cnf95xx; */
-    /* struct cavm_sso_lf_ggrp_misc_cnt_s f95mm; */
-    /* struct cavm_sso_lf_ggrp_misc_cnt_s f95o; */
-    /* struct cavm_sso_lf_ggrp_misc_cnt_s loki; */
+    /* struct cavm_sso_lf_ggrp_misc_cnt_s cn; */
 };
 typedef union cavm_sso_lf_ggrp_misc_cnt cavm_sso_lf_ggrp_misc_cnt_t;
 
@@ -14011,11 +12290,7 @@ union cavm_sso_vhgrpx_int_ena_w1c
     struct cavm_sso_vhgrpx_int_ena_w1c_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t exe_dis               : 1;  /**< [ 63: 63](R/W1C/H) Internal:
-                                                                 This bit exists to enable auto-generation of the CSR and work
-                                                                 around the inheritance_disabled attribute issue. This bit
-                                                                 will not be connected to the EXE_DIS flop in SSO_VHGRP()_INT.
-                                                                 See Bugzilla - bug 2050. */
+        uint64_t exe_dis               : 1;  /**< [ 63: 63](R/W1C/H)  */
         uint64_t reserved_4_62         : 59;
         uint64_t mbox                  : 1;  /**< [  3:  3](R/W1C/H) PF to VF mailbox interrupt. */
         uint64_t xaq_limit             : 1;  /**< [  2:  2](R/W1C/H) Group AQ exceeded allocation limit. */
@@ -14027,11 +12302,7 @@ union cavm_sso_vhgrpx_int_ena_w1c
         uint64_t xaq_limit             : 1;  /**< [  2:  2](R/W1C/H) Group AQ exceeded allocation limit. */
         uint64_t mbox                  : 1;  /**< [  3:  3](R/W1C/H) PF to VF mailbox interrupt. */
         uint64_t reserved_4_62         : 59;
-        uint64_t exe_dis               : 1;  /**< [ 63: 63](R/W1C/H) Internal:
-                                                                 This bit exists to enable auto-generation of the CSR and work
-                                                                 around the inheritance_disabled attribute issue. This bit
-                                                                 will not be connected to the EXE_DIS flop in SSO_VHGRP()_INT.
-                                                                 See Bugzilla - bug 2050. */
+        uint64_t exe_dis               : 1;  /**< [ 63: 63](R/W1C/H)  */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_sso_vhgrpx_int_ena_w1c_s cn; */
@@ -14064,11 +12335,7 @@ union cavm_sso_vhgrpx_int_ena_w1s
     struct cavm_sso_vhgrpx_int_ena_w1s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t exe_dis               : 1;  /**< [ 63: 63](R/W1S/H) Internal:
-                                                                 This bit exists to enable auto-generation of the CSR and work
-                                                                 around the inheritance_disabled attribute issue. This bit
-                                                                 will not be connected to the EXE_DIS flop in SSO_VHGRP()_INT.
-                                                                 See Bugzilla - bug 2050. */
+        uint64_t exe_dis               : 1;  /**< [ 63: 63](R/W1S/H)  */
         uint64_t reserved_4_62         : 59;
         uint64_t mbox                  : 1;  /**< [  3:  3](R/W1S/H) PF to VF mailbox interrupt enable. */
         uint64_t xaq_limit             : 1;  /**< [  2:  2](R/W1S/H) Hardware-group AQ exceeded allocation limit error enable. */
@@ -14080,11 +12347,7 @@ union cavm_sso_vhgrpx_int_ena_w1s
         uint64_t xaq_limit             : 1;  /**< [  2:  2](R/W1S/H) Hardware-group AQ exceeded allocation limit error enable. */
         uint64_t mbox                  : 1;  /**< [  3:  3](R/W1S/H) PF to VF mailbox interrupt enable. */
         uint64_t reserved_4_62         : 59;
-        uint64_t exe_dis               : 1;  /**< [ 63: 63](R/W1S/H) Internal:
-                                                                 This bit exists to enable auto-generation of the CSR and work
-                                                                 around the inheritance_disabled attribute issue. This bit
-                                                                 will not be connected to the EXE_DIS flop in SSO_VHGRP()_INT.
-                                                                 See Bugzilla - bug 2050. */
+        uint64_t exe_dis               : 1;  /**< [ 63: 63](R/W1S/H)  */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_sso_vhgrpx_int_ena_w1s_s cn; */
@@ -14501,16 +12764,7 @@ union cavm_sso_ws_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
-        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Enable OCLA backpressure stalls. For diagnostic use only.
-                                                                 Internal:
-                                                                 \<55\> = NCBB input fifo stall (ncbo).
-                                                                 \<54\> = Work-slot response. (arbrsp).
-                                                                 \<53\> = Work-slot switching of descheduled work entries. (arbx).
-                                                                 \<52\> = Work-slot SWTAG response. (arbs).
-                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
-                                                                 \<50\> = Work-slot CAM access. (arbc).
-                                                                 \<49\> = Work-slot RAM access. (arbr).
-                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Enable OCLA backpressure stalls. For diagnostic use only. */
         uint64_t reserved_31_47        : 17;
         uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
                                                                  For diagnostic use only.
@@ -14528,14 +12782,7 @@ union cavm_sso_ws_cfg
                                                                  of hazards and results in 16 cycles of backpressure to DQ readers
                                                                  to break free of the deadlock. A threshold of zero disables this
                                                                  backpressure mechanism.
-                                                                 For diagnostic use only.
-
-                                                                 Internal:
-                                                                 The deadlock is caused by a HWS or AGTX making another HWS replay RAM
-                                                                 reads while waiting for a CAM grant. The CAM grant gets aborted on
-                                                                 seeing the replayed reads in progress, doesn't make forward progress,
-                                                                 and makes other HWSs replay RAM reads. Applying backpressure to ARBR
-                                                                 requests from the HWSs trying to replay RAM reads breaks the deadlock. */
+                                                                 For diagnostic use only. */
         uint64_t reserved_8_15         : 8;
         uint64_t sai_flush             : 1;  /**< [  7:  7](R/W1) When written with one, send a pulse to invalidate the VHWS switch tag cache
                                                                  inside the cores.  Reads as zero. For diagnostic use only. */
@@ -14563,14 +12810,7 @@ union cavm_sso_ws_cfg
                                                                  of hazards and results in 16 cycles of backpressure to DQ readers
                                                                  to break free of the deadlock. A threshold of zero disables this
                                                                  backpressure mechanism.
-                                                                 For diagnostic use only.
-
-                                                                 Internal:
-                                                                 The deadlock is caused by a HWS or AGTX making another HWS replay RAM
-                                                                 reads while waiting for a CAM grant. The CAM grant gets aborted on
-                                                                 seeing the replayed reads in progress, doesn't make forward progress,
-                                                                 and makes other HWSs replay RAM reads. Applying backpressure to ARBR
-                                                                 requests from the HWSs trying to replay RAM reads breaks the deadlock. */
+                                                                 For diagnostic use only. */
         uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
                                                                  For diagnostic use only.
                                                                  0x0 = Disable this backpressure mechanism.
@@ -14582,16 +12822,7 @@ union cavm_sso_ws_cfg
                                                                  0x6 = 2048 cycles.
                                                                  0x7 = 4096 cycles. */
         uint64_t reserved_31_47        : 17;
-        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Enable OCLA backpressure stalls. For diagnostic use only.
-                                                                 Internal:
-                                                                 \<55\> = NCBB input fifo stall (ncbo).
-                                                                 \<54\> = Work-slot response. (arbrsp).
-                                                                 \<53\> = Work-slot switching of descheduled work entries. (arbx).
-                                                                 \<52\> = Work-slot SWTAG response. (arbs).
-                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
-                                                                 \<50\> = Work-slot CAM access. (arbc).
-                                                                 \<49\> = Work-slot RAM access. (arbr).
-                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Enable OCLA backpressure stalls. For diagnostic use only. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } s;
@@ -14616,46 +12847,6 @@ static inline uint64_t CAVM_SSO_WS_CFG_FUNC(void)
 #define arguments_CAVM_SSO_WS_CFG -1,-1,-1,-1
 
 /**
- * Register (NCB) sso_ws_eco
- *
- * INTERNAL: SSO PF WS ECO Register
- */
-union cavm_sso_ws_eco
-{
-    uint64_t u;
-    struct cavm_sso_ws_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 8;  /**< [  7:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_sso_ws_eco_s cn; */
-};
-typedef union cavm_sso_ws_eco cavm_sso_ws_eco_t;
-
-#define CAVM_SSO_WS_ECO CAVM_SSO_WS_ECO_FUNC()
-static inline uint64_t CAVM_SSO_WS_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_WS_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x860000001048ll;
-    __cavm_csr_fatal("SSO_WS_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SSO_WS_ECO cavm_sso_ws_eco_t
-#define bustype_CAVM_SSO_WS_ECO CSR_TYPE_NCB
-#define basename_CAVM_SSO_WS_ECO "SSO_WS_ECO"
-#define device_bar_CAVM_SSO_WS_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_SSO_WS_ECO 0
-#define arguments_CAVM_SSO_WS_ECO -1,-1,-1,-1
-
-/**
  * Register (NCB) sso_xaq#_head_next
  *
  * SSO PF Hardware-Group External Admission Queue Head Next Register
@@ -14671,15 +12862,11 @@ union cavm_sso_xaqx_head_next
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_49_63        : 15;
-        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_0_6          : 7;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_6          : 7;
-        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_49_63        : 15;
 #endif /* Word 0 - End */
     } s;
@@ -14720,17 +12907,13 @@ union cavm_sso_xaqx_head_ptr
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_49_63        : 15;
-        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_5_6          : 2;
         uint64_t cl                    : 5;  /**< [  4:  0](R/W/H) Cache line number in buffer. Cache line zero contains the next pointer. */
 #else /* Word 0 - Little Endian */
         uint64_t cl                    : 5;  /**< [  4:  0](R/W/H) Cache line number in buffer. Cache line zero contains the next pointer. */
         uint64_t reserved_5_6          : 2;
-        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_49_63        : 15;
 #endif /* Word 0 - End */
     } s;
@@ -14770,15 +12953,11 @@ union cavm_sso_xaqx_tail_next
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_49_63        : 15;
-        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_0_6          : 7;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_6          : 7;
-        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_49_63        : 15;
 #endif /* Word 0 - End */
     } s;
@@ -14820,17 +12999,13 @@ union cavm_sso_xaqx_tail_ptr
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_49_63        : 15;
-        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_5_6          : 2;
         uint64_t cl                    : 5;  /**< [  4:  0](R/W/H) Cache line number in buffer. Cache line zero contains the next pointer. */
 #else /* Word 0 - Little Endian */
         uint64_t cl                    : 5;  /**< [  4:  0](R/W/H) Cache line number in buffer. Cache line zero contains the next pointer. */
         uint64_t reserved_5_6          : 2;
-        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes.
-                                                                 Internal:
-                                                                 For peak performance, all XAQ buffers should reside on the local node's memory. */
+        uint64_t ptr                   : 42; /**< [ 48:  7](R/W/H) IOVA pointer, divided by 128 bytes. */
         uint64_t reserved_49_63        : 15;
 #endif /* Word 0 - End */
     } s;

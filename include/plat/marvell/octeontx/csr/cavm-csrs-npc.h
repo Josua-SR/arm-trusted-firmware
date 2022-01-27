@@ -769,16 +769,10 @@ union cavm_npc_af_const
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t match_stats           : 16; /**< [ 63: 48](RO) Number of NPC_AF_MATCH_STAT() base counters. When NPC_AF_CONST2[MATCH_STATS_EXT]
-                                                                 is present and non-zero, the device supports the extended MCAM capabilities.
-
-                                                                 Internal:
-                                                                 Deprecated in CN98XX. */
+                                                                 is present and non-zero, the device supports the extended MCAM capabilities. */
         uint64_t mcam_banks            : 4;  /**< [ 47: 44](RO) Number of MCAM banks. */
         uint64_t mcam_bank_depth       : 16; /**< [ 43: 28](RO) MCAM bank base depth. When NPC_AF_CONST2[MCAM_BANK_DEPTH_EXT] is present and
-                                                                 non-zero, the device supports the extended MCAM capabilities.
-
-                                                                 Internal:
-                                                                 Deprecated in CN98XX. */
+                                                                 non-zero, the device supports the extended MCAM capabilities. */
         uint64_t reserved_26_27        : 2;
         uint64_t mcam_bank_width       : 10; /**< [ 25: 16](RO) MCAM bank width. Combined number of nonreserved bits in
                                                                  NPC_AF_MCAME(0)_BANK(0)_CAM(0)_W0, NPC_AF_MCAME(0)_BANK(0)_CAM(0)_W1 and
@@ -799,16 +793,10 @@ union cavm_npc_af_const
                                                                  NPC_AF_MCAME(0)_BANK(0)_CAM(0)_INTF. */
         uint64_t reserved_26_27        : 2;
         uint64_t mcam_bank_depth       : 16; /**< [ 43: 28](RO) MCAM bank base depth. When NPC_AF_CONST2[MCAM_BANK_DEPTH_EXT] is present and
-                                                                 non-zero, the device supports the extended MCAM capabilities.
-
-                                                                 Internal:
-                                                                 Deprecated in CN98XX. */
+                                                                 non-zero, the device supports the extended MCAM capabilities. */
         uint64_t mcam_banks            : 4;  /**< [ 47: 44](RO) Number of MCAM banks. */
         uint64_t match_stats           : 16; /**< [ 63: 48](RO) Number of NPC_AF_MATCH_STAT() base counters. When NPC_AF_CONST2[MATCH_STATS_EXT]
-                                                                 is present and non-zero, the device supports the extended MCAM capabilities.
-
-                                                                 Internal:
-                                                                 Deprecated in CN98XX. */
+                                                                 is present and non-zero, the device supports the extended MCAM capabilities. */
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_npc_af_const_s cnf95xxp1; */
@@ -847,26 +835,7 @@ union cavm_npc_af_const1
     struct cavm_npc_af_const1_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t have_const2           : 1;  /**< [ 63: 63](RO) NPC_AF_CONST2 is present.
-                                                                 Internal:
-                                                                 \<pre\>
-                                                                 27       =\> MCAM Extention
-                                                                 26       =\> MBZ
-                                                                 25 .. 24 =\> Bank
-                                                                 23 ..  8 =\> Entry
-                                                                 7 ..   3 =\> Register
-                                                                    0/1 = NPC_AF_MCAME(0..1023)_BANK(0..3)_CAM(0..1)_INTF 0x00 / 0x08
-                                                                    2/3 = NPC_AF_MCAME(0..1023)_BANK(0..3)_CAM(0..1)_W0   0x10 / 0x18
-                                                                    4/5 = NPC_AF_MCAME(0..1023)_BANK(0..3)_CAM(0..1)_W1   0x20 / 0x28
-                                                                      7 = NPC_AF_MCAME(0..1023)_BANK(0..3)_CFG            0x38
-                                                                      8 = NPC_AF_MCAME(0..1023)_BANK(0..3)_ACTION         0x40
-                                                                      9 = NPC_AF_MCAME(0..1023)_BANK(0..3)_TAG_ACT        0x48
-                                                                     10 = NPC_AF_MCAME(0..1023)_BANK(0..3)_STAT_ACT       0x50
-                                                                     14 = NPC_AF_MCAM_BANK(0..3)_HIT(0..15)_EXT           0x70
-                                                                     15 = NPC_AF_MATCH_STAT(0..511)                       0x78
-                                                                     Values 6,11-13,16-31 are Reserved
-                                                                 2 ..  0 =\> MBZ
-                                                                 \</pre\> */
+        uint64_t have_const2           : 1;  /**< [ 63: 63](RO) NPC_AF_CONST2 is present. */
         uint64_t reserved_36_62        : 27;
         uint64_t cpi_size              : 16; /**< [ 35: 20](RO) Number CPI table entries in NPC_AF_CPI()_CFG. */
         uint64_t pkinds                : 8;  /**< [ 19: 12](RO) Number of port kinds. */
@@ -876,26 +845,7 @@ union cavm_npc_af_const1
         uint64_t pkinds                : 8;  /**< [ 19: 12](RO) Number of port kinds. */
         uint64_t cpi_size              : 16; /**< [ 35: 20](RO) Number CPI table entries in NPC_AF_CPI()_CFG. */
         uint64_t reserved_36_62        : 27;
-        uint64_t have_const2           : 1;  /**< [ 63: 63](RO) NPC_AF_CONST2 is present.
-                                                                 Internal:
-                                                                 \<pre\>
-                                                                 27       =\> MCAM Extention
-                                                                 26       =\> MBZ
-                                                                 25 .. 24 =\> Bank
-                                                                 23 ..  8 =\> Entry
-                                                                 7 ..   3 =\> Register
-                                                                    0/1 = NPC_AF_MCAME(0..1023)_BANK(0..3)_CAM(0..1)_INTF 0x00 / 0x08
-                                                                    2/3 = NPC_AF_MCAME(0..1023)_BANK(0..3)_CAM(0..1)_W0   0x10 / 0x18
-                                                                    4/5 = NPC_AF_MCAME(0..1023)_BANK(0..3)_CAM(0..1)_W1   0x20 / 0x28
-                                                                      7 = NPC_AF_MCAME(0..1023)_BANK(0..3)_CFG            0x38
-                                                                      8 = NPC_AF_MCAME(0..1023)_BANK(0..3)_ACTION         0x40
-                                                                      9 = NPC_AF_MCAME(0..1023)_BANK(0..3)_TAG_ACT        0x48
-                                                                     10 = NPC_AF_MCAME(0..1023)_BANK(0..3)_STAT_ACT       0x50
-                                                                     14 = NPC_AF_MCAM_BANK(0..3)_HIT(0..15)_EXT           0x70
-                                                                     15 = NPC_AF_MATCH_STAT(0..511)                       0x78
-                                                                     Values 6,11-13,16-31 are Reserved
-                                                                 2 ..  0 =\> MBZ
-                                                                 \</pre\> */
+        uint64_t have_const2           : 1;  /**< [ 63: 63](RO) NPC_AF_CONST2 is present. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_npc_af_const1_s cn9; */
@@ -1193,9 +1143,6 @@ static inline uint64_t CAVM_NPC_AF_DBG_DATAX(uint64_t a)
  * NPC AF Debug Result Registers
  * These registers contain the result data of the last packet/lookup whose debug
  * information is captured by NPC_AF_DBG_CTL[INTF_DBG,LKUP_DBG].
- *
- * Internal:
- * FIXME - add note about coherency of data in continuous packet capture mode.
  */
 union cavm_npc_af_dbg_resultx
 {
@@ -1293,87 +1240,6 @@ static inline uint64_t CAVM_NPC_AF_DBG_STATUS_FUNC(void)
 #define device_bar_CAVM_NPC_AF_DBG_STATUS 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NPC_AF_DBG_STATUS 0
 #define arguments_CAVM_NPC_AF_DBG_STATUS -1,-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) npc_af_dv_fc_scratch
- *
- * INTERNAL: NPC AF Scratch Register
- *
- * Internal:
- * This register is for internal DV purpose.
- */
-union cavm_npc_af_dv_fc_scratch
-{
-    uint64_t u;
-    struct cavm_npc_af_dv_fc_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t it                    : 64; /**< [ 63:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 This set of bits are specified for DV only. */
-#else /* Word 0 - Little Endian */
-        uint64_t it                    : 64; /**< [ 63:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 This set of bits are specified for DV only. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_npc_af_dv_fc_scratch_s cn; */
-};
-typedef union cavm_npc_af_dv_fc_scratch cavm_npc_af_dv_fc_scratch_t;
-
-#define CAVM_NPC_AF_DV_FC_SCRATCH CAVM_NPC_AF_DV_FC_SCRATCH_FUNC()
-static inline uint64_t CAVM_NPC_AF_DV_FC_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPC_AF_DV_FC_SCRATCH_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840060000060ll;
-    __cavm_csr_fatal("NPC_AF_DV_FC_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NPC_AF_DV_FC_SCRATCH cavm_npc_af_dv_fc_scratch_t
-#define bustype_CAVM_NPC_AF_DV_FC_SCRATCH CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NPC_AF_DV_FC_SCRATCH "NPC_AF_DV_FC_SCRATCH"
-#define device_bar_CAVM_NPC_AF_DV_FC_SCRATCH 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NPC_AF_DV_FC_SCRATCH 0
-#define arguments_CAVM_NPC_AF_DV_FC_SCRATCH -1,-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) npc_af_eco0
- *
- * INTERNAL: ECO 0 Register
- */
-union cavm_npc_af_eco0
-{
-    uint64_t u;
-    struct cavm_npc_af_eco0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_npc_af_eco0_s cn; */
-};
-typedef union cavm_npc_af_eco0 cavm_npc_af_eco0_t;
-
-#define CAVM_NPC_AF_ECO0 CAVM_NPC_AF_ECO0_FUNC()
-static inline uint64_t CAVM_NPC_AF_ECO0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPC_AF_ECO0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x840060000200ll;
-    __cavm_csr_fatal("NPC_AF_ECO0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NPC_AF_ECO0 cavm_npc_af_eco0_t
-#define bustype_CAVM_NPC_AF_ECO0 CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NPC_AF_ECO0 "NPC_AF_ECO0"
-#define device_bar_CAVM_NPC_AF_ECO0 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NPC_AF_ECO0 0
-#define arguments_CAVM_NPC_AF_ECO0 -1,-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) npc_af_ikpu_err_ctl
@@ -1714,10 +1580,7 @@ union cavm_npc_af_intfx_lidx_ltx_ldx_cfg
                                                                  * Last LDATA byte is written to NPC_MCAM_KEY_X*_S[KW0]\<55:48\>.
 
                                                                  Software must ensure that the LDATA bytes specified by [KEY_OFFSET] and
-                                                                 [BYTESM1] are within key width selected by NPC_AF_INTF()_KEX_CFG[KEYW].
-
-                                                                 Internal:
-                                                                 Hardware drops LDATA bytes beyond the key width. */
+                                                                 [BYTESM1] are within key width selected by NPC_AF_INTF()_KEX_CFG[KEYW]. */
 #else /* Word 0 - Little Endian */
         uint64_t key_offset            : 6;  /**< [  5:  0](R/W) Key offset. Starting byte offset of LDATA in the MCAM search key. The layer
                                                                  data is written to the key in network byte order, with the last byte from
@@ -1731,10 +1594,7 @@ union cavm_npc_af_intfx_lidx_ltx_ldx_cfg
                                                                  * Last LDATA byte is written to NPC_MCAM_KEY_X*_S[KW0]\<55:48\>.
 
                                                                  Software must ensure that the LDATA bytes specified by [KEY_OFFSET] and
-                                                                 [BYTESM1] are within key width selected by NPC_AF_INTF()_KEX_CFG[KEYW].
-
-                                                                 Internal:
-                                                                 Hardware drops LDATA bytes beyond the key width. */
+                                                                 [BYTESM1] are within key width selected by NPC_AF_INTF()_KEX_CFG[KEYW]. */
         uint64_t flags_ena             : 1;  /**< [  6:  6](R/W) Enable FLAGS based extraction. Ignored unless the register's layer
                                                                  ID (LID index) matches NPC_AF_KEX_LDATA()_FLAGS_CFG[LID]. */
         uint64_t ena                   : 1;  /**< [  7:  7](R/W) LDATA extract enable. */
@@ -2176,21 +2036,13 @@ union cavm_npc_af_kpux_dbg
         uint64_t reserved_9_63         : 55;
         uint64_t byp                   : 1;  /**< [  8:  8](RO/H) Set if KPU was bypassed due to NPC_AF_KPU()_ENTRY()_ACTION0[PARSE_DONE] set,
                                                                  non-zero NPC_AF_KPU()_ENTRY()_ACTION0[BYP_COUNT] in a previous stage, or if
-                                                                 parsing was terminated by a prior KPU due to a header parse error.
-
-                                                                 Internal:
-                                                                 Includes terminated_for_error being set due to var_len_offset_violation,
-                                                                 ptr_advance_violation, or dp_offset_violation. */
+                                                                 parsing was terminated by a prior KPU due to a header parse error. */
         uint64_t hit_entry             : 8;  /**< [  7:  0](RO/H) KPU hit entry index. Valid when [BYP] is clear. */
 #else /* Word 0 - Little Endian */
         uint64_t hit_entry             : 8;  /**< [  7:  0](RO/H) KPU hit entry index. Valid when [BYP] is clear. */
         uint64_t byp                   : 1;  /**< [  8:  8](RO/H) Set if KPU was bypassed due to NPC_AF_KPU()_ENTRY()_ACTION0[PARSE_DONE] set,
                                                                  non-zero NPC_AF_KPU()_ENTRY()_ACTION0[BYP_COUNT] in a previous stage, or if
-                                                                 parsing was terminated by a prior KPU due to a header parse error.
-
-                                                                 Internal:
-                                                                 Includes terminated_for_error being set due to var_len_offset_violation,
-                                                                 ptr_advance_violation, or dp_offset_violation. */
+                                                                 parsing was terminated by a prior KPU due to a header parse error. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -3341,44 +3193,6 @@ static inline uint64_t CAVM_NPC_AF_MCAM_DBG_FUNC(void)
 #define arguments_CAVM_NPC_AF_MCAM_DBG -1,-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) npc_af_mcam_pwr_cfg
- *
- * INTERNAL: NPC AF MCAM Power Configuration Register
- */
-union cavm_npc_af_mcam_pwr_cfg
-{
-    uint64_t u;
-    struct cavm_npc_af_mcam_pwr_cfg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t dis_pwr_save          : 1;  /**< [  0:  0](R/W) Diagnostic mode.  When set disables the MCAM power saving feature. */
-#else /* Word 0 - Little Endian */
-        uint64_t dis_pwr_save          : 1;  /**< [  0:  0](R/W) Diagnostic mode.  When set disables the MCAM power saving feature. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_npc_af_mcam_pwr_cfg_s cn; */
-};
-typedef union cavm_npc_af_mcam_pwr_cfg cavm_npc_af_mcam_pwr_cfg_t;
-
-#define CAVM_NPC_AF_MCAM_PWR_CFG CAVM_NPC_AF_MCAM_PWR_CFG_FUNC()
-static inline uint64_t CAVM_NPC_AF_MCAM_PWR_CFG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPC_AF_MCAM_PWR_CFG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX))
-        return 0x840063005000ll;
-    __cavm_csr_fatal("NPC_AF_MCAM_PWR_CFG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NPC_AF_MCAM_PWR_CFG cavm_npc_af_mcam_pwr_cfg_t
-#define bustype_CAVM_NPC_AF_MCAM_PWR_CFG CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NPC_AF_MCAM_PWR_CFG "NPC_AF_MCAM_PWR_CFG"
-#define device_bar_CAVM_NPC_AF_MCAM_PWR_CFG 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NPC_AF_MCAM_PWR_CFG 0
-#define arguments_CAVM_NPC_AF_MCAM_PWR_CFG -1,-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) npc_af_mcam_pwr_intf#_bank#
  *
  * NPC AF MCAM Power Interface Register
@@ -4119,162 +3933,6 @@ static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_TAG_ACT_EXT(uint64_t a, uint64_t
 #define device_bar_CAVM_NPC_AF_MCAMEX_BANKX_TAG_ACT_EXT(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NPC_AF_MCAMEX_BANKX_TAG_ACT_EXT(a,b) (a)
 #define arguments_CAVM_NPC_AF_MCAMEX_BANKX_TAG_ACT_EXT(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) npc_af_nife_bp_test
- *
- * INTERNAL: NPC AF NIFE Backpressure Test Register
- */
-union cavm_npc_af_nife_bp_test
-{
-    uint64_t u;
-    struct cavm_npc_af_nife_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure at the below points.
-                                                                 \<63\> = NIX1 TX interface.
-                                                                 \<62\> = NIX1 RX interface.
-                                                                 \<61\> = NIX0 TX interface.
-                                                                 \<60\> = NIX0 RX interface.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config for NIX1 TX interface.
-                                                                   \<21:20\> = Config for NIX1 RX interface.
-                                                                   \<19:18\> = Config for NIX0 TX interface.
-                                                                   \<17:16\> = Config for NIX0 RX interface. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config for NIX1 TX interface.
-                                                                   \<21:20\> = Config for NIX1 RX interface.
-                                                                   \<19:18\> = Config for NIX0 TX interface.
-                                                                   \<17:16\> = Config for NIX0 RX interface. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure at the below points.
-                                                                 \<63\> = NIX1 TX interface.
-                                                                 \<62\> = NIX1 RX interface.
-                                                                 \<61\> = NIX0 TX interface.
-                                                                 \<60\> = NIX0 RX interface.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_npc_af_nife_bp_test_s cn; */
-};
-typedef union cavm_npc_af_nife_bp_test cavm_npc_af_nife_bp_test_t;
-
-#define CAVM_NPC_AF_NIFE_BP_TEST CAVM_NPC_AF_NIFE_BP_TEST_FUNC()
-static inline uint64_t CAVM_NPC_AF_NIFE_BP_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPC_AF_NIFE_BP_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX))
-        return 0x840063003008ll;
-    __cavm_csr_fatal("NPC_AF_NIFE_BP_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NPC_AF_NIFE_BP_TEST cavm_npc_af_nife_bp_test_t
-#define bustype_CAVM_NPC_AF_NIFE_BP_TEST CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NPC_AF_NIFE_BP_TEST "NPC_AF_NIFE_BP_TEST"
-#define device_bar_CAVM_NPC_AF_NIFE_BP_TEST 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NPC_AF_NIFE_BP_TEST 0
-#define arguments_CAVM_NPC_AF_NIFE_BP_TEST -1,-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) npc_af_nifi_bp_test
- *
- * INTERNAL: NPC AF NIFI Backpressure Test Register
- */
-union cavm_npc_af_nifi_bp_test
-{
-    uint64_t u;
-    struct cavm_npc_af_nifi_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure at the below points.
-                                                                 \<63\> = NIX1 TX interface.
-                                                                 \<62\> = NIX1 RX interface.
-                                                                 \<61\> = NIX0 TX interface.
-                                                                 \<60\> = NIX0 RX interface.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config for NIX1 TX interface.
-                                                                   \<21:20\> = Config for NIX1 RX interface.
-                                                                   \<19:18\> = Config for NIX0 TX interface.
-                                                                   \<17:16\> = Config for NIX0 RX interface. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config for NIX1 TX interface.
-                                                                   \<21:20\> = Config for NIX1 RX interface.
-                                                                   \<19:18\> = Config for NIX0 TX interface.
-                                                                   \<17:16\> = Config for NIX0 RX interface. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure at the below points.
-                                                                 \<63\> = NIX1 TX interface.
-                                                                 \<62\> = NIX1 RX interface.
-                                                                 \<61\> = NIX0 TX interface.
-                                                                 \<60\> = NIX0 RX interface.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_npc_af_nifi_bp_test_s cn; */
-};
-typedef union cavm_npc_af_nifi_bp_test cavm_npc_af_nifi_bp_test_t;
-
-#define CAVM_NPC_AF_NIFI_BP_TEST CAVM_NPC_AF_NIFI_BP_TEST_FUNC()
-static inline uint64_t CAVM_NPC_AF_NIFI_BP_TEST_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPC_AF_NIFI_BP_TEST_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX))
-        return 0x840063003000ll;
-    __cavm_csr_fatal("NPC_AF_NIFI_BP_TEST", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NPC_AF_NIFI_BP_TEST cavm_npc_af_nifi_bp_test_t
-#define bustype_CAVM_NPC_AF_NIFI_BP_TEST CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NPC_AF_NIFI_BP_TEST "NPC_AF_NIFI_BP_TEST"
-#define device_bar_CAVM_NPC_AF_NIFI_BP_TEST 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NPC_AF_NIFI_BP_TEST 0
-#define arguments_CAVM_NPC_AF_NIFI_BP_TEST -1,-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) npc_af_pck_cfg

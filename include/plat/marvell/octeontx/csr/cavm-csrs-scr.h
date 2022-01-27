@@ -467,19 +467,7 @@ union cavm_scr_write32_s
                                                                  Accesses are always nonsecure. The normal permission registers
                                                                  MRML_RSL()_PERMIT, MRML_NCB()_PERMIT, GPIO_PERMIT, etc. still apply, and must be
                                                                  appropriately permissive for the script access to the corresponding device to
-                                                                 succeed.
-
-                                                                 Internal:
-                                                                 This list corresponds to rom.c's script_access_allowed().  Verification has a
-                                                                 similar vkit function to insure PEM subsystem configuration writes are allowed
-                                                                 by this function (to insure it doesn't omit an important register needed for
-                                                                 configuration.)
-
-                                                                 The description of each register listed above contains a cross reference to this
-                                                                 text.
-
-                                                                 This list must never contain registers that could enable a memory write to an
-                                                                 arbitrary address, e.g. no MSI-X registers. */
+                                                                 succeed. */
 #else /* Word 0 - Little Endian */
         uint64_t addr                  : 56; /**< [ 55:  0] Address. The address must be to a permitted address, or the write will be
                                                                  silently dropped and reads will return zeros. The permitted registers are:
@@ -537,19 +525,7 @@ union cavm_scr_write32_s
                                                                  Accesses are always nonsecure. The normal permission registers
                                                                  MRML_RSL()_PERMIT, MRML_NCB()_PERMIT, GPIO_PERMIT, etc. still apply, and must be
                                                                  appropriately permissive for the script access to the corresponding device to
-                                                                 succeed.
-
-                                                                 Internal:
-                                                                 This list corresponds to rom.c's script_access_allowed().  Verification has a
-                                                                 similar vkit function to insure PEM subsystem configuration writes are allowed
-                                                                 by this function (to insure it doesn't omit an important register needed for
-                                                                 configuration.)
-
-                                                                 The description of each register listed above contains a cross reference to this
-                                                                 text.
-
-                                                                 This list must never contain registers that could enable a memory write to an
-                                                                 arbitrary address, e.g. no MSI-X registers. */
+                                                                 succeed. */
         uint64_t op                    : 8;  /**< [ 63: 56] Opcode. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
@@ -629,19 +605,7 @@ union cavm_scr_write32_s
                                                                  Accesses are always nonsecure. The normal permission registers
                                                                  MRML_RSL()_PERMIT, MRML_NCB()_PERMIT, GPIO_PERMIT, etc. still apply, and must be
                                                                  appropriately permissive for the script access to the corresponding device to
-                                                                 succeed.
-
-                                                                 Internal:
-                                                                 This list corresponds to rom.c's script_access_allowed().  Verification has a
-                                                                 similar vkit function to insure PEM subsystem configuration writes are allowed
-                                                                 by this function (to insure it doesn't omit an important register needed for
-                                                                 configuration.)
-
-                                                                 The description of each register listed above contains a cross reference to this
-                                                                 text.
-
-                                                                 This list must never contain registers that could enable a memory write to an
-                                                                 arbitrary address, e.g. no MSI-X registers. */
+                                                                 succeed. */
 #else /* Word 0 - Little Endian */
         uint64_t addr                  : 56; /**< [ 55:  0] Address. The address must be to a permitted address, or the write will be
                                                                  silently dropped and reads will return zeros. The permitted registers are:
@@ -706,19 +670,7 @@ union cavm_scr_write32_s
                                                                  Accesses are always nonsecure. The normal permission registers
                                                                  MRML_RSL()_PERMIT, MRML_NCB()_PERMIT, GPIO_PERMIT, etc. still apply, and must be
                                                                  appropriately permissive for the script access to the corresponding device to
-                                                                 succeed.
-
-                                                                 Internal:
-                                                                 This list corresponds to rom.c's script_access_allowed().  Verification has a
-                                                                 similar vkit function to insure PEM subsystem configuration writes are allowed
-                                                                 by this function (to insure it doesn't omit an important register needed for
-                                                                 configuration.)
-
-                                                                 The description of each register listed above contains a cross reference to this
-                                                                 text.
-
-                                                                 This list must never contain registers that could enable a memory write to an
-                                                                 arbitrary address, e.g. no MSI-X registers. */
+                                                                 succeed. */
         uint64_t op                    : 8;  /**< [ 63: 56] Opcode. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
@@ -797,19 +749,7 @@ union cavm_scr_write32_s
                                                                  Accesses are always nonsecure. The normal permission registers
                                                                  MRML_RSL()_PERMIT, MRML_NCB()_PERMIT, GPIO_PERMIT, etc. still apply, and must be
                                                                  appropriately permissive for the script access to the corresponding device to
-                                                                 succeed.
-
-                                                                 Internal:
-                                                                 This list corresponds to rom.c's script_access_allowed().  Verification has a
-                                                                 similar vkit function to insure PEM subsystem configuration writes are allowed
-                                                                 by this function (to insure it doesn't omit an important register needed for
-                                                                 configuration.)
-
-                                                                 The description of each register listed above contains a cross reference to this
-                                                                 text.
-
-                                                                 This list must never contain registers that could enable a memory write to an
-                                                                 arbitrary address, e.g. no MSI-X registers. */
+                                                                 succeed. */
 #else /* Word 0 - Little Endian */
         uint64_t addr                  : 56; /**< [ 55:  0] Address. The address must be to a permitted address, or the write will be
                                                                  silently dropped and reads will return zeros. The permitted registers are:
@@ -873,19 +813,7 @@ union cavm_scr_write32_s
                                                                  Accesses are always nonsecure. The normal permission registers
                                                                  MRML_RSL()_PERMIT, MRML_NCB()_PERMIT, GPIO_PERMIT, etc. still apply, and must be
                                                                  appropriately permissive for the script access to the corresponding device to
-                                                                 succeed.
-
-                                                                 Internal:
-                                                                 This list corresponds to rom.c's script_access_allowed().  Verification has a
-                                                                 similar vkit function to insure PEM subsystem configuration writes are allowed
-                                                                 by this function (to insure it doesn't omit an important register needed for
-                                                                 configuration.)
-
-                                                                 The description of each register listed above contains a cross reference to this
-                                                                 text.
-
-                                                                 This list must never contain registers that could enable a memory write to an
-                                                                 arbitrary address, e.g. no MSI-X registers. */
+                                                                 succeed. */
         uint64_t op                    : 8;  /**< [ 63: 56] Opcode. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */

@@ -177,11 +177,6 @@
  * PCC Device ID Low Enumeration
  * Enumerates the values of the PCI configuration header Device ID bits
  * \<7:0\>.
- *
- * Internal:
- * This enumeration is no longer updated with new codes, see instead CN10xxx version.
- *
- * The class_codes are formatted as defined by PCC_CLASS_CODE_S.
  */
 #define CAVM_PCC_DEV_IDL_E_AP5 (0x76)
 #define CAVM_PCC_DEV_IDL_E_AP6 (0x86)
@@ -404,8 +399,6 @@
  *
  * PCC Vendor-Specific Capability ID Enumeration
  * Enumerates the values of Marvell (Cavium)'s vendor-specific PCI capability IDs.
- * Internal:
- * See also http://mawiki.caveonetworks.com/wiki/Architecture/PCI_Vendor_Headers
  */
 #define CAVM_PCC_VSECID_E_NONE (0)
 #define CAVM_PCC_VSECID_E_SY_RAS_DES (2)
@@ -1103,10 +1096,7 @@ union cavm_pccpf_xxx_bar0l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the BAR 0 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar0_rbsz and tie__pfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
         uint32_t reserved_4_15         : 12;
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t typ                   : 2;  /**< [  2:  1](RO/H) BAR type. 0x0 if not implemented or PCCPF_XXX_VSEC_SCTL[EA] is set, else 0x2:
@@ -1125,10 +1115,7 @@ union cavm_pccpf_xxx_bar0l
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t reserved_4_15         : 12;
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the BAR 0 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar0_rbsz and tie__pfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_bar0l_cn9
@@ -1180,10 +1167,7 @@ union cavm_pccpf_xxx_bar0u
                                                                  BAR for address decoding. After sizing, for proper software behavior, software must
                                                                  restore the register value, where the proper value may be read from PCCPF_XXX_VSEC_BAR0U,
                                                                  with software writing the node number into the field bits corresponding to address bits
-                                                                 \<45:44\>.
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar0_rbsz and tie__pfbar0_offset. */
+                                                                 \<45:44\>. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Contains the upper 32 bits of the BAR 0 base address. Bits corresponding to address bits
                                                                  less than the size of the BAR are read-as-zero, other bits are read-write only to allow
@@ -1191,10 +1175,7 @@ union cavm_pccpf_xxx_bar0u
                                                                  BAR for address decoding. After sizing, for proper software behavior, software must
                                                                  restore the register value, where the proper value may be read from PCCPF_XXX_VSEC_BAR0U,
                                                                  with software writing the node number into the field bits corresponding to address bits
-                                                                 \<45:44\>.
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar0_rbsz and tie__pfbar0_offset. */
+                                                                 \<45:44\>. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_bar0u_cn9
@@ -1241,10 +1222,7 @@ union cavm_pccpf_xxx_bar2l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the BAR 2 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar2_rbsz and tie__pfbar2_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
         uint32_t reserved_4_15         : 12;
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t typ                   : 2;  /**< [  2:  1](RO/H) BAR type. 0x0 if not implemented or PCCPF_XXX_VSEC_SCTL[EA] is set, else 0x2:
@@ -1263,10 +1241,7 @@ union cavm_pccpf_xxx_bar2l
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t reserved_4_15         : 12;
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the BAR 2 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar2_rbsz and tie__pfbar2_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_bar2l_cn9
@@ -1313,16 +1288,10 @@ union cavm_pccpf_xxx_bar2u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Contains the upper 32 bits of the BAR 2 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar2_rbsz and tie__pfbar2_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Contains the upper 32 bits of the BAR 2 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar2_rbsz and tie__pfbar2_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_bar2u_cn9
@@ -1369,10 +1338,7 @@ union cavm_pccpf_xxx_bar4l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the BAR 4 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar4_rbsz and tie__pfbar4_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
         uint32_t reserved_4_15         : 12;
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t typ                   : 2;  /**< [  2:  1](RO/H) BAR type. 0x0 if not implemented or PCCPF_XXX_VSEC_SCTL[EA] is set, else 0x2:
@@ -1391,10 +1357,7 @@ union cavm_pccpf_xxx_bar4l
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t reserved_4_15         : 12;
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the BAR 4 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar4_rbsz and tie__pfbar4_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_bar4l_cn9
@@ -1441,16 +1404,10 @@ union cavm_pccpf_xxx_bar4u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Contains the upper 32 bits of the BAR 4 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar4_rbsz and tie__pfbar4_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Contains the upper 32 bits of the BAR 4 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar4_rbsz and tie__pfbar4_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_bar4u_cn9
@@ -1568,21 +1525,13 @@ union cavm_pccpf_xxx_cmd
         uint32_t reserved_21_31        : 11;
         uint32_t cl                    : 1;  /**< [ 20: 20](RO) Capabilities list. Indicates presence of an extended capability item. */
         uint32_t reserved_3_19         : 17;
-        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable.
-                                                                 Internal:
-                                                                 For simplicity always one; we do not disable NCB transactions. */
-        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable.
-                                                                 Internal:
-                                                                 NCB/RSL always decoded; have hardcoded BARs. */
+        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable. */
+        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable. */
         uint32_t reserved_0            : 1;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0            : 1;
-        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable.
-                                                                 Internal:
-                                                                 NCB/RSL always decoded; have hardcoded BARs. */
-        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable.
-                                                                 Internal:
-                                                                 For simplicity always one; we do not disable NCB transactions. */
+        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable. */
+        uint32_t me                    : 1;  /**< [  2:  2](RO) Master enable. */
         uint32_t reserved_3_19         : 17;
         uint32_t cl                    : 1;  /**< [ 20: 20](RO) Capabilities list. Indicates presence of an extended capability item. */
         uint32_t reserved_21_31        : 11;
@@ -1599,33 +1548,17 @@ union cavm_pccpf_xxx_cmd
                                                                  transactions.
 
                                                                  If PCCPF_XXX_E_DEV_CAP[FLR] is read-only zero, always set and writes have no
-                                                                 effect. Resets to zero and writable otherwise.
-
-                                                                 Internal:
-                                                                 Drives pcc__blk_masterena if block's CSR file has pcc_flr="True"
-                                                                 attribute. Function must not initiate NCBI DMA requests when
-                                                                 pcc__blk_masterena=0. In addition, PCC will not generate GIB (MSI-X)
-                                                                 transactions when this bit is clear. */
-        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable.
-                                                                 Internal:
-                                                                 NCB/RSL always decoded; have hardcoded BARs. */
+                                                                 effect. Resets to zero and writable otherwise. */
+        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable. */
         uint32_t reserved_0            : 1;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0            : 1;
-        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable.
-                                                                 Internal:
-                                                                 NCB/RSL always decoded; have hardcoded BARs. */
+        uint32_t msae                  : 1;  /**< [  1:  1](RO) Memory space access enable. */
         uint32_t me                    : 1;  /**< [  2:  2](R/W) Bus master enable. If set, function may initiate upstream DMA or MSI-X
                                                                  transactions.
 
                                                                  If PCCPF_XXX_E_DEV_CAP[FLR] is read-only zero, always set and writes have no
-                                                                 effect. Resets to zero and writable otherwise.
-
-                                                                 Internal:
-                                                                 Drives pcc__blk_masterena if block's CSR file has pcc_flr="True"
-                                                                 attribute. Function must not initiate NCBI DMA requests when
-                                                                 pcc__blk_masterena=0. In addition, PCC will not generate GIB (MSI-X)
-                                                                 transactions when this bit is clear. */
+                                                                 effect. Resets to zero and writable otherwise. */
         uint32_t reserved_3_19         : 17;
         uint32_t cl                    : 1;  /**< [ 20: 20](RO) Capabilities list. Indicates presence of an extended capability item. */
         uint32_t reserved_21_31        : 11;
@@ -1737,10 +1670,7 @@ union cavm_pccpf_xxx_e_dev_cap
 
                                                                    1 = PCCPF_XXX_E_DEV_CTL[BCR_FLR], PCCPF_XXX_E_DEV_CTL[TRPEND],
                                                                    PCCPF_XXX_CMD[ME], and PCCPF_XXX_SRIOV_CTL[VFE] (if applicable) are
-                                                                   functional.
-
-                                                                 Internal:
-                                                                 Returns 1 if block's CSR file has pcc_flr="True" attribute. */
+                                                                   functional. */
         uint32_t reserved_16_27        : 12;
         uint32_t rber                  : 1;  /**< [ 15: 15](RO) Role-based error reporting. Required to be set by PCIe3.1. */
         uint32_t reserved_0_14         : 15;
@@ -1758,10 +1688,7 @@ union cavm_pccpf_xxx_e_dev_cap
 
                                                                    1 = PCCPF_XXX_E_DEV_CTL[BCR_FLR], PCCPF_XXX_E_DEV_CTL[TRPEND],
                                                                    PCCPF_XXX_CMD[ME], and PCCPF_XXX_SRIOV_CTL[VFE] (if applicable) are
-                                                                   functional.
-
-                                                                 Internal:
-                                                                 Returns 1 if block's CSR file has pcc_flr="True" attribute. */
+                                                                   functional. */
         uint32_t reserved_29_31        : 3;
 #endif /* Word 0 - End */
     } s;
@@ -2039,53 +1966,33 @@ union cavm_pccpf_xxx_id
     struct cavm_pccpf_xxx_id_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t devid                 : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-
-                                                                 Internal:
-                                                                 Unit
-                                                                 from PCC's tie__pfunitid. */
+        uint32_t devid                 : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E. */
         uint32_t vendid                : 16; /**< [ 15:  0](RO) Cavium's vendor ID. Enumerated by PCC_VENDOR_E::CAVIUM. */
 #else /* Word 0 - Little Endian */
         uint32_t vendid                : 16; /**< [ 15:  0](RO) Cavium's vendor ID. Enumerated by PCC_VENDOR_E::CAVIUM. */
-        uint32_t devid                 : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-
-                                                                 Internal:
-                                                                 Unit
-                                                                 from PCC's tie__pfunitid. */
+        uint32_t devid                 : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_id_s cn8; */
     struct cavm_pccpf_xxx_id_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__pfunitid. */
+        uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E. */
         uint32_t vendid                : 16; /**< [ 15:  0](RO) Cavium's vendor ID. Enumerated by PCC_VENDOR_E::CAVIUM. */
 #else /* Word 0 - Little Endian */
         uint32_t vendid                : 16; /**< [ 15:  0](RO) Cavium's vendor ID. Enumerated by PCC_VENDOR_E::CAVIUM. */
-        uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__pfunitid. */
+        uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } cn9;
     /* struct cavm_pccpf_xxx_id_cn9 cn96xxp1; */
     struct cavm_pccpf_xxx_id_cn96xxp3
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__pfunitid. */
+        uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E. */
         uint32_t vendid                : 16; /**< [ 15:  0](RO) Marvell (Cavium)'s vendor ID. Enumerated by PCC_VENDOR_E::CAVIUM. */
 #else /* Word 0 - Little Endian */
         uint32_t vendid                : 16; /**< [ 15:  0](RO) Marvell (Cavium)'s vendor ID. Enumerated by PCC_VENDOR_E::CAVIUM. */
-        uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__pfunitid. */
+        uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } cn96xxp3;
     /* struct cavm_pccpf_xxx_id_cn96xxp3 cn98xx; */
@@ -2134,9 +2041,7 @@ union cavm_pccpf_xxx_msix_cap_hdr
 
                                                                  Setting or clearing FUNM has no effect on the state of the per-vector mask bits. */
         uint32_t reserved_27_29        : 3;
-        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1).
-                                                                 Internal:
-                                                                 From PCC's MSIX_PF_VECS parameter. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1). */
         uint32_t ncp                   : 8;  /**< [ 15:  8](RO/H) Next capability pointer. If PCCPF_XXX_VSEC_SCTL[EA] is set points to
                                                                  PCCPF_XXX_EA_CAP_HDR, else 0x0. */
         uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X Capability ID. */
@@ -2144,9 +2049,7 @@ union cavm_pccpf_xxx_msix_cap_hdr
         uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X Capability ID. */
         uint32_t ncp                   : 8;  /**< [ 15:  8](RO/H) Next capability pointer. If PCCPF_XXX_VSEC_SCTL[EA] is set points to
                                                                  PCCPF_XXX_EA_CAP_HDR, else 0x0. */
-        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1).
-                                                                 Internal:
-                                                                 From PCC's MSIX_PF_VECS parameter. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1). */
         uint32_t reserved_27_29        : 3;
         uint32_t funm                  : 1;  /**< [ 30: 30](R/W) Function mask.
                                                                  0 = Each vectors' mask bit determines whether the vector is masked or not.
@@ -2175,17 +2078,13 @@ union cavm_pccpf_xxx_msix_cap_hdr
 
                                                                  Setting or clearing [FUNM] has no effect on the state of the per-vector mask bits. */
         uint32_t reserved_27_29        : 3;
-        uint32_t msixts                : 11; /**< [ 26: 16](RO/H) MSI-X table size encoded as (table size - 1).
-                                                                 Internal:
-                                                                 From PCC generated parameter. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO/H) MSI-X table size encoded as (table size - 1). */
         uint32_t ncp                   : 8;  /**< [ 15:  8](RO) Next capability pointer. Points to PCCPF_XXX_EA_CAP_HDR. */
         uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X Capability ID. */
 #else /* Word 0 - Little Endian */
         uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X Capability ID. */
         uint32_t ncp                   : 8;  /**< [ 15:  8](RO) Next capability pointer. Points to PCCPF_XXX_EA_CAP_HDR. */
-        uint32_t msixts                : 11; /**< [ 26: 16](RO/H) MSI-X table size encoded as (table size - 1).
-                                                                 Internal:
-                                                                 From PCC generated parameter. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO/H) MSI-X table size encoded as (table size - 1). */
         uint32_t reserved_27_29        : 3;
         uint32_t funm                  : 1;  /**< [ 30: 30](R/W) Function mask.
                                                                  0 = Each vectors' mask bit determines whether the vector is masked or not.
@@ -2297,16 +2196,10 @@ union cavm_pccpf_xxx_msix_table
         uint32_t msixtoffs             : 29; /**< [ 31:  3](RO) MSI-X table offset register. Offset of the MSI-X table, as a number of eight-byte
                                                                  words from the base address of the BAR. For most blocks, zero. */
         uint32_t msixtbir              : 3;  /**< [  2:  0](RO) MSI-X table BAR indicator register (BIR). Indicates which BAR is used to map the MSI-X
-                                                                 table into memory space. Typically 0x4, indicating BAR4H/L.
-
-                                                                 Internal:
-                                                                 From PCC generated parameter. */
+                                                                 table into memory space. Typically 0x4, indicating BAR4H/L. */
 #else /* Word 0 - Little Endian */
         uint32_t msixtbir              : 3;  /**< [  2:  0](RO) MSI-X table BAR indicator register (BIR). Indicates which BAR is used to map the MSI-X
-                                                                 table into memory space. Typically 0x4, indicating BAR4H/L.
-
-                                                                 Internal:
-                                                                 From PCC generated parameter. */
+                                                                 table into memory space. Typically 0x4, indicating BAR4H/L. */
         uint32_t msixtoffs             : 29; /**< [ 31:  3](RO) MSI-X table offset register. Offset of the MSI-X table, as a number of eight-byte
                                                                  words from the base address of the BAR. For most blocks, zero. */
 #endif /* Word 0 - End */
@@ -2338,54 +2231,30 @@ union cavm_pccpf_xxx_rev
     struct cavm_pccpf_xxx_rev_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t bcc                   : 8;  /**< [ 31: 24](RO) Base class code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[23:16]. */
-        uint32_t sc                    : 8;  /**< [ 23: 16](RO) Subclass code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[15:8]. */
-        uint32_t pi                    : 8;  /**< [ 15:  8](RO) Programming interface. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[7:0]. */
+        uint32_t bcc                   : 8;  /**< [ 31: 24](RO) Base class code. See PCC_DEV_IDL_E. */
+        uint32_t sc                    : 8;  /**< [ 23: 16](RO) Subclass code. See PCC_DEV_IDL_E. */
+        uint32_t pi                    : 8;  /**< [ 15:  8](RO) Programming interface. See PCC_DEV_IDL_E. */
         uint32_t rid                   : 8;  /**< [  7:  0](RO/H) Revision ID. Read only version of PCCPF_XXX_VSEC_SCTL[RID]. */
 #else /* Word 0 - Little Endian */
         uint32_t rid                   : 8;  /**< [  7:  0](RO/H) Revision ID. Read only version of PCCPF_XXX_VSEC_SCTL[RID]. */
-        uint32_t pi                    : 8;  /**< [ 15:  8](RO) Programming interface. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[7:0]. */
-        uint32_t sc                    : 8;  /**< [ 23: 16](RO) Subclass code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[15:8]. */
-        uint32_t bcc                   : 8;  /**< [ 31: 24](RO) Base class code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[23:16]. */
+        uint32_t pi                    : 8;  /**< [ 15:  8](RO) Programming interface. See PCC_DEV_IDL_E. */
+        uint32_t sc                    : 8;  /**< [ 23: 16](RO) Subclass code. See PCC_DEV_IDL_E. */
+        uint32_t bcc                   : 8;  /**< [ 31: 24](RO) Base class code. See PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_rev_s cn8; */
     struct cavm_pccpf_xxx_rev_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t bcc                   : 8;  /**< [ 31: 24](RO/H) Base class code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[23:16]. */
-        uint32_t sc                    : 8;  /**< [ 23: 16](RO/H) Subclass code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[15:8]. */
-        uint32_t pi                    : 8;  /**< [ 15:  8](RO/H) Programming interface. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[7:0]. */
+        uint32_t bcc                   : 8;  /**< [ 31: 24](RO/H) Base class code. See PCC_DEV_IDL_E. */
+        uint32_t sc                    : 8;  /**< [ 23: 16](RO/H) Subclass code. See PCC_DEV_IDL_E. */
+        uint32_t pi                    : 8;  /**< [ 15:  8](RO/H) Programming interface. See PCC_DEV_IDL_E. */
         uint32_t rid                   : 8;  /**< [  7:  0](RO/H) Revision ID. Read only version of PCCPF_XXX_VSEC_SCTL[RID]. */
 #else /* Word 0 - Little Endian */
         uint32_t rid                   : 8;  /**< [  7:  0](RO/H) Revision ID. Read only version of PCCPF_XXX_VSEC_SCTL[RID]. */
-        uint32_t pi                    : 8;  /**< [ 15:  8](RO/H) Programming interface. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[7:0]. */
-        uint32_t sc                    : 8;  /**< [ 23: 16](RO/H) Subclass code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[15:8]. */
-        uint32_t bcc                   : 8;  /**< [ 31: 24](RO/H) Base class code. See PCC_DEV_IDL_E.
-                                                                 Internal:
-                                                                 From PCC's tie__class_code[23:16]. */
+        uint32_t pi                    : 8;  /**< [ 15:  8](RO/H) Programming interface. See PCC_DEV_IDL_E. */
+        uint32_t sc                    : 8;  /**< [ 23: 16](RO/H) Subclass code. See PCC_DEV_IDL_E. */
+        uint32_t bcc                   : 8;  /**< [ 31: 24](RO/H) Base class code. See PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } cn9;
 };
@@ -2490,11 +2359,7 @@ union cavm_pccpf_xxx_sriov_bar0l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the VF BAR 0 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_rbsz and
-                                                                 tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
         uint32_t reserved_4_15         : 12;
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t typ                   : 2;  /**< [  2:  1](RO/H) BAR type. 0x0 if not implemented or PCCPF_XXX_VSEC_SCTL[EA] is set, else 0x2:
@@ -2513,11 +2378,7 @@ union cavm_pccpf_xxx_sriov_bar0l
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t reserved_4_15         : 12;
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the VF BAR 0 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_rbsz and
-                                                                 tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     /* struct cavm_pccpf_xxx_sriov_bar0l_cn8 cn81xx; */
@@ -2525,11 +2386,7 @@ union cavm_pccpf_xxx_sriov_bar0l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the VF BAR 0 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_rbsz and
-                                                                 tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
         uint32_t reserved_4_15         : 12;
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t typ                   : 2;  /**< [  2:  1](RO/H) BAR type. 0x0 if not implemented or PCCPF_XXX_VSEC_SCTL[EA] is set, else 0x2:
@@ -2548,11 +2405,7 @@ union cavm_pccpf_xxx_sriov_bar0l
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t reserved_4_15         : 12;
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the VF BAR 0 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_rbsz and
-                                                                 tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn83xx;
     struct cavm_pccpf_xxx_sriov_bar0l_cn9
@@ -2599,16 +2452,10 @@ union cavm_pccpf_xxx_sriov_bar0u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Upper bits of the VF BAR 0 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_rbsz and tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Upper bits of the VF BAR 0 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_rbsz and tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_sriov_bar0u_cn9
@@ -2655,10 +2502,7 @@ union cavm_pccpf_xxx_sriov_bar2l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the VF BAR 2 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar2_rbsz and tie__vfbar2_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
         uint32_t reserved_4_15         : 12;
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t typ                   : 2;  /**< [  2:  1](RO/H) BAR type. 0x0 if not implemented or PCCPF_XXX_VSEC_SCTL[EA] is set, else 0x2:
@@ -2677,10 +2521,7 @@ union cavm_pccpf_xxx_sriov_bar2l
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t reserved_4_15         : 12;
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the VF BAR 2 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar2_rbsz and tie__vfbar2_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_sriov_bar2l_cn9
@@ -2727,16 +2568,10 @@ union cavm_pccpf_xxx_sriov_bar2u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Upper bits of the VF BAR 2 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar2_rbsz and tie__vfbar2_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Upper bits of the VF BAR 2 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar2_rbsz and tie__vfbar2_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_sriov_bar2u_cn9
@@ -2783,10 +2618,7 @@ union cavm_pccpf_xxx_sriov_bar4l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the VF BAR 4 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar4_rbsz and tie__vfbar4_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
         uint32_t reserved_4_15         : 12;
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t typ                   : 2;  /**< [  2:  1](RO/H) BAR type. 0x0 if not implemented or PCCPF_XXX_VSEC_SCTL[EA] is set, else 0x2:
@@ -2805,10 +2637,7 @@ union cavm_pccpf_xxx_sriov_bar4l
         uint32_t pf                    : 1;  /**< [  3:  3](RO) Prefetchable. */
         uint32_t reserved_4_15         : 12;
         uint32_t lbab                  : 16; /**< [ 31: 16](R/W/H) Lower bits of the VF BAR 4 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar4_rbsz and tie__vfbar4_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_sriov_bar4l_cn9
@@ -2855,16 +2684,10 @@ union cavm_pccpf_xxx_sriov_bar4u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Upper bits of the VF BAR 4 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar4_rbsz and tie__vfbar4_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W/H) Upper bits of the VF BAR 4 base address. See additional BAR related notes in
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar4_rbsz and tie__vfbar4_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } cn8;
     struct cavm_pccpf_xxx_sriov_bar4u_cn9
@@ -3013,18 +2836,12 @@ union cavm_pccpf_xxx_sriov_ctl
         uint32_t vfe                   : 1;  /**< [  0:  0](R/W) VF enable. If PCCPF_XXX_E_DEV_CAP[FLR] is clear, always set and writes have no
                                                                  effect. Resets to zero and writable otherwise.
 
-                                                                 When clear, PCCVF_XXX_* CSRs are reset, reads and writes to them are RAO/WI.
-
-                                                                 Internal:
-                                                                 When clear, forces PCCVF_XXX_CMD[ME] = pcc__blk_masterena = 0. */
+                                                                 When clear, PCCVF_XXX_* CSRs are reset, reads and writes to them are RAO/WI. */
 #else /* Word 0 - Little Endian */
         uint32_t vfe                   : 1;  /**< [  0:  0](R/W) VF enable. If PCCPF_XXX_E_DEV_CAP[FLR] is clear, always set and writes have no
                                                                  effect. Resets to zero and writable otherwise.
 
-                                                                 When clear, PCCVF_XXX_* CSRs are reset, reads and writes to them are RAO/WI.
-
-                                                                 Internal:
-                                                                 When clear, forces PCCVF_XXX_CMD[ME] = pcc__blk_masterena = 0. */
+                                                                 When clear, PCCVF_XXX_* CSRs are reset, reads and writes to them are RAO/WI. */
         uint32_t me                    : 1;  /**< [  1:  1](RO) VF migration enable. */
         uint32_t mie                   : 1;  /**< [  2:  2](RO) VF migration interrupt enable. */
         uint32_t mse                   : 1;  /**< [  3:  3](RO) VF MSE. Master space enable always on. */
@@ -3062,18 +2879,12 @@ union cavm_pccpf_xxx_sriov_dev
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t vfdev                 : 16; /**< [ 31: 16](RO) VF device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-                                                                 e.g. 0xA033 for RNM_VF.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__vfunitid. */
+                                                                 e.g. 0xA033 for RNM_VF. */
         uint32_t reserved_0_15         : 16;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0_15         : 16;
         uint32_t vfdev                 : 16; /**< [ 31: 16](RO) VF device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-                                                                 e.g. 0xA033 for RNM_VF.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__vfunitid. */
+                                                                 e.g. 0xA033 for RNM_VF. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_sriov_dev_s cn8; */
@@ -3081,18 +2892,12 @@ union cavm_pccpf_xxx_sriov_dev
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t vfdev                 : 16; /**< [ 31: 16](RO/H) VF device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-                                                                 e.g. 0xA033 for RNM's VF (PCC_DEV_IDL_E::RNM_VF).
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__vfunitid. */
+                                                                 e.g. 0xA033 for RNM's VF (PCC_DEV_IDL_E::RNM_VF). */
         uint32_t reserved_0_15         : 16;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0_15         : 16;
         uint32_t vfdev                 : 16; /**< [ 31: 16](RO/H) VF device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E.
-                                                                 e.g. 0xA033 for RNM's VF (PCC_DEV_IDL_E::RNM_VF).
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__vfunitid. */
+                                                                 e.g. 0xA033 for RNM's VF (PCC_DEV_IDL_E::RNM_VF). */
 #endif /* Word 0 - End */
     } cn9;
 };
@@ -3159,13 +2964,9 @@ union cavm_pccpf_xxx_sriov_nvf
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_24_31        : 8;
         uint32_t fdl                   : 8;  /**< [ 23: 16](RO) Function dependency link. Only a single PF 0 exists. */
-        uint32_t nvf                   : 16; /**< [ 15:  0](RO) Number of VFs that are visible.
-                                                                 Internal:
-                                                                 From PCC's MSIX_VFS parameter. */
+        uint32_t nvf                   : 16; /**< [ 15:  0](RO) Number of VFs that are visible. */
 #else /* Word 0 - Little Endian */
-        uint32_t nvf                   : 16; /**< [ 15:  0](RO) Number of VFs that are visible.
-                                                                 Internal:
-                                                                 From PCC's MSIX_VFS parameter. */
+        uint32_t nvf                   : 16; /**< [ 15:  0](RO) Number of VFs that are visible. */
         uint32_t fdl                   : 8;  /**< [ 23: 16](RO) Function dependency link. Only a single PF 0 exists. */
         uint32_t reserved_24_31        : 8;
 #endif /* Word 0 - End */
@@ -3176,13 +2977,9 @@ union cavm_pccpf_xxx_sriov_nvf
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_24_31        : 8;
         uint32_t fdl                   : 8;  /**< [ 23: 16](RO) Function dependency link. Only a single PF 0 exists. */
-        uint32_t nvf                   : 16; /**< [ 15:  0](RO/H) Number of VFs that are visible.
-                                                                 Internal:
-                                                                 From PCC generated parameter. For RVU, from RVU_PRIV_PF()_CFG[NVF]. */
+        uint32_t nvf                   : 16; /**< [ 15:  0](RO/H) Number of VFs that are visible. */
 #else /* Word 0 - Little Endian */
-        uint32_t nvf                   : 16; /**< [ 15:  0](RO/H) Number of VFs that are visible.
-                                                                 Internal:
-                                                                 From PCC generated parameter. For RVU, from RVU_PRIV_PF()_CFG[NVF]. */
+        uint32_t nvf                   : 16; /**< [ 15:  0](RO/H) Number of VFs that are visible. */
         uint32_t fdl                   : 8;  /**< [ 23: 16](RO) Function dependency link. Only a single PF 0 exists. */
         uint32_t reserved_24_31        : 8;
 #endif /* Word 0 - End */
@@ -3282,38 +3079,22 @@ union cavm_pccpf_xxx_sriov_vfs
     struct cavm_pccpf_xxx_sriov_vfs_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t tvf                   : 16; /**< [ 31: 16](RO) Total VFs.
-                                                                 Internal:
-                                                                 from pcc's MSIX_VFS parameter. */
-        uint32_t ivf                   : 16; /**< [ 15:  0](RO) Initial VFs.
-                                                                 Internal:
-                                                                 From PCC's MSIX_VFS parameter. */
+        uint32_t tvf                   : 16; /**< [ 31: 16](RO) Total VFs. */
+        uint32_t ivf                   : 16; /**< [ 15:  0](RO) Initial VFs. */
 #else /* Word 0 - Little Endian */
-        uint32_t ivf                   : 16; /**< [ 15:  0](RO) Initial VFs.
-                                                                 Internal:
-                                                                 From PCC's MSIX_VFS parameter. */
-        uint32_t tvf                   : 16; /**< [ 31: 16](RO) Total VFs.
-                                                                 Internal:
-                                                                 from pcc's MSIX_VFS parameter. */
+        uint32_t ivf                   : 16; /**< [ 15:  0](RO) Initial VFs. */
+        uint32_t tvf                   : 16; /**< [ 31: 16](RO) Total VFs. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_sriov_vfs_s cn8; */
     struct cavm_pccpf_xxx_sriov_vfs_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t tvf                   : 16; /**< [ 31: 16](RO/H) Total VFs.
-                                                                 Internal:
-                                                                 From PCC generated parameter. For RVU, from RVU_PRIV_PF()_CFG[NVF]. */
-        uint32_t ivf                   : 16; /**< [ 15:  0](RO/H) Initial VFs.
-                                                                 Internal:
-                                                                 From PCC generated parameter. For RVU, from RVU_PRIV_PF()_CFG[NVF]. */
+        uint32_t tvf                   : 16; /**< [ 31: 16](RO/H) Total VFs. */
+        uint32_t ivf                   : 16; /**< [ 15:  0](RO/H) Initial VFs. */
 #else /* Word 0 - Little Endian */
-        uint32_t ivf                   : 16; /**< [ 15:  0](RO/H) Initial VFs.
-                                                                 Internal:
-                                                                 From PCC generated parameter. For RVU, from RVU_PRIV_PF()_CFG[NVF]. */
-        uint32_t tvf                   : 16; /**< [ 31: 16](RO/H) Total VFs.
-                                                                 Internal:
-                                                                 From PCC generated parameter. For RVU, from RVU_PRIV_PF()_CFG[NVF]. */
+        uint32_t ivf                   : 16; /**< [ 15:  0](RO/H) Initial VFs. */
+        uint32_t tvf                   : 16; /**< [ 31: 16](RO/H) Total VFs. */
 #endif /* Word 0 - End */
     } cn9;
 };
@@ -3343,51 +3124,33 @@ union cavm_pccpf_xxx_subid
     struct cavm_pccpf_xxx_subid_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> enumerated by PCC_DEV_IDL_E.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__prod and tie__pfunitid. */
+        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> enumerated by PCC_DEV_IDL_E. */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Cavium = 0x177D. */
 #else /* Word 0 - Little Endian */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Cavium = 0x177D. */
-        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> enumerated by PCC_DEV_IDL_E.
-
-                                                                 Internal:
-                                                                 Unit from PCC's tie__prod and tie__pfunitid. */
+        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> enumerated by PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_subid_s cn8; */
     struct cavm_pccpf_xxx_subid_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0.
-
-                                                                 Internal:
-                                                                 \<15:8\> from PCC's tie__prod. */
+        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0. */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Cavium = 0x177D. */
 #else /* Word 0 - Little Endian */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Cavium = 0x177D. */
-        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0.
-
-                                                                 Internal:
-                                                                 \<15:8\> from PCC's tie__prod. */
+        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0. */
 #endif /* Word 0 - End */
     } cn9;
     /* struct cavm_pccpf_xxx_subid_cn9 cn96xxp1; */
     struct cavm_pccpf_xxx_subid_cn96xxp3
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0.
-
-                                                                 Internal:
-                                                                 \<15:8\> from PCC's tie__prod. */
+        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0. */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Marvell (Cavium) = 0x177D. */
 #else /* Word 0 - Little Endian */
         uint32_t ssvid                 : 16; /**< [ 15:  0](RO) Subsystem vendor ID. Marvell (Cavium) = 0x177D. */
-        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0.
-
-                                                                 Internal:
-                                                                 \<15:8\> from PCC's tie__prod. */
+        uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0. */
 #endif /* Word 0 - End */
     } cn96xxp3;
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 cn98xx; */
@@ -3423,18 +3186,12 @@ union cavm_pccpf_xxx_vsec_bar0l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded BAR 0 base address; the reset value for
-                                                                 PCCPF_XXX_BAR0L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0L[LBAB]. */
         uint32_t reserved_0_15         : 16;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0_15         : 16;
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded BAR 0 base address; the reset value for
-                                                                 PCCPF_XXX_BAR0L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0L[LBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_bar0l_s cn; */
@@ -3468,16 +3225,10 @@ union cavm_pccpf_xxx_vsec_bar0u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded BAR 0 base address; the reset value for
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded BAR 0 base address; the reset value for
-                                                                 PCCPF_XXX_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar0_offset. */
+                                                                 PCCPF_XXX_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_bar0u_s cn; */
@@ -3511,18 +3262,12 @@ union cavm_pccpf_xxx_vsec_bar2l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded BAR 2 base address; the reset value for
-                                                                 PCCPF_XXX_BAR2L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar2_offset. */
+                                                                 PCCPF_XXX_BAR2L[LBAB]. */
         uint32_t reserved_0_15         : 16;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0_15         : 16;
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded BAR 2 base address; the reset value for
-                                                                 PCCPF_XXX_BAR2L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar2_offset. */
+                                                                 PCCPF_XXX_BAR2L[LBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_bar2l_s cn; */
@@ -3556,16 +3301,10 @@ union cavm_pccpf_xxx_vsec_bar2u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded BAR 2 base address; the reset value for
-                                                                 PCCPF_XXX_BAR2U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar2_offset. */
+                                                                 PCCPF_XXX_BAR2U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded BAR 2 base address; the reset value for
-                                                                 PCCPF_XXX_BAR2U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar2_offset. */
+                                                                 PCCPF_XXX_BAR2U[UBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_bar2u_s cn; */
@@ -3599,18 +3338,12 @@ union cavm_pccpf_xxx_vsec_bar4l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded BAR 4 base address; the reset value for
-                                                                 PCCPF_XXX_BAR4L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar4_offset. */
+                                                                 PCCPF_XXX_BAR4L[LBAB]. */
         uint32_t reserved_0_15         : 16;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0_15         : 16;
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded BAR 4 base address; the reset value for
-                                                                 PCCPF_XXX_BAR4L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar4_offset. */
+                                                                 PCCPF_XXX_BAR4L[LBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_bar4l_s cn; */
@@ -3644,16 +3377,10 @@ union cavm_pccpf_xxx_vsec_bar4u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded BAR 4 base address; the reset value for
-                                                                 PCCPF_XXX_BAR4U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar4_offset. */
+                                                                 PCCPF_XXX_BAR4U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded BAR 4 base address; the reset value for
-                                                                 PCCPF_XXX_BAR4U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__pfbar4_offset. */
+                                                                 PCCPF_XXX_BAR4U[UBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_bar4u_s cn; */
@@ -3969,10 +3696,7 @@ union cavm_pccpf_xxx_vsec_sctl
                                                                  PCCPF_XXX_BAR2L, PCCPF_XXX_BAR2U, PCCPF_XXX_BAR4L, PCCPF_XXX_BAR4U,
                                                                  PCCPF_XXX_SRIOV_BAR0L, PCCPF_XXX_SRIOV_BAR0U, PCCPF_XXX_SRIOV_BAR2L,
                                                                  PCCPF_XXX_SRIOV_BAR2U, PCCPF_XXX_SRIOV_BAR4L, PCCPF_XXX_SRIOV_BAR4U). */
-        uint32_t bcst_rsp              : 1;  /**< [  2:  2](SR/W) Reserved, must be 0.
-                                                                 Internal:
-                                                                 Reserved for future use - Enable this PCC
-                                                                 instance as the responder to PCC broadcast reads/writes. */
+        uint32_t bcst_rsp              : 1;  /**< [  2:  2](SR/W) Reserved, must be 0. */
         uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivalent to setting the per-vector secure bit
                                                                  (e.g. GTI_MSIX_VEC()_ADDR[SECVEC]) for all vectors in the block. */
         uint32_t msix_phys             : 1;  /**< [  0:  0](SR/W) MSI-X interrupts are physical.
@@ -3988,10 +3712,7 @@ union cavm_pccpf_xxx_vsec_sctl
                                                                  interrupt delivery will bypass the SMMU. */
         uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivalent to setting the per-vector secure bit
                                                                  (e.g. GTI_MSIX_VEC()_ADDR[SECVEC]) for all vectors in the block. */
-        uint32_t bcst_rsp              : 1;  /**< [  2:  2](SR/W) Reserved, must be 0.
-                                                                 Internal:
-                                                                 Reserved for future use - Enable this PCC
-                                                                 instance as the responder to PCC broadcast reads/writes. */
+        uint32_t bcst_rsp              : 1;  /**< [  2:  2](SR/W) Reserved, must be 0. */
         uint32_t ea                    : 1;  /**< [  3:  3](SR/W) Enable PCI enhanced allocation.
 
                                                                  0 = Addresses are discovered using standard BARs, however while the BARs are
@@ -4219,18 +3940,12 @@ union cavm_pccpf_xxx_vsec_sriov_bar0l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded SR-IOV BAR 0 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR0L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR0L[LBAB]. */
         uint32_t reserved_0_15         : 16;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0_15         : 16;
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded SR-IOV BAR 0 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR0L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR0L[LBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_sriov_bar0l_s cn; */
@@ -4264,16 +3979,10 @@ union cavm_pccpf_xxx_vsec_sriov_bar0u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded SR-IOV BAR 0 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR0U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded SR-IOV BAR 0 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR0U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar0_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR0U[UBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_sriov_bar0u_s cn; */
@@ -4307,18 +4016,12 @@ union cavm_pccpf_xxx_vsec_sriov_bar2l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded SR-IOV BAR 2 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR2L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar2_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR2L[LBAB]. */
         uint32_t reserved_0_15         : 16;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0_15         : 16;
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded SR-IOV BAR 2 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR2L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar2_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR2L[LBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_sriov_bar2l_s cn; */
@@ -4352,16 +4055,10 @@ union cavm_pccpf_xxx_vsec_sriov_bar2u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded SR-IOV BAR 2 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR2U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar2_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR2U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded SR-IOV BAR 2 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR2U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar2_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR2U[UBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_sriov_bar2u_s cn; */
@@ -4395,18 +4092,12 @@ union cavm_pccpf_xxx_vsec_sriov_bar4l
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded SR-IOV BAR 4 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR4L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar4_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR4L[LBAB]. */
         uint32_t reserved_0_15         : 16;
 #else /* Word 0 - Little Endian */
         uint32_t reserved_0_15         : 16;
         uint32_t lbab                  : 16; /**< [ 31: 16](RO) Lower bits of the hard-coded SR-IOV BAR 4 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR4L[LBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar4_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR4L[LBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_sriov_bar4l_s cn; */
@@ -4440,16 +4131,10 @@ union cavm_pccpf_xxx_vsec_sriov_bar4u
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded SR-IOV BAR 4 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR4U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar4_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR4U[UBAB]. */
 #else /* Word 0 - Little Endian */
         uint32_t ubab                  : 32; /**< [ 31:  0](RO) Upper bits of the hard-coded SR-IOV BAR 4 base address; the reset value for
-                                                                 PCCPF_XXX_SRIOV_BAR4U[UBAB].
-
-                                                                 Internal:
-                                                                 From PCC's tie__vfbar4_offset. */
+                                                                 PCCPF_XXX_SRIOV_BAR4U[UBAB]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pccpf_xxx_vsec_sriov_bar4u_s cn; */

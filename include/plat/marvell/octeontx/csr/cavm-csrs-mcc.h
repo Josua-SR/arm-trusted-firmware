@@ -342,292 +342,6 @@ static inline uint64_t CAVM_MCCX_CTL_ACTIVE_PC(uint64_t a)
 #define arguments_CAVM_MCCX_CTL_ACTIVE_PC(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) mcc#_ctl_bp_test1
- *
- * INTERNAL: MCC CTL Backpressure Test Register
- */
-union cavm_mccx_ctl_bp_test1
-{
-    uint64_t u;
-    struct cavm_mccx_ctl_bp_test1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, disables popping of Read Response to MCI1.
-                                                                 \<62\> = When set, disables popping of Read Response to MCI0.
-                                                                 \<61\> = When set, disables popping of Read Response from LMC1.
-                                                                 \<60\> = When set, disables popping of Read Response from LMC0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, disables popping of Read Response to MCI1.
-                                                                 \<62\> = When set, disables popping of Read Response to MCI0.
-                                                                 \<61\> = When set, disables popping of Read Response from LMC1.
-                                                                 \<60\> = When set, disables popping of Read Response from LMC0. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_ctl_bp_test1_s cn; */
-};
-typedef union cavm_mccx_ctl_bp_test1 cavm_mccx_ctl_bp_test1_t;
-
-static inline uint64_t CAVM_MCCX_CTL_BP_TEST1(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_CTL_BP_TEST1(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=1))
-        return 0x87e03c000460ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x87e03c000460ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
-        return 0x87e03c000460ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
-        return 0x87e03c000460ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
-        return 0x87e03c000460ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
-        return 0x87e03c000460ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("MCCX_CTL_BP_TEST1", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_CTL_BP_TEST1(a) cavm_mccx_ctl_bp_test1_t
-#define bustype_CAVM_MCCX_CTL_BP_TEST1(a) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_CTL_BP_TEST1(a) "MCCX_CTL_BP_TEST1"
-#define device_bar_CAVM_MCCX_CTL_BP_TEST1(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_CTL_BP_TEST1(a) (a)
-#define arguments_CAVM_MCCX_CTL_BP_TEST1(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) mcc#_ctl_bp_test2
- *
- * INTERNAL: MCC CTL Backpressure Test Register
- */
-union cavm_mccx_ctl_bp_test2
-{
-    uint64_t u;
-    struct cavm_mccx_ctl_bp_test2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, disables popping of Read command to LMC1.
-                                                                 \<62\> = When set, disables popping of Read command to LMC0.
-                                                                 \<61\> = When set, disables popping of Write command to LMC1.
-                                                                 \<60\> = When set, disables popping of Write command to LMC0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, disables popping of Read command to LMC1.
-                                                                 \<62\> = When set, disables popping of Read command to LMC0.
-                                                                 \<61\> = When set, disables popping of Write command to LMC1.
-                                                                 \<60\> = When set, disables popping of Write command to LMC0. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_ctl_bp_test2_s cn; */
-};
-typedef union cavm_mccx_ctl_bp_test2 cavm_mccx_ctl_bp_test2_t;
-
-static inline uint64_t CAVM_MCCX_CTL_BP_TEST2(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_CTL_BP_TEST2(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=1))
-        return 0x87e03c000468ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x87e03c000468ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
-        return 0x87e03c000468ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
-        return 0x87e03c000468ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
-        return 0x87e03c000468ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
-        return 0x87e03c000468ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("MCCX_CTL_BP_TEST2", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_CTL_BP_TEST2(a) cavm_mccx_ctl_bp_test2_t
-#define bustype_CAVM_MCCX_CTL_BP_TEST2(a) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_CTL_BP_TEST2(a) "MCCX_CTL_BP_TEST2"
-#define device_bar_CAVM_MCCX_CTL_BP_TEST2(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_CTL_BP_TEST2(a) (a)
-#define arguments_CAVM_MCCX_CTL_BP_TEST2(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) mcc#_ctl_bp_test3
- *
- * INTERNAL: MCC CTL Backpressure Test Register 3
- */
-union cavm_mccx_ctl_bp_test3
-{
-    uint64_t u;
-    struct cavm_mccx_ctl_bp_test3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, disables popping of Read command to LMC2.
-                                                                 \<61\> = When set, disables popping of Write command to LMC2.
-                                                                 \<60\> = When set, disables popping of Read Response from LMC2. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, disables popping of Read command to LMC2.
-                                                                 \<61\> = When set, disables popping of Write command to LMC2.
-                                                                 \<60\> = When set, disables popping of Read Response from LMC2. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_ctl_bp_test3_s cn; */
-};
-typedef union cavm_mccx_ctl_bp_test3 cavm_mccx_ctl_bp_test3_t;
-
-static inline uint64_t CAVM_MCCX_CTL_BP_TEST3(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_CTL_BP_TEST3(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x87e03c000470ll + 0x1000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("MCCX_CTL_BP_TEST3", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_CTL_BP_TEST3(a) cavm_mccx_ctl_bp_test3_t
-#define bustype_CAVM_MCCX_CTL_BP_TEST3(a) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_CTL_BP_TEST3(a) "MCCX_CTL_BP_TEST3"
-#define device_bar_CAVM_MCCX_CTL_BP_TEST3(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_CTL_BP_TEST3(a) (a)
-#define arguments_CAVM_MCCX_CTL_BP_TEST3(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) mcc#_eco
- *
- * INTERNAL: MCC ECO Register
- */
-union cavm_mccx_eco
-{
-    uint64_t u;
-    struct cavm_mccx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_eco_s cn; */
-};
-typedef union cavm_mccx_eco cavm_mccx_eco_t;
-
-static inline uint64_t CAVM_MCCX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=1))
-        return 0x87e03c000080ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x87e03c000080ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
-        return 0x87e03c000080ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
-        return 0x87e03c000080ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
-        return 0x87e03c000080ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
-        return 0x87e03c000080ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("MCCX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_ECO(a) cavm_mccx_eco_t
-#define bustype_CAVM_MCCX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_ECO(a) "MCCX_ECO"
-#define device_bar_CAVM_MCCX_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_ECO(a) (a)
-#define arguments_CAVM_MCCX_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) mcc#_lmcoe#_bscrub_cfg
  *
  * LMC Background Scrub Control Register
@@ -1328,9 +1042,6 @@ static inline uint64_t CAVM_MCCX_LMCOEX_RAS_ERR00ADDR(uint64_t a, uint64_t b)
  * LMC RAS Error Record 00 Control Register
  * This per-record register contains enables bits for the node that writes to this record.
  * See the individual per-record CSRs for the record-specific values of each field.
- *
- * Internal:
- * If adding/removing records, update MCC()_MCI()_RAS_ERRDEVID[NUM].
  */
 union cavm_mccx_lmcoex_ras_err00ctlr
 {
@@ -1407,19 +1118,13 @@ union cavm_mccx_lmcoex_ras_err00ctlr
                                                                  0 = Error detection and correction disabled.
                                                                  1 = Error detection and correction enabled.
 
-                                                                 For CNXXXX, all records similar.
-
-                                                                 Internal:
-                                                                 This feature is always enabled, so this field has no control. */
+                                                                 For CNXXXX, all records similar. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 1;  /**< [  0:  0](RO) Enable error detection and correction at the node.
                                                                  0 = Error detection and correction disabled.
                                                                  1 = Error detection and correction enabled.
 
-                                                                 For CNXXXX, all records similar.
-
-                                                                 Internal:
-                                                                 This feature is always enabled, so this field has no control. */
+                                                                 For CNXXXX, all records similar. */
         uint64_t imp_fe                : 1;  /**< [  1:  1](R/W) Implementation defined.
 
                                                                  For CNXXXX force error.
@@ -1524,9 +1229,6 @@ static inline uint64_t CAVM_MCCX_LMCOEX_RAS_ERR00CTLR(uint64_t a, uint64_t b)
  * features are implemented. and of the implemented features which are software
  * programmable.
  * See the individual per-record CSRs for the record-specific values of each field.
- *
- * Internal:
- * If adding/removing records, update MCC()_LMCOE()_RAS_ERRDEVID[NUM].
  */
 union cavm_mccx_lmcoex_ras_err00fr
 {
@@ -1542,68 +1244,44 @@ union cavm_mccx_lmcoex_ras_err00fr
                                                                  implemented. *_RAS_ERRnSTATUS[OF] is set to 1.
                                                                  0x1 = Count corrected error. If *_RAS_ERRnSTATUS[OF] = 1 before the corrected
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
-                                                                 overwritten. If the counter overflows, *_RAS_ERRnSTATUS[OF] is set to 1.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 overwritten. If the counter overflows, *_RAS_ERRnSTATUS[OF] is set to 1. */
         uint64_t dui                   : 2;  /**< [ 17: 16](RO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t rp                    : 1;  /**< [ 15: 15](RO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
-                                                                 repeat counter is the same size as the primary error counter.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 repeat counter is the same size as the primary error counter. */
         uint64_t cec                   : 3;  /**< [ 14: 12](RO) Indicates a standard correctable error counter mechanism in *_RAS_ERRnMISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in *_RAS_ERRnMISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in *_RAS_ERRnMISC0\<47:32\>.
-                                                                 _ All other values are reserved.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 _ All other values are reserved. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable using ERR\<n\>CTLR.CFI.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) In-band uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ui                    : 2;  /**< [  5:  4](RO) Uncorrected error recovery interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -1611,17 +1289,11 @@ union cavm_mccx_lmcoex_ras_err00fr
                                                                  0x3 = Reserved. */
         uint64_t ed                    : 2;  /**< [  1:  0](RO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
-                                                                 0x2 = Feature is controllable.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x2 = Feature is controllable. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 2;  /**< [  1:  0](RO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
-                                                                 0x2 = Feature is controllable.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x2 = Feature is controllable. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -1631,60 +1303,39 @@ union cavm_mccx_lmcoex_ras_err00fr
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) In-band uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable using ERR\<n\>CTLR.CFI.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t cec                   : 3;  /**< [ 14: 12](RO) Indicates a standard correctable error counter mechanism in *_RAS_ERRnMISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in *_RAS_ERRnMISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in *_RAS_ERRnMISC0\<47:32\>.
-                                                                 _ All other values are reserved.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 _ All other values are reserved. */
         uint64_t rp                    : 1;  /**< [ 15: 15](RO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
-                                                                 repeat counter is the same size as the primary error counter.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 repeat counter is the same size as the primary error counter. */
         uint64_t dui                   : 2;  /**< [ 17: 16](RO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ceo                   : 2;  /**< [ 19: 18](RO) Corrected error overwrite. Indicates the behavior when a second corrected error
                                                                  is detected after a first corrected error has been recorded by the node.
                                                                  0x0 = Count corrected error if a counter is implemented. Keep the previous error
@@ -1692,10 +1343,7 @@ union cavm_mccx_lmcoex_ras_err00fr
                                                                  implemented. *_RAS_ERRnSTATUS[OF] is set to 1.
                                                                  0x1 = Count corrected error. If *_RAS_ERRnSTATUS[OF] = 1 before the corrected
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
-                                                                 overwritten. If the counter overflows, *_RAS_ERRnSTATUS[OF] is set to 1.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 overwritten. If the counter overflows, *_RAS_ERRnSTATUS[OF] is set to 1. */
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } s;
@@ -1712,68 +1360,44 @@ union cavm_mccx_lmcoex_ras_err00fr
                                                                  implemented. *_RAS_ERRnSTATUS[OF] is set to 1.
                                                                  0x1 = Count corrected error. If *_RAS_ERRnSTATUS[OF] = 1 before the corrected
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
-                                                                 overwritten. If the counter overflows, *_RAS_ERRnSTATUS[OF] is set to 1.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 overwritten. If the counter overflows, *_RAS_ERRnSTATUS[OF] is set to 1. */
         uint64_t dui                   : 2;  /**< [ 17: 16](RO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t rp                    : 1;  /**< [ 15: 15](RO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
-                                                                 repeat counter is the same size as the primary error counter.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 repeat counter is the same size as the primary error counter. */
         uint64_t cec                   : 3;  /**< [ 14: 12](RO) Indicates a standard correctable error counter mechanism in *_RAS_ERRnMISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in *_RAS_ERRnMISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in *_RAS_ERRnMISC0\<47:32\>.
-                                                                 _ All other values are reserved.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 _ All other values are reserved. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable using ERR\<n\>CTLR.CFI.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) In-band uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ui                    : 2;  /**< [  5:  4](RO) Uncorrected error recovery interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -1781,17 +1405,11 @@ union cavm_mccx_lmcoex_ras_err00fr
                                                                  0x3 = Reserved. */
         uint64_t ed                    : 2;  /**< [  1:  0](RO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
-                                                                 0x2 = Feature is controllable.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x2 = Feature is controllable. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 2;  /**< [  1:  0](RO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
-                                                                 0x2 = Feature is controllable.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x2 = Feature is controllable. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -1801,60 +1419,39 @@ union cavm_mccx_lmcoex_ras_err00fr
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) In-band uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable using ERR\<n\>CTLR.CFI.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t cec                   : 3;  /**< [ 14: 12](RO) Indicates a standard correctable error counter mechanism in *_RAS_ERRnMISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in *_RAS_ERRnMISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in *_RAS_ERRnMISC0\<47:32\>.
-                                                                 _ All other values are reserved.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 _ All other values are reserved. */
         uint64_t rp                    : 1;  /**< [ 15: 15](RO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
-                                                                 repeat counter is the same size as the primary error counter.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 repeat counter is the same size as the primary error counter. */
         uint64_t dui                   : 2;  /**< [ 17: 16](RO) Error recovery interrupt for deferred errors. If this feature is implemented,
                                                                  then the error recovery interrupt must be implemented.
 
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Reserved.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ceo                   : 2;  /**< [ 19: 18](RO) Corrected error overwrite. Indicates the behavior when a second corrected error
                                                                  is detected after a first corrected error has been recorded by the node.
                                                                  0x0 = Count corrected error if a counter is implemented. Keep the previous error
@@ -1862,10 +1459,7 @@ union cavm_mccx_lmcoex_ras_err00fr
                                                                  implemented. *_RAS_ERRnSTATUS[OF] is set to 1.
                                                                  0x1 = Count corrected error. If *_RAS_ERRnSTATUS[OF] = 1 before the corrected
                                                                  error is counted, keep the previous syndrome. Otherwise the previous syndrome is
-                                                                 overwritten. If the counter overflows, *_RAS_ERRnSTATUS[OF] is set to 1.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 overwritten. If the counter overflows, *_RAS_ERRnSTATUS[OF] is set to 1. */
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -2535,8 +2129,6 @@ static inline uint64_t CAVM_MCCX_LMCOEX_RAS_ERR01ADDR(uint64_t a, uint64_t b)
  *
  * LMC RAS Error Record 01 Control Register
  * See MCC()_LMCOE()_RAS_ERR00CTLR.
- * Internal:
- * Only ERR00CTLR is necessary to describe the node.
  */
 union cavm_mccx_lmcoex_ras_err01ctlr
 {
@@ -2583,8 +2175,6 @@ static inline uint64_t CAVM_MCCX_LMCOEX_RAS_ERR01CTLR(uint64_t a, uint64_t b)
  *
  * LMC RAS Error Record 01 Feature Register
  * See MCC()_LMCOE()_RAS_ERR00FR.
- * Internal:
- * Only ERR00FR is necessary to describe the node.
  */
 union cavm_mccx_lmcoex_ras_err01fr
 {
@@ -7990,10 +7580,7 @@ union cavm_mccx_lmcoex_ras_errirqsr
                                                                  0 = Error recovery interrupt write not in progress.
                                                                  1 = Error recovery interrupt write in progress.
 
-                                                                 In CNXXXX, reads same as [FHI].
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 In CNXXXX, reads same as [FHI]. */
         uint64_t fhierr                : 1;  /**< [  1:  1](RO) Fault handling interrupt error.
                                                                  0 = Fault handling interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -8003,17 +7590,11 @@ union cavm_mccx_lmcoex_ras_errirqsr
                                                                  In CNXXXX, always 0. */
         uint64_t fhi                   : 1;  /**< [  0:  0](RO/H) Fault handling interrupt write in progress.
                                                                  0 = Fault handling interrupt write not in progress.
-                                                                 1 = Fault handling interrupt write in progress.
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 1 = Fault handling interrupt write in progress. */
 #else /* Word 0 - Little Endian */
         uint64_t fhi                   : 1;  /**< [  0:  0](RO/H) Fault handling interrupt write in progress.
                                                                  0 = Fault handling interrupt write not in progress.
-                                                                 1 = Fault handling interrupt write in progress.
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 1 = Fault handling interrupt write in progress. */
         uint64_t fhierr                : 1;  /**< [  1:  1](RO) Fault handling interrupt error.
                                                                  0 = Fault handling interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -8025,10 +7606,7 @@ union cavm_mccx_lmcoex_ras_errirqsr
                                                                  0 = Error recovery interrupt write not in progress.
                                                                  1 = Error recovery interrupt write in progress.
 
-                                                                 In CNXXXX, reads same as [FHI].
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 In CNXXXX, reads same as [FHI]. */
         uint64_t erierr                : 1;  /**< [  3:  3](RO) Error recovery interrupt error.
                                                                  0 = Error recovery interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -9024,244 +8602,6 @@ static inline uint64_t CAVM_MCCX_LMCOEX_WRNXM_FADR(uint64_t a, uint64_t b)
 #define arguments_CAVM_MCCX_LMCOEX_WRNXM_FADR(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) mcc#_mci#_bp_test
- *
- * INTERNAL: MCC MCI Backpressure Test Register
- */
-union cavm_mccx_mcix_bp_test
-{
-    uint64_t u;
-    struct cavm_mccx_mcix_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, disables popping of Read Command FIFOs from TADs.
-                                                                 \<62\> = When set, disables popping of Write/WBar Command FIFOs from TADs.
-                                                                 \<61\> = When set, disables popping of Read Data from CTL.
-                                                                 \<60\> = When set, disables popping of ACKs from CTL. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, disables popping of Read Command FIFOs from TADs.
-                                                                 \<62\> = When set, disables popping of Write/WBar Command FIFOs from TADs.
-                                                                 \<61\> = When set, disables popping of Read Data from CTL.
-                                                                 \<60\> = When set, disables popping of ACKs from CTL. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_mcix_bp_test_s cn; */
-};
-typedef union cavm_mccx_mcix_bp_test cavm_mccx_mcix_bp_test_t;
-
-static inline uint64_t CAVM_MCCX_MCIX_BP_TEST(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_MCIX_BP_TEST(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400048ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400048ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b==0)))
-        return 0x87e03c400048ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b==0)))
-        return 0x87e03c400048ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b==0)))
-        return 0x87e03c400048ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b==0)))
-        return 0x87e03c400048ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("MCCX_MCIX_BP_TEST", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_MCIX_BP_TEST(a,b) cavm_mccx_mcix_bp_test_t
-#define bustype_CAVM_MCCX_MCIX_BP_TEST(a,b) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_MCIX_BP_TEST(a,b) "MCCX_MCIX_BP_TEST"
-#define device_bar_CAVM_MCCX_MCIX_BP_TEST(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_MCIX_BP_TEST(a,b) (a)
-#define arguments_CAVM_MCCX_MCIX_BP_TEST(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) mcc#_mci#_dbe_dbg_cnt
- *
- * INTERNAL: MCC MCI DBE Detection Counter Registers
- *
- * This register keeps track of the number of double-bit errors arriving on the DAT
- * mesh into MCI from MSW in saturating counters. For debug purposes only - no
- * correction.
- */
-union cavm_mccx_mcix_dbe_dbg_cnt
-{
-    uint64_t u;
-    struct cavm_mccx_mcix_dbe_dbg_cnt_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ow3                   : 16; /**< [ 63: 48](R/W/H) Current double-bit error counter value for OW3. */
-        uint64_t ow2                   : 16; /**< [ 47: 32](R/W/H) Current double-bit error counter value for OW2. */
-        uint64_t ow1                   : 16; /**< [ 31: 16](R/W/H) Current double-bit error counter value for OW1. */
-        uint64_t ow0                   : 16; /**< [ 15:  0](R/W/H) Current double-bit error counter value for OW0. */
-#else /* Word 0 - Little Endian */
-        uint64_t ow0                   : 16; /**< [ 15:  0](R/W/H) Current double-bit error counter value for OW0. */
-        uint64_t ow1                   : 16; /**< [ 31: 16](R/W/H) Current double-bit error counter value for OW1. */
-        uint64_t ow2                   : 16; /**< [ 47: 32](R/W/H) Current double-bit error counter value for OW2. */
-        uint64_t ow3                   : 16; /**< [ 63: 48](R/W/H) Current double-bit error counter value for OW3. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_mcix_dbe_dbg_cnt_s cn; */
-};
-typedef union cavm_mccx_mcix_dbe_dbg_cnt cavm_mccx_mcix_dbe_dbg_cnt_t;
-
-static inline uint64_t CAVM_MCCX_MCIX_DBE_DBG_CNT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_MCIX_DBE_DBG_CNT(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400060ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400060ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b==0)))
-        return 0x87e03c400060ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b==0)))
-        return 0x87e03c400060ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b==0)))
-        return 0x87e03c400060ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b==0)))
-        return 0x87e03c400060ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("MCCX_MCIX_DBE_DBG_CNT", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_MCIX_DBE_DBG_CNT(a,b) cavm_mccx_mcix_dbe_dbg_cnt_t
-#define bustype_CAVM_MCCX_MCIX_DBE_DBG_CNT(a,b) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_MCIX_DBE_DBG_CNT(a,b) "MCCX_MCIX_DBE_DBG_CNT"
-#define device_bar_CAVM_MCCX_MCIX_DBE_DBG_CNT(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_MCIX_DBE_DBG_CNT(a,b) (a)
-#define arguments_CAVM_MCCX_MCIX_DBE_DBG_CNT(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) mcc#_mci#_ecc_dbg_en
- *
- * INTERNAL: MCC MCI Mesh ECC Error Detection Counter Control Register
- *
- * This register enables counting of the number of single and double bit errors on the
- * DAT mesh coming into MCI from MSW.
- * For debug purposes only, no SBE correction.
- */
-union cavm_mccx_mcix_ecc_dbg_en
-{
-    uint64_t u;
-    struct cavm_mccx_mcix_ecc_dbg_en_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t sbe                   : 1;  /**< [  1:  1](R/W) Enable counting the number of SBEs seen on the DAT mesh in MCC()_MCI()_SBE_DBG_CNT. */
-        uint64_t dbe                   : 1;  /**< [  0:  0](R/W) Enable counting the number of DBEs seen on the DAT mesh in MCC()_MCI()_DBE_DBG_CNT. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbe                   : 1;  /**< [  0:  0](R/W) Enable counting the number of DBEs seen on the DAT mesh in MCC()_MCI()_DBE_DBG_CNT. */
-        uint64_t sbe                   : 1;  /**< [  1:  1](R/W) Enable counting the number of SBEs seen on the DAT mesh in MCC()_MCI()_SBE_DBG_CNT. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_mcix_ecc_dbg_en_s cn; */
-};
-typedef union cavm_mccx_mcix_ecc_dbg_en cavm_mccx_mcix_ecc_dbg_en_t;
-
-static inline uint64_t CAVM_MCCX_MCIX_ECC_DBG_EN(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_MCIX_ECC_DBG_EN(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400050ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400050ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b==0)))
-        return 0x87e03c400050ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b==0)))
-        return 0x87e03c400050ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b==0)))
-        return 0x87e03c400050ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b==0)))
-        return 0x87e03c400050ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("MCCX_MCIX_ECC_DBG_EN", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_MCIX_ECC_DBG_EN(a,b) cavm_mccx_mcix_ecc_dbg_en_t
-#define bustype_CAVM_MCCX_MCIX_ECC_DBG_EN(a,b) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_MCIX_ECC_DBG_EN(a,b) "MCCX_MCIX_ECC_DBG_EN"
-#define device_bar_CAVM_MCCX_MCIX_ECC_DBG_EN(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_MCIX_ECC_DBG_EN(a,b) (a)
-#define arguments_CAVM_MCCX_MCIX_ECC_DBG_EN(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) mcc#_mci#_eco
- *
- * INTERNAL: MCC MCI ECO Register
- */
-union cavm_mccx_mcix_eco
-{
-    uint64_t u;
-    struct cavm_mccx_mcix_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_mcix_eco_s cn; */
-};
-typedef union cavm_mccx_mcix_eco cavm_mccx_mcix_eco_t;
-
-static inline uint64_t CAVM_MCCX_MCIX_ECO(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_MCIX_ECO(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400040ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400040ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b==0)))
-        return 0x87e03c400040ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b==0)))
-        return 0x87e03c400040ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b==0)))
-        return 0x87e03c400040ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b==0)))
-        return 0x87e03c400040ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("MCCX_MCIX_ECO", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_MCIX_ECO(a,b) cavm_mccx_mcix_eco_t
-#define bustype_CAVM_MCCX_MCIX_ECO(a,b) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_MCIX_ECO(a,b) "MCCX_MCIX_ECO"
-#define device_bar_CAVM_MCCX_MCIX_ECO(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_MCIX_ECO(a,b) (a)
-#define arguments_CAVM_MCCX_MCIX_ECO(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) mcc#_mci#_int
  *
  * MCC MCI Interrupt Register
@@ -9624,10 +8964,7 @@ union cavm_mccx_mcix_ras_err00addr
         uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
 
                                                                  0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In ARM spec it is named NS. */
+                                                                 1 = The address is nonsecure. */
         uint64_t si                    : 1;  /**< [ 62: 62](RO) Secure Incorrect. Indicates whether the NS bit is valid. The possible values of this bit are:
 
                                                                  0 = The NS bit is correct. That is, it matches the programmers' view of the
@@ -9684,97 +9021,19 @@ union cavm_mccx_mcix_ras_err00addr
         uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
 
                                                                  0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In ARM spec it is named NS. */
+                                                                 1 = The address is nonsecure. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_mccx_mcix_ras_err00addr_s cn9; */
-    /* struct cavm_mccx_mcix_ras_err00addr_s cn96xxp1; */
-    struct cavm_mccx_mcix_ras_err00addr_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
-
-                                                                 0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In Arm spec it is named NS. */
-        uint64_t si                    : 1;  /**< [ 62: 62](RO) Secure Incorrect. Indicates whether the NS bit is valid. The possible values of this bit are:
-
-                                                                 0 = The NS bit is correct. That is, it matches the programmers' view of the
-                                                                     Nonsecure attribute for this recorded location.
-                                                                 1 = The NS bit might not be correct, and might not match the programmers' view of the
-                                                                     Nonsecure attribute for the recorded location. */
-        uint64_t ai                    : 1;  /**< [ 61: 61](RO) Address Incorrect. Indicates whether the PADDR field is a valid physical address that is
-                                                                 known to match the programmers' view of the physical address for the recorded location.
-                                                                 The possible values of this bit are:
-
-                                                                 0 = The PADDR field is a valid physical address. That is, it matches the
-                                                                     programmers' view of the physical address for the recorded location.
-                                                                 1 = The PADDR field might not be a valid physical address, and might not
-                                                                     match the programmers' view of the physical address for the recorded location. */
-        uint64_t reserved_56_60        : 5;
-        uint64_t paddr                 : 56; /**< [ 55:  0](R/W/H) Physical Address. Address of the recorded location.
-                                                                 See CCS_ASC_REGION_* to extract system address.
-
-                                                                 [55:51] = 0x0.
-                                                                 [50:48] = FLMCMSK. Failing LMC mask.
-                                                                 [47]    = FLRBIT.  Failing left/right bit.
-                                                                 [46:43] = FAREM.   Failing address remainder number.
-                                                                 [42:39] = FREGION. Failing ASC region matched.
-                                                                 [38]    = FO.      Failing address bit 6 (Fill Order).
-                                                                 [37: 3] = FOFFSET. Failing LLC/LMC address offset number.
-                                                                 [2:0]   = FIDX.    Failing address cache-line index. */
-#else /* Word 0 - Little Endian */
-        uint64_t paddr                 : 56; /**< [ 55:  0](R/W/H) Physical Address. Address of the recorded location.
-                                                                 See CCS_ASC_REGION_* to extract system address.
-
-                                                                 [55:51] = 0x0.
-                                                                 [50:48] = FLMCMSK. Failing LMC mask.
-                                                                 [47]    = FLRBIT.  Failing left/right bit.
-                                                                 [46:43] = FAREM.   Failing address remainder number.
-                                                                 [42:39] = FREGION. Failing ASC region matched.
-                                                                 [38]    = FO.      Failing address bit 6 (Fill Order).
-                                                                 [37: 3] = FOFFSET. Failing LLC/LMC address offset number.
-                                                                 [2:0]   = FIDX.    Failing address cache-line index. */
-        uint64_t reserved_56_60        : 5;
-        uint64_t ai                    : 1;  /**< [ 61: 61](RO) Address Incorrect. Indicates whether the PADDR field is a valid physical address that is
-                                                                 known to match the programmers' view of the physical address for the recorded location.
-                                                                 The possible values of this bit are:
-
-                                                                 0 = The PADDR field is a valid physical address. That is, it matches the
-                                                                     programmers' view of the physical address for the recorded location.
-                                                                 1 = The PADDR field might not be a valid physical address, and might not
-                                                                     match the programmers' view of the physical address for the recorded location. */
-        uint64_t si                    : 1;  /**< [ 62: 62](RO) Secure Incorrect. Indicates whether the NS bit is valid. The possible values of this bit are:
-
-                                                                 0 = The NS bit is correct. That is, it matches the programmers' view of the
-                                                                     Nonsecure attribute for this recorded location.
-                                                                 1 = The NS bit might not be correct, and might not match the programmers' view of the
-                                                                     Nonsecure attribute for the recorded location. */
-        uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
-
-                                                                 0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In Arm spec it is named NS. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_mccx_mcix_ras_err00addr_cn96xxp3 cn98xx; */
+    /* struct cavm_mccx_mcix_ras_err00addr_s cn96xx; */
+    /* struct cavm_mccx_mcix_ras_err00addr_s cn98xx; */
     struct cavm_mccx_mcix_ras_err00addr_cnf95xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
 
                                                                  0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In Arm spec it is named NS. */
+                                                                 1 = The address is nonsecure. */
         uint64_t si                    : 1;  /**< [ 62: 62](RO) Secure Incorrect. Indicates whether the NS bit is valid. The possible values of this bit are:
 
                                                                  0 = The NS bit is correct. That is, it matches the programmers' view of the
@@ -9831,10 +9090,7 @@ union cavm_mccx_mcix_ras_err00addr
         uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
 
                                                                  0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In Arm spec it is named NS. */
+                                                                 1 = The address is nonsecure. */
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_mccx_mcix_ras_err00addr_cnf95xx f95mm; */
@@ -9874,9 +9130,6 @@ static inline uint64_t CAVM_MCCX_MCIX_RAS_ERR00ADDR(uint64_t a, uint64_t b)
  * MCC MCI RAS Error Record 00 Control Register
  * This per-record register contains enables bits for the node that writes to this record.
  * See the individual per-record CSRs for the record-specific values of each field.
- *
- * Internal:
- * If adding/removing records, update MCC()_MCI()_RAS_ERRDEVID[NUM].
  */
 union cavm_mccx_mcix_ras_err00ctlr
 {
@@ -9956,19 +9209,13 @@ union cavm_mccx_mcix_ras_err00ctlr
                                                                  0 = Error detection and correction disabled.
                                                                  1 = Error detection and correction enabled.
 
-                                                                 For CNXXXX, all records similar.
-
-                                                                 Internal:
-                                                                 This feature is always enabled, so this field has no control. */
+                                                                 For CNXXXX, all records similar. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 1;  /**< [  0:  0](R/W) Enable error detection and correction at the node.
                                                                  0 = Error detection and correction disabled.
                                                                  1 = Error detection and correction enabled.
 
-                                                                 For CNXXXX, all records similar.
-
-                                                                 Internal:
-                                                                 This feature is always enabled, so this field has no control. */
+                                                                 For CNXXXX, all records similar. */
         uint64_t imp_fe                : 1;  /**< [  1:  1](R/W) Implementation defined.
 
                                                                  For CNXXXX force error.
@@ -10076,9 +9323,6 @@ static inline uint64_t CAVM_MCCX_MCIX_RAS_ERR00CTLR(uint64_t a, uint64_t b)
  * features are implemented. and of the implemented features which are software
  * programmable.
  * See the individual per-record CSRs for the record-specific values of each field.
- *
- * Internal:
- * If adding/removing records, update MCC()_MCI()_RAS_ERRDEVID[NUM].
  */
 union cavm_mccx_mcix_ras_err00fr
 {
@@ -10114,10 +9358,7 @@ union cavm_mccx_mcix_ras_err00fr
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in *_RAS_ERRnMISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in *_RAS_ERRnMISC0\<47:32\>.
-                                                                 _ All other values are reserved.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 _ All other values are reserved. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -10127,10 +9368,7 @@ union cavm_mccx_mcix_ras_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) In-band uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -10139,26 +9377,17 @@ union cavm_mccx_mcix_ras_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ui                    : 2;  /**< [  5:  4](RO) Uncorrected error recovery interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -10172,19 +9401,13 @@ union cavm_mccx_mcix_ras_err00fr
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 2;  /**< [  1:  0](RO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -10198,18 +9421,12 @@ union cavm_mccx_mcix_ras_err00fr
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) In-band uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -10218,10 +9435,7 @@ union cavm_mccx_mcix_ras_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -10231,18 +9445,12 @@ union cavm_mccx_mcix_ras_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cec                   : 3;  /**< [ 14: 12](RO) Indicates a standard correctable error counter mechanism in *_RAS_ERRnMISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in *_RAS_ERRnMISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in *_RAS_ERRnMISC0\<47:32\>.
-                                                                 _ All other values are reserved.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 _ All other values are reserved. */
         uint64_t rp                    : 1;  /**< [ 15: 15](RO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
@@ -10302,10 +9510,7 @@ union cavm_mccx_mcix_ras_err00fr
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in *_RAS_ERRnMISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in *_RAS_ERRnMISC0\<47:32\>.
-                                                                 _ All other values are reserved.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 _ All other values are reserved. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -10315,10 +9520,7 @@ union cavm_mccx_mcix_ras_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) In-band uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -10327,26 +9529,17 @@ union cavm_mccx_mcix_ras_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ui                    : 2;  /**< [  5:  4](RO) Uncorrected error recovery interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -10360,19 +9553,13 @@ union cavm_mccx_mcix_ras_err00fr
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
 #else /* Word 0 - Little Endian */
         uint64_t ed                    : 2;  /**< [  1:  0](RO) Error detection and correction.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
 
-                                                                 For CNXXXX all records controllable, always 0x2.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 For CNXXXX all records controllable, always 0x2. */
         uint64_t imp_fe                : 2;  /**< [  3:  2](RO) Implementation defined.
                                                                  0x0 = No additional feature.
                                                                  0x1 = Reserved.
@@ -10386,18 +9573,12 @@ union cavm_mccx_mcix_ras_err00fr
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t fi                    : 2;  /**< [  7:  6](RO) Fault handling interrupt.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
                                                                  0x2 = Feature is controllable.
-                                                                 0x3 = Feature is controllable with independent controls for reads and writes.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 0x3 = Feature is controllable with independent controls for reads and writes. */
         uint64_t ue                    : 2;  /**< [  9:  8](RO) In-band uncorrected error reporting.
                                                                  0x0 = Does not support feature.
                                                                  0x1 = Feature always enabled.
@@ -10406,10 +9587,7 @@ union cavm_mccx_mcix_ras_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to uncorrectable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cfi                   : 2;  /**< [ 11: 10](RO) Fault handling interrupt for corrected errors. If this feature is implemented,
                                                                  then the fault handling interrupt must be implemented.
                                                                  0x0 = Does not support feature.
@@ -10419,18 +9597,12 @@ union cavm_mccx_mcix_ras_err00fr
 
                                                                  For CNXXXX depends on the record.
                                                                  * For records corresponding to correctable errors, 0x2.
-                                                                 * For other records, 0x0.
-
-                                                                 Internal:
-                                                                 Hardcoded per record. */
+                                                                 * For other records, 0x0. */
         uint64_t cec                   : 3;  /**< [ 14: 12](RO) Indicates a standard correctable error counter mechanism in *_RAS_ERRnMISC0.
                                                                  0x0 = Does not implement the standardized error counter model.
                                                                  0x2 = Implements an 8-bit error counter in *_RAS_ERRnMISC0\<39:32\>.
                                                                  0x4 = Implements a 16-bit error counter in *_RAS_ERRnMISC0\<47:32\>.
-                                                                 _ All other values are reserved.
-
-                                                                 Internal:
-                                                                 Hardcoded. */
+                                                                 _ All other values are reserved. */
         uint64_t rp                    : 1;  /**< [ 15: 15](RO) Repeat counter. Indicates whether the node implements a repeat corrected error counter.
                                                                  0 = A single CE counter is implemented.
                                                                  1 = A first (repeat) counter and a second (other) counter are implemented. The
@@ -11119,10 +10291,7 @@ union cavm_mccx_mcix_ras_err01addr
         uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
 
                                                                  0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In ARM spec it is named NS. */
+                                                                 1 = The address is nonsecure. */
         uint64_t si                    : 1;  /**< [ 62: 62](RO) Secure Incorrect. Indicates whether the NS bit is valid. The possible values of this bit are:
 
                                                                  0 = The NS bit is correct. That is, it matches the programmers' view of the
@@ -11179,97 +10348,19 @@ union cavm_mccx_mcix_ras_err01addr
         uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
 
                                                                  0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In ARM spec it is named NS. */
+                                                                 1 = The address is nonsecure. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_mccx_mcix_ras_err01addr_s cn9; */
-    /* struct cavm_mccx_mcix_ras_err01addr_s cn96xxp1; */
-    struct cavm_mccx_mcix_ras_err01addr_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
-
-                                                                 0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In Arm spec it is named NS. */
-        uint64_t si                    : 1;  /**< [ 62: 62](RO) Secure Incorrect. Indicates whether the NS bit is valid. The possible values of this bit are:
-
-                                                                 0 = The NS bit is correct. That is, it matches the programmers' view of the
-                                                                     Nonsecure attribute for this recorded location.
-                                                                 1 = The NS bit might not be correct, and might not match the programmers' view of the
-                                                                     Nonsecure attribute for the recorded location. */
-        uint64_t ai                    : 1;  /**< [ 61: 61](RO) Address Incorrect. Indicates whether the PADDR field is a valid physical address that is
-                                                                 known to match the programmers' view of the physical address for the recorded location.
-                                                                 The possible values of this bit are:
-
-                                                                 0 = The PADDR field is a valid physical address. That is, it matches the
-                                                                     programmers' view of the physical address for the recorded location.
-                                                                 1 = The PADDR field might not be a valid physical address, and might not
-                                                                     match the programmers' view of the physical address for the recorded location. */
-        uint64_t reserved_56_60        : 5;
-        uint64_t paddr                 : 56; /**< [ 55:  0](R/W/H) Physical Address. Address of the recorded location.
-                                                                 See CCS_ASC_REGION_* to extract system address.
-
-                                                                 [55:51] = 0x0.
-                                                                 [50:48] = FLMCMSK. Failing LMC mask.
-                                                                 [47]    = FLRBIT.  Failing left/right bit.
-                                                                 [46:43] = FAREM.   Failing address remainder number.
-                                                                 [42:39] = FREGION. Failing ASC region matched.
-                                                                 [38]    = FO.      Failing address bit 6 (Fill Order).
-                                                                 [37: 3] = FOFFSET. Failing LLC/LMC address offset number.
-                                                                 [2:0]   = FIDX.    Failing address cache-line index. */
-#else /* Word 0 - Little Endian */
-        uint64_t paddr                 : 56; /**< [ 55:  0](R/W/H) Physical Address. Address of the recorded location.
-                                                                 See CCS_ASC_REGION_* to extract system address.
-
-                                                                 [55:51] = 0x0.
-                                                                 [50:48] = FLMCMSK. Failing LMC mask.
-                                                                 [47]    = FLRBIT.  Failing left/right bit.
-                                                                 [46:43] = FAREM.   Failing address remainder number.
-                                                                 [42:39] = FREGION. Failing ASC region matched.
-                                                                 [38]    = FO.      Failing address bit 6 (Fill Order).
-                                                                 [37: 3] = FOFFSET. Failing LLC/LMC address offset number.
-                                                                 [2:0]   = FIDX.    Failing address cache-line index. */
-        uint64_t reserved_56_60        : 5;
-        uint64_t ai                    : 1;  /**< [ 61: 61](RO) Address Incorrect. Indicates whether the PADDR field is a valid physical address that is
-                                                                 known to match the programmers' view of the physical address for the recorded location.
-                                                                 The possible values of this bit are:
-
-                                                                 0 = The PADDR field is a valid physical address. That is, it matches the
-                                                                     programmers' view of the physical address for the recorded location.
-                                                                 1 = The PADDR field might not be a valid physical address, and might not
-                                                                     match the programmers' view of the physical address for the recorded location. */
-        uint64_t si                    : 1;  /**< [ 62: 62](RO) Secure Incorrect. Indicates whether the NS bit is valid. The possible values of this bit are:
-
-                                                                 0 = The NS bit is correct. That is, it matches the programmers' view of the
-                                                                     Nonsecure attribute for this recorded location.
-                                                                 1 = The NS bit might not be correct, and might not match the programmers' view of the
-                                                                     Nonsecure attribute for the recorded location. */
-        uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
-
-                                                                 0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In Arm spec it is named NS. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_mccx_mcix_ras_err01addr_cn96xxp3 cn98xx; */
+    /* struct cavm_mccx_mcix_ras_err01addr_s cn96xx; */
+    /* struct cavm_mccx_mcix_ras_err01addr_s cn98xx; */
     struct cavm_mccx_mcix_ras_err01addr_cnf95xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
 
                                                                  0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In Arm spec it is named NS. */
+                                                                 1 = The address is nonsecure. */
         uint64_t si                    : 1;  /**< [ 62: 62](RO) Secure Incorrect. Indicates whether the NS bit is valid. The possible values of this bit are:
 
                                                                  0 = The NS bit is correct. That is, it matches the programmers' view of the
@@ -11326,10 +10417,7 @@ union cavm_mccx_mcix_ras_err01addr
         uint64_t nsec                  : 1;  /**< [ 63: 63](R/W/H) Non-secure attribute. The possible values of this bit are:
 
                                                                  0 = The address is secure.
-                                                                 1 = The address is nonsecure.
-
-                                                                 Internal:
-                                                                 In Arm spec it is named NS. */
+                                                                 1 = The address is nonsecure. */
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_mccx_mcix_ras_err01addr_cnf95xx f95mm; */
@@ -12729,10 +11817,7 @@ union cavm_mccx_mcix_ras_errirqsr
                                                                  0 = Error recovery interrupt write not in progress.
                                                                  1 = Error recovery interrupt write in progress.
 
-                                                                 In CNXXXX, reads same as [FHI].
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 In CNXXXX, reads same as [FHI]. */
         uint64_t fhierr                : 1;  /**< [  1:  1](RO) Fault handling interrupt error.
                                                                  0 = Fault handling interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -12742,17 +11827,11 @@ union cavm_mccx_mcix_ras_errirqsr
                                                                  In CNXXXX, always 0. */
         uint64_t fhi                   : 1;  /**< [  0:  0](RO/H) Fault handling interrupt write in progress.
                                                                  0 = Fault handling interrupt write not in progress.
-                                                                 1 = Fault handling interrupt write in progress.
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 1 = Fault handling interrupt write in progress. */
 #else /* Word 0 - Little Endian */
         uint64_t fhi                   : 1;  /**< [  0:  0](RO/H) Fault handling interrupt write in progress.
                                                                  0 = Fault handling interrupt write not in progress.
-                                                                 1 = Fault handling interrupt write in progress.
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 1 = Fault handling interrupt write in progress. */
         uint64_t fhierr                : 1;  /**< [  1:  1](RO) Fault handling interrupt error.
                                                                  0 = Fault handling interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -12764,10 +11843,7 @@ union cavm_mccx_mcix_ras_errirqsr
                                                                  0 = Error recovery interrupt write not in progress.
                                                                  1 = Error recovery interrupt write in progress.
 
-                                                                 In CNXXXX, reads same as [FHI].
-
-                                                                 Internal:
-                                                                 Connects to GIB/GIA counter being nonzero. */
+                                                                 In CNXXXX, reads same as [FHI]. */
         uint64_t erierr                : 1;  /**< [  3:  3](RO) Error recovery interrupt error.
                                                                  0 = Error recovery interrupt write has not returned an error since this bit was
                                                                  last cleared to 0.
@@ -13558,61 +12634,6 @@ static inline uint64_t CAVM_MCCX_MCIX_RDDISLMC_FADR(uint64_t a, uint64_t b)
 #define device_bar_CAVM_MCCX_MCIX_RDDISLMC_FADR(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_MCCX_MCIX_RDDISLMC_FADR(a,b) (a)
 #define arguments_CAVM_MCCX_MCIX_RDDISLMC_FADR(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) mcc#_mci#_sbe_dbg_cnt
- *
- * INTERNAL: MCC MCI SBE Detection Counter Registers
- *
- * This register keeps track of the number of single-bit errors arriving on the DAT
- * mesh into MCI from MSW in saturating counters. For debug purposes only - no
- * correction.
- */
-union cavm_mccx_mcix_sbe_dbg_cnt
-{
-    uint64_t u;
-    struct cavm_mccx_mcix_sbe_dbg_cnt_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ow3                   : 16; /**< [ 63: 48](R/W/H) Current single-bit error counter value for OW3. */
-        uint64_t ow2                   : 16; /**< [ 47: 32](R/W/H) Current single-bit error counter value for OW2. */
-        uint64_t ow1                   : 16; /**< [ 31: 16](R/W/H) Current single-bit error counter value for OW1. */
-        uint64_t ow0                   : 16; /**< [ 15:  0](R/W/H) Current single-bit error counter value for OW0. */
-#else /* Word 0 - Little Endian */
-        uint64_t ow0                   : 16; /**< [ 15:  0](R/W/H) Current single-bit error counter value for OW0. */
-        uint64_t ow1                   : 16; /**< [ 31: 16](R/W/H) Current single-bit error counter value for OW1. */
-        uint64_t ow2                   : 16; /**< [ 47: 32](R/W/H) Current single-bit error counter value for OW2. */
-        uint64_t ow3                   : 16; /**< [ 63: 48](R/W/H) Current single-bit error counter value for OW3. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mccx_mcix_sbe_dbg_cnt_s cn; */
-};
-typedef union cavm_mccx_mcix_sbe_dbg_cnt cavm_mccx_mcix_sbe_dbg_cnt_t;
-
-static inline uint64_t CAVM_MCCX_MCIX_SBE_DBG_CNT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MCCX_MCIX_SBE_DBG_CNT(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400058ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x87e03c400058ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b==0)))
-        return 0x87e03c400058ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b==0)))
-        return 0x87e03c400058ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b==0)))
-        return 0x87e03c400058ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b==0)))
-        return 0x87e03c400058ll + 0x1000000ll * ((a) & 0x0) + 0x100000ll * ((b) & 0x0);
-    __cavm_csr_fatal("MCCX_MCIX_SBE_DBG_CNT", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MCCX_MCIX_SBE_DBG_CNT(a,b) cavm_mccx_mcix_sbe_dbg_cnt_t
-#define bustype_CAVM_MCCX_MCIX_SBE_DBG_CNT(a,b) CSR_TYPE_RSL
-#define basename_CAVM_MCCX_MCIX_SBE_DBG_CNT(a,b) "MCCX_MCIX_SBE_DBG_CNT"
-#define device_bar_CAVM_MCCX_MCIX_SBE_DBG_CNT(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MCCX_MCIX_SBE_DBG_CNT(a,b) (a)
-#define arguments_CAVM_MCCX_MCIX_SBE_DBG_CNT(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) mcc#_mci#_wrdislmc_fadr

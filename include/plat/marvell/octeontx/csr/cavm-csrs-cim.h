@@ -2358,68 +2358,6 @@ static inline uint64_t CAVM_CIMX_ICC_IGRPEN1_EL3(uint64_t a)
 #define arguments_CAVM_CIMX_ICC_IGRPEN1_EL3(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) cim#_icc_imp0
- *
- * INTERNAL: CIM Implementation 0 Register
- *
- * Register used by CIM internally for storage. Inaccessible to cores.
- */
-union cavm_cimx_icc_imp0
-{
-    uint64_t u;
-    struct cavm_cimx_icc_imp0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_27_63        : 37;
-        uint64_t scratch               : 26; /**< [ 26:  1](RO/H) Testing area. */
-        uint64_t ds                    : 1;  /**< [  0:  0](RO/H) Disable security.
-                                                                 Local version of GICD_(S)CTLR[DS] maintained by (a limited number of) downstream
-                                                                 writes from redistributor. Specifically, it is permissible to get a downstream write from
-                                                                 RDB which sets DS to one at some point. However, behavior is architecturally undefined if
-                                                                 RDB ever follows that with a DS resetting downstream write. */
-#else /* Word 0 - Little Endian */
-        uint64_t ds                    : 1;  /**< [  0:  0](RO/H) Disable security.
-                                                                 Local version of GICD_(S)CTLR[DS] maintained by (a limited number of) downstream
-                                                                 writes from redistributor. Specifically, it is permissible to get a downstream write from
-                                                                 RDB which sets DS to one at some point. However, behavior is architecturally undefined if
-                                                                 RDB ever follows that with a DS resetting downstream write. */
-        uint64_t scratch               : 26; /**< [ 26:  1](RO/H) Testing area. */
-        uint64_t reserved_27_63        : 37;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cimx_icc_imp0_s cn; */
-};
-typedef union cavm_cimx_icc_imp0 cavm_cimx_icc_imp0_t;
-
-static inline uint64_t CAVM_CIMX_ICC_IMP0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CIMX_ICC_IMP0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
-        return 0x87b00007c000ll + 0x80000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=23))
-        return 0x87b00007c000ll + 0x80000ll * ((a) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=23))
-        return 0x87b00007c000ll + 0x80000ll * ((a) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
-        return 0x87b00007c000ll + 0x80000ll * ((a) & 0x3f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
-        return 0x87b00007c000ll + 0x80000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
-        return 0x87b00007c000ll + 0x80000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=47))
-        return 0x87b00007c000ll + 0x80000ll * ((a) & 0x3f);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
-        return 0x87b00007c000ll + 0x80000ll * ((a) & 0x7);
-    __cavm_csr_fatal("CIMX_ICC_IMP0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CIMX_ICC_IMP0(a) cavm_cimx_icc_imp0_t
-#define bustype_CAVM_CIMX_ICC_IMP0(a) CSR_TYPE_NCB
-#define basename_CAVM_CIMX_ICC_IMP0(a) "CIMX_ICC_IMP0"
-#define busnum_CAVM_CIMX_ICC_IMP0(a) (a)
-#define arguments_CAVM_CIMX_ICC_IMP0(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) cim#_icc_pmr_el1
  *
  * CIM Physical or Virtual Priority Mask EL1 Register
@@ -3377,10 +3315,6 @@ static inline uint64_t CAVM_CIMX_ICH_EISR_EL2(uint64_t a)
  * CIM Hypervisor Empty List Register Status EL2 Register
  * These registers can be used to locate a usable list register when the hypervisor is
  * delivering an interrupt to a guest OS.
- *
- * Internal:
- * This register was renamed ICH_ELRSR_EL2 in OBAN of 2014-06-13 after
- * release v20 of GIC v3.
  */
 union cavm_cimx_ich_elsr_el2
 {
@@ -4034,9 +3968,7 @@ union cavm_cimx_ich_vmcr_el2
                                                                  This field is always accessible to EL2 accesses, regardless of the setting of
                                                                  [VCBPR]. */
         uint64_t reserved_10_17        : 8;
-        uint64_t veoim                 : 1;  /**< [  9:  9](R/W/H) Virtual EOI mode. Visible to the guest as CIM()_ICC_CTLR_EL1[EOIMODE]
-                                                                 Internal:
-                                                                 An implementation might choose to make this field RAO/WI. */
+        uint64_t veoim                 : 1;  /**< [  9:  9](R/W/H) Virtual EOI mode. Visible to the guest as CIM()_ICC_CTLR_EL1[EOIMODE] */
         uint64_t reserved_6_8          : 3;
         uint64_t vensei                : 1;  /**< [  5:  5](RAZ) Reserved. */
         uint64_t vcbpr                 : 1;  /**< [  4:  4](R/W/H) Visible to the guest as CIM()_ICC_CTLR_EL1[CBPR].
@@ -4078,9 +4010,7 @@ union cavm_cimx_ich_vmcr_el2
                                                                  This bit has no effect on accesses to GICV_ABPR but does affect preemption. */
         uint64_t vensei                : 1;  /**< [  5:  5](RAZ) Reserved. */
         uint64_t reserved_6_8          : 3;
-        uint64_t veoim                 : 1;  /**< [  9:  9](R/W/H) Virtual EOI mode. Visible to the guest as CIM()_ICC_CTLR_EL1[EOIMODE]
-                                                                 Internal:
-                                                                 An implementation might choose to make this field RAO/WI. */
+        uint64_t veoim                 : 1;  /**< [  9:  9](R/W/H) Virtual EOI mode. Visible to the guest as CIM()_ICC_CTLR_EL1[EOIMODE] */
         uint64_t reserved_10_17        : 8;
         uint64_t vbpr1                 : 3;  /**< [ 20: 18](R/W) Virtual BPR1. Visible to the guest as CIM()_ICC_BPR1_EL1.
                                                                  This field is always accessible to EL2 accesses, regardless of the setting of

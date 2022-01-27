@@ -61,22 +61,6 @@
 #define CAVM_BGX_LMAC_TYPES_E_XAUI (1)
 
 /**
- * Enumeration bgx_opcode_e
- *
- * INTERNAL: BGX Error Opcode Enumeration
- *
- * Enumerates the error opcodes created by BGX and presented to NCSI/PKO/NIC.
- */
-#define CAVM_BGX_OPCODE_E_RE_FCS (7)
-#define CAVM_BGX_OPCODE_E_RE_FCS_RCV (8)
-#define CAVM_BGX_OPCODE_E_RE_JABBER (2)
-#define CAVM_BGX_OPCODE_E_RE_NONE (0)
-#define CAVM_BGX_OPCODE_E_RE_PARTIAL (1)
-#define CAVM_BGX_OPCODE_E_RE_RX_CTL (0xb)
-#define CAVM_BGX_OPCODE_E_RE_SKIP (0xc)
-#define CAVM_BGX_OPCODE_E_RE_TERMINATE (9)
-
-/**
  * Enumeration bgx_spu_br_train_cst_e
  *
  * BGX Training Coefficient Status Enumeration
@@ -257,40 +241,6 @@ union cavm_bgx_spu_br_train_rep_s
 };
 
 /**
- * Structure bgx_spu_sds_cu_s
- *
- * INTERNAL: BGX Training Coeffiecient Structure
- *
- * This structure is similar to BGX_SPU_BR_TRAIN_CUP_S format, but with reserved fields removed
- * and [RCVR_READY] field added.
- */
-union cavm_bgx_spu_sds_cu_s
-{
-    uint32_t u;
-    struct cavm_bgx_spu_sds_cu_s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_9_31         : 23;
-        uint32_t rcvr_ready            : 1;  /**< [  8:  8] See BGX_SPU_BR_TRAIN_REP_S[RX_READY]. */
-        uint32_t preset                : 1;  /**< [  7:  7] See BGX_SPU_BR_TRAIN_CUP_S[PRESET]. */
-        uint32_t initialize            : 1;  /**< [  6:  6] See BGX_SPU_BR_TRAIN_CUP_S[INIT]. */
-        uint32_t post_cu               : 2;  /**< [  5:  4] See BGX_SPU_BR_TRAIN_CUP_S[POST_CUP]. */
-        uint32_t main_cu               : 2;  /**< [  3:  2] See BGX_SPU_BR_TRAIN_CUP_S[MAIN_CUP]. */
-        uint32_t pre_cu                : 2;  /**< [  1:  0] See BGX_SPU_BR_TRAIN_CUP_S[PRE_CUP]. */
-#else /* Word 0 - Little Endian */
-        uint32_t pre_cu                : 2;  /**< [  1:  0] See BGX_SPU_BR_TRAIN_CUP_S[PRE_CUP]. */
-        uint32_t main_cu               : 2;  /**< [  3:  2] See BGX_SPU_BR_TRAIN_CUP_S[MAIN_CUP]. */
-        uint32_t post_cu               : 2;  /**< [  5:  4] See BGX_SPU_BR_TRAIN_CUP_S[POST_CUP]. */
-        uint32_t initialize            : 1;  /**< [  6:  6] See BGX_SPU_BR_TRAIN_CUP_S[INIT]. */
-        uint32_t preset                : 1;  /**< [  7:  7] See BGX_SPU_BR_TRAIN_CUP_S[PRESET]. */
-        uint32_t rcvr_ready            : 1;  /**< [  8:  8] See BGX_SPU_BR_TRAIN_REP_S[RX_READY]. */
-        uint32_t reserved_9_31         : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_bgx_spu_sds_cu_s_s cn; */
-};
-
-/**
  * Structure bgx_spu_sds_skew_status_s
  *
  * BGX Skew Status Structure
@@ -330,33 +280,6 @@ union cavm_bgx_spu_sds_skew_status_s
 };
 
 /**
- * Structure bgx_spu_sds_sr_s
- *
- * INTERNAL: BGX Lane Training Coefficient Structure
- *
- * Similar to BGX_SPU_BR_TRAIN_REP_S format, but with reserved and RX_READY fields removed.
- */
-union cavm_bgx_spu_sds_sr_s
-{
-    uint32_t u;
-    struct cavm_bgx_spu_sds_sr_s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_6_31         : 26;
-        uint32_t post_status           : 2;  /**< [  5:  4] See BGX_SPU_BR_TRAIN_REP_S[POST_CST]. */
-        uint32_t main_status           : 2;  /**< [  3:  2] See BGX_SPU_BR_TRAIN_REP_S[MAIN_CST]. */
-        uint32_t pre_status            : 2;  /**< [  1:  0] See BGX_SPU_BR_TRAIN_REP_S[PRE_CST]. */
-#else /* Word 0 - Little Endian */
-        uint32_t pre_status            : 2;  /**< [  1:  0] See BGX_SPU_BR_TRAIN_REP_S[PRE_CST]. */
-        uint32_t main_status           : 2;  /**< [  3:  2] See BGX_SPU_BR_TRAIN_REP_S[MAIN_CST]. */
-        uint32_t post_status           : 2;  /**< [  5:  4] See BGX_SPU_BR_TRAIN_REP_S[POST_CST]. */
-        uint32_t reserved_6_31         : 26;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_bgx_spu_sds_sr_s_s cn; */
-};
-
-/**
  * Register (RSL) bgx#_cmr#_config
  *
  * BGX CMR Configuration Registers
@@ -364,44 +287,6 @@ union cavm_bgx_spu_sds_sr_s
  * maximum LMAC ID) that can be enabled by these registers is limited by
  * BGX()_CMR_RX_LMACS[LMACS] and BGX()_CMR_TX_LMACS[LMACS]. When multiple LMACs are
  * enabled, they must be configured with the same [LMAC_TYPE] value.
- *
- * Internal:
- * \<pre\>
- * Typical configurations:
- *   ---------------------------------------------------------------------------
- *   Configuration           LMACS  Register             [ENABLE]    [LMAC_TYPE]
- *   ---------------------------------------------------------------------------
- *   1x40GBASE-R4            1      BGXn_CMR0_CONFIG     1           4
- *                                  BGXn_CMR1_CONFIG     0           --
- *                                  BGXn_CMR2_CONFIG     0           --
- *                                  BGXn_CMR3_CONFIG     0           --
- *   ---------------------------------------------------------------------------
- *   4x10GBASE-R             4      BGXn_CMR0_CONFIG     1           3
- *                                  BGXn_CMR1_CONFIG     1           3
- *                                  BGXn_CMR2_CONFIG     1           3
- *                                  BGXn_CMR3_CONFIG     1           3
- *   ---------------------------------------------------------------------------
- *   2xRXAUI                 2      BGXn_CMR0_CONFIG     1           2
- *                                  BGXn_CMR1_CONFIG     1           2
- *                                  BGXn_CMR2_CONFIG     0           --
- *                                  BGXn_CMR3_CONFIG     0           --
- *   ---------------------------------------------------------------------------
- *   1x10GBASE-X/XAUI/DXAUI  1      BGXn_CMR0_CONFIG     1           1
- *                                  BGXn_CMR1_CONFIG     0           --
- *                                  BGXn_CMR2_CONFIG     0           --
- *                                  BGXn_CMR3_CONFIG     0           --
- *   ---------------------------------------------------------------------------
- *   4xSGMII/1000BASE-X      4      BGXn_CMR0_CONFIG     1           0
- *                                  BGXn_CMR1_CONFIG     1           0
- *                                  BGXn_CMR2_CONFIG     1           0
- *                                  BGXn_CMR3_CONFIG     1           0
- *   ---------------------------------------------------------------------------
- *   QSGMII                  4      BGXn_CMR0_CONFIG     1           6
- *                                  BGXn_CMR1_CONFIG     1           6
- *                                  BGXn_CMR2_CONFIG     1           6
- *                                  BGXn_CMR3_CONFIG     1           6
- *   ---------------------------------------------------------------------------
- * \</pre\>
  */
 union cavm_bgxx_cmrx_config
 {
@@ -1358,32 +1243,6 @@ static inline uint64_t CAVM_BGXX_CMRX_RX_BP_STATUS(uint64_t a, uint64_t b)
  * Register (RSL) bgx#_cmr#_rx_dmac_ctl
  *
  * BGX CMR Receive DMAC Address-Control Register
- * Internal:
- * "* ALGORITHM
- * Here is some pseudo code that represents the address filter behavior.
- * dmac_addr_filter(uint8 prt, uint48 dmac) {
- * for (lmac=0, lmac\<4, lmac++) {
- *   if (is_bcst(dmac))                               // broadcast accept
- *     return (BGX()_CMR({lmac})_RX_DMAC_CTL[BCST_ACCEPT] ? ACCEPT : REJECT);
- *   if (is_mcst(dmac) && BGX()_CMR({lmac})_RX_DMAC_CTL[MCST_MODE] == 0)   // multicast reject
- *     return REJECT;
- *   if (is_mcst(dmac) && BGX()_CMR({lmac})_RX_DMAC_CTL[MCST_MODE] == 1)   // multicast accept
- *     return ACCEPT;
- *   else        // DMAC CAM filter
- *     cam_hit = 0;
- *   for (i=0; i\<32; i++) {
- *     cam = BGX()_CMR_RX_DMAC({i})_CAM;
- *     if (cam[EN] && cam[ID] == {lmac} && cam[ADR] == dmac) {
- *       cam_hit = 1;
- *       break;
- *     }
- *   }
- *   if (cam_hit) {
- *     return (BGX()_CMR({lmac})_RX_DMAC_CTL[CAM_ACCEPT] ? ACCEPT : REJECT);
- *   else
- *     return (BGX()_CMR({lmac})_RX_DMAC_CTL[CAM_ACCEPT] ? REJECT : ACCEPT);
- *   }
- * }"
  */
 union cavm_bgxx_cmrx_rx_dmac_ctl
 {
@@ -1495,37 +1354,13 @@ union cavm_bgxx_cmrx_rx_id_map
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_15_63        : 49;
-        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Defeatured. Reassembly ID for Octeon PKI; not used in CN8XXX.
-                                                                 Reassembly ID map for this LMAC. A shared pool of 96 reassembly IDs (RIDs) exists for all
-                                                                 MACs.
-
-                                                                 The RID for this LMAC must be constrained such that it does not overlap with any other MAC
-                                                                 in the system. Its reset value has been chosen such that this condition is satisfied:
-
-                                                                 _ RID reset value = 4*(BGX_ID + 1) + LMAC_ID
-
-                                                                 Changes to RID must only occur when the LMAC is quiescent (i.e. the LMAC receive interface
-                                                                 is down and the RX FIFO is empty). */
+        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved. */
         uint64_t unused                : 2;  /**< [  7:  6](RAZ) Reserved. */
         uint64_t pknd                  : 6;  /**< [  5:  0](R/W) Port kind for this LMAC. */
 #else /* Word 0 - Little Endian */
         uint64_t pknd                  : 6;  /**< [  5:  0](R/W) Port kind for this LMAC. */
         uint64_t unused                : 2;  /**< [  7:  6](RAZ) Reserved. */
-        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Defeatured. Reassembly ID for Octeon PKI; not used in CN8XXX.
-                                                                 Reassembly ID map for this LMAC. A shared pool of 96 reassembly IDs (RIDs) exists for all
-                                                                 MACs.
-
-                                                                 The RID for this LMAC must be constrained such that it does not overlap with any other MAC
-                                                                 in the system. Its reset value has been chosen such that this condition is satisfied:
-
-                                                                 _ RID reset value = 4*(BGX_ID + 1) + LMAC_ID
-
-                                                                 Changes to RID must only occur when the LMAC is quiescent (i.e. the LMAC receive interface
-                                                                 is down and the RX FIFO is empty). */
+        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved. */
         uint64_t reserved_15_63        : 49;
 #endif /* Word 0 - End */
     } s;
@@ -2093,7 +1928,7 @@ static inline uint64_t CAVM_BGXX_CMRX_RX_STAT8(uint64_t a, uint64_t b)
 /**
  * Register (RSL) bgx#_cmr#_rx_weight
  *
- * INTERNAL: BGX CMR Receive-Weight Register
+ * BGX CMR Receive-Weight Register
  */
 union cavm_bgxx_cmrx_rx_weight
 {
@@ -2121,8 +1956,6 @@ static inline uint64_t CAVM_BGXX_CMRX_RX_WEIGHT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && ((a<=1) && (b<=3)))
         return 0x87e0e00000e0ll + 0x1000000ll * ((a) & 0x1) + 0x100000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=3) && (b<=3)))
-        return 0x87e0e00000e0ll + 0x1000000ll * ((a) & 0x3) + 0x100000ll * ((b) & 0x3);
     __cavm_csr_fatal("BGXX_CMRX_RX_WEIGHT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -3315,64 +3148,10 @@ union cavm_bgxx_cmr_bist_status
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_27_63        : 37;
         uint64_t status                : 27; /**< [ 26:  0](RO/H) '"BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass or never
-                                                                 run.'
-
-                                                                 Internal:
-                                                                 "\<0\> = bgx#.rxb.infif_gmp.
-                                                                 \<1\> = bgx#.rxb.infif_smu.
-                                                                 \<2\> = bgx#.rxb.fif_bnk00.
-                                                                 \<3\> = bgx#.rxb.fif_bnk01.
-                                                                 \<4\> = bgx#.rxb.fif_bnk10.
-                                                                 \<5\> = bgx#.rxb.fif_bnk11.
-                                                                 \<6\> = bgx#.rxb.pki_skd_fif.
-                                                                 \<7\> = bgx#.rxb.nic_skd_fif.
-                                                                 \<8\> = bgx#.rxb_mix0_fif.
-                                                                 \<9\> = bgx#.rxb_mix1_fif.
-                                                                 \<10\> = 0.
-                                                                 \<11\> = bgx#.txb_fif_bnk0.
-                                                                 \<12\> = bgx#.txb_fif_bnk1.
-                                                                 \<13\> = bgx#.txb_skd_m0_pko_fif.
-                                                                 \<14\> = bgx#.txb_skd_m1_pko_fif.
-                                                                 \<15\> = bgx#.txb_skd_m2_pko_fif.
-                                                                 \<16\> = bgx#.txb_skd_m3_pko_fif.
-                                                                 \<17\> = bgx#.txb_skd_m0_nic_fif.
-                                                                 \<18\> = bgx#.txb_skd_m1_nic_fif.
-                                                                 \<19\> = bgx#.txb_skd_m2_nic_fif.
-                                                                 \<20\> = bgx#.txb_skd_m3_nic_fif.
-                                                                 \<21\> = bgx#.txb_mix0_fif.
-                                                                 \<22\> = bgx#.txb_mix1_fif.
-                                                                 \<23\> = bgx#.txb_ncsi_fif.
-                                                                 \<24\> = 0." */
+                                                                 run.' */
 #else /* Word 0 - Little Endian */
         uint64_t status                : 27; /**< [ 26:  0](RO/H) '"BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass or never
-                                                                 run.'
-
-                                                                 Internal:
-                                                                 "\<0\> = bgx#.rxb.infif_gmp.
-                                                                 \<1\> = bgx#.rxb.infif_smu.
-                                                                 \<2\> = bgx#.rxb.fif_bnk00.
-                                                                 \<3\> = bgx#.rxb.fif_bnk01.
-                                                                 \<4\> = bgx#.rxb.fif_bnk10.
-                                                                 \<5\> = bgx#.rxb.fif_bnk11.
-                                                                 \<6\> = bgx#.rxb.pki_skd_fif.
-                                                                 \<7\> = bgx#.rxb.nic_skd_fif.
-                                                                 \<8\> = bgx#.rxb_mix0_fif.
-                                                                 \<9\> = bgx#.rxb_mix1_fif.
-                                                                 \<10\> = 0.
-                                                                 \<11\> = bgx#.txb_fif_bnk0.
-                                                                 \<12\> = bgx#.txb_fif_bnk1.
-                                                                 \<13\> = bgx#.txb_skd_m0_pko_fif.
-                                                                 \<14\> = bgx#.txb_skd_m1_pko_fif.
-                                                                 \<15\> = bgx#.txb_skd_m2_pko_fif.
-                                                                 \<16\> = bgx#.txb_skd_m3_pko_fif.
-                                                                 \<17\> = bgx#.txb_skd_m0_nic_fif.
-                                                                 \<18\> = bgx#.txb_skd_m1_nic_fif.
-                                                                 \<19\> = bgx#.txb_skd_m2_nic_fif.
-                                                                 \<20\> = bgx#.txb_skd_m3_nic_fif.
-                                                                 \<21\> = bgx#.txb_mix0_fif.
-                                                                 \<22\> = bgx#.txb_mix1_fif.
-                                                                 \<23\> = bgx#.txb_ncsi_fif.
-                                                                 \<24\> = 0." */
+                                                                 run.' */
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
@@ -3382,137 +3161,14 @@ union cavm_bgxx_cmr_bist_status
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_25_63        : 39;
         uint64_t status                : 25; /**< [ 24:  0](RO/H) '"BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass or never
-                                                                 run.'
-
-                                                                 Internal:
-                                                                 "\<0\> = bgx#.rxb.infif_gmp.
-                                                                 \<1\> = bgx#.rxb.infif_smu.
-                                                                 \<2\> = bgx#.rxb.fif_bnk00.
-                                                                 \<3\> = bgx#.rxb.fif_bnk01.
-                                                                 \<4\> = bgx#.rxb.fif_bnk10.
-                                                                 \<5\> = bgx#.rxb.fif_bnk11.
-                                                                 \<6\> = bgx#.rxb.pki_skd_fif.
-                                                                 \<7\> = bgx#.rxb.nic_skd_fif.
-                                                                 \<8\> = bgx#.rxb_mix0_fif.
-                                                                 \<9\> = bgx#.rxb_mix1_fif.
-                                                                 \<10\> = 0.
-                                                                 \<11\> = bgx#.txb_fif_bnk0.
-                                                                 \<12\> = bgx#.txb_fif_bnk1.
-                                                                 \<13\> = bgx#.txb_skd_m0_pko_fif.
-                                                                 \<14\> = bgx#.txb_skd_m1_pko_fif.
-                                                                 \<15\> = bgx#.txb_skd_m2_pko_fif.
-                                                                 \<16\> = bgx#.txb_skd_m3_pko_fif.
-                                                                 \<17\> = bgx#.txb_skd_m0_nic_fif.
-                                                                 \<18\> = bgx#.txb_skd_m1_nic_fif.
-                                                                 \<19\> = bgx#.txb_skd_m2_nic_fif.
-                                                                 \<20\> = bgx#.txb_skd_m3_nic_fif.
-                                                                 \<21\> = bgx#.txb_mix0_fif.
-                                                                 \<22\> = bgx#.txb_mix1_fif.
-                                                                 \<23\> = bgx#.txb_ncsi_fif.
-                                                                 \<24\> = 0." */
+                                                                 run.' */
 #else /* Word 0 - Little Endian */
         uint64_t status                : 25; /**< [ 24:  0](RO/H) '"BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass or never
-                                                                 run.'
-
-                                                                 Internal:
-                                                                 "\<0\> = bgx#.rxb.infif_gmp.
-                                                                 \<1\> = bgx#.rxb.infif_smu.
-                                                                 \<2\> = bgx#.rxb.fif_bnk00.
-                                                                 \<3\> = bgx#.rxb.fif_bnk01.
-                                                                 \<4\> = bgx#.rxb.fif_bnk10.
-                                                                 \<5\> = bgx#.rxb.fif_bnk11.
-                                                                 \<6\> = bgx#.rxb.pki_skd_fif.
-                                                                 \<7\> = bgx#.rxb.nic_skd_fif.
-                                                                 \<8\> = bgx#.rxb_mix0_fif.
-                                                                 \<9\> = bgx#.rxb_mix1_fif.
-                                                                 \<10\> = 0.
-                                                                 \<11\> = bgx#.txb_fif_bnk0.
-                                                                 \<12\> = bgx#.txb_fif_bnk1.
-                                                                 \<13\> = bgx#.txb_skd_m0_pko_fif.
-                                                                 \<14\> = bgx#.txb_skd_m1_pko_fif.
-                                                                 \<15\> = bgx#.txb_skd_m2_pko_fif.
-                                                                 \<16\> = bgx#.txb_skd_m3_pko_fif.
-                                                                 \<17\> = bgx#.txb_skd_m0_nic_fif.
-                                                                 \<18\> = bgx#.txb_skd_m1_nic_fif.
-                                                                 \<19\> = bgx#.txb_skd_m2_nic_fif.
-                                                                 \<20\> = bgx#.txb_skd_m3_nic_fif.
-                                                                 \<21\> = bgx#.txb_mix0_fif.
-                                                                 \<22\> = bgx#.txb_mix1_fif.
-                                                                 \<23\> = bgx#.txb_ncsi_fif.
-                                                                 \<24\> = 0." */
+                                                                 run.' */
         uint64_t reserved_25_63        : 39;
 #endif /* Word 0 - End */
     } cn81xx;
-    struct cavm_bgxx_cmr_bist_status_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_27_63        : 37;
-        uint64_t status                : 27; /**< [ 26:  0](RO/H) '"BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass or never
-                                                                 run.'
-
-                                                                 Internal:
-                                                                 "\<0\> = bgx#.rxb.infif_gmp.
-                                                                 \<1\> = bgx#.rxb.infif_smu.
-                                                                 \<2\> = bgx#.rxb.fif_bnk00.
-                                                                 \<3\> = bgx#.rxb.fif_bnk01.
-                                                                 \<4\> = bgx#.rxb.fif_bnk10.
-                                                                 \<5\> = bgx#.rxb.fif_bnk11.
-                                                                 \<6\> = bgx#.rxb.pki_skd_fif.
-                                                                 \<7\> = bgx#.rxb.nic_skd_fif.
-                                                                 \<8\> = bgx#.rxb_mix0_fif.
-                                                                 \<9\> = bgx#.rxb_mix1_fif.
-                                                                 \<10\> = 0.
-                                                                 \<11\> = bgx#.txb_fif_mem0.
-                                                                 \<12\> = bgx#.txb_fif_mem1.
-                                                                 \<13\> = bgx#.txb_fif_mem2.
-                                                                 \<14\> = bgx#.txb_fif_mem3.
-                                                                 \<15\> = bgx#.txb_skd_m0_pko_fif.
-                                                                 \<16\> = bgx#.txb_skd_m1_pko_fif.
-                                                                 \<17\> = bgx#.txb_skd_m2_pko_fif.
-                                                                 \<18\> = bgx#.txb_skd_m3_pko_fif.
-                                                                 \<19\> = bgx#.txb_skd_m0_nic_fif.
-                                                                 \<20\> = bgx#.txb_skd_m1_nic_fif.
-                                                                 \<21\> = bgx#.txb_skd_m2_nic_fif.
-                                                                 \<22\> = bgx#.txb_skd_m3_nic_fif.
-                                                                 \<23\> = bgx#.txb_mix0_fif.
-                                                                 \<24\> = bgx#.txb_mix1_fif.
-                                                                 \<25\> = bgx#.txb_ncsi_fif.
-                                                                 \<26\> = 0." */
-#else /* Word 0 - Little Endian */
-        uint64_t status                : 27; /**< [ 26:  0](RO/H) '"BIST results. Hardware sets a bit to 1 for memory that fails; 0 indicates pass or never
-                                                                 run.'
-
-                                                                 Internal:
-                                                                 "\<0\> = bgx#.rxb.infif_gmp.
-                                                                 \<1\> = bgx#.rxb.infif_smu.
-                                                                 \<2\> = bgx#.rxb.fif_bnk00.
-                                                                 \<3\> = bgx#.rxb.fif_bnk01.
-                                                                 \<4\> = bgx#.rxb.fif_bnk10.
-                                                                 \<5\> = bgx#.rxb.fif_bnk11.
-                                                                 \<6\> = bgx#.rxb.pki_skd_fif.
-                                                                 \<7\> = bgx#.rxb.nic_skd_fif.
-                                                                 \<8\> = bgx#.rxb_mix0_fif.
-                                                                 \<9\> = bgx#.rxb_mix1_fif.
-                                                                 \<10\> = 0.
-                                                                 \<11\> = bgx#.txb_fif_mem0.
-                                                                 \<12\> = bgx#.txb_fif_mem1.
-                                                                 \<13\> = bgx#.txb_fif_mem2.
-                                                                 \<14\> = bgx#.txb_fif_mem3.
-                                                                 \<15\> = bgx#.txb_skd_m0_pko_fif.
-                                                                 \<16\> = bgx#.txb_skd_m1_pko_fif.
-                                                                 \<17\> = bgx#.txb_skd_m2_pko_fif.
-                                                                 \<18\> = bgx#.txb_skd_m3_pko_fif.
-                                                                 \<19\> = bgx#.txb_skd_m0_nic_fif.
-                                                                 \<20\> = bgx#.txb_skd_m1_nic_fif.
-                                                                 \<21\> = bgx#.txb_skd_m2_nic_fif.
-                                                                 \<22\> = bgx#.txb_skd_m3_nic_fif.
-                                                                 \<23\> = bgx#.txb_mix0_fif.
-                                                                 \<24\> = bgx#.txb_mix1_fif.
-                                                                 \<25\> = bgx#.txb_ncsi_fif.
-                                                                 \<26\> = 0." */
-        uint64_t reserved_27_63        : 37;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_bgxx_cmr_bist_status_s cn83xx; */
 };
 typedef union cavm_bgxx_cmr_bist_status cavm_bgxx_cmr_bist_status_t;
 
@@ -3646,49 +3302,6 @@ static inline uint64_t CAVM_BGXX_CMR_CHAN_MSK_OR(uint64_t a)
 #define device_bar_CAVM_BGXX_CMR_CHAN_MSK_OR(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_BGXX_CMR_CHAN_MSK_OR(a) (a)
 #define arguments_CAVM_BGXX_CMR_CHAN_MSK_OR(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) bgx#_cmr_eco
- *
- * INTERNAL: BGX ECO Registers
- */
-union cavm_bgxx_cmr_eco
-{
-    uint64_t u;
-    struct cavm_bgxx_cmr_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_ro                : 32; /**< [ 63: 32](RO) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t eco_ro                : 32; /**< [ 63: 32](RO) Internal:
-                                                                 Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_bgxx_cmr_eco_s cn; */
-};
-typedef union cavm_bgxx_cmr_eco cavm_bgxx_cmr_eco_t;
-
-static inline uint64_t CAVM_BGXX_CMR_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BGXX_CMR_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
-        return 0x87e0e0001028ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
-        return 0x87e0e0001028ll + 0x1000000ll * ((a) & 0x3);
-    __cavm_csr_fatal("BGXX_CMR_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_BGXX_CMR_ECO(a) cavm_bgxx_cmr_eco_t
-#define bustype_CAVM_BGXX_CMR_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_BGXX_CMR_ECO(a) "BGXX_CMR_ECO"
-#define device_bar_CAVM_BGXX_CMR_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_BGXX_CMR_ECO(a) (a)
-#define arguments_CAVM_BGXX_CMR_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) bgx#_cmr_global_config
@@ -5350,8 +4963,6 @@ typedef union cavm_bgxx_cmr_pko_nxc_adr cavm_bgxx_cmr_pko_nxc_adr_t;
 static inline uint64_t CAVM_BGXX_CMR_PKO_NXC_ADR(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_BGXX_CMR_PKO_NXC_ADR(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
-        return 0x87e0e0001018ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x87e0e0001018ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("BGXX_CMR_PKO_NXC_ADR", 1, a, 0, 0, 0, 0, 0);
@@ -5599,8 +5210,6 @@ typedef union cavm_bgxx_cmr_rx_stat10 cavm_bgxx_cmr_rx_stat10_t;
 static inline uint64_t CAVM_BGXX_CMR_RX_STAT10(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_BGXX_CMR_RX_STAT10(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
-        return 0x87e0e00000c0ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x87e0e00000c0ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("BGXX_CMR_RX_STAT10", 1, a, 0, 0, 0, 0, 0);
@@ -5643,8 +5252,6 @@ typedef union cavm_bgxx_cmr_rx_stat9 cavm_bgxx_cmr_rx_stat9_t;
 static inline uint64_t CAVM_BGXX_CMR_RX_STAT9(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_BGXX_CMR_RX_STAT9(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
-        return 0x87e0e00000b8ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x87e0e00000b8ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("BGXX_CMR_RX_STAT9", 1, a, 0, 0, 0, 0, 0);
@@ -5668,28 +5275,6 @@ static inline uint64_t CAVM_BGXX_CMR_RX_STAT9(uint64_t a)
  * The steering algorithm is applied after the RX DMAC filter specified by
  * BGX()_CMR()_RX_DMAC_CTL and BGX()_CMR_RX_DMAC()_CAM. As such, the DMAC filter and steering
  * filters should be set in a consistent manner.
- *
- * Internal:
- * "* ALGORITHM
- * // Steering of RX packets for LMAC identified by BGX()_CMR_GLOBAL_CONFIG[NCSI_LMAC_ID].
- * rx_steering(uint48 pkt_dmac, uint16 pkt_etype, uint16 pkt_vlan_id) {
- *    for (int i = 0; i \< 8; i++) {
- *       steer = BGX()_CMR_RX_STEERING(i);
- *       vetype = BGX()_CMR_RX_STEERING_VETYPE(i);
- *       if (steer[MCST_EN] || steer[DMAC_EN] || vetype[VLAN_EN] || vetype[VLAN_TAG_EN]) {
- *          // Filter is enabled.
- *          if (   (!steer[MCST_EN] || is_mcst(pkt_dmac))
- *              && (!steer[DMAC_EN] || pkt_dmac == steer[DMAC])
- *              && (!vetype[VLAN_EN] || pkt_vlan_id == vetype[VLAN_ID])
- *              && (!vetype[VLAN_TAG_EN] || pkt_etype == vetype[VLAN_ETYPE]) )
- *          {
- *             // Filter match (all enabled matching criteria are met).
- *             return steer[DEST];
- *          }
- *       }
- *    }
- *    return BGX()_CMR_RX_STEERING_DEFAULT[DEST]; // No match
- * }"
  */
 union cavm_bgxx_cmr_rx_steeringx
 {
@@ -5700,8 +5285,8 @@ union cavm_bgxx_cmr_rx_steeringx
         uint64_t reserved_52_63        : 12;
         uint64_t dest                  : 2;  /**< [ 51: 50](R/W) Destination for traffic that meets all criteria of the matching algorithm:
                                                                  0x0 = Steer this traffic exclusively to NCSI.
-                                                                 0x1 = Steer this traffic exclusively to NIC.
-                                                                 0x2 = Steer this traffic to BOTH NIC and NCSI.
+                                                                 0x1 = Steer this traffic exclusively to PKO/NIC.
+                                                                 0x2 = Steer this traffic to BOTH PKO/NIC and NCSI.
                                                                  0x3 = Steer this traffic to the bit bucket (drop). */
         uint64_t mcst_en               : 1;  /**< [ 49: 49](R/W) Enable for identifying multicast packets:
                                                                  1 = Include multicast packets in the matching algorithm.
@@ -5722,56 +5307,19 @@ union cavm_bgxx_cmr_rx_steeringx
                                                                  0 = Do not include multicast packets in the matching algorithm. */
         uint64_t dest                  : 2;  /**< [ 51: 50](R/W) Destination for traffic that meets all criteria of the matching algorithm:
                                                                  0x0 = Steer this traffic exclusively to NCSI.
-                                                                 0x1 = Steer this traffic exclusively to NIC.
-                                                                 0x2 = Steer this traffic to BOTH NIC and NCSI.
+                                                                 0x1 = Steer this traffic exclusively to PKO/NIC.
+                                                                 0x2 = Steer this traffic to BOTH PKO/NIC and NCSI.
                                                                  0x3 = Steer this traffic to the bit bucket (drop). */
         uint64_t reserved_52_63        : 12;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_bgxx_cmr_rx_steeringx_s cn8; */
-    /* struct cavm_bgxx_cmr_rx_steeringx_s cn81xx; */
-    struct cavm_bgxx_cmr_rx_steeringx_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t dest                  : 2;  /**< [ 51: 50](R/W) Destination for traffic that meets all criteria of the matching algorithm:
-                                                                 0x0 = Steer this traffic exclusively to NCSI.
-                                                                 0x1 = Steer this traffic exclusively to PKO/NIC.
-                                                                 0x2 = Steer this traffic to BOTH PKO/NIC and NCSI.
-                                                                 0x3 = Steer this traffic to the bit bucket (drop). */
-        uint64_t mcst_en               : 1;  /**< [ 49: 49](R/W) Enable for identifying multicast packets:
-                                                                 1 = Include multicast packets in the matching algorithm.
-                                                                 0 = Do not include multicast packets in the matching algorithm. */
-        uint64_t dmac_en               : 1;  /**< [ 48: 48](R/W) Enable DMAC address check:
-                                                                 1 = Include DMAC address checking in the matching algorithm.
-                                                                 0 = Do not include DMAC address checking in the matching algorithm. */
-        uint64_t dmac                  : 48; /**< [ 47:  0](R/W) DMAC address used for the matching algorithm when [DMAC_EN] is set. Broadcast can be
-                                                                 specified with value 0xFFFF_FFFFFFFF. */
-#else /* Word 0 - Little Endian */
-        uint64_t dmac                  : 48; /**< [ 47:  0](R/W) DMAC address used for the matching algorithm when [DMAC_EN] is set. Broadcast can be
-                                                                 specified with value 0xFFFF_FFFFFFFF. */
-        uint64_t dmac_en               : 1;  /**< [ 48: 48](R/W) Enable DMAC address check:
-                                                                 1 = Include DMAC address checking in the matching algorithm.
-                                                                 0 = Do not include DMAC address checking in the matching algorithm. */
-        uint64_t mcst_en               : 1;  /**< [ 49: 49](R/W) Enable for identifying multicast packets:
-                                                                 1 = Include multicast packets in the matching algorithm.
-                                                                 0 = Do not include multicast packets in the matching algorithm. */
-        uint64_t dest                  : 2;  /**< [ 51: 50](R/W) Destination for traffic that meets all criteria of the matching algorithm:
-                                                                 0x0 = Steer this traffic exclusively to NCSI.
-                                                                 0x1 = Steer this traffic exclusively to PKO/NIC.
-                                                                 0x2 = Steer this traffic to BOTH PKO/NIC and NCSI.
-                                                                 0x3 = Steer this traffic to the bit bucket (drop). */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_bgxx_cmr_rx_steeringx_s cn; */
 };
 typedef union cavm_bgxx_cmr_rx_steeringx cavm_bgxx_cmr_rx_steeringx_t;
 
 static inline uint64_t CAVM_BGXX_CMR_RX_STEERINGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_BGXX_CMR_RX_STEERINGX(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a<=1) && (b<=7)))
-        return 0x87e0e0000300ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=3) && (b<=7)))
         return 0x87e0e0000300ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("BGXX_CMR_RX_STEERINGX", 2, a, b, 0, 0, 0, 0);
@@ -5799,49 +5347,26 @@ union cavm_bgxx_cmr_rx_steering_default
         uint64_t dest                  : 2;  /**< [  1:  0](R/W) Destination for traffic that does not match any of the steering filters specified by
                                                                  BGX()_CMR_RX_STEERING() and and BGX()_CMR_RX_STEERING_VETYPE():
                                                                  0x0 = Steer traffic exclusively to NCSI.
-                                                                 0x1 = Steer traffic exclusively to NIC.
-                                                                 0x2 = Steer traffic to BOTH NIC and NCSI.
+                                                                 0x1 = Steer traffic exclusively to PKO/NIC.
+                                                                 0x2 = Steer traffic to BOTH PKO/NIC and NCSI.
                                                                  0x3 = Steer traffic to the bit bucket (drop). */
 #else /* Word 0 - Little Endian */
         uint64_t dest                  : 2;  /**< [  1:  0](R/W) Destination for traffic that does not match any of the steering filters specified by
                                                                  BGX()_CMR_RX_STEERING() and and BGX()_CMR_RX_STEERING_VETYPE():
                                                                  0x0 = Steer traffic exclusively to NCSI.
-                                                                 0x1 = Steer traffic exclusively to NIC.
-                                                                 0x2 = Steer traffic to BOTH NIC and NCSI.
+                                                                 0x1 = Steer traffic exclusively to PKO/NIC.
+                                                                 0x2 = Steer traffic to BOTH PKO/NIC and NCSI.
                                                                  0x3 = Steer traffic to the bit bucket (drop). */
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_bgxx_cmr_rx_steering_default_s cn8; */
-    /* struct cavm_bgxx_cmr_rx_steering_default_s cn81xx; */
-    struct cavm_bgxx_cmr_rx_steering_default_cn83xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t dest                  : 2;  /**< [  1:  0](R/W) Destination for traffic that does not match any of the steering filters specified by
-                                                                 BGX()_CMR_RX_STEERING() and and BGX()_CMR_RX_STEERING_VETYPE():
-                                                                 0x0 = Steer traffic exclusively to NCSI.
-                                                                 0x1 = Steer traffic exclusively to PKO/NIC.
-                                                                 0x2 = Steer traffic to BOTH PKO/NIC and NCSI.
-                                                                 0x3 = Steer traffic to the bit bucket (drop). */
-#else /* Word 0 - Little Endian */
-        uint64_t dest                  : 2;  /**< [  1:  0](R/W) Destination for traffic that does not match any of the steering filters specified by
-                                                                 BGX()_CMR_RX_STEERING() and and BGX()_CMR_RX_STEERING_VETYPE():
-                                                                 0x0 = Steer traffic exclusively to NCSI.
-                                                                 0x1 = Steer traffic exclusively to PKO/NIC.
-                                                                 0x2 = Steer traffic to BOTH PKO/NIC and NCSI.
-                                                                 0x3 = Steer traffic to the bit bucket (drop). */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } cn83xx;
+    /* struct cavm_bgxx_cmr_rx_steering_default_s cn; */
 };
 typedef union cavm_bgxx_cmr_rx_steering_default cavm_bgxx_cmr_rx_steering_default_t;
 
 static inline uint64_t CAVM_BGXX_CMR_RX_STEERING_DEFAULT(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_BGXX_CMR_RX_STEERING_DEFAULT(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
-        return 0x87e0e0000448ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x87e0e0000448ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("BGXX_CMR_RX_STEERING_DEFAULT", 1, a, 0, 0, 0, 0, 0);
@@ -5901,8 +5426,6 @@ typedef union cavm_bgxx_cmr_rx_steering_vetypex cavm_bgxx_cmr_rx_steering_vetype
 static inline uint64_t CAVM_BGXX_CMR_RX_STEERING_VETYPEX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_BGXX_CMR_RX_STEERING_VETYPEX(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_CN81XX) && ((a<=1) && (b<=7)))
-        return 0x87e0e0000400ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=3) && (b<=7)))
         return 0x87e0e0000400ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("BGXX_CMR_RX_STEERING_VETYPEX", 2, a, b, 0, 0, 0, 0);
@@ -6193,27 +5716,6 @@ static inline uint64_t CAVM_BGXX_GMP_GMI_PRTX_CFG(uint64_t a, uint64_t b)
  * [CNT]. In normal operation, the L2 header begins after the
  * PREAMBLE + SFD (BGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] = 1) and any optional UDD skip
  * data (BGX()_GMP_GMI_RX()_UDD_SKP[LEN]).
- *
- * Internal:
- * Notes:
- * As each byte in a packet is received by GMI, the L2 byte count is compared
- * against the [CNT].  The L2 byte count is the number of bytes
- * from the beginning of the L2 header (DMAC).  In normal operation, the L2
- * header begins after the PREAMBLE+SFD (BGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK]=1) and any
- * optional UDD skip data (BGX()_GMP_GMI_RX()_UDD_SKP[LEN]).
- * When BGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is clear, PREAMBLE+SFD are prepended to the
- * packet and would require UDD skip length to account for them.
- *
- * Full Duplex:
- * _   L2 Size \<  [CNT] - Accept packet. No filtering is applied.
- * _   L2 Size \>= [CNT] - Apply filter. Accept packet based on PAUSE packet filter.
- *
- * Half Duplex:
- * _   L2 Size \<  [CNT] - Drop packet. Packet is unconditionally dropped.
- * _   L2 Size \>= [CNT] - Accept packet.
- *
- * where L2_size = MAX(0, total_packet_size - BGX()_GMP_GMI_RX()_UDD_SKP[LEN] -
- *                        ((BGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK]==1)*8))
  */
 union cavm_bgxx_gmp_gmi_rxx_decision
 {
@@ -6318,17 +5820,6 @@ static inline uint64_t CAVM_BGXX_GMP_GMI_RXX_FRM_CHK(uint64_t a, uint64_t b)
  * PAUSE
  * packets only apply to full duplex operation, any PAUSE packet would constitute an exception
  * which should be handled by the processing cores. PAUSE packets should not be forwarded.
- *
- * Internal:
- * Notes:
- * [PRE_STRP]:
- * When [PRE_CHK] is set (indicating that the PREAMBLE will be sent), [PRE_STRP]
- * determines if the PREAMBLE+SFD bytes are thrown away or sent to the Octane
- * core as part of the packet.
- * In either mode, the PREAMBLE+SFD bytes are not counted toward the packet
- * size when checking against the MIN and MAX bounds.  Furthermore, the bytes
- * are skipped when locating the start of the L2 header for DMAC and Control
- * frame recognition.
  */
 union cavm_bgxx_gmp_gmi_rxx_frm_ctl
 {
@@ -6605,60 +6096,6 @@ static inline uint64_t CAVM_BGXX_GMP_GMI_RXX_IFG(uint64_t a, uint64_t b)
  * set the error.
  * In half duplex operation, the expectation is that collisions will appear as either MINERR or
  * CAREXT errors.'
- *
- * Internal:
- * Notes:
- * (1) exception conditions 10:0 can also set the rcv/opcode in the received
- * packet's workQ entry.  The BGX()_GMP_GMI_RX()_FRM_CHK register provides a bit mask
- * for configuring which conditions set the error.
- *
- * (2) in half duplex operation, the expectation is that collisions will appear
- * as either MINERR o r CAREXT errors.
- *
- * (3) JABBER An RX jabber error indicates that a packet was received which
- * is longer than the maximum allowed packet as defined by the
- * system.  GMI will truncate the packet at the JABBER count.
- * Failure to do so could lead to system instabilty.
- *
- * (4) NIBERR This error is illegal at 1000Mbs speeds
- * (BGX()_GMP_GMI_PRT()_CFG[SPEED]==0) and will never assert.
- *
- * (5) MINERR total frame DA+SA+TL+DATA+PAD+FCS \< 64
- *
- * (6) ALNERR Indicates that the packet received was not an integer number of
- * bytes.  If FCS checking is enabled, ALNERR will only assert if
- * the FCS is bad.  If FCS checking is disabled, ALNERR will
- * assert in all non-integer frame cases.
- *
- * (7) Collisions Collisions can only occur in half-duplex mode.  A collision
- * is assumed by the receiver when the slottime
- * (BGX()_GMP_GMI_PRT()_CFG[SLOTTIME]) is not satisfied.  In 10/100 mode,
- * this will result in a frame \< SLOTTIME.  In 1000 mode, it
- * could result either in frame \< SLOTTIME or a carrier extend
- * error with the SLOTTIME.  These conditions are visible by...
- * . transfer ended before slottime COLDET
- * . carrier extend error           CAREXT
- *
- * (A) LENERR Length errors occur when the received packet does not match the
- * length field.  LENERR is only checked for packets between 64
- * and 1500 bytes.  For untagged frames, the length must exact
- * match.  For tagged frames the length or length+4 must match.
- *
- * (B) PCTERR checks that the frame begins with a valid PREAMBLE sequence.
- * Does not check the number of PREAMBLE cycles.
- *
- * (C) OVRERR *DON'T PUT IN HRM*
- * OVRERR is an architectural assertion check internal to GMI to
- * make sure no assumption was violated.  In a correctly operating
- * system, this interrupt can never fire.
- * GMI has an internal arbiter which selects which of four ports to
- * buffer in the main RX FIFO.  If we normally buffer eight bytes,
- * then each port will typically push a tick every eight cycles if
- * the packet interface is going as fast as possible.  If there
- * are four ports, they push every two cycles.  So that's the
- * assumption.  That the inbound module will always be able to
- * consume the tick before another is produced.  If that doesn't
- * happen that's when OVRERR will assert."
  */
 union cavm_bgxx_gmp_gmi_rxx_int
 {
@@ -7077,30 +6514,6 @@ static inline uint64_t CAVM_BGXX_GMP_GMI_RXX_JABBER(uint64_t a, uint64_t b)
  * BGX GMP GMI User-Defined Data Skip Registers
  * This register specifies the amount of user-defined data (UDD) added before the start of the
  * L2C data.
- *
- * Internal:
- * Notes:
- * (1) The skip bytes are part of the packet and will be handled by NIC.
- *
- * (2) The system can determine if the UDD bytes are included in the FCS check
- * by using the FCSSEL field - if the FCS check is enabled.
- *
- * (3) Assume that the preamble/sfd is always at the start of the frame - even
- * before UDD bytes.  In most cases, there will be no preamble in these
- * cases since it will be packet interface in direct communication to
- * another packet interface (MAC to MAC) without a PHY involved.
- *
- * (4) We can still do address filtering and control packet filtering is the
- * user desires.
- *
- * (5) BGX()_GMP_GMI_RX()_UDD_SKP[LEN] must be 0 in half-duplex operation unless
- * BGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is clear.  If BGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is
- * clear,
- * then BGX()_GMP_GMI_RX()_UDD_SKP[LEN] will normally be 8.
- *
- * (6) In all cases, the UDD bytes will be sent down the packet interface as
- * part of the packet.  The UDD bytes are never stripped from the actual
- * packet.
  */
 union cavm_bgxx_gmp_gmi_rxx_udd_skp
 {
@@ -7675,25 +7088,6 @@ static inline uint64_t CAVM_BGXX_GMP_GMI_TXX_MIN_PKT(uint64_t a, uint64_t b)
  *
  * BGX GMI TX PAUSE-Packet Transmission-Interval Registers
  * This register specifies how often PAUSE packets are sent.
- * Internal:
- * Notes:
- * Choosing proper values of BGX()_GMP_GMI_TX()_PAUSE_PKT_TIME[PTIME] and
- * BGX()_GMP_GMI_TX()_PAUSE_PKT_INTERVAL[INTERVAL] can be challenging to the system
- * designer.  It is suggested that TIME be much greater than INTERVAL and
- * BGX()_GMP_GMI_TX()_PAUSE_ZERO[SEND] be set.  This allows a periodic refresh of the PAUSE
- * count and then when the backpressure condition is lifted, a PAUSE packet
- * with TIME==0 will be sent indicating that Octane is ready for additional
- * data.
- *
- * If the system chooses to not set BGX()_GMP_GMI_TX()_PAUSE_ZERO[SEND], then it is
- * suggested that TIME and INTERVAL are programmed such that they satisify the
- * following rule:
- *
- * _ INTERVAL \<= TIME - (largest_pkt_size + IFG + pause_pkt_size)
- *
- * where largest_pkt_size is that largest packet that the system can send
- * (normally 1518B), IFG is the interframe gap and pause_pkt_size is the size
- * of the PAUSE packet (normally 64B).
  */
 union cavm_bgxx_gmp_gmi_txx_pause_pkt_interval
 {
@@ -9019,14 +8413,6 @@ static inline uint64_t CAVM_BGXX_GMP_PCS_LINKX_TIMER(uint64_t a, uint64_t b)
  * Register (RSL) bgx#_gmp_pcs_misc#_ctl
  *
  * BGX GMP SGMII Miscellaneous Control Registers
- * Internal:
- * SGMII bit [12] is really a misnomer, it is a decode  of pi_qlm_cfg pins to indicate SGMII or
- * 1000Base-X modes.
- *
- * Note: The SGMII AN Advertisement Register above will be sent during Auto Negotiation if
- * [MAC_PHY] is set (1=PHY mode). If the bit is not set (0=MAC mode), the
- * tx_Config_Reg\<14\> becomes ACK bit and tx_Config_Reg\<0\> is always 1.
- * All other bits in tx_Config_Reg sent will be 0. The PHY dictates the Auto Negotiation results.
  */
 union cavm_bgxx_gmp_pcs_miscx_ctl
 {
@@ -9886,9 +9272,6 @@ static inline uint64_t CAVM_BGXX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
  * Register (RSL) bgx#_smu#_cbfc_ctl
  *
  * BGX SMU PFC Control Registers
- * Internal:
- * INTERNAL: XOFF for a specific class/channel \<i\> is XOFF\<i\> = ([PHYS_EN]\<i\> & cmr_rx_phys_bp) |
- * ([LOGL_EN]\<i\> & cmr_rx_logl_xoff\<i\>).
  */
 union cavm_bgxx_smux_cbfc_ctl
 {
@@ -10469,10 +9852,6 @@ static inline uint64_t CAVM_BGXX_SMUX_RX_FRM_CTL(uint64_t a, uint64_t b)
  *
  * BGX SMU Receive Interrupt Registers
  * SMU Interrupt Register.
- * Internal:
- * Exception conditions \<9\> and \<4:0\> can also set the rcv/opcode in the received packet's work
- * queue entry. BGX()_SMU()_RX_FRM_CHK provides a bit mask for configuring which
- * conditions set the error.
  */
 union cavm_bgxx_smux_rx_int
 {
@@ -10863,15 +10242,6 @@ static inline uint64_t CAVM_BGXX_SMUX_RX_INT_W1S(uint64_t a, uint64_t b)
  * BGX SMU Maximum Packet-Size Registers
  * This register specifies the maximum size for packets, beyond which the SMU truncates. In
  * XAUI/RXAUI mode, port 0 is used for checking.
- *
- * Internal:
- * The packet that will be sent to the packet input logic will have an
- * additionl 8 bytes if BGX()_SMU()_RX_FRM_CTL[PRE_CHK] is set and
- * BGX()_SMU()_RX_FRM_CTL[PRE_STRP] is clear.  The max packet that will be sent is
- * defined as:
- *
- * _ max_sized_packet = BGX()_SMU()_RX_JABBER[CNT]+((BGX()_SMU()_RX_FRM_CTL[PRE_CHK] &
- * !BGX()_SMU()_RX_FRM_CTL[PRE_STRP])*8)
  */
 union cavm_bgxx_smux_rx_jabber
 {
@@ -10915,23 +10285,6 @@ static inline uint64_t CAVM_BGXX_SMUX_RX_JABBER(uint64_t a, uint64_t b)
  * Register (RSL) bgx#_smu#_rx_udd_skp
  *
  * BGX SMU User-Defined Data Skip Registers
- * Internal:
- * (1) The skip bytes are part of the packet and will be sent down the NCB
- * packet interface and will be handled by NIC.
- * (2) The system can determine if the UDD bytes are included in the FCS check
- * by using the FCSSEL field if the FCS check is enabled.
- *
- * (3) Assume that the preamble/sfd is always at the start of the frame even
- * before UDD bytes.  In most cases, there will be no preamble in these
- * cases since it will be packet interface in direct communication to
- * another packet interface (MAC to MAC) without a PHY involved.
- *
- * (4) We can still do address filtering and control packet filtering if the
- * user desires.
- *
- * (6) In all cases, the UDD bytes will be sent down the packet interface as
- * part of the packet.  The UDD bytes are never stripped from the actual
- * packet.
  */
 union cavm_bgxx_smux_rx_udd_skp
 {

@@ -60,7 +60,7 @@ int plat_octeontx_is_lmc_enabled(unsigned int lmc)
 		return 0;
 
 	lmcx_dll_ctl2.u = CSR_READ(CAVM_LMCX_DLL_CTL2(lmc));
-	return lmcx_dll_ctl2.cnf95xx.dreset ? 0 : 1;
+	return lmcx_dll_ctl2.cn9.dreset ? 0 : 1;
 }
 
 /*******************************************************************************

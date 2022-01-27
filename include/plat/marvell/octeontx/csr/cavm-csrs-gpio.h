@@ -811,7 +811,7 @@ static inline uint64_t CAVM_GPIO_BLINK_FREQ_FUNC(void)
 /**
  * Register (NCB) gpio_cer_err_w1c
  *
- * INTERNAL: GPIO Central Error Write-One-to-Clear Register
+ * GPIO Central Error Write-One-to-Clear Register
  */
 union cavm_gpio_cer_err_w1c
 {
@@ -842,7 +842,9 @@ typedef union cavm_gpio_cer_err_w1c cavm_gpio_cer_err_w1c_t;
 static inline uint64_t CAVM_GPIO_CER_ERR_W1C_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GPIO_CER_ERR_W1C_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX))
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X))
+        return 0x803000001608ll;
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
         return 0x803000001608ll;
     __cavm_csr_fatal("GPIO_CER_ERR_W1C", 0, 0, 0, 0, 0, 0, 0);
 }
@@ -857,9 +859,8 @@ static inline uint64_t CAVM_GPIO_CER_ERR_W1C_FUNC(void)
 /**
  * Register (NCB) gpio_cer_err_w1s
  *
- * INTERNAL: GPIO Central Error Write-One-to-Set Register
- *
- * Deprecated. This register report CER Errors to GPIO pins.
+ * GPIO Central Error Write-One-to-Set Register
+ * This register report CER Errors to GPIO pins.
  *
  * This register is not accessible through ROM scripts; see SCR_WRITE32_S[ADDR].
  */
@@ -892,7 +893,9 @@ typedef union cavm_gpio_cer_err_w1s cavm_gpio_cer_err_w1s_t;
 static inline uint64_t CAVM_GPIO_CER_ERR_W1S_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GPIO_CER_ERR_W1S_FUNC(void)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX))
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X))
+        return 0x803000001600ll;
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
         return 0x803000001600ll;
     __cavm_csr_fatal("GPIO_CER_ERR_W1S", 0, 0, 0, 0, 0, 0, 0);
 }
@@ -2743,10 +2746,7 @@ union cavm_gpio_misc_supply
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
-                                                                 _ All other values reserved.
-
-                                                                 Internal:
-                                                                 Values echo VDET_TWS_AVS */
+                                                                 _ All other values reserved. */
         uint64_t vdet_emmc             : 2;  /**< [ 19: 18](RO/H) Sensed I/O power supply setting for EMMC bus:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -2771,10 +2771,7 @@ union cavm_gpio_misc_supply
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
-                                                                 _ All other values reserved.
-
-                                                                 Internal:
-                                                                 Values echo VDET_IO_N */
+                                                                 _ All other values reserved. */
         uint64_t vdet_io_n             : 2;  /**< [  9:  8](RO/H) Sensed I/O power supply setting for generic IO pins:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -2830,10 +2827,7 @@ union cavm_gpio_misc_supply
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
-                                                                 _ All other values reserved.
-
-                                                                 Internal:
-                                                                 Values echo VDET_IO_N */
+                                                                 _ All other values reserved. */
         uint64_t vdet_gpio48           : 2;  /**< [ 13: 12](RO/H) Sensed I/O power supply setting for GPIO48..63.
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -2858,10 +2852,7 @@ union cavm_gpio_misc_supply
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
-                                                                 _ All other values reserved.
-
-                                                                 Internal:
-                                                                 Values echo VDET_TWS_AVS */
+                                                                 _ All other values reserved. */
         uint64_t vdet_scan             : 2;  /**< [ 23: 22](RO/H) Sensed I/O power supply setting for dedicated scan ports:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -2884,10 +2875,7 @@ union cavm_gpio_misc_supply
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
-                                                                 _ All other values reserved.
-
-                                                                 Internal:
-                                                                 Values echo VDET_TWS_AVS */
+                                                                 _ All other values reserved. */
         uint64_t vdet_emmc             : 2;  /**< [ 19: 18](RO/H) Sensed I/O power supply setting for EMMC bus:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -2993,10 +2981,7 @@ union cavm_gpio_misc_supply
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
-                                                                 _ All other values reserved.
-
-                                                                 Internal:
-                                                                 Values echo VDET_TWS_AVS */
+                                                                 _ All other values reserved. */
         uint64_t vdet_scan             : 2;  /**< [ 23: 22](RO/H) Sensed I/O power supply setting for dedicated scan ports:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -3018,10 +3003,7 @@ union cavm_gpio_misc_supply
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
-                                                                 _ All other values reserved.
-
-                                                                 Internal:
-                                                                 Values echo VDET_TWS_AVS */
+                                                                 _ All other values reserved. */
         uint64_t vdet_emmc             : 2;  /**< [ 19: 18](RO/H) Sensed I/O power supply setting for EMMC bus:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -3127,10 +3109,7 @@ union cavm_gpio_misc_supply
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
-                                                                 _ All other values reserved.
-
-                                                                 Internal:
-                                                                 Values echo VDET_TWS_AVS */
+                                                                 _ All other values reserved. */
         uint64_t vdet_scan             : 2;  /**< [ 23: 22](RO/H) Sensed I/O power supply setting for dedicated scan ports:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -3494,8 +3473,7 @@ static inline uint64_t CAVM_GPIO_MULTI_CAST_FUNC(void)
 /**
  * Register (NCB) gpio_ocla_exten_trig
  *
- * INTERNAL: GPIO OCLA External Trigger Register
- *
+ * GPIO OCLA External Trigger Register
  * This register is only accessible to the requestor(s) permitted with GPIO_PERMIT.
  *
  * This register is not accessible through ROM scripts; see SCR_WRITE32_S[ADDR].
@@ -3539,7 +3517,13 @@ typedef union cavm_gpio_ocla_exten_trig cavm_gpio_ocla_exten_trig_t;
 static inline uint64_t CAVM_GPIO_OCLA_EXTEN_TRIG_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GPIO_OCLA_EXTEN_TRIG_FUNC(void)
 {
-    return 0x803000000020ll;
+    if (cavm_is_model(OCTEONTX_CN8XXX))
+        return 0x803000000020ll;
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X))
+        return 0x803000000020ll;
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+        return 0x803000000020ll;
+    __cavm_csr_fatal("GPIO_OCLA_EXTEN_TRIG", 0, 0, 0, 0, 0, 0, 0);
 }
 
 #define typedef_CAVM_GPIO_OCLA_EXTEN_TRIG cavm_gpio_ocla_exten_trig_t
@@ -3674,15 +3658,7 @@ union cavm_gpio_pkg_ver
                                                                                        backwards board-compatible with package A.
                                                                  0x5 = SKU package N = 42.5 x 42.5mm package, up to 2 DDR channels, 8 lanes Ethernet.
                                                                                        backwards board-compatible with package C.
-                                                                 0x7 = SKU package P = 50 x 50mm package, up to 3 DDR channels.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die.
-
-                                                                 Proposed but currently not planned packages:
-                                                                 Pass A: 0x7 = SKU package H = 50 x 50mm package, up to 3 DDR channels,
-                                                                               forward C0 board compatible.
-                                                                 Pass C: 0x1 = SKU package J = 42.5 x 42.5mm package, up to 2 DDR channels, 4 lanes Ethernet. */
+                                                                 0x7 = SKU package P = 50 x 50mm package, up to 3 DDR channels. */
 #else /* Word 0 - Little Endian */
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
 
@@ -3697,15 +3673,7 @@ union cavm_gpio_pkg_ver
                                                                                        backwards board-compatible with package A.
                                                                  0x5 = SKU package N = 42.5 x 42.5mm package, up to 2 DDR channels, 8 lanes Ethernet.
                                                                                        backwards board-compatible with package C.
-                                                                 0x7 = SKU package P = 50 x 50mm package, up to 3 DDR channels.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die.
-
-                                                                 Proposed but currently not planned packages:
-                                                                 Pass A: 0x7 = SKU package H = 50 x 50mm package, up to 3 DDR channels,
-                                                                               forward C0 board compatible.
-                                                                 Pass C: 0x1 = SKU package J = 42.5 x 42.5mm package, up to 2 DDR channels, 4 lanes Ethernet. */
+                                                                 0x7 = SKU package P = 50 x 50mm package, up to 3 DDR channels. */
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -3714,16 +3682,10 @@ union cavm_gpio_pkg_ver
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_3_63         : 61;
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = 57 x 57 package, up to 6 DDR channels, for CN98XX.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = 57 x 57 package, up to 6 DDR channels, for CN98XX. */
 #else /* Word 0 - Little Endian */
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = 57 x 57 package, up to 6 DDR channels, for CN98XX.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = 57 x 57 package, up to 6 DDR channels, for CN98XX. */
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cn98xx;
@@ -3732,16 +3694,10 @@ union cavm_gpio_pkg_ver
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_3_63         : 61;
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = 45 x 45mm package, up to 2 DDR channels, for CNF95XX.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = 45 x 45mm package, up to 2 DDR channels, for CNF95XX. */
 #else /* Word 0 - Little Endian */
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = 45 x 45mm package, up to 2 DDR channels, for CNF95XX.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = 45 x 45mm package, up to 2 DDR channels, for CNF95XX. */
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cnf95xxp1;
@@ -3751,17 +3707,11 @@ union cavm_gpio_pkg_ver
         uint64_t reserved_3_63         : 61;
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
                                                                  0x0 = SKU package A = 45 x 45mm package, up to 2 DDR channels, for CNF95XX.
-                                                                 0x1 = SKU package B = 45 x 45mm package, up to 2 DDR channels, for CNF95XX pass B0+.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x1 = SKU package B = 45 x 45mm package, up to 2 DDR channels, for CNF95XX pass B0+. */
 #else /* Word 0 - Little Endian */
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
                                                                  0x0 = SKU package A = 45 x 45mm package, up to 2 DDR channels, for CNF95XX.
-                                                                 0x1 = SKU package B = 45 x 45mm package, up to 2 DDR channels, for CNF95XX pass B0+.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x1 = SKU package B = 45 x 45mm package, up to 2 DDR channels, for CNF95XX pass B0+. */
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cnf95xxp2;
@@ -3770,16 +3720,10 @@ union cavm_gpio_pkg_ver
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_3_63         : 61;
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = for CNF95XXMM.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = for CNF95XXMM. */
 #else /* Word 0 - Little Endian */
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = for CNF95XXMM.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = for CNF95XXMM. */
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } f95mm;
@@ -3788,16 +3732,10 @@ union cavm_gpio_pkg_ver
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_3_63         : 61;
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = for CNF95XXN.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = for CNF95XXN. */
 #else /* Word 0 - Little Endian */
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = for CNF95XXN.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = for CNF95XXN. */
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } f95o;
@@ -3806,16 +3744,10 @@ union cavm_gpio_pkg_ver
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_3_63         : 61;
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = for LOKI.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = for LOKI. */
 #else /* Word 0 - Little Endian */
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = for LOKI.
-
-                                                                 Internal:
-                                                                 Architecturally defined, same encoding across same die. */
+                                                                 0x0 = SKU package A = for LOKI. */
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } loki;

@@ -98,82 +98,6 @@
 #define CAVM_XCP_MIPS_VEC_INT_E_WDOG (6)
 
 /**
- * Structure xcp_bp_test0_bp_cfg_s
- *
- * INTERNAL: XCP Backpressure Test 0 Configuration Structure
- *
- * XCP()_BP_TEST0[BP_CFG] field structure for bit connections to fifos.
- */
-union cavm_xcp_bp_test0_bp_cfg_s
-{
-    uint32_t u;
-    struct cavm_xcp_bp_test0_bp_cfg_s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_4_31         : 28;
-        uint32_t xcp_ncb_r_dctl_tx_fifo : 2; /**< [  3:  2] Config for xcp_ncb_r_dctl_tx_fifo. */
-        uint32_t ncb_csr_sm_req_fifo   : 2;  /**< [  1:  0] Config for ncb_csr_sm_req_fifo. */
-#else /* Word 0 - Little Endian */
-        uint32_t ncb_csr_sm_req_fifo   : 2;  /**< [  1:  0] Config for ncb_csr_sm_req_fifo. */
-        uint32_t xcp_ncb_r_dctl_tx_fifo : 2; /**< [  3:  2] Config for xcp_ncb_r_dctl_tx_fifo. */
-        uint32_t reserved_4_31         : 28;
-#endif /* Word 0 - End */
-    } s;
-    struct cavm_xcp_bp_test0_bp_cfg_s_cn
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_14_31        : 18;
-        uint32_t reserved_4_13         : 10;
-        uint32_t xcp_ncb_r_dctl_tx_fifo : 2; /**< [  3:  2] Config for xcp_ncb_r_dctl_tx_fifo. */
-        uint32_t ncb_csr_sm_req_fifo   : 2;  /**< [  1:  0] Config for ncb_csr_sm_req_fifo. */
-#else /* Word 0 - Little Endian */
-        uint32_t ncb_csr_sm_req_fifo   : 2;  /**< [  1:  0] Config for ncb_csr_sm_req_fifo. */
-        uint32_t xcp_ncb_r_dctl_tx_fifo : 2; /**< [  3:  2] Config for xcp_ncb_r_dctl_tx_fifo. */
-        uint32_t reserved_4_13         : 10;
-        uint32_t reserved_14_31        : 18;
-#endif /* Word 0 - End */
-    } cn;
-};
-
-/**
- * Structure xcp_bp_test0_enable_s
- *
- * INTERNAL: XCP Backpressure Test 0 Enable Structure
- *
- * XCP()_BP_TEST0[ENABLE] field structure for bit connections to fifos.
- */
-union cavm_xcp_bp_test0_enable_s
-{
-    uint32_t u;
-    struct cavm_xcp_bp_test0_enable_s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_2_31         : 30;
-        uint32_t xcp_ncb_r_dctl_tx_fifo : 1; /**< [  1:  1] ENABLE for xcp_ncb_r_dctl_tx_fifo. */
-        uint32_t ncb_csr_sm_req_fifo   : 1;  /**< [  0:  0] ENABLE for ncb_csr_sm_req_fifo. */
-#else /* Word 0 - Little Endian */
-        uint32_t ncb_csr_sm_req_fifo   : 1;  /**< [  0:  0] ENABLE for ncb_csr_sm_req_fifo. */
-        uint32_t xcp_ncb_r_dctl_tx_fifo : 1; /**< [  1:  1] ENABLE for xcp_ncb_r_dctl_tx_fifo. */
-        uint32_t reserved_2_31         : 30;
-#endif /* Word 0 - End */
-    } s;
-    struct cavm_xcp_bp_test0_enable_s_cn
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_7_31         : 25;
-        uint32_t reserved_2_6          : 5;
-        uint32_t xcp_ncb_r_dctl_tx_fifo : 1; /**< [  1:  1] ENABLE for xcp_ncb_r_dctl_tx_fifo. */
-        uint32_t ncb_csr_sm_req_fifo   : 1;  /**< [  0:  0] ENABLE for ncb_csr_sm_req_fifo. */
-#else /* Word 0 - Little Endian */
-        uint32_t ncb_csr_sm_req_fifo   : 1;  /**< [  0:  0] ENABLE for ncb_csr_sm_req_fifo. */
-        uint32_t xcp_ncb_r_dctl_tx_fifo : 1; /**< [  1:  1] ENABLE for xcp_ncb_r_dctl_tx_fifo. */
-        uint32_t reserved_2_6          : 5;
-        uint32_t reserved_7_31         : 25;
-#endif /* Word 0 - End */
-    } cn;
-};
-
-/**
  * Register (NCB32b) xcp#_accum_empty
  *
  * XCP Write Accumulator Empty Register
@@ -256,71 +180,6 @@ static inline uint64_t CAVM_XCPX_BOOT_JUMP(uint64_t a)
 #define device_bar_CAVM_XCPX_BOOT_JUMP(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_XCPX_BOOT_JUMP(a) (a)
 #define arguments_CAVM_XCPX_BOOT_JUMP(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) xcp#_bp_test0
- *
- * INTERNAL: XCP Backpressure Test Register
- *
- * This register is only accessible to the requestor(s) permitted with CPC_XCP()_PERMIT.
- *
- * This register is reset on XCP domain reset.
- */
-union cavm_xcpx_bp_test0
-{
-    uint64_t u;
-    struct cavm_xcpx_bp_test0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 7;  /**< [ 63: 57](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 Refer to XCP_BP_TEST0_ENABLE_S for field bit descriptions and layout. */
-        uint64_t reserved_48_56        : 9;
-        uint64_t bp_cfg                : 14; /**< [ 47: 34](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 Refer to XCP_BP_TEST0_BP_CFG_S for field bit descriptions and layout. */
-        uint64_t reserved_12_33        : 22;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_33        : 22;
-        uint64_t bp_cfg                : 14; /**< [ 47: 34](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 Refer to XCP_BP_TEST0_BP_CFG_S for field bit descriptions and layout. */
-        uint64_t reserved_48_56        : 9;
-        uint64_t enable                : 7;  /**< [ 63: 57](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 Refer to XCP_BP_TEST0_ENABLE_S for field bit descriptions and layout. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_xcpx_bp_test0_s cn; */
-};
-typedef union cavm_xcpx_bp_test0 cavm_xcpx_bp_test0_t;
-
-static inline uint64_t CAVM_XCPX_BP_TEST0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_XCPX_BP_TEST0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1))
-        return 0x82c00000e000ll + 0x1000000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("XCPX_BP_TEST0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_XCPX_BP_TEST0(a) cavm_xcpx_bp_test0_t
-#define bustype_CAVM_XCPX_BP_TEST0(a) CSR_TYPE_NCB
-#define basename_CAVM_XCPX_BP_TEST0(a) "XCPX_BP_TEST0"
-#define device_bar_CAVM_XCPX_BP_TEST0(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_XCPX_BP_TEST0(a) (a)
-#define arguments_CAVM_XCPX_BP_TEST0(a) (a),-1,-1,-1
 
 /**
  * Register (NCB32b) xcp#_bus_err_lint
@@ -1456,45 +1315,6 @@ static inline uint64_t CAVM_XCPX_DEVX_XCP_MBOX_LINT_W1S(uint64_t a, uint64_t b)
 #define device_bar_CAVM_XCPX_DEVX_XCP_MBOX_LINT_W1S(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_XCPX_DEVX_XCP_MBOX_LINT_W1S(a,b) (a)
 #define arguments_CAVM_XCPX_DEVX_XCP_MBOX_LINT_W1S(a,b) (a),(b),-1,-1
-
-/**
- * Register (NCB32b) xcp#_eco
- *
- * INTERNAL: XCP ECO Register
- *
- * This register is only accessible to the requestor(s) permitted with CPC_XCP()_PERMIT.
- *
- * This register is reset on XCP domain reset.
- */
-union cavm_xcpx_eco
-{
-    uint32_t u;
-    struct cavm_xcpx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint32_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_xcpx_eco_s cn; */
-};
-typedef union cavm_xcpx_eco cavm_xcpx_eco_t;
-
-static inline uint64_t CAVM_XCPX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_XCPX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1))
-        return 0x82c000000100ll + 0x1000000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("XCPX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_XCPX_ECO(a) cavm_xcpx_eco_t
-#define bustype_CAVM_XCPX_ECO(a) CSR_TYPE_NCB32b
-#define basename_CAVM_XCPX_ECO(a) "XCPX_ECO"
-#define device_bar_CAVM_XCPX_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_XCPX_ECO(a) (a)
-#define arguments_CAVM_XCPX_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (NCB32b) xcp#_gib#_lint

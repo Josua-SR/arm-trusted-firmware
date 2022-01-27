@@ -134,55 +134,6 @@ static inline uint64_t CAVM_TSNX_CONST(uint64_t a)
 #define arguments_CAVM_TSNX_CONST(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) tsn#_eco
- *
- * INTERNAL: TSN ECO Register
- */
-union cavm_tsnx_eco
-{
-    uint64_t u;
-    struct cavm_tsnx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_tsnx_eco_s cn; */
-};
-typedef union cavm_tsnx_eco cavm_tsnx_eco_t;
-
-static inline uint64_t CAVM_TSNX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_TSNX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=9))
-        return 0x87e0c00000c8ll + 0x1000000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=10))
-        return 0x87e0c00000c8ll + 0x1000000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=15))
-        return 0x87e0c00000c8ll + 0x1000000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
-        return 0x87e0c00000c8ll + 0x1000000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=7))
-        return 0x87e0c00000c8ll + 0x1000000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=7))
-        return 0x87e0c00000c8ll + 0x1000000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=7))
-        return 0x87e0c00000c8ll + 0x1000000ll * ((a) & 0x7);
-    __cavm_csr_fatal("TSNX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_TSNX_ECO(a) cavm_tsnx_eco_t
-#define bustype_CAVM_TSNX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_TSNX_ECO(a) "TSNX_ECO"
-#define device_bar_CAVM_TSNX_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_TSNX_ECO(a) (a)
-#define arguments_CAVM_TSNX_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) tsn#_fuse_bypass
  *
  * TSN Fuse Bypass Register

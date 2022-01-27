@@ -2122,48 +2122,6 @@ static inline uint64_t CAVM_RMAPX_CONTROL(uint64_t a)
 #define arguments_CAVM_RMAPX_CONTROL(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) rmap#_eco
- *
- * INTERNAL: RMAP ECO Register
- */
-union cavm_rmapx_eco
-{
-    uint64_t u;
-    struct cavm_rmapx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rmapx_eco_s cn; */
-};
-typedef union cavm_rmapx_eco cavm_rmapx_eco_t;
-
-static inline uint64_t CAVM_RMAPX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RMAPX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043380008ll + 0x180000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043380008ll + 0x180000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043380008ll + 0x180000ll * ((a) & 0x1);
-    __cavm_csr_fatal("RMAPX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RMAPX_ECO(a) cavm_rmapx_eco_t
-#define bustype_CAVM_RMAPX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_RMAPX_ECO(a) "RMAPX_ECO"
-#define busnum_CAVM_RMAPX_ECO(a) (a)
-#define arguments_CAVM_RMAPX_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) rmap#_error_enable0
  *
  * RMAP Error Enable 0 Register
@@ -3281,44 +3239,6 @@ static inline uint64_t CAVM_RMAPX_JD2_CFG6(uint64_t a)
 #define arguments_CAVM_RMAPX_JD2_CFG6(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) rmap#_scratch
- *
- * INTERNAL: Scratch Register
- */
-union cavm_rmapx_scratch
-{
-    uint64_t u;
-    struct cavm_rmapx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rmapx_scratch_s cn; */
-};
-typedef union cavm_rmapx_scratch cavm_rmapx_scratch_t;
-
-static inline uint64_t CAVM_RMAPX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RMAPX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043380080ll + 0x180000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043380080ll + 0x180000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043380080ll + 0x180000ll * ((a) & 0x1);
-    __cavm_csr_fatal("RMAPX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RMAPX_SCRATCH(a) cavm_rmapx_scratch_t
-#define bustype_CAVM_RMAPX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_RMAPX_SCRATCH(a) "RMAPX_SCRATCH"
-#define busnum_CAVM_RMAPX_SCRATCH(a) (a)
-#define arguments_CAVM_RMAPX_SCRATCH(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) rmap#_status
  *
  * RMAP Status Register
@@ -3652,93 +3572,5 @@ static inline uint64_t CAVM_RMAPX_TC_MAIN_RESET(uint64_t a)
 #define basename_CAVM_RMAPX_TC_MAIN_RESET(a) "RMAPX_TC_MAIN_RESET"
 #define busnum_CAVM_RMAPX_TC_MAIN_RESET(a) (a)
 #define arguments_CAVM_RMAPX_TC_MAIN_RESET(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) rmap#_tc_main_start
- *
- * INTERNAL: TC Start Register
- *
- * TC1860 Main Start Register
- */
-union cavm_rmapx_tc_main_start
-{
-    uint64_t u;
-    struct cavm_rmapx_tc_main_start_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t start                 : 1;  /**< [  0:  0](R/W) Start bit. A write to this address indicates the start of a new task. The
-                                                                 configuration
-                                                                 written in base address 0x1100 is read for this task. The register is automatically de-
-                                                                 asserted to low. */
-#else /* Word 0 - Little Endian */
-        uint64_t start                 : 1;  /**< [  0:  0](R/W) Start bit. A write to this address indicates the start of a new task. The
-                                                                 configuration
-                                                                 written in base address 0x1100 is read for this task. The register is automatically de-
-                                                                 asserted to low. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rmapx_tc_main_start_s cn; */
-};
-typedef union cavm_rmapx_tc_main_start cavm_rmapx_tc_main_start_t;
-
-static inline uint64_t CAVM_RMAPX_TC_MAIN_START(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RMAPX_TC_MAIN_START(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e043381008ll + 0x180000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x87e043381008ll + 0x180000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e043381008ll + 0x180000ll * ((a) & 0x1);
-    __cavm_csr_fatal("RMAPX_TC_MAIN_START", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RMAPX_TC_MAIN_START(a) cavm_rmapx_tc_main_start_t
-#define bustype_CAVM_RMAPX_TC_MAIN_START(a) CSR_TYPE_RSL
-#define basename_CAVM_RMAPX_TC_MAIN_START(a) "RMAPX_TC_MAIN_START"
-#define busnum_CAVM_RMAPX_TC_MAIN_START(a) (a)
-#define arguments_CAVM_RMAPX_TC_MAIN_START(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) rmap#_tc_status#
- *
- * INTERNAL: TC Status Register
- *
- * TC1860 status register
- */
-union cavm_rmapx_tc_statusx
-{
-    uint64_t u;
-    struct cavm_rmapx_tc_statusx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t status                : 64; /**< [ 63:  0](RO) Status bits */
-#else /* Word 0 - Little Endian */
-        uint64_t status                : 64; /**< [ 63:  0](RO) Status bits */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rmapx_tc_statusx_s cn; */
-};
-typedef union cavm_rmapx_tc_statusx cavm_rmapx_tc_statusx_t;
-
-static inline uint64_t CAVM_RMAPX_TC_STATUSX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RMAPX_TC_STATUSX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043381020ll + 0x180000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x87e043381020ll + 0x180000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e043381020ll + 0x180000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    __cavm_csr_fatal("RMAPX_TC_STATUSX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_RMAPX_TC_STATUSX(a,b) cavm_rmapx_tc_statusx_t
-#define bustype_CAVM_RMAPX_TC_STATUSX(a,b) CSR_TYPE_RSL
-#define basename_CAVM_RMAPX_TC_STATUSX(a,b) "RMAPX_TC_STATUSX"
-#define busnum_CAVM_RMAPX_TC_STATUSX(a,b) (a)
-#define arguments_CAVM_RMAPX_TC_STATUSX(a,b) (a),(b),-1,-1
 
 #endif /* __CAVM_CSRS_RMAP_H__ */

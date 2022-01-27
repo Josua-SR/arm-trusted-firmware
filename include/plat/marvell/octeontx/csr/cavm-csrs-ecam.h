@@ -52,20 +52,9 @@ union cavm_ecam_cfg_addr_s
         uint64_t reserved_46           : 1;
         uint64_t node                  : 2;  /**< [ 45: 44] CCPI node number. */
         uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0) DID. 0x48 + ECAM number. */
-        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Setup. Allow certain PCC
-                                                                 configuration registers to be written for boot-time initialization. Treated as 0
-                                                                 unless in secure mode. */
-        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Broadcast. Write to all PCC
-                                                                 blocks for fast configuration. Treated as 0 unless in secure mode and SETUP is
-                                                                 set. */
-        uint64_t dmn                   : 6;  /**< [ 33: 28] Domain number.
-                                                                 Internal:
-                                                                 \<33:32\> is SMMU number, \<31:28\> is the bus-numbering space within the SMMU (0x0 or PEM
-                                                                 ID). */
+        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ. */
+        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ. */
+        uint64_t dmn                   : 6;  /**< [ 33: 28] Domain number. */
         uint64_t bus                   : 8;  /**< [ 27: 20] Bus number. */
         uint64_t func                  : 8;  /**< [ 19: 12] Function number. Note this assumes an ARI device; for external PCI devices that do not
                                                                  support ARI this contains both the device and function number. */
@@ -75,20 +64,9 @@ union cavm_ecam_cfg_addr_s
         uint64_t func                  : 8;  /**< [ 19: 12] Function number. Note this assumes an ARI device; for external PCI devices that do not
                                                                  support ARI this contains both the device and function number. */
         uint64_t bus                   : 8;  /**< [ 27: 20] Bus number. */
-        uint64_t dmn                   : 6;  /**< [ 33: 28] Domain number.
-                                                                 Internal:
-                                                                 \<33:32\> is SMMU number, \<31:28\> is the bus-numbering space within the SMMU (0x0 or PEM
-                                                                 ID). */
-        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Broadcast. Write to all PCC
-                                                                 blocks for fast configuration. Treated as 0 unless in secure mode and SETUP is
-                                                                 set. */
-        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Setup. Allow certain PCC
-                                                                 configuration registers to be written for boot-time initialization. Treated as 0
-                                                                 unless in secure mode. */
+        uint64_t dmn                   : 6;  /**< [ 33: 28] Domain number. */
+        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ. */
+        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ. */
         uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0) DID. 0x48 + ECAM number. */
         uint64_t node                  : 2;  /**< [ 45: 44] CCPI node number. */
         uint64_t reserved_46           : 1;
@@ -104,16 +82,8 @@ union cavm_ecam_cfg_addr_s
         uint64_t reserved_46           : 1;
         uint64_t node                  : 2;  /**< [ 45: 44] CCPI node number. */
         uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0) DID. 0x48 + ECAM number. */
-        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Setup. Allow certain PCC
-                                                                 configuration registers to be written for boot-time initialization. Treated as 0
-                                                                 unless in secure mode. */
-        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Broadcast. Write to all PCC
-                                                                 blocks for fast configuration. Treated as 0 unless in secure mode and SETUP is
-                                                                 set. */
+        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ. */
+        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ. */
         uint64_t reserved_28_33        : 6;
         uint64_t bus                   : 8;  /**< [ 27: 20] Bus number. */
         uint64_t func                  : 8;  /**< [ 19: 12] Function number. Note this assumes an ARI device; for external PCI devices that do not
@@ -125,16 +95,8 @@ union cavm_ecam_cfg_addr_s
                                                                  support ARI this contains both the device and function number. */
         uint64_t bus                   : 8;  /**< [ 27: 20] Bus number. */
         uint64_t reserved_28_33        : 6;
-        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Broadcast. Write to all PCC
-                                                                 blocks for fast configuration. Treated as 0 unless in secure mode and SETUP is
-                                                                 set. */
-        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Setup. Allow certain PCC
-                                                                 configuration registers to be written for boot-time initialization. Treated as 0
-                                                                 unless in secure mode. */
+        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ. */
+        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ. */
         uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0) DID. 0x48 + ECAM number. */
         uint64_t node                  : 2;  /**< [ 45: 44] CCPI node number. */
         uint64_t reserved_46           : 1;
@@ -151,16 +113,8 @@ union cavm_ecam_cfg_addr_s
         uint64_t reserved_46           : 1;
         uint64_t node                  : 2;  /**< [ 45: 44] CCPI node number. */
         uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0..1) DID. 0x48 + ECAM number. */
-        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Setup. Allow certain PCC
-                                                                 configuration registers to be written for boot-time initialization. Treated as 0
-                                                                 unless in secure mode. */
-        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Broadcast. Write to all PCC
-                                                                 blocks for fast configuration. Treated as 0 unless in secure mode and SETUP is
-                                                                 set. */
+        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ. */
+        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ. */
         uint64_t reserved_28_33        : 6;
         uint64_t bus                   : 8;  /**< [ 27: 20] Bus number. */
         uint64_t func                  : 8;  /**< [ 19: 12] Function number. Note this assumes an ARI device; for external PCI devices that do not
@@ -172,16 +126,8 @@ union cavm_ecam_cfg_addr_s
                                                                  support ARI this contains both the device and function number. */
         uint64_t bus                   : 8;  /**< [ 27: 20] Bus number. */
         uint64_t reserved_28_33        : 6;
-        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Broadcast. Write to all PCC
-                                                                 blocks for fast configuration. Treated as 0 unless in secure mode and SETUP is
-                                                                 set. */
-        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Setup. Allow certain PCC
-                                                                 configuration registers to be written for boot-time initialization. Treated as 0
-                                                                 unless in secure mode. */
+        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ. */
+        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ. */
         uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0..1) DID. 0x48 + ECAM number. */
         uint64_t node                  : 2;  /**< [ 45: 44] CCPI node number. */
         uint64_t reserved_46           : 1;
@@ -195,28 +141,11 @@ union cavm_ecam_cfg_addr_s
         uint64_t reserved_52_63        : 12;
         uint64_t io                    : 5;  /**< [ 51: 47] Indicates I/O space. */
         uint64_t reserved_46           : 1;
-        uint64_t node                  : 2;  /**< [ 45: 44] Reserved.
-                                                                 Internal:
-                                                                 CCPI node number. */
-        uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0) DID. 0x78.
-                                                                 Internal:
-                                                                 Use id_defs::ECAM0_78_8ID. */
-        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ.
-                                                                 Internal:
-                                                                 This was intended to allow certain PCC configuration registers to be written for
-                                                                 boot-time initialization. Treated as 0 unless in secure mode.
-
-                                                                 PEM also uses this flag to write certain CS2 registers, e.g. PCIEEP_BAR0_MASKL,
-                                                                 but software should be using PEM()_CFG_WR instead of the ECAM for that. */
-        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Broadcast. Write to all PCC
-                                                                 blocks for fast configuration. Treated as 0 unless in secure mode and SETUP is
-                                                                 set. */
-        uint64_t dmn                   : 6;  /**< [ 33: 28] Domain number.
-                                                                 Internal:
-                                                                 \<33:32\> is SMMU number, \<31:28\> is the bus-numbering space within the SMMU (0x0 or PEM
-                                                                 ID). */
+        uint64_t node                  : 2;  /**< [ 45: 44] Reserved. */
+        uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0) DID. 0x78. */
+        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ. */
+        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ. */
+        uint64_t dmn                   : 6;  /**< [ 33: 28] Domain number. */
         uint64_t bus                   : 8;  /**< [ 27: 20] Bus number. */
         uint64_t func                  : 8;  /**< [ 19: 12] Function number. Note this assumes an ARI device; for external PCI devices that do not
                                                                  support ARI this contains both the device and function number. */
@@ -226,28 +155,11 @@ union cavm_ecam_cfg_addr_s
         uint64_t func                  : 8;  /**< [ 19: 12] Function number. Note this assumes an ARI device; for external PCI devices that do not
                                                                  support ARI this contains both the device and function number. */
         uint64_t bus                   : 8;  /**< [ 27: 20] Bus number. */
-        uint64_t dmn                   : 6;  /**< [ 33: 28] Domain number.
-                                                                 Internal:
-                                                                 \<33:32\> is SMMU number, \<31:28\> is the bus-numbering space within the SMMU (0x0 or PEM
-                                                                 ID). */
-        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ.
-                                                                 Internal:
-                                                                 Reserved for future use - Broadcast. Write to all PCC
-                                                                 blocks for fast configuration. Treated as 0 unless in secure mode and SETUP is
-                                                                 set. */
-        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ.
-                                                                 Internal:
-                                                                 This was intended to allow certain PCC configuration registers to be written for
-                                                                 boot-time initialization. Treated as 0 unless in secure mode.
-
-                                                                 PEM also uses this flag to write certain CS2 registers, e.g. PCIEEP_BAR0_MASKL,
-                                                                 but software should be using PEM()_CFG_WR instead of the ECAM for that. */
-        uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0) DID. 0x78.
-                                                                 Internal:
-                                                                 Use id_defs::ECAM0_78_8ID. */
-        uint64_t node                  : 2;  /**< [ 45: 44] Reserved.
-                                                                 Internal:
-                                                                 CCPI node number. */
+        uint64_t dmn                   : 6;  /**< [ 33: 28] Domain number. */
+        uint64_t bcst                  : 1;  /**< [ 34: 34] Reserved, MBZ. */
+        uint64_t setup                 : 1;  /**< [ 35: 35] Reserved, MBZ. */
+        uint64_t did                   : 8;  /**< [ 43: 36] ECAM(0) DID. 0x78. */
+        uint64_t node                  : 2;  /**< [ 45: 44] Reserved. */
         uint64_t reserved_46           : 1;
         uint64_t io                    : 5;  /**< [ 51: 47] Indicates I/O space. */
         uint64_t reserved_52_63        : 12;
@@ -1114,40 +1026,5 @@ static inline uint64_t CAVM_ECAMX_RSLX_SKILL(uint64_t a, uint64_t b)
 #define device_bar_CAVM_ECAMX_RSLX_SKILL(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_ECAMX_RSLX_SKILL(a,b) (a)
 #define arguments_CAVM_ECAMX_RSLX_SKILL(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) ecam#_scratch
- *
- * INTERNAL: ECAM Scratch Register
- */
-union cavm_ecamx_scratch
-{
-    uint64_t u;
-    struct cavm_ecamx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Test register for CSR access. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Test register for CSR access. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ecamx_scratch_s cn; */
-};
-typedef union cavm_ecamx_scratch cavm_ecamx_scratch_t;
-
-static inline uint64_t CAVM_ECAMX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ECAMX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
-        return 0x87e078080000ll + 0x1000000ll * ((a) & 0x0);
-    __cavm_csr_fatal("ECAMX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_ECAMX_SCRATCH(a) cavm_ecamx_scratch_t
-#define bustype_CAVM_ECAMX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_ECAMX_SCRATCH(a) "ECAMX_SCRATCH"
-#define device_bar_CAVM_ECAMX_SCRATCH(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_ECAMX_SCRATCH(a) (a)
-#define arguments_CAVM_ECAMX_SCRATCH(a) (a),-1,-1,-1
 
 #endif /* __CAVM_CSRS_ECAM_H__ */

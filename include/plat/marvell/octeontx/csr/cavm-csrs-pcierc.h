@@ -692,28 +692,16 @@ union cavm_pciercx_bnum
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t slt                   : 8;  /**< [ 31: 24](RO) Secondary latency timer. Not applicable to PCI Express, hardwired to 0x0. */
         uint32_t subbnum               : 8;  /**< [ 23: 16](R/W) Subordinate bus number.
-                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus.
-
-                                                                 Internal:
-                                                                 Note IOB/ECAM snoops on writes to this register. */
+                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus. */
         uint32_t sbnum                 : 8;  /**< [ 15:  8](R/W) Secondary bus number.
-                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus.
-
-                                                                 Internal:
-                                                                 Note IOB/ECAM snoops on writes to this register. */
+                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus. */
         uint32_t pbnum                 : 8;  /**< [  7:  0](R/W) Primary bus number. */
 #else /* Word 0 - Little Endian */
         uint32_t pbnum                 : 8;  /**< [  7:  0](R/W) Primary bus number. */
         uint32_t sbnum                 : 8;  /**< [ 15:  8](R/W) Secondary bus number.
-                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus.
-
-                                                                 Internal:
-                                                                 Note IOB/ECAM snoops on writes to this register. */
+                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus. */
         uint32_t subbnum               : 8;  /**< [ 23: 16](R/W) Subordinate bus number.
-                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus.
-
-                                                                 Internal:
-                                                                 Note IOB/ECAM snoops on writes to this register. */
+                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus. */
         uint32_t slt                   : 8;  /**< [ 31: 24](RO) Secondary latency timer. Not applicable to PCI Express, hardwired to 0x0. */
 #endif /* Word 0 - End */
     } s;
@@ -1406,28 +1394,16 @@ union cavm_pciercx_cfg006
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t slt                   : 8;  /**< [ 31: 24](RO) Secondary latency timer. Not applicable to PCI Express, hardwired to 0x0. */
         uint32_t subbnum               : 8;  /**< [ 23: 16](R/W) Subordinate bus number.
-                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus.
-
-                                                                 Internal:
-                                                                 Note IOB/ECAM snoops on writes to this register. */
+                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus. */
         uint32_t sbnum                 : 8;  /**< [ 15:  8](R/W) Secondary bus number.
-                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus.
-
-                                                                 Internal:
-                                                                 Note IOB/ECAM snoops on writes to this register. */
+                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus. */
         uint32_t pbnum                 : 8;  /**< [  7:  0](R/W) Primary bus number. */
 #else /* Word 0 - Little Endian */
         uint32_t pbnum                 : 8;  /**< [  7:  0](R/W) Primary bus number. */
         uint32_t sbnum                 : 8;  /**< [ 15:  8](R/W) Secondary bus number.
-                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus.
-
-                                                                 Internal:
-                                                                 Note IOB/ECAM snoops on writes to this register. */
+                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus. */
         uint32_t subbnum               : 8;  /**< [ 23: 16](R/W) Subordinate bus number.
-                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus.
-
-                                                                 Internal:
-                                                                 Note IOB/ECAM snoops on writes to this register. */
+                                                                 If 0x0 no configuration accesses are forwarded to the secondary bus. */
         uint32_t slt                   : 8;  /**< [ 31: 24](RO) Secondary latency timer. Not applicable to PCI Express, hardwired to 0x0. */
 #endif /* Word 0 - End */
     } s;
@@ -2461,10 +2437,7 @@ union cavm_pciercx_cfg024
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t moffs                 : 30; /**< [ 31:  2](RO/WRSL) Lower base.  This field is writable through PEM()_CFG_WR. However, the application must
-                                                                 not change this field.
-
-                                                                 Internal:
-                                                                 This is the offset to cover PEMRC BAR4 0xfffff & 0xffffc \>\>2 */
+                                                                 not change this field. */
         uint32_t size                  : 1;  /**< [  1:  1](RO/WRSL) Size - 64-bit (1), 32-bit (0).  This field is writable through PEM()_CFG_WR. However, the
                                                                  application must not change this field. */
         uint32_t ea_rsvd               : 1;  /**< [  0:  0](RO/WRSL) Reserved.  This field is writable through PEM()_CFG_WR. However, the application must
@@ -2475,10 +2448,7 @@ union cavm_pciercx_cfg024
         uint32_t size                  : 1;  /**< [  1:  1](RO/WRSL) Size - 64-bit (1), 32-bit (0).  This field is writable through PEM()_CFG_WR. However, the
                                                                  application must not change this field. */
         uint32_t moffs                 : 30; /**< [ 31:  2](RO/WRSL) Lower base.  This field is writable through PEM()_CFG_WR. However, the application must
-                                                                 not change this field.
-
-                                                                 Internal:
-                                                                 This is the offset to cover PEMRC BAR4 0xfffff & 0xffffc \>\>2 */
+                                                                 not change this field. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pciercx_cfg024_s cn; */
@@ -2514,16 +2484,10 @@ union cavm_pciercx_cfg025
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t ubase                 : 32; /**< [ 31:  0](RO/WRSL) Upper base.  This field is writable through PEM()_CFG_WR. However, the application must
-                                                                 not change this field.
-
-                                                                 Internal:
-                                                                 This is the upper 32 bits of PEM_BAR_E::PEM()_PF_BAR0 */
+                                                                 not change this field. */
 #else /* Word 0 - Little Endian */
         uint32_t ubase                 : 32; /**< [ 31:  0](RO/WRSL) Upper base.  This field is writable through PEM()_CFG_WR. However, the application must
-                                                                 not change this field.
-
-                                                                 Internal:
-                                                                 This is the upper 32 bits of PEM_BAR_E::PEM()_PF_BAR0 */
+                                                                 not change this field. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pciercx_cfg025_s cn; */
@@ -9496,17 +9460,7 @@ union cavm_pciercx_cfg155
         uint32_t latched_nfts          : 8;  /**< [ 23: 16](RO/H) Latched N_FTS.
                                                                  Indicates the value of N_FTS in the received TS ordered
                                                                  sets from the link partner. */
-        uint32_t l1sub_state           : 3;  /**< [ 15: 13](RO/H) Indicates the internal L1Sub state machine state.
-                                                                 Internal:
-                                                                 0x0 = Idle state.
-                                                                 0x1 = Wait for aux_clk_active.
-                                                                 0x2 = Wait for pclkack.
-                                                                 0x3 = Wait for clkreq.
-                                                                 0x4 = Check clkreq_in_n is de-asserted for t_power_off time.
-                                                                 0x5 = L1 substate, turn off txcommonmode circuits (L1.2 only)
-                                                                      and rx electrical idle detection circuits.
-                                                                 0x6 = Locally/remotely initiated exit, assert pclkreq, wait for pclkack.
-                                                                 0x7 = Wait for pclkack when aborting an attempt to enter L1_N. */
+        uint32_t l1sub_state           : 3;  /**< [ 15: 13](RO/H) Indicates the internal L1Sub state machine state. */
         uint32_t pme_rsnd_flag         : 1;  /**< [ 12: 12](RO) PME re-send flag.
                                                                  When the DUT sends a PM_PME message TLP, the DUT
                                                                  sets PME_Status bit. If host software does not clear
@@ -9608,17 +9562,7 @@ union cavm_pciercx_cfg155
                                                                  PME_Status bit for 100ms (+50%/-5%), the DUT resends the
                                                                  PM_PME message. This bit indicates that a PM_PME was
                                                                  resent. */
-        uint32_t l1sub_state           : 3;  /**< [ 15: 13](RO/H) Indicates the internal L1Sub state machine state.
-                                                                 Internal:
-                                                                 0x0 = Idle state.
-                                                                 0x1 = Wait for aux_clk_active.
-                                                                 0x2 = Wait for pclkack.
-                                                                 0x3 = Wait for clkreq.
-                                                                 0x4 = Check clkreq_in_n is de-asserted for t_power_off time.
-                                                                 0x5 = L1 substate, turn off txcommonmode circuits (L1.2 only)
-                                                                      and rx electrical idle detection circuits.
-                                                                 0x6 = Locally/remotely initiated exit, assert pclkreq, wait for pclkack.
-                                                                 0x7 = Wait for pclkack when aborting an attempt to enter L1_N. */
+        uint32_t l1sub_state           : 3;  /**< [ 15: 13](RO/H) Indicates the internal L1Sub state machine state. */
         uint32_t latched_nfts          : 8;  /**< [ 23: 16](RO/H) Latched N_FTS.
                                                                  Indicates the value of N_FTS in the received TS ordered
                                                                  sets from the link partner. */
@@ -15814,17 +15758,13 @@ union cavm_pciercx_ea_entry3
     struct cavm_pciercx_ea_entry3_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t moffs                 : 30; /**< [ 31:  2](RO/WRSL) Lower base.  This field is writable through PEM()_CFG_TBL().
-                                                                 Internal:
-                                                                 This is the offset to cover PEMRC BAR4 0xfffff & 0xffffc \>\>2 */
+        uint32_t moffs                 : 30; /**< [ 31:  2](RO/WRSL) Lower base.  This field is writable through PEM()_CFG_TBL(). */
         uint32_t size                  : 1;  /**< [  1:  1](RO/WRSL) Size - 64-bit (1), 32-bit (0).  This field is writable through PEM()_CFG_TBL(). */
         uint32_t ea_rsvd               : 1;  /**< [  0:  0](RO/WRSL) Reserved.  This field is writable through PEM()_CFG_TBL(). */
 #else /* Word 0 - Little Endian */
         uint32_t ea_rsvd               : 1;  /**< [  0:  0](RO/WRSL) Reserved.  This field is writable through PEM()_CFG_TBL(). */
         uint32_t size                  : 1;  /**< [  1:  1](RO/WRSL) Size - 64-bit (1), 32-bit (0).  This field is writable through PEM()_CFG_TBL(). */
-        uint32_t moffs                 : 30; /**< [ 31:  2](RO/WRSL) Lower base.  This field is writable through PEM()_CFG_TBL().
-                                                                 Internal:
-                                                                 This is the offset to cover PEMRC BAR4 0xfffff & 0xffffc \>\>2 */
+        uint32_t moffs                 : 30; /**< [ 31:  2](RO/WRSL) Lower base.  This field is writable through PEM()_CFG_TBL(). */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pciercx_ea_entry3_s cn; */
@@ -15864,13 +15804,9 @@ union cavm_pciercx_ea_entry4
     struct cavm_pciercx_ea_entry4_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t ubase                 : 32; /**< [ 31:  0](RO/WRSL) Upper base.  This field is writable through PEM()_CFG_TBL().
-                                                                 Internal:
-                                                                 This is the upper 32 bits of PEM_BAR_E::PEM()_PF_BAR0 */
+        uint32_t ubase                 : 32; /**< [ 31:  0](RO/WRSL) Upper base.  This field is writable through PEM()_CFG_TBL(). */
 #else /* Word 0 - Little Endian */
-        uint32_t ubase                 : 32; /**< [ 31:  0](RO/WRSL) Upper base.  This field is writable through PEM()_CFG_TBL().
-                                                                 Internal:
-                                                                 This is the upper 32 bits of PEM_BAR_E::PEM()_PF_BAR0 */
+        uint32_t ubase                 : 32; /**< [ 31:  0](RO/WRSL) Upper base.  This field is writable through PEM()_CFG_TBL(). */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pciercx_ea_entry4_s cn; */
@@ -27511,17 +27447,7 @@ union cavm_pciercx_ras_sd_statuspm
         uint32_t latched_nfts          : 8;  /**< [ 23: 16](RO/H) Latched N_FTS.
                                                                  Indicates the value of N_FTS in the received TS ordered
                                                                  sets from the link partner. */
-        uint32_t l1sub_state           : 3;  /**< [ 15: 13](RO/H) Indicates the internal L1Sub state machine state.
-                                                                 Internal:
-                                                                 0x0 = Idle state.
-                                                                 0x1 = Wait for aux_clk_active.
-                                                                 0x2 = Wait for pclkack.
-                                                                 0x3 = Wait for clkreq.
-                                                                 0x4 = Check clkreq_in_n is de-asserted for t_power_off time.
-                                                                 0x5 = L1 substate, turn off txcommonmode circuits (L1.2 only)
-                                                                      and rx electrical idle detection circuits.
-                                                                 0x6 = Locally/remotely initiated exit, assert pclkreq, wait for pclkack.
-                                                                 0x7 = Wait for pclkack when aborting an attempt to enter L1_N. */
+        uint32_t l1sub_state           : 3;  /**< [ 15: 13](RO/H) Indicates the internal L1Sub state machine state. */
         uint32_t pme_rsnd_flag         : 1;  /**< [ 12: 12](RO) PME resend flag.
                                                                  When the DUT sends a PM_PME message TLP, the DUT
                                                                  sets PME_Status bit. If host software does not clear
@@ -27623,17 +27549,7 @@ union cavm_pciercx_ras_sd_statuspm
                                                                  PME_Status bit for 100ms (+50%/-5%), the DUT resends the
                                                                  PM_PME message. This bit indicates that a PM_PME was
                                                                  resent. */
-        uint32_t l1sub_state           : 3;  /**< [ 15: 13](RO/H) Indicates the internal L1Sub state machine state.
-                                                                 Internal:
-                                                                 0x0 = Idle state.
-                                                                 0x1 = Wait for aux_clk_active.
-                                                                 0x2 = Wait for pclkack.
-                                                                 0x3 = Wait for clkreq.
-                                                                 0x4 = Check clkreq_in_n is de-asserted for t_power_off time.
-                                                                 0x5 = L1 substate, turn off txcommonmode circuits (L1.2 only)
-                                                                      and rx electrical idle detection circuits.
-                                                                 0x6 = Locally/remotely initiated exit, assert pclkreq, wait for pclkack.
-                                                                 0x7 = Wait for pclkack when aborting an attempt to enter L1_N. */
+        uint32_t l1sub_state           : 3;  /**< [ 15: 13](RO/H) Indicates the internal L1Sub state machine state. */
         uint32_t latched_nfts          : 8;  /**< [ 23: 16](RO/H) Latched N_FTS.
                                                                  Indicates the value of N_FTS in the received TS ordered
                                                                  sets from the link partner. */
@@ -31533,10 +31449,6 @@ static inline uint64_t CAVM_PCIERCX_VER_TYPE(uint64_t a)
  * Register (PCICONFIGRC) pcierc#_vpd_base
  *
  * PCIe RC PCI Express VPD Control and Capabilities Register
- * Internal:
- * All 32 bits are writable through PEM()_CFG_TBL(), so that software may replace VPD
- * capability with another desired capablility as a PCIERC_UNUSED_CAP5, (e.g. Enhanced
- * Allocation) if desired.
  */
 union cavm_pciercx_vpd_base
 {
@@ -31589,10 +31501,6 @@ static inline uint64_t CAVM_PCIERCX_VPD_BASE(uint64_t a)
  * Register (PCICONFIGRC) pcierc#_vpd_data
  *
  * PCIe RC PCI Express VPD Data Register
- * Internal:
- * All 32 bits are writable through PEM()_CFG_TBL(), so that software may replace VPD
- * capability with another desired capablility as a PCIERC_UNUSED_CAP6, (e.g. Enhanced
- * Allocation) if desired.
  */
 union cavm_pciercx_vpd_data
 {

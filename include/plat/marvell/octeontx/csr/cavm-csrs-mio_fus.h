@@ -259,27 +259,15 @@ union cavm_mio_fus_dat2
                                                                  0x2 = RTL simulator.
                                                                  0x3 = ASIM.
                                                                  0x4-0x7 = reserved. */
-        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved.
-                                                                 Internal:
-                                                                 Controls global power throttling. MSB is a spare, and lower 7 bits indicate
-                                                                 N/128 power reduction. Small values have less throttling and higher
-                                                                 performance. 0x0 disables throttling. */
-        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved.
-                                                                 Internal:
-                                                                 fuse[99]. Fuse information - Ignore trusted-mode disable. */
+        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved. */
+        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved. */
         uint64_t rom_info              : 10; /**< [ 46: 37](RO) Fuse information - ROM info. */
-        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved.
-                                                                 Internal:
-                                                                 Fuse information - Power limit. */
+        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved. */
         uint64_t dorm_crypto           : 1;  /**< [ 34: 34](RO) Fuse information - Dormant encryption enable. See NOCRYPTO. */
-        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved.
-                                                                 Internal:
-                                                                 Tied to 0. */
+        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved. */
         uint64_t raid_en               : 1;  /**< [ 32: 32](RO) Fuse information - RAID enabled. */
         uint64_t reserved_31           : 1;
-        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.  In CN80XX always set.
-                                                                 Internal:
-                                                                 30 = fuse[75]. */
+        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.  In CN80XX always set. */
         uint64_t reserved_29           : 1;
         uint64_t nodfa_cp2             : 1;  /**< [ 28: 28](RO) Fuse information - HFA disable (CP2). */
         uint64_t nomul                 : 1;  /**< [ 27: 27](RO) Fuse information - VMUL disable. */
@@ -403,27 +391,15 @@ union cavm_mio_fus_dat2
         uint64_t nomul                 : 1;  /**< [ 27: 27](RO) Fuse information - VMUL disable. */
         uint64_t nodfa_cp2             : 1;  /**< [ 28: 28](RO) Fuse information - HFA disable (CP2). */
         uint64_t reserved_29           : 1;
-        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.  In CN80XX always set.
-                                                                 Internal:
-                                                                 30 = fuse[75]. */
+        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.  In CN80XX always set. */
         uint64_t reserved_31           : 1;
         uint64_t raid_en               : 1;  /**< [ 32: 32](RO) Fuse information - RAID enabled. */
-        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved.
-                                                                 Internal:
-                                                                 Tied to 0. */
+        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved. */
         uint64_t dorm_crypto           : 1;  /**< [ 34: 34](RO) Fuse information - Dormant encryption enable. See NOCRYPTO. */
-        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved.
-                                                                 Internal:
-                                                                 Fuse information - Power limit. */
+        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved. */
         uint64_t rom_info              : 10; /**< [ 46: 37](RO) Fuse information - ROM info. */
-        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved.
-                                                                 Internal:
-                                                                 fuse[99]. Fuse information - Ignore trusted-mode disable. */
-        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved.
-                                                                 Internal:
-                                                                 Controls global power throttling. MSB is a spare, and lower 7 bits indicate
-                                                                 N/128 power reduction. Small values have less throttling and higher
-                                                                 performance. 0x0 disables throttling. */
+        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved. */
+        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved. */
         uint64_t run_platform          : 3;  /**< [ 58: 56](RO) Fuses to indicate the run platform. Not to be blown in actual hardware.
                                                                  Provides software a means of determining the platform at run time.
                                                                  0x0 = Hardware.
@@ -446,27 +422,15 @@ union cavm_mio_fus_dat2
                                                                  0x2 = RTL simulator.
                                                                  0x3 = ASIM.
                                                                  0x4-0x7 = reserved. */
-        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved.
-                                                                 Internal:
-                                                                 Controls global power throttling. MSB is a spare, and lower 7 bits indicate
-                                                                 N/128 power reduction. Small values have less throttling and higher
-                                                                 performance. 0x0 disables throttling. */
-        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved.
-                                                                 Internal:
-                                                                 fuse[99]. Fuse information - Ignore trusted-mode disable. */
+        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved. */
+        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved. */
         uint64_t rom_info              : 10; /**< [ 46: 37](RO) Fuse information - ROM info. */
-        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved.
-                                                                 Internal:
-                                                                 Fuse information - Power limit. */
+        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved. */
         uint64_t dorm_crypto           : 1;  /**< [ 34: 34](RO) Fuse information - Dormant encryption enable. See NOCRYPTO. */
-        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved.
-                                                                 Internal:
-                                                                 Tied to 0. */
+        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved. */
         uint64_t raid_en               : 1;  /**< [ 32: 32](RO) Fuse information - RAID enabled. */
         uint64_t reserved_31           : 1;
-        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.  In CN80XX always set.
-                                                                 Internal:
-                                                                 30 = fuse[75]. */
+        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.  In CN80XX always set. */
         uint64_t reserved_29           : 1;
         uint64_t nodfa_cp2             : 1;  /**< [ 28: 28](RO) Fuse information - HFA disable (CP2). */
         uint64_t nomul                 : 1;  /**< [ 27: 27](RO) Fuse information - VMUL disable. */
@@ -582,27 +546,15 @@ union cavm_mio_fus_dat2
         uint64_t nomul                 : 1;  /**< [ 27: 27](RO) Fuse information - VMUL disable. */
         uint64_t nodfa_cp2             : 1;  /**< [ 28: 28](RO) Fuse information - HFA disable (CP2). */
         uint64_t reserved_29           : 1;
-        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.  In CN80XX always set.
-                                                                 Internal:
-                                                                 30 = fuse[75]. */
+        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.  In CN80XX always set. */
         uint64_t reserved_31           : 1;
         uint64_t raid_en               : 1;  /**< [ 32: 32](RO) Fuse information - RAID enabled. */
-        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved.
-                                                                 Internal:
-                                                                 Tied to 0. */
+        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved. */
         uint64_t dorm_crypto           : 1;  /**< [ 34: 34](RO) Fuse information - Dormant encryption enable. See NOCRYPTO. */
-        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved.
-                                                                 Internal:
-                                                                 Fuse information - Power limit. */
+        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved. */
         uint64_t rom_info              : 10; /**< [ 46: 37](RO) Fuse information - ROM info. */
-        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved.
-                                                                 Internal:
-                                                                 fuse[99]. Fuse information - Ignore trusted-mode disable. */
-        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved.
-                                                                 Internal:
-                                                                 Controls global power throttling. MSB is a spare, and lower 7 bits indicate
-                                                                 N/128 power reduction. Small values have less throttling and higher
-                                                                 performance. 0x0 disables throttling. */
+        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved. */
+        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved. */
         uint64_t run_platform          : 3;  /**< [ 58: 56](RO) Fuses to indicate the run platform. Not to be blown in actual hardware.
                                                                  Provides software a means of determining the platform at run time.
                                                                  0x0 = Hardware.
@@ -624,27 +576,15 @@ union cavm_mio_fus_dat2
                                                                  0x2 = RTL simulator.
                                                                  0x3 = ASIM.
                                                                  0x4-0x7 = reserved. */
-        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved.
-                                                                 Internal:
-                                                                 Controls global power throttling. MSB is a spare, and lower 7 bits indicate
-                                                                 N/128 power reduction. Small values have less throttling and higher
-                                                                 performance. 0x0 disables throttling. */
-        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved.
-                                                                 Internal:
-                                                                 fuse[99]. Fuse information - Ignore trusted-mode disable. */
+        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved. */
+        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved. */
         uint64_t rom_info              : 10; /**< [ 46: 37](RO) Fuse information - ROM info. */
-        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved.
-                                                                 Internal:
-                                                                 Fuse information - Power limit. */
+        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved. */
         uint64_t dorm_crypto           : 1;  /**< [ 34: 34](RO) Fuse information - Dormant encryption enable. See NOCRYPTO. */
-        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved.
-                                                                 Internal:
-                                                                 Tied to 0. */
+        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved. */
         uint64_t raid_en               : 1;  /**< [ 32: 32](RO) Fuse information - RAID enabled. */
         uint64_t reserved_31           : 1;
-        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.
-                                                                 Internal:
-                                                                 30 = fuse[75]. */
+        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts. */
         uint64_t reserved_29           : 1;
         uint64_t nodfa_cp2             : 1;  /**< [ 28: 28](RO) Fuse information - HFA disable (CP2). */
         uint64_t nomul                 : 1;  /**< [ 27: 27](RO) Fuse information - VMUL disable. */
@@ -756,27 +696,15 @@ union cavm_mio_fus_dat2
         uint64_t nomul                 : 1;  /**< [ 27: 27](RO) Fuse information - VMUL disable. */
         uint64_t nodfa_cp2             : 1;  /**< [ 28: 28](RO) Fuse information - HFA disable (CP2). */
         uint64_t reserved_29           : 1;
-        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts.
-                                                                 Internal:
-                                                                 30 = fuse[75]. */
+        uint64_t lmc_mode32            : 1;  /**< [ 30: 30](RO) DRAM controller is limited to 32/36 bit wide parts. */
         uint64_t reserved_31           : 1;
         uint64_t raid_en               : 1;  /**< [ 32: 32](RO) Fuse information - RAID enabled. */
-        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved.
-                                                                 Internal:
-                                                                 Tied to 0. */
+        uint64_t fus318                : 1;  /**< [ 33: 33](RO) Reserved. */
         uint64_t dorm_crypto           : 1;  /**< [ 34: 34](RO) Fuse information - Dormant encryption enable. See NOCRYPTO. */
-        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved.
-                                                                 Internal:
-                                                                 Fuse information - Power limit. */
+        uint64_t power_limit           : 2;  /**< [ 36: 35](RO) Reserved. */
         uint64_t rom_info              : 10; /**< [ 46: 37](RO) Fuse information - ROM info. */
-        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved.
-                                                                 Internal:
-                                                                 fuse[99]. Fuse information - Ignore trusted-mode disable. */
-        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved.
-                                                                 Internal:
-                                                                 Controls global power throttling. MSB is a spare, and lower 7 bits indicate
-                                                                 N/128 power reduction. Small values have less throttling and higher
-                                                                 performance. 0x0 disables throttling. */
+        uint64_t fus118                : 1;  /**< [ 47: 47](RO) Reserved. */
+        uint64_t gbl_pwr_throttle      : 8;  /**< [ 55: 48](RO) Reserved. */
         uint64_t run_platform          : 3;  /**< [ 58: 56](RO) Fuses to indicate the run platform. Not to be blown in actual hardware.
                                                                  Provides software a means of determining the platform at run time.
                                                                  0x0 = Hardware.
@@ -817,10 +745,7 @@ union cavm_mio_fus_dat3
     struct cavm_mio_fus_dat3_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ema0                  : 6;  /**< [ 63: 58](RO) Fuse information - EMA0.
-                                                                 Internal:
-                                                                 Default value is 0x11. Soft or hard blow of these fuses
-                                                                 will XOR with this value. */
+        uint64_t ema0                  : 6;  /**< [ 63: 58](RO) Fuse information - EMA0. */
         uint64_t pll_ctl               : 10; /**< [ 57: 48](RO) Reserved. */
         uint64_t dfa_info_dte          : 3;  /**< [ 47: 45](RO) Fuse information - HFA information (HTE). */
         uint64_t dfa_info_clm          : 4;  /**< [ 44: 41](RO) Fuse information - HFA information (cluster mask). */
@@ -846,16 +771,11 @@ union cavm_mio_fus_dat3
         uint64_t efus_ign              : 1;  /**< [ 26: 26](RO) Fuse information - efuse ignore. */
         uint64_t nozip                 : 1;  /**< [ 25: 25](RO) Fuse information - ZIP disable. */
         uint64_t nodfa_dte             : 1;  /**< [ 24: 24](RO) Fuse information - HFA disable (HTE). */
-        uint64_t ema1                  : 6;  /**< [ 23: 18](RO) Fuse information - EMA1.
-                                                                 Internal:
-                                                                 Default value is 0x02. Soft or hard blow of these fuses
-                                                                 will XOR with this value. */
+        uint64_t ema1                  : 6;  /**< [ 23: 18](RO) Fuse information - EMA1. */
         uint64_t nohna_dte             : 1;  /**< [ 17: 17](RO) Fuse information - HNA disable (DTE). */
         uint64_t hna_info_dte          : 3;  /**< [ 16: 14](RO) Fuse information - HNA information (DTE). */
         uint64_t hna_info_clm          : 4;  /**< [ 13: 10](RO) Fuse information - HNA information (cluster mask). */
-        uint64_t tns_cripple           : 1;  /**< [  9:  9](RO) Reserved.
-                                                                 Internal:
-                                                                 When set to 1, TNS switching functionality is permanently disabled. */
+        uint64_t tns_cripple           : 1;  /**< [  9:  9](RO) Reserved. */
         uint64_t core_pll_mul          : 5;  /**< [  8:  4](RO) Core-clock PLL multiplier hardware limit. Indicates maximum
                                                                  value for PLL_MUL[5:1] straps.  Any strap setting above this
                                                                  value will be ignored.  A value of 0 indicates no hardware limit. */
@@ -869,16 +789,11 @@ union cavm_mio_fus_dat3
         uint64_t core_pll_mul          : 5;  /**< [  8:  4](RO) Core-clock PLL multiplier hardware limit. Indicates maximum
                                                                  value for PLL_MUL[5:1] straps.  Any strap setting above this
                                                                  value will be ignored.  A value of 0 indicates no hardware limit. */
-        uint64_t tns_cripple           : 1;  /**< [  9:  9](RO) Reserved.
-                                                                 Internal:
-                                                                 When set to 1, TNS switching functionality is permanently disabled. */
+        uint64_t tns_cripple           : 1;  /**< [  9:  9](RO) Reserved. */
         uint64_t hna_info_clm          : 4;  /**< [ 13: 10](RO) Fuse information - HNA information (cluster mask). */
         uint64_t hna_info_dte          : 3;  /**< [ 16: 14](RO) Fuse information - HNA information (DTE). */
         uint64_t nohna_dte             : 1;  /**< [ 17: 17](RO) Fuse information - HNA disable (DTE). */
-        uint64_t ema1                  : 6;  /**< [ 23: 18](RO) Fuse information - EMA1.
-                                                                 Internal:
-                                                                 Default value is 0x02. Soft or hard blow of these fuses
-                                                                 will XOR with this value. */
+        uint64_t ema1                  : 6;  /**< [ 23: 18](RO) Fuse information - EMA1. */
         uint64_t nodfa_dte             : 1;  /**< [ 24: 24](RO) Fuse information - HFA disable (HTE). */
         uint64_t nozip                 : 1;  /**< [ 25: 25](RO) Fuse information - ZIP disable. */
         uint64_t efus_ign              : 1;  /**< [ 26: 26](RO) Fuse information - efuse ignore. */
@@ -904,10 +819,7 @@ union cavm_mio_fus_dat3
         uint64_t dfa_info_clm          : 4;  /**< [ 44: 41](RO) Fuse information - HFA information (cluster mask). */
         uint64_t dfa_info_dte          : 3;  /**< [ 47: 45](RO) Fuse information - HFA information (HTE). */
         uint64_t pll_ctl               : 10; /**< [ 57: 48](RO) Reserved. */
-        uint64_t ema0                  : 6;  /**< [ 63: 58](RO) Fuse information - EMA0.
-                                                                 Internal:
-                                                                 Default value is 0x11. Soft or hard blow of these fuses
-                                                                 will XOR with this value. */
+        uint64_t ema0                  : 6;  /**< [ 63: 58](RO) Fuse information - EMA0. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_mio_fus_dat3_s cn8; */
@@ -915,10 +827,7 @@ union cavm_mio_fus_dat3
     struct cavm_mio_fus_dat3_cn83xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ema0                  : 6;  /**< [ 63: 58](RO) Fuse information - EMA0.
-                                                                 Internal:
-                                                                 Default value is 0x11. Soft or hard blow of these fuses
-                                                                 will XOR with this value. */
+        uint64_t ema0                  : 6;  /**< [ 63: 58](RO) Fuse information - EMA0. */
         uint64_t pll_ctl               : 10; /**< [ 57: 48](RO) Reserved. */
         uint64_t dfa_info_dte          : 3;  /**< [ 47: 45](RO) Fuse information - HFA information (HTE). */
         uint64_t dfa_info_clm          : 4;  /**< [ 44: 41](RO) Fuse information - HFA information (cluster mask). */
@@ -944,16 +853,11 @@ union cavm_mio_fus_dat3
         uint64_t efus_ign              : 1;  /**< [ 26: 26](RO) Fuse information - efuse ignore. */
         uint64_t nozip                 : 1;  /**< [ 25: 25](RO) Fuse information - ZIP disable. */
         uint64_t nodfa_dte             : 1;  /**< [ 24: 24](RO) Fuse information - HFA disable (HTE). */
-        uint64_t ema1                  : 6;  /**< [ 23: 18](RO) Fuse information - EMA1.
-                                                                 Internal:
-                                                                 Default value is 0x02. Soft or hard blow of these fuses
-                                                                 will XOR with this value. */
+        uint64_t ema1                  : 6;  /**< [ 23: 18](RO) Fuse information - EMA1. */
         uint64_t nohna_dte             : 1;  /**< [ 17: 17](RO) Fuse information - HNA disable (DTE). */
         uint64_t hna_info_dte          : 3;  /**< [ 16: 14](RO) Fuse information - HNA information (DTE). */
         uint64_t hna_info_clm          : 4;  /**< [ 13: 10](RO) Fuse information - HNA information (cluster mask). */
-        uint64_t tns_cripple           : 1;  /**< [  9:  9](RO) Reserved.
-                                                                 Internal:
-                                                                 When set to 1, TNS switching functionality is permanently disabled. */
+        uint64_t tns_cripple           : 1;  /**< [  9:  9](RO) Reserved. */
         uint64_t core_pll_mul          : 5;  /**< [  8:  4](RO) Core-clock PLL multiplier hardware limit. Indicates maximum
                                                                  value for PLL_MUL[5:1] straps.  Any strap setting above this
                                                                  value will be ignored.  A value of 0 indicates no hardware limit. */
@@ -967,16 +871,11 @@ union cavm_mio_fus_dat3
         uint64_t core_pll_mul          : 5;  /**< [  8:  4](RO) Core-clock PLL multiplier hardware limit. Indicates maximum
                                                                  value for PLL_MUL[5:1] straps.  Any strap setting above this
                                                                  value will be ignored.  A value of 0 indicates no hardware limit. */
-        uint64_t tns_cripple           : 1;  /**< [  9:  9](RO) Reserved.
-                                                                 Internal:
-                                                                 When set to 1, TNS switching functionality is permanently disabled. */
+        uint64_t tns_cripple           : 1;  /**< [  9:  9](RO) Reserved. */
         uint64_t hna_info_clm          : 4;  /**< [ 13: 10](RO) Fuse information - HNA information (cluster mask). */
         uint64_t hna_info_dte          : 3;  /**< [ 16: 14](RO) Fuse information - HNA information (DTE). */
         uint64_t nohna_dte             : 1;  /**< [ 17: 17](RO) Fuse information - HNA disable (DTE). */
-        uint64_t ema1                  : 6;  /**< [ 23: 18](RO) Fuse information - EMA1.
-                                                                 Internal:
-                                                                 Default value is 0x02. Soft or hard blow of these fuses
-                                                                 will XOR with this value. */
+        uint64_t ema1                  : 6;  /**< [ 23: 18](RO) Fuse information - EMA1. */
         uint64_t nodfa_dte             : 1;  /**< [ 24: 24](RO) Fuse information - HFA disable (HTE). */
         uint64_t nozip                 : 1;  /**< [ 25: 25](RO) Fuse information - ZIP disable. */
         uint64_t efus_ign              : 1;  /**< [ 26: 26](RO) Fuse information - efuse ignore. */
@@ -1002,10 +901,7 @@ union cavm_mio_fus_dat3
         uint64_t dfa_info_clm          : 4;  /**< [ 44: 41](RO) Fuse information - HFA information (cluster mask). */
         uint64_t dfa_info_dte          : 3;  /**< [ 47: 45](RO) Fuse information - HFA information (HTE). */
         uint64_t pll_ctl               : 10; /**< [ 57: 48](RO) Reserved. */
-        uint64_t ema0                  : 6;  /**< [ 63: 58](RO) Fuse information - EMA0.
-                                                                 Internal:
-                                                                 Default value is 0x11. Soft or hard blow of these fuses
-                                                                 will XOR with this value. */
+        uint64_t ema0                  : 6;  /**< [ 63: 58](RO) Fuse information - EMA0. */
 #endif /* Word 0 - End */
     } cn83xx;
 };
@@ -1080,50 +976,6 @@ static inline uint64_t CAVM_MIO_FUS_DAT4_FUNC(void)
 #define device_bar_CAVM_MIO_FUS_DAT4 0x0 /* PF_BAR0 */
 #define busnum_CAVM_MIO_FUS_DAT4 0
 #define arguments_CAVM_MIO_FUS_DAT4 -1,-1,-1,-1
-
-/**
- * Register (RSL) mio_fus_int
- *
- * INTERNAL: MIO Fuse Repair Interrupt Register
- */
-union cavm_mio_fus_int
-{
-    uint64_t u;
-    struct cavm_mio_fus_int_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t rpr_dbe               : 1;  /**< [  1:  1](R/W1C/H) Internal:
-                                                                 Indicates an uncorrectable double-bit-error occurred to RPR_MEM. */
-        uint64_t rpr_sbe               : 1;  /**< [  0:  0](R/W1C/H) Internal:
-                                                                 Indicates a corrected single-bit-error occurred to RPR_MEM. */
-#else /* Word 0 - Little Endian */
-        uint64_t rpr_sbe               : 1;  /**< [  0:  0](R/W1C/H) Internal:
-                                                                 Indicates a corrected single-bit-error occurred to RPR_MEM. */
-        uint64_t rpr_dbe               : 1;  /**< [  1:  1](R/W1C/H) Internal:
-                                                                 Indicates an uncorrectable double-bit-error occurred to RPR_MEM. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mio_fus_int_s cn; */
-};
-typedef union cavm_mio_fus_int cavm_mio_fus_int_t;
-
-#define CAVM_MIO_FUS_INT CAVM_MIO_FUS_INT_FUNC()
-static inline uint64_t CAVM_MIO_FUS_INT_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_FUS_INT_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x87e003001548ll;
-    __cavm_csr_fatal("MIO_FUS_INT", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MIO_FUS_INT cavm_mio_fus_int_t
-#define bustype_CAVM_MIO_FUS_INT CSR_TYPE_RSL
-#define basename_CAVM_MIO_FUS_INT "MIO_FUS_INT"
-#define device_bar_CAVM_MIO_FUS_INT 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MIO_FUS_INT 0
-#define arguments_CAVM_MIO_FUS_INT -1,-1,-1,-1
 
 /**
  * Register (RSL) mio_fus_pdf
@@ -1288,9 +1140,6 @@ static inline uint64_t CAVM_MIO_FUS_PLL_FUNC(void)
  *    for (cp = bufferp+strlen(bufferp)-1; cp\>=bufferp && isspace(*cp); --cp) *cp='\0';
  * }
  * \</pre\>"
- *
- * Internal:
- * Fuse[1535:1408]."
  */
 union cavm_mio_fus_pnamex
 {
@@ -1334,39 +1183,11 @@ union cavm_mio_fus_prog
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_2_63         : 62;
-        uint64_t sft                   : 1;  /**< [  1:  1](R/W/H) Internal:
-                                                                 When set with [PROG], causes only the local storage to change and will
-                                                                 not blow any fuses. A soft blow is still subject to lockdown fuses.
-                                                                 Hardware will clear this bit when the program operation is complete.
-                                                                 Soft blown fuses will become active after a either a soft or warm
-                                                                 reset but will not persist through a cold reset. */
-        uint64_t prog                  : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 When written to one by software, blow the fuse bank. Hardware will
-                                                                 clear when the program operation is complete. To write a bank of
-                                                                 fuses, software must set MIO_FUS_WADR[ADDR] to the bank to be
-                                                                 programmed and then set each bit within MIO_FUS_BNK_DAT() to
-                                                                 indicate which fuses to blow.  Once ADDR, and DAT are set up,
-                                                                 Software can write to MIO_FUS_PROG[PROG] to start the bank write
-                                                                 and poll on [PROG]. Once [PROG] is clear, the bank write is complete.
-                                                                 MIO_FUS_READ_TIMES[WRSTB_WH] determines the time for the operation
-                                                                 to complete.  New fuses will become active after a reset. */
+        uint64_t sft                   : 1;  /**< [  1:  1](R/W/H)  */
+        uint64_t prog                  : 1;  /**< [  0:  0](R/W/H)  */
 #else /* Word 0 - Little Endian */
-        uint64_t prog                  : 1;  /**< [  0:  0](R/W/H) Internal:
-                                                                 When written to one by software, blow the fuse bank. Hardware will
-                                                                 clear when the program operation is complete. To write a bank of
-                                                                 fuses, software must set MIO_FUS_WADR[ADDR] to the bank to be
-                                                                 programmed and then set each bit within MIO_FUS_BNK_DAT() to
-                                                                 indicate which fuses to blow.  Once ADDR, and DAT are set up,
-                                                                 Software can write to MIO_FUS_PROG[PROG] to start the bank write
-                                                                 and poll on [PROG]. Once [PROG] is clear, the bank write is complete.
-                                                                 MIO_FUS_READ_TIMES[WRSTB_WH] determines the time for the operation
-                                                                 to complete.  New fuses will become active after a reset. */
-        uint64_t sft                   : 1;  /**< [  1:  1](R/W/H) Internal:
-                                                                 When set with [PROG], causes only the local storage to change and will
-                                                                 not blow any fuses. A soft blow is still subject to lockdown fuses.
-                                                                 Hardware will clear this bit when the program operation is complete.
-                                                                 Soft blown fuses will become active after a either a soft or warm
-                                                                 reset but will not persist through a cold reset. */
+        uint64_t prog                  : 1;  /**< [  0:  0](R/W/H)  */
+        uint64_t sft                   : 1;  /**< [  1:  1](R/W/H)  */
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
@@ -1389,56 +1210,6 @@ static inline uint64_t CAVM_MIO_FUS_PROG_FUNC(void)
 #define device_bar_CAVM_MIO_FUS_PROG 0x0 /* PF_BAR0 */
 #define busnum_CAVM_MIO_FUS_PROG 0
 #define arguments_CAVM_MIO_FUS_PROG -1,-1,-1,-1
-
-/**
- * Register (RSL) mio_fus_prog_times
- *
- * INTERNAL: MIO Fuse Program Times Register
- */
-union cavm_mio_fus_prog_times
-{
-    uint64_t u;
-    struct cavm_mio_fus_prog_times_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_35_63        : 29;
-        uint64_t vgate_pin             : 1;  /**< [ 34: 34](RO) Internal:
-                                                                 Efuse vgate pin (L6G). */
-        uint64_t fsrc_pin              : 1;  /**< [ 33: 33](RO) Internal:
-                                                                 Efuse fsource pin (L6G). */
-        uint64_t prog_pin              : 1;  /**< [ 32: 32](RO) Internal:
-                                                                 Efuse program pin (IFB). */
-        uint64_t reserved_0_31         : 32;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_31         : 32;
-        uint64_t prog_pin              : 1;  /**< [ 32: 32](RO) Internal:
-                                                                 Efuse program pin (IFB). */
-        uint64_t fsrc_pin              : 1;  /**< [ 33: 33](RO) Internal:
-                                                                 Efuse fsource pin (L6G). */
-        uint64_t vgate_pin             : 1;  /**< [ 34: 34](RO) Internal:
-                                                                 Efuse vgate pin (L6G). */
-        uint64_t reserved_35_63        : 29;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mio_fus_prog_times_s cn; */
-};
-typedef union cavm_mio_fus_prog_times cavm_mio_fus_prog_times_t;
-
-#define CAVM_MIO_FUS_PROG_TIMES CAVM_MIO_FUS_PROG_TIMES_FUNC()
-static inline uint64_t CAVM_MIO_FUS_PROG_TIMES_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_FUS_PROG_TIMES_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x87e003001518ll;
-    __cavm_csr_fatal("MIO_FUS_PROG_TIMES", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MIO_FUS_PROG_TIMES cavm_mio_fus_prog_times_t
-#define bustype_CAVM_MIO_FUS_PROG_TIMES CSR_TYPE_RSL
-#define basename_CAVM_MIO_FUS_PROG_TIMES "MIO_FUS_PROG_TIMES"
-#define device_bar_CAVM_MIO_FUS_PROG_TIMES 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MIO_FUS_PROG_TIMES 0
-#define arguments_CAVM_MIO_FUS_PROG_TIMES -1,-1,-1,-1
 
 /**
  * Register (RSL) mio_fus_rcmd
@@ -1592,131 +1363,11 @@ static inline uint64_t CAVM_MIO_FUS_READ_TIMES_FUNC(void)
 #define arguments_CAVM_MIO_FUS_READ_TIMES -1,-1,-1,-1
 
 /**
- * Register (RSL) mio_fus_rpr_dat#
- *
- * INTERNAL: MIO Fuse Repair Memory Register
- */
-union cavm_mio_fus_rpr_datx
-{
-    uint64_t u;
-    struct cavm_mio_fus_rpr_datx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dat                   : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 Repair memory store (RPR_MEM). Data for read and write. A write to
-                                                                 MIO_FUS_RPR_DAT(1) writes all 128 bits from both registers to RPR_MEM. */
-#else /* Word 0 - Little Endian */
-        uint64_t dat                   : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 Repair memory store (RPR_MEM). Data for read and write. A write to
-                                                                 MIO_FUS_RPR_DAT(1) writes all 128 bits from both registers to RPR_MEM. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mio_fus_rpr_datx_s cn; */
-};
-typedef union cavm_mio_fus_rpr_datx cavm_mio_fus_rpr_datx_t;
-
-static inline uint64_t CAVM_MIO_FUS_RPR_DATX(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_FUS_RPR_DATX(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
-        return 0x87e003001530ll + 8ll * ((a) & 0x1);
-    __cavm_csr_fatal("MIO_FUS_RPR_DATX", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MIO_FUS_RPR_DATX(a) cavm_mio_fus_rpr_datx_t
-#define bustype_CAVM_MIO_FUS_RPR_DATX(a) CSR_TYPE_RSL
-#define basename_CAVM_MIO_FUS_RPR_DATX(a) "MIO_FUS_RPR_DATX"
-#define device_bar_CAVM_MIO_FUS_RPR_DATX(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MIO_FUS_RPR_DATX(a) (a)
-#define arguments_CAVM_MIO_FUS_RPR_DATX(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) mio_fus_soft_repair
- *
- * INTERNAL: MIO Fuse Soft Repair Register
- *
- * Internal:
- * INTERNAL: Aka `Soft Blow'. Upon reset fuse repairs are loaded into REPAIR_MEM as they are
- * loaded into the memories. Any new defects are loaded in afterwards, leaving END_PTR at the
- * last defect.
- */
-union cavm_mio_fus_soft_repair
-{
-    uint64_t u;
-    struct cavm_mio_fus_soft_repair_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_20_63        : 44;
-        uint64_t rpr_flip_synd         : 2;  /**< [ 19: 18](R/W/H) Internal:
-                                                                 Flip syndrome bits on RPR_MEM writes. For diagnostic use only. */
-        uint64_t autoblow              : 1;  /**< [ 17: 17](R/W/H) Internal:
-                                                                 Set to initiate burning of defect fuses to fuse macro. Clears when fuses are
-                                                                 blown. */
-        uint64_t too_many              : 1;  /**< [ 16: 16](RO/H) Internal:
-                                                                 Set if the sum of fuse repairs and memory defects exceeds 48. */
-        uint64_t numdefects            : 8;  /**< [ 15:  8](RO/H) Internal:
-                                                                 After reset/BIST indicates the number of memory defects reported. Defects are
-                                                                 stored in REPAIR_MEM from bit address NUMREPAIRS*21 to (NUMREPAIRS*21 + NUMDEFECTS*21 -
-                                                                 1). */
-        uint64_t numrepairs            : 8;  /**< [  7:  0](R/W) Internal:
-                                                                 Indicates the number of soft repairs to load from repair mem to the memories on
-                                                                 a soft/warm reset. Indicates the number of repairs loaded from efuses to repair mem on a
-                                                                 cold reset. */
-#else /* Word 0 - Little Endian */
-        uint64_t numrepairs            : 8;  /**< [  7:  0](R/W) Internal:
-                                                                 Indicates the number of soft repairs to load from repair mem to the memories on
-                                                                 a soft/warm reset. Indicates the number of repairs loaded from efuses to repair mem on a
-                                                                 cold reset. */
-        uint64_t numdefects            : 8;  /**< [ 15:  8](RO/H) Internal:
-                                                                 After reset/BIST indicates the number of memory defects reported. Defects are
-                                                                 stored in REPAIR_MEM from bit address NUMREPAIRS*21 to (NUMREPAIRS*21 + NUMDEFECTS*21 -
-                                                                 1). */
-        uint64_t too_many              : 1;  /**< [ 16: 16](RO/H) Internal:
-                                                                 Set if the sum of fuse repairs and memory defects exceeds 48. */
-        uint64_t autoblow              : 1;  /**< [ 17: 17](R/W/H) Internal:
-                                                                 Set to initiate burning of defect fuses to fuse macro. Clears when fuses are
-                                                                 blown. */
-        uint64_t rpr_flip_synd         : 2;  /**< [ 19: 18](R/W/H) Internal:
-                                                                 Flip syndrome bits on RPR_MEM writes. For diagnostic use only. */
-        uint64_t reserved_20_63        : 44;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mio_fus_soft_repair_s cn; */
-};
-typedef union cavm_mio_fus_soft_repair cavm_mio_fus_soft_repair_t;
-
-#define CAVM_MIO_FUS_SOFT_REPAIR CAVM_MIO_FUS_SOFT_REPAIR_FUNC()
-static inline uint64_t CAVM_MIO_FUS_SOFT_REPAIR_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_FUS_SOFT_REPAIR_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x87e003001540ll;
-    __cavm_csr_fatal("MIO_FUS_SOFT_REPAIR", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MIO_FUS_SOFT_REPAIR cavm_mio_fus_soft_repair_t
-#define bustype_CAVM_MIO_FUS_SOFT_REPAIR CSR_TYPE_RSL
-#define basename_CAVM_MIO_FUS_SOFT_REPAIR "MIO_FUS_SOFT_REPAIR"
-#define device_bar_CAVM_MIO_FUS_SOFT_REPAIR 0x0 /* PF_BAR0 */
-#define busnum_CAVM_MIO_FUS_SOFT_REPAIR 0
-#define arguments_CAVM_MIO_FUS_SOFT_REPAIR -1,-1,-1,-1
-
-/**
  * Register (RSL) mio_fus_tgg
  *
  * MIO Fuse TGG Register
  * This register exists to support Authentik. Authentik code should read this register, then
  * clear VAL to prevent other software from observing the value of the TGG fuses.
- *
- * Internal:
- * INTERNAL: It is never possible to read the TGG fuses via MIO_FUS_RCMD. Whenever the fuse
- * corresponding to VAL (TGG\<63\>) is blown, it is not possible to blow any of TGG\<62:0\>. The fuse
- * corresponding to VAL must be the one and only lock down bit for TGG\<62:0\> - no other fuse
- * lockdown bit can prevent blowing TGG\<62:0\>. It must always be possible to blow the fuse
- * corresponding to VAL when it is not already blown. If an Authentik part may be converted to a
- * non-Authentik part (via some JTAG mechanism or any other mechanism), it must not be possible
- * to read the TGG fuse values from the Authentik part by performing this conversion -\> the reset
- * value of VAL should be zero in this converted case.
  */
 union cavm_mio_fus_tgg
 {

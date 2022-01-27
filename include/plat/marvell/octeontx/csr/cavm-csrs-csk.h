@@ -209,44 +209,6 @@ static inline uint64_t CAVM_CSK_CYCLE_COUNT_FUNC(void)
 #define arguments_CAVM_CSK_CYCLE_COUNT -1,-1,-1,-1
 
 /**
- * Register (RSL) csk_scratch
- *
- * INTERNAL: CSK Scratch Register
- *
- * This register is a scratch register for software use.
- */
-union cavm_csk_scratch
-{
-    uint64_t u;
-    struct cavm_csk_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data, not used by hardware. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data, not used by hardware. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_csk_scratch_s cn; */
-};
-typedef union cavm_csk_scratch cavm_csk_scratch_t;
-
-#define CAVM_CSK_SCRATCH CAVM_CSK_SCRATCH_FUNC()
-static inline uint64_t CAVM_CSK_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CSK_SCRATCH_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x87e00e000000ll;
-    __cavm_csr_fatal("CSK_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CSK_SCRATCH cavm_csk_scratch_t
-#define bustype_CAVM_CSK_SCRATCH CSR_TYPE_RSL
-#define basename_CAVM_CSK_SCRATCH "CSK_SCRATCH"
-#define device_bar_CAVM_CSK_SCRATCH 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CSK_SCRATCH 0
-#define arguments_CAVM_CSK_SCRATCH -1,-1,-1,-1
-
-/**
  * Register (RSL) csk_shrink_start_index
  *
  * CSK Start Cycle Index Register

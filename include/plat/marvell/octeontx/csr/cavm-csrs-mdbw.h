@@ -799,29 +799,15 @@ union cavm_mdbwx_ab_sltx_cp_fat_jtag
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_48_63        : 16;
-        uint64_t ab                    : 16; /**< [ 47: 32](RO/H) This set of bits, specifies the AB (DAC) error job tag.
-                                                                 Internal:
-                                                                 The tag might not be
-                                                                 latest tag or accurate. As the error
-                                                                 signal can be asserted by the AB (DAC) in the absence of a job as well. */
+        uint64_t ab                    : 16; /**< [ 47: 32](RO/H) This set of bits, specifies the AB (DAC) error job tag. */
         uint64_t jd_fetch              : 16; /**< [ 31: 16](RO/H) This set of bits, specifies the job descriptor fetch, had a GHAB response with a fatal
-                                                                 error.
-
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+                                                                 error. */
         uint64_t job_sd_fetch          : 16; /**< [ 15:  0](RO/H) This set of bits, the job subdescriptor fetch, had a GHAB response with a fatal error. */
 #else /* Word 0 - Little Endian */
         uint64_t job_sd_fetch          : 16; /**< [ 15:  0](RO/H) This set of bits, the job subdescriptor fetch, had a GHAB response with a fatal error. */
         uint64_t jd_fetch              : 16; /**< [ 31: 16](RO/H) This set of bits, specifies the job descriptor fetch, had a GHAB response with a fatal
-                                                                 error.
-
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
-        uint64_t ab                    : 16; /**< [ 47: 32](RO/H) This set of bits, specifies the AB (DAC) error job tag.
-                                                                 Internal:
-                                                                 The tag might not be
-                                                                 latest tag or accurate. As the error
-                                                                 signal can be asserted by the AB (DAC) in the absence of a job as well. */
+                                                                 error. */
+        uint64_t ab                    : 16; /**< [ 47: 32](RO/H) This set of bits, specifies the AB (DAC) error job tag. */
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } s;
@@ -861,29 +847,15 @@ union cavm_mdbwx_ab_sltx_cp_nfat_jtag
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_48_63        : 16;
-        uint64_t ab                    : 16; /**< [ 47: 32](RO/H) This set of bits, specifies the AB (DAC) error job tag.
-                                                                 Internal:
-                                                                 The tag might not be
-                                                                 latest tag or accurate. As the error
-                                                                 signal can be asserted by the AB (DAC) in the absence of a job as well. */
+        uint64_t ab                    : 16; /**< [ 47: 32](RO/H) This set of bits, specifies the AB (DAC) error job tag. */
         uint64_t jd_fetch              : 16; /**< [ 31: 16](RO/H) This set of bits, specifies the job descriptor fetch, had a GHAB response with a fatal
-                                                                 error.
-
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+                                                                 error. */
         uint64_t job_sd_fetch          : 16; /**< [ 15:  0](RO/H) This set of bits, the job subdescriptor fetch, had a GHAB response with a fatal error. */
 #else /* Word 0 - Little Endian */
         uint64_t job_sd_fetch          : 16; /**< [ 15:  0](RO/H) This set of bits, the job subdescriptor fetch, had a GHAB response with a fatal error. */
         uint64_t jd_fetch              : 16; /**< [ 31: 16](RO/H) This set of bits, specifies the job descriptor fetch, had a GHAB response with a fatal
-                                                                 error.
-
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
-        uint64_t ab                    : 16; /**< [ 47: 32](RO/H) This set of bits, specifies the AB (DAC) error job tag.
-                                                                 Internal:
-                                                                 The tag might not be
-                                                                 latest tag or accurate. As the error
-                                                                 signal can be asserted by the AB (DAC) in the absence of a job as well. */
+                                                                 error. */
+        uint64_t ab                    : 16; /**< [ 47: 32](RO/H) This set of bits, specifies the AB (DAC) error job tag. */
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } s;
@@ -908,73 +880,6 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_CP_NFAT_JTAG(uint64_t a, uint64_t b)
 #define basename_CAVM_MDBWX_AB_SLTX_CP_NFAT_JTAG(a,b) "MDBWX_AB_SLTX_CP_NFAT_JTAG"
 #define busnum_CAVM_MDBWX_AB_SLTX_CP_NFAT_JTAG(a,b) (a)
 #define arguments_CAVM_MDBWX_AB_SLTX_CP_NFAT_JTAG(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) mdbw#_ab_slt#_debug0
- *
- * INTERNAL: MDBW AB Slot Debug Register
- *
- * Internal:
- * This register set specifies debug information per MDBW,  per job slot. This
- * register set contains bits, which specify the write-resend mask. This masks subsequent
- * interrupt transactions for this register. If set indicates an interrupt has been issued for
- * this vector. The bit is reset by hardware if software performs a W1C to any of the
- * corresponding interrupt bits in the interrupt register.
- */
-union cavm_mdbwx_ab_sltx_debug0
-{
-    uint64_t u;
-    struct cavm_mdbwx_ab_sltx_debug0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ferr                  : 1;  /**< [ 63: 63](R/W/H) Internal:
-                                                                 This bit specifies the write-resend mask, for fatal errors. */
-        uint64_t nferr                 : 1;  /**< [ 62: 62](R/W/H) Internal:
-                                                                 This bit specifies the write-resend mask, for non-fatal errors. */
-        uint64_t derr                  : 1;  /**< [ 61: 61](R/W/H) Internal:
-                                                                 This bit specifies the write-resend mask, for DMA errors. */
-        uint64_t adrerr                : 1;  /**< [ 60: 60](R/W/H) Internal:
-                                                                 This bit specifies the write-resend mask for address errors. */
-        uint64_t reserved_16_59        : 44;
-        uint64_t job_id                : 16; /**< [ 15:  0](RO/H) Internal:
-                                                                 This set of bits, specifies the job tag, corresponding to the job that is active
-                                                                 in the MDBW, per AB, per job slot. */
-#else /* Word 0 - Little Endian */
-        uint64_t job_id                : 16; /**< [ 15:  0](RO/H) Internal:
-                                                                 This set of bits, specifies the job tag, corresponding to the job that is active
-                                                                 in the MDBW, per AB, per job slot. */
-        uint64_t reserved_16_59        : 44;
-        uint64_t adrerr                : 1;  /**< [ 60: 60](R/W/H) Internal:
-                                                                 This bit specifies the write-resend mask for address errors. */
-        uint64_t derr                  : 1;  /**< [ 61: 61](R/W/H) Internal:
-                                                                 This bit specifies the write-resend mask, for DMA errors. */
-        uint64_t nferr                 : 1;  /**< [ 62: 62](R/W/H) Internal:
-                                                                 This bit specifies the write-resend mask, for non-fatal errors. */
-        uint64_t ferr                  : 1;  /**< [ 63: 63](R/W/H) Internal:
-                                                                 This bit specifies the write-resend mask, for fatal errors. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdbwx_ab_sltx_debug0_s cn; */
-};
-typedef union cavm_mdbwx_ab_sltx_debug0 cavm_mdbwx_ab_sltx_debug0_t;
-
-static inline uint64_t CAVM_MDBWX_AB_SLTX_DEBUG0(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDBWX_AB_SLTX_DEBUG0(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=41) && (b<=1)))
-        return 0x87e044002330ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
-        return 0x87e044002330ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
-        return 0x87e044002330ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
-    __cavm_csr_fatal("MDBWX_AB_SLTX_DEBUG0", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDBWX_AB_SLTX_DEBUG0(a,b) cavm_mdbwx_ab_sltx_debug0_t
-#define bustype_CAVM_MDBWX_AB_SLTX_DEBUG0(a,b) CSR_TYPE_RSL
-#define basename_CAVM_MDBWX_AB_SLTX_DEBUG0(a,b) "MDBWX_AB_SLTX_DEBUG0"
-#define busnum_CAVM_MDBWX_AB_SLTX_DEBUG0(a,b) (a)
-#define arguments_CAVM_MDBWX_AB_SLTX_DEBUG0(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) mdbw#_ab_slt#_derr_ena_w1c
@@ -1398,11 +1303,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1c
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1418,11 +1319,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1c
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1434,11 +1331,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1c
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1454,11 +1347,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1c
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1468,11 +1357,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1c
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1488,11 +1373,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1c
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1532,11 +1413,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1552,11 +1429,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1568,11 +1441,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1588,11 +1457,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1602,11 +1467,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1622,11 +1483,7 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1667,11 +1524,7 @@ union cavm_mdbwx_ab_sltx_fat_err_int
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) This bit specifies that the AB (DAC) had a fatal error. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) This bit specifies the job descriptor fetch, had a GHAB response with a fatal error.
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) This bit specifies the job descriptor fetch, had a GHAB response with a fatal error. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) This bit specifies the job subdescriptor fetch, had a GHAB response with a fatal error. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) This bit specifies that the DAC Configuration DMA has a fatal Error . */
@@ -1687,11 +1540,7 @@ union cavm_mdbwx_ab_sltx_fat_err_int
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) This bit specifies that the DAC Configuration DMA has a fatal Error . */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) This bit specifies the job subdescriptor fetch, had a GHAB response with a fatal error. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) This bit specifies the job descriptor fetch, had a GHAB response with a fatal error.
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) This bit specifies the job descriptor fetch, had a GHAB response with a fatal error. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) This bit specifies that the AB (DAC) had a fatal error. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1732,11 +1581,7 @@ union cavm_mdbwx_ab_sltx_fat_err_int_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1752,11 +1597,7 @@ union cavm_mdbwx_ab_sltx_fat_err_int_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1768,11 +1609,7 @@ union cavm_mdbwx_ab_sltx_fat_err_int_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1788,11 +1625,7 @@ union cavm_mdbwx_ab_sltx_fat_err_int_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1802,11 +1635,7 @@ union cavm_mdbwx_ab_sltx_fat_err_int_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
@@ -1822,11 +1651,7 @@ union cavm_mdbwx_ab_sltx_fat_err_int_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 Since this
-                                                                 happens before AB or job slot
-                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1866,9 +1691,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1c
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -1884,9 +1707,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1c
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1898,9 +1719,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1c
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -1916,9 +1735,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1c
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1928,9 +1745,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1c
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -1946,9 +1761,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1c
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -1988,9 +1801,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -2006,9 +1817,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -2020,9 +1829,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -2038,9 +1845,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -2050,9 +1855,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -2068,9 +1871,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -2111,9 +1912,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_int
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) This bit specifies the AB (DAC) had a non-fatal error. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) This bit specifies the job descriptor fetch, had a GHAB response with a fatal error.
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) This bit specifies the job descriptor fetch, had a GHAB response with a fatal error. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) This bit specifies the job subdescriptor fetch, had a GHAB response with a fatal error. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) This bit specifies that the DAC Configuration DMA has a non-fatal error. */
@@ -2129,9 +1928,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_int
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) This bit specifies that the DAC Configuration DMA has a non-fatal error. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) This bit specifies the job subdescriptor fetch, had a GHAB response with a fatal error. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) This bit specifies the job descriptor fetch, had a GHAB response with a fatal error.
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) This bit specifies the job descriptor fetch, had a GHAB response with a fatal error. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) This bit specifies the AB (DAC) had a non-fatal error. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -2172,9 +1969,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_int_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -2190,9 +1985,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_int_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..41)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -2204,9 +1997,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_int_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -2222,9 +2013,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_int_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..14)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -2234,9 +2023,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_int_w1s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
         uint64_t reserved_13_15        : 3;
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
@@ -2252,9 +2039,7 @@ union cavm_mdbwx_ab_sltx_nfat_err_int_w1s
         uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
         uint64_t reserved_13_15        : 3;
         uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
-        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
-                                                                 Internal:
-                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH]. */
         uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
@@ -3101,36 +2886,22 @@ union cavm_mdbwx_cfg
         uint64_t reserved_51_63        : 13;
         uint64_t mdbw_done             : 1;  /**< [ 50: 50](RO/H) This bit is set, after this register's [ENA] bit = 0, and indicates the MDBW has completed
                                                                  clearing internal states corresponding to PSM Jobs. This bit must be set, before software
-                                                                 reenables the MDBW by setting [ENA] = 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW MDBW reset is complete. */
+                                                                 reenables the MDBW by setting [ENA] = 1. */
         uint64_t ab_done               : 1;  /**< [ 49: 49](RO/H) This bit is used to indicate the MDBW has completed clearing internal states corresponding
                                                                  to
-                                                                 an AB. This bit is reset by hardware after a MDBW is reenabled.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is complete. */
+                                                                 an AB. This bit is reset by hardware after a MDBW is reenabled. */
         uint64_t reserved_29_48        : 20;
         uint64_t mdbw_stopped          : 1;  /**< [ 28: 28](RO/H) This bit is set, after this register's [ENA] bit = 0, and indicates the MDBW is busy
                                                                  clearing internal states corresponding to PSM Jobs. This bit must be equal to 0, before
-                                                                 software reenables the MDBW by setting [ENA] = 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is in progress. */
+                                                                 software reenables the MDBW by setting [ENA] = 1. */
         uint64_t reserved_25_27        : 3;
         uint64_t ab_stopped            : 1;  /**< [ 24: 24](RO/H) This bit is set indicates the MDBW is busy clearing internal states corresponding to an
                                                                  AB. This bit must be equal to 0, before software reenables the AB by setting [AB_ENA] =
-                                                                 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is in progress. */
+                                                                 1. */
         uint64_t reserved_21_23        : 3;
         uint64_t ab_busy               : 1;  /**< [ 20: 20](RO/H) This bit is set indicates the AB is busy processing a job. */
         uint64_t reserved_17_19        : 3;
-        uint64_t ab_ena                : 1;  /**< [ 16: 16](R/W) This bit defines the enable corresponding to the AB within the MDBW.
-                                                                 Internal:
-                                                                 Used as a conditional reset for the AB's. */
+        uint64_t ab_ena                : 1;  /**< [ 16: 16](R/W) This bit defines the enable corresponding to the AB within the MDBW. */
         uint64_t reserved_7_15         : 9;
         uint64_t ab_cclk_pwait_dis     : 1;  /**< [  6:  6](R/W) Set one to disable the DSP conditional clock gating when DSP is in PWAIT sleep mode.
                                                                  During DSP sleep mode, the DSP conditional clock is turned off if this bit is set to 0. */
@@ -3143,32 +2914,18 @@ union cavm_mdbwx_cfg
         uint64_t job_slot_ena          : 1;  /**< [  2:  2](R/W) This bit enables MDBW job slot scheduling. Setting this bit = 0, all AB's will use slot 0
                                                                  for all subsequent
                                                                  jobs. Software must ensure the MDBW is in an idle state, i.e., without any active or
-                                                                 pending jobs enqueued, before setting this bit.
-
-                                                                 Internal:
-                                                                 Used as a backup measure only. */
+                                                                 pending jobs enqueued, before setting this bit. */
         uint64_t ena                   : 1;  /**< [  1:  1](R/W) This bit enables the MDBW. Setting this bit = 0, does not reset any MDBW CSR
-                                                                 setting or stats; it only resets the JMGR, AMM logic.
-
-                                                                 Internal:
-                                                                 Used as a conditional
-                                                                 reset for the MDBW. */
+                                                                 setting or stats; it only resets the JMGR, AMM logic. */
         uint64_t mdbw_cclk_force_on    : 1;  /**< [  0:  0](R/W) Set one to force the MDBW conditional clock to be always on. A CYA function. */
 #else /* Word 0 - Little Endian */
         uint64_t mdbw_cclk_force_on    : 1;  /**< [  0:  0](R/W) Set one to force the MDBW conditional clock to be always on. A CYA function. */
         uint64_t ena                   : 1;  /**< [  1:  1](R/W) This bit enables the MDBW. Setting this bit = 0, does not reset any MDBW CSR
-                                                                 setting or stats; it only resets the JMGR, AMM logic.
-
-                                                                 Internal:
-                                                                 Used as a conditional
-                                                                 reset for the MDBW. */
+                                                                 setting or stats; it only resets the JMGR, AMM logic. */
         uint64_t job_slot_ena          : 1;  /**< [  2:  2](R/W) This bit enables MDBW job slot scheduling. Setting this bit = 0, all AB's will use slot 0
                                                                  for all subsequent
                                                                  jobs. Software must ensure the MDBW is in an idle state, i.e., without any active or
-                                                                 pending jobs enqueued, before setting this bit.
-
-                                                                 Internal:
-                                                                 Used as a backup measure only. */
+                                                                 pending jobs enqueued, before setting this bit. */
         uint64_t nojob_runstall_ena    : 1;  /**< [  3:  3](R/W) When set, force DAC RUNSTALL=1 when MDBW has no MDAB jobs to process.
                                                                  DSP RUNSTALL=1 will force the internal DSP pipeline to STALL (to save DSP core power).
                                                                  When this bit is ENABLED, the DSP pipeline is forced to STALL (to save power),
@@ -3178,38 +2935,24 @@ union cavm_mdbwx_cfg
         uint64_t ab_cclk_pwait_dis     : 1;  /**< [  6:  6](R/W) Set one to disable the DSP conditional clock gating when DSP is in PWAIT sleep mode.
                                                                  During DSP sleep mode, the DSP conditional clock is turned off if this bit is set to 0. */
         uint64_t reserved_7_15         : 9;
-        uint64_t ab_ena                : 1;  /**< [ 16: 16](R/W) This bit defines the enable corresponding to the AB within the MDBW.
-                                                                 Internal:
-                                                                 Used as a conditional reset for the AB's. */
+        uint64_t ab_ena                : 1;  /**< [ 16: 16](R/W) This bit defines the enable corresponding to the AB within the MDBW. */
         uint64_t reserved_17_19        : 3;
         uint64_t ab_busy               : 1;  /**< [ 20: 20](RO/H) This bit is set indicates the AB is busy processing a job. */
         uint64_t reserved_21_23        : 3;
         uint64_t ab_stopped            : 1;  /**< [ 24: 24](RO/H) This bit is set indicates the MDBW is busy clearing internal states corresponding to an
                                                                  AB. This bit must be equal to 0, before software reenables the AB by setting [AB_ENA] =
-                                                                 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is in progress. */
+                                                                 1. */
         uint64_t reserved_25_27        : 3;
         uint64_t mdbw_stopped          : 1;  /**< [ 28: 28](RO/H) This bit is set, after this register's [ENA] bit = 0, and indicates the MDBW is busy
                                                                  clearing internal states corresponding to PSM Jobs. This bit must be equal to 0, before
-                                                                 software reenables the MDBW by setting [ENA] = 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is in progress. */
+                                                                 software reenables the MDBW by setting [ENA] = 1. */
         uint64_t reserved_29_48        : 20;
         uint64_t ab_done               : 1;  /**< [ 49: 49](RO/H) This bit is used to indicate the MDBW has completed clearing internal states corresponding
                                                                  to
-                                                                 an AB. This bit is reset by hardware after a MDBW is reenabled.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is complete. */
+                                                                 an AB. This bit is reset by hardware after a MDBW is reenabled. */
         uint64_t mdbw_done             : 1;  /**< [ 50: 50](RO/H) This bit is set, after this register's [ENA] bit = 0, and indicates the MDBW has completed
                                                                  clearing internal states corresponding to PSM Jobs. This bit must be set, before software
-                                                                 reenables the MDBW by setting [ENA] = 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW MDBW reset is complete. */
+                                                                 reenables the MDBW by setting [ENA] = 1. */
         uint64_t reserved_51_63        : 13;
 #endif /* Word 0 - End */
     } s;
@@ -3221,36 +2964,22 @@ union cavm_mdbwx_cfg
         uint64_t reserved_51_63        : 13;
         uint64_t mdbw_done             : 1;  /**< [ 50: 50](RO/H) This bit is set, after this register's [ENA] bit = 0, and indicates the MDBW has completed
                                                                  clearing internal states corresponding to PSM Jobs. This bit must be set, before software
-                                                                 reenables the MDBW by setting [ENA] = 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW MDBW reset is complete. */
+                                                                 reenables the MDBW by setting [ENA] = 1. */
         uint64_t ab_done               : 1;  /**< [ 49: 49](RO/H) This bit is used to indicate the MDBW has completed clearing internal states corresponding
                                                                  to
-                                                                 an AB. This bit is reset by hardware after a MDBW is reenabled.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is complete. */
+                                                                 an AB. This bit is reset by hardware after a MDBW is reenabled. */
         uint64_t reserved_29_48        : 20;
         uint64_t mdbw_stopped          : 1;  /**< [ 28: 28](RO/H) This bit is set, after this register's [ENA] bit = 0, and indicates the MDBW is busy
                                                                  clearing internal states corresponding to PSM Jobs. This bit must be equal to 0, before
-                                                                 software reenables the MDBW by setting [ENA] = 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is in progress. */
+                                                                 software reenables the MDBW by setting [ENA] = 1. */
         uint64_t reserved_25_27        : 3;
         uint64_t ab_stopped            : 1;  /**< [ 24: 24](RO/H) This bit is set indicates the MDBW is busy clearing internal states corresponding to an
                                                                  AB. This bit must be equal to 0, before software reenables the AB by setting [AB_ENA] =
-                                                                 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is in progress. */
+                                                                 1. */
         uint64_t reserved_21_23        : 3;
         uint64_t ab_busy               : 1;  /**< [ 20: 20](RO/H) This bit is set indicates the AB is busy processing a job. */
         uint64_t reserved_17_19        : 3;
-        uint64_t ab_ena                : 1;  /**< [ 16: 16](R/W) This bit defines the enable corresponding to the AB within the MDBW.
-                                                                 Internal:
-                                                                 Used as a conditional reset for the AB's. */
+        uint64_t ab_ena                : 1;  /**< [ 16: 16](R/W) This bit defines the enable corresponding to the AB within the MDBW. */
         uint64_t reserved_7_15         : 9;
         uint64_t ab_cclk_pwait_dis     : 1;  /**< [  6:  6](R/W) Set one to disable the DSP conditional clock gating when DSP is in PWAIT sleep mode.
                                                                  During DSP sleep mode, the DSP conditional clock is turned off if this bit is set to 0. */
@@ -3263,32 +2992,18 @@ union cavm_mdbwx_cfg
         uint64_t job_slot_ena          : 1;  /**< [  2:  2](R/W) This bit enables MDBW job slot scheduling. Setting this bit = 0, all AB's will use slot 0
                                                                  for all subsequent
                                                                  jobs. Software must ensure the MDBW is in an idle state, i.e., without any active or
-                                                                 pending jobs enqueued, before setting this bit.
-
-                                                                 Internal:
-                                                                 Used as a backup measure only. */
+                                                                 pending jobs enqueued, before setting this bit. */
         uint64_t ena                   : 1;  /**< [  1:  1](R/W) This bit enables the MDBW. Setting this bit = 0, does not reset any MDBW CSR
-                                                                 setting or stats; it only resets the JMGR, AMM logic.
-
-                                                                 Internal:
-                                                                 Used as a conditional
-                                                                 reset for the MDBW. */
+                                                                 setting or stats; it only resets the JMGR, AMM logic. */
         uint64_t mdbw_cclk_force_on    : 1;  /**< [  0:  0](R/W) Set one to force the MDBW conditional clock to be always on. For diagnostic use only. */
 #else /* Word 0 - Little Endian */
         uint64_t mdbw_cclk_force_on    : 1;  /**< [  0:  0](R/W) Set one to force the MDBW conditional clock to be always on. For diagnostic use only. */
         uint64_t ena                   : 1;  /**< [  1:  1](R/W) This bit enables the MDBW. Setting this bit = 0, does not reset any MDBW CSR
-                                                                 setting or stats; it only resets the JMGR, AMM logic.
-
-                                                                 Internal:
-                                                                 Used as a conditional
-                                                                 reset for the MDBW. */
+                                                                 setting or stats; it only resets the JMGR, AMM logic. */
         uint64_t job_slot_ena          : 1;  /**< [  2:  2](R/W) This bit enables MDBW job slot scheduling. Setting this bit = 0, all AB's will use slot 0
                                                                  for all subsequent
                                                                  jobs. Software must ensure the MDBW is in an idle state, i.e., without any active or
-                                                                 pending jobs enqueued, before setting this bit.
-
-                                                                 Internal:
-                                                                 Used as a backup measure only. */
+                                                                 pending jobs enqueued, before setting this bit. */
         uint64_t nojob_runstall_ena    : 1;  /**< [  3:  3](R/W) When set, force DAC RUNSTALL=1 when MDBW has no MDAB jobs to process.
                                                                  DSP RUNSTALL=1 will force the internal DSP pipeline to STALL (to save DSP core power).
                                                                  When this bit is ENABLED, the DSP pipeline is forced to STALL (to save power),
@@ -3298,38 +3013,24 @@ union cavm_mdbwx_cfg
         uint64_t ab_cclk_pwait_dis     : 1;  /**< [  6:  6](R/W) Set one to disable the DSP conditional clock gating when DSP is in PWAIT sleep mode.
                                                                  During DSP sleep mode, the DSP conditional clock is turned off if this bit is set to 0. */
         uint64_t reserved_7_15         : 9;
-        uint64_t ab_ena                : 1;  /**< [ 16: 16](R/W) This bit defines the enable corresponding to the AB within the MDBW.
-                                                                 Internal:
-                                                                 Used as a conditional reset for the AB's. */
+        uint64_t ab_ena                : 1;  /**< [ 16: 16](R/W) This bit defines the enable corresponding to the AB within the MDBW. */
         uint64_t reserved_17_19        : 3;
         uint64_t ab_busy               : 1;  /**< [ 20: 20](RO/H) This bit is set indicates the AB is busy processing a job. */
         uint64_t reserved_21_23        : 3;
         uint64_t ab_stopped            : 1;  /**< [ 24: 24](RO/H) This bit is set indicates the MDBW is busy clearing internal states corresponding to an
                                                                  AB. This bit must be equal to 0, before software reenables the AB by setting [AB_ENA] =
-                                                                 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is in progress. */
+                                                                 1. */
         uint64_t reserved_25_27        : 3;
         uint64_t mdbw_stopped          : 1;  /**< [ 28: 28](RO/H) This bit is set, after this register's [ENA] bit = 0, and indicates the MDBW is busy
                                                                  clearing internal states corresponding to PSM Jobs. This bit must be equal to 0, before
-                                                                 software reenables the MDBW by setting [ENA] = 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is in progress. */
+                                                                 software reenables the MDBW by setting [ENA] = 1. */
         uint64_t reserved_29_48        : 20;
         uint64_t ab_done               : 1;  /**< [ 49: 49](RO/H) This bit is used to indicate the MDBW has completed clearing internal states corresponding
                                                                  to
-                                                                 an AB. This bit is reset by hardware after a MDBW is reenabled.
-
-                                                                 Internal:
-                                                                 Used to indicate SW reset sequence is complete. */
+                                                                 an AB. This bit is reset by hardware after a MDBW is reenabled. */
         uint64_t mdbw_done             : 1;  /**< [ 50: 50](RO/H) This bit is set, after this register's [ENA] bit = 0, and indicates the MDBW has completed
                                                                  clearing internal states corresponding to PSM Jobs. This bit must be set, before software
-                                                                 reenables the MDBW by setting [ENA] = 1.
-
-                                                                 Internal:
-                                                                 Used to indicate SW MDBW reset is complete. */
+                                                                 reenables the MDBW by setting [ENA] = 1. */
         uint64_t reserved_51_63        : 13;
 #endif /* Word 0 - End */
     } cnf95xxp2;
@@ -3355,77 +3056,6 @@ static inline uint64_t CAVM_MDBWX_CFG(uint64_t a)
 #define basename_CAVM_MDBWX_CFG(a) "MDBWX_CFG"
 #define busnum_CAVM_MDBWX_CFG(a) (a)
 #define arguments_CAVM_MDBWX_CFG(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) mdbw#_debug1
- *
- * INTERNAL: MDBW Debug 1 Register
- *
- * Internal:
- * This register set, specifies special debug CSR's for internal used per MDBW.
- * Specifically, This
- * register set contains bits, which specify the a master reset to the MDBW.
- */
-union cavm_mdbwx_debug1
-{
-    uint64_t u;
-    struct cavm_mdbwx_debug1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t master_reset_n        : 1;  /**< [ 63: 63](R/W) Internal:
-                                                                 This debug reset bit is used to reset (active low) the MAB irrespective of
-                                                                 quiescience state.
-                                                                 This must not be used unless it is assured there are no PSM credit returns required.
-                                                                 Alternatively, the PSM queue and credits for this MAB needs to be restored after this
-                                                                 operation. Further, all system access for this MHB needs to be flushed from the system
-                                                                 before re-enabling this block. This is primarily for debug puposes only. Writing a 0
-                                                                 resets the MDB and writing a 1 brings the MDB out of reset. */
-        uint64_t cfg_arb_sel           : 1;  /**< [ 62: 62](R/W) Internal:
-                                                                 If this bit is set to 1, indicates a higher (fixed) priority for CFG DMA
-                                                                 requests over RD-DMA CFG requests. When this bit is set to 0 both the CFG DMA and RD DMA
-                                                                 CFG requests are arbitrated on a round-robin basis. */
-        uint64_t reserved_2_61         : 60;
-        uint64_t dac_dbg_en            : 1;  /**< [  1:  1](R/W) Set one to enable DAC debug signals to be driven on dbg3 data bus. */
-        uint64_t amm_dbg_en            : 1;  /**< [  0:  0](R/W) Set one to enable DMA debug signals to be driven on dbg3 data bus. */
-#else /* Word 0 - Little Endian */
-        uint64_t amm_dbg_en            : 1;  /**< [  0:  0](R/W) Set one to enable DMA debug signals to be driven on dbg3 data bus. */
-        uint64_t dac_dbg_en            : 1;  /**< [  1:  1](R/W) Set one to enable DAC debug signals to be driven on dbg3 data bus. */
-        uint64_t reserved_2_61         : 60;
-        uint64_t cfg_arb_sel           : 1;  /**< [ 62: 62](R/W) Internal:
-                                                                 If this bit is set to 1, indicates a higher (fixed) priority for CFG DMA
-                                                                 requests over RD-DMA CFG requests. When this bit is set to 0 both the CFG DMA and RD DMA
-                                                                 CFG requests are arbitrated on a round-robin basis. */
-        uint64_t master_reset_n        : 1;  /**< [ 63: 63](R/W) Internal:
-                                                                 This debug reset bit is used to reset (active low) the MAB irrespective of
-                                                                 quiescience state.
-                                                                 This must not be used unless it is assured there are no PSM credit returns required.
-                                                                 Alternatively, the PSM queue and credits for this MAB needs to be restored after this
-                                                                 operation. Further, all system access for this MHB needs to be flushed from the system
-                                                                 before re-enabling this block. This is primarily for debug puposes only. Writing a 0
-                                                                 resets the MDB and writing a 1 brings the MDB out of reset. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdbwx_debug1_s cn; */
-};
-typedef union cavm_mdbwx_debug1 cavm_mdbwx_debug1_t;
-
-static inline uint64_t CAVM_MDBWX_DEBUG1(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDBWX_DEBUG1(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
-        return 0x87e044002340ll + 0x4000ll * ((a) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
-        return 0x87e044002340ll + 0x4000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
-        return 0x87e044002340ll + 0x4000ll * ((a) & 0x3f);
-    __cavm_csr_fatal("MDBWX_DEBUG1", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDBWX_DEBUG1(a) cavm_mdbwx_debug1_t
-#define bustype_CAVM_MDBWX_DEBUG1(a) CSR_TYPE_RSL
-#define basename_CAVM_MDBWX_DEBUG1(a) "MDBWX_DEBUG1"
-#define busnum_CAVM_MDBWX_DEBUG1(a) (a)
-#define arguments_CAVM_MDBWX_DEBUG1(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) mdbw#_dma_error_jce_w0
@@ -3508,100 +3138,11 @@ static inline uint64_t CAVM_MDBWX_DMA_ERROR_JCE_W1(uint64_t a)
 #define arguments_CAVM_MDBWX_DMA_ERROR_JCE_W1(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) mdbw#_dv_scratch
- *
- * INTERNAL: MDBW Verification Scratch Register
- *
- * Internal:
- * This register set, defines a scratch register for verification purposes only per
- * MDBW.
- */
-union cavm_mdbwx_dv_scratch
-{
-    uint64_t u;
-    struct cavm_mdbwx_dv_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t it                    : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 This set of bits are specified for DV only. */
-#else /* Word 0 - Little Endian */
-        uint64_t it                    : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 This set of bits are specified for DV only. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdbwx_dv_scratch_s cn; */
-};
-typedef union cavm_mdbwx_dv_scratch cavm_mdbwx_dv_scratch_t;
-
-static inline uint64_t CAVM_MDBWX_DV_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDBWX_DV_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
-        return 0x87e044002f10ll + 0x4000ll * ((a) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
-        return 0x87e044002f10ll + 0x4000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
-        return 0x87e044002f10ll + 0x4000ll * ((a) & 0x3f);
-    __cavm_csr_fatal("MDBWX_DV_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDBWX_DV_SCRATCH(a) cavm_mdbwx_dv_scratch_t
-#define bustype_CAVM_MDBWX_DV_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_MDBWX_DV_SCRATCH(a) "MDBWX_DV_SCRATCH"
-#define busnum_CAVM_MDBWX_DV_SCRATCH(a) (a)
-#define arguments_CAVM_MDBWX_DV_SCRATCH(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) mdbw#_eco
- *
- * INTERNAL: MDBW ECO Register
- */
-union cavm_mdbwx_eco
-{
-    uint64_t u;
-    struct cavm_mdbwx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 Reserved for ECO usage.(Has AB CTRL signals tied to it) */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 Reserved for ECO usage.(Has AB CTRL signals tied to it) */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdbwx_eco_s cn; */
-};
-typedef union cavm_mdbwx_eco cavm_mdbwx_eco_t;
-
-static inline uint64_t CAVM_MDBWX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDBWX_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
-        return 0x87e044002f00ll + 0x4000ll * ((a) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
-        return 0x87e044002f00ll + 0x4000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
-        return 0x87e044002f00ll + 0x4000ll * ((a) & 0x3f);
-    __cavm_csr_fatal("MDBWX_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDBWX_ECO(a) cavm_mdbwx_eco_t
-#define bustype_CAVM_MDBWX_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_MDBWX_ECO(a) "MDBWX_ECO"
-#define busnum_CAVM_MDBWX_ECO(a) (a)
-#define arguments_CAVM_MDBWX_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) mdbw#_err_stat0
  *
  * MDBW Errors Statistic 0 Register
  * This register set specifies the statistic for the number of errors (except SBE's and
  * DBE's) per MDBW.
- *
- * Internal:
- * If the stat counter indicates per clock increment, this implies one
- * of error singalling was a level signal and did not conform to specification. It also indicates
- * a potential deadlock condition, if the counter rolls on for an extended period of time.
  */
 union cavm_mdbwx_err_stat0
 {
@@ -3643,11 +3184,6 @@ static inline uint64_t CAVM_MDBWX_ERR_STAT0(uint64_t a)
  *
  * MDBW Errors Statistic 1 Register
  * This register set specifies the statistic for the number of DMA errors per MDBW.
- * Internal:
- * If
- * the stat counter indicates per clock increment, this implies one
- * of error singalling was a level signal and did not conform to specification. It also indicates
- * a potential deadlock condition, if the counter rolls on for an extended period of time.
  */
 union cavm_mdbwx_err_stat1
 {
@@ -3655,25 +3191,11 @@ union cavm_mdbwx_err_stat1
     struct cavm_mdbwx_err_stat1_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of Address range errors.
-                                                                 Internal:
-                                                                 This does not account for multiple
-                                                                 DMA errors that might occur across different jobs, AB's in the same clock cycle. */
-        uint64_t dma_err_stat          : 32; /**< [ 31:  0](R/W/H) This set of bits, specifies the number of DMA errors.
-                                                                 Internal:
-                                                                 This does not account for
-                                                                 multiple
-                                                                 DMA errors that might occur across different jobs, AB's in the same clock cycle. */
+        uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of Address range errors. */
+        uint64_t dma_err_stat          : 32; /**< [ 31:  0](R/W/H) This set of bits, specifies the number of DMA errors. */
 #else /* Word 0 - Little Endian */
-        uint64_t dma_err_stat          : 32; /**< [ 31:  0](R/W/H) This set of bits, specifies the number of DMA errors.
-                                                                 Internal:
-                                                                 This does not account for
-                                                                 multiple
-                                                                 DMA errors that might occur across different jobs, AB's in the same clock cycle. */
-        uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of Address range errors.
-                                                                 Internal:
-                                                                 This does not account for multiple
-                                                                 DMA errors that might occur across different jobs, AB's in the same clock cycle. */
+        uint64_t dma_err_stat          : 32; /**< [ 31:  0](R/W/H) This set of bits, specifies the number of DMA errors. */
+        uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of Address range errors. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_mdbwx_err_stat1_s cn9; */
@@ -3681,25 +3203,11 @@ union cavm_mdbwx_err_stat1
     struct cavm_mdbwx_err_stat1_cnf95xxp2
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of address range errors.
-                                                                 Internal:
-                                                                 This does not account for multiple
-                                                                 DMA errors that might occur across different jobs, AB's in the same clock cycle. */
-        uint64_t dma_err_stat          : 32; /**< [ 31:  0](R/W/H) This set of bits, specifies the number of DMA errors.
-                                                                 Internal:
-                                                                 This does not account for
-                                                                 multiple
-                                                                 DMA errors that might occur across different jobs, AB's in the same clock cycle. */
+        uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of address range errors. */
+        uint64_t dma_err_stat          : 32; /**< [ 31:  0](R/W/H) This set of bits, specifies the number of DMA errors. */
 #else /* Word 0 - Little Endian */
-        uint64_t dma_err_stat          : 32; /**< [ 31:  0](R/W/H) This set of bits, specifies the number of DMA errors.
-                                                                 Internal:
-                                                                 This does not account for
-                                                                 multiple
-                                                                 DMA errors that might occur across different jobs, AB's in the same clock cycle. */
-        uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of address range errors.
-                                                                 Internal:
-                                                                 This does not account for multiple
-                                                                 DMA errors that might occur across different jobs, AB's in the same clock cycle. */
+        uint64_t dma_err_stat          : 32; /**< [ 31:  0](R/W/H) This set of bits, specifies the number of DMA errors. */
+        uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of address range errors. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_err_stat1_cnf95xxp2 f95mm; */

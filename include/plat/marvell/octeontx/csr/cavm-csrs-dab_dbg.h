@@ -77,10 +77,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled.
                                                                      ExternalSecureNoninvasiveDebugEnabled() == TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values of 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SNID[1]=1, SNID[0]=(SPIDEN || SPNIDEN) && (NIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values of 0x2 and 0x3. */
         uint32_t sid                   : 2;  /**< [  5:  4](RO/H) Secure invasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      nonsecure.
@@ -91,10 +88,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalSecureInvasiveDebugEnabled()
                                                                      == TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SID[1]=1, SID[0]=(SPIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t nsnid                 : 2;  /**< [  3:  2](RO/H) Nonsecure noninvasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      secure.
@@ -105,10 +99,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalNoninvasiveDebugEnabled() ==
                                                                      TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: NSNID[1]=1, NSNID[0]=(NIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t nsid                  : 2;  /**< [  1:  0](RO/H) Nonsecure invasive debug.
                                                                  0x2 = Not implemented. EL3 is not implemented and the processor is
                                                                      secure.
@@ -119,10 +110,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalInvasiveDebugEnabled() ==
                                                                      TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: NSID[1]=1, NSID[0]= DBGEN. */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
 #else /* Word 0 - Little Endian */
         uint32_t nsid                  : 2;  /**< [  1:  0](RO/H) Nonsecure invasive debug.
                                                                  0x2 = Not implemented. EL3 is not implemented and the processor is
@@ -134,10 +122,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalInvasiveDebugEnabled() ==
                                                                      TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: NSID[1]=1, NSID[0]= DBGEN. */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t nsnid                 : 2;  /**< [  3:  2](RO/H) Nonsecure noninvasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      secure.
@@ -148,10 +133,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalNoninvasiveDebugEnabled() ==
                                                                      TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: NSNID[1]=1, NSNID[0]=(NIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t sid                   : 2;  /**< [  5:  4](RO/H) Secure invasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      nonsecure.
@@ -162,10 +144,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalSecureInvasiveDebugEnabled()
                                                                      == TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SID[1]=1, SID[0]=(SPIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t snid                  : 2;  /**< [  7:  6](RO/H) Secure noninvasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      nonsecure.
@@ -174,10 +153,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled.
                                                                      ExternalSecureNoninvasiveDebugEnabled() == TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values of 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SNID[1]=1, SNID[0]=(SPIDEN || SPNIDEN) && (NIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values of 0x2 and 0x3. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;
@@ -194,10 +170,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled.
                                                                      ExternalSecureNoninvasiveDebugEnabled() == TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values of 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SNID[1]=1, SNID[0]=(SPIDEN || SPNIDEN) && (NIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values of 0x2 and 0x3. */
         uint32_t sid                   : 2;  /**< [  5:  4](RO/H) Secure invasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      nonsecure.
@@ -206,10 +179,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalSecureInvasiveDebugEnabled()
                                                                      == TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SID[1]=1, SID[0]=(SPIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t nsnid                 : 2;  /**< [  3:  2](RO/H) Nonsecure noninvasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      secure.
@@ -218,10 +188,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalNoninvasiveDebugEnabled() ==
                                                                      TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: NSNID[1]=1, NSNID[0]=(NIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t nsid                  : 2;  /**< [  1:  0](RO/H) Nonsecure invasive debug.
                                                                  0x2 = Not implemented. EL3 is not implemented and the processor is
                                                                      secure.
@@ -230,10 +197,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalInvasiveDebugEnabled() ==
                                                                      TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: NSID[1]=1, NSID[0]= DBGEN. */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
 #else /* Word 0 - Little Endian */
         uint32_t nsid                  : 2;  /**< [  1:  0](RO/H) Nonsecure invasive debug.
                                                                  0x2 = Not implemented. EL3 is not implemented and the processor is
@@ -243,10 +207,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalInvasiveDebugEnabled() ==
                                                                      TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: NSID[1]=1, NSID[0]= DBGEN. */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t nsnid                 : 2;  /**< [  3:  2](RO/H) Nonsecure noninvasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      secure.
@@ -255,10 +216,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalNoninvasiveDebugEnabled() ==
                                                                      TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: NSNID[1]=1, NSNID[0]=(NIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t sid                   : 2;  /**< [  5:  4](RO/H) Secure invasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      nonsecure.
@@ -267,10 +225,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled. ExternalSecureInvasiveDebugEnabled()
                                                                      == TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SID[1]=1, SID[0]=(SPIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t snid                  : 2;  /**< [  7:  6](RO/H) Secure noninvasive debug.
                                                                  0x0 = Not implemented. EL3 is not implemented and the processor is
                                                                      nonsecure.
@@ -279,10 +234,7 @@ union cavm_dbgx_dbgauthstatus_el1
                                                                  0x3 = Implemented and enabled.
                                                                      ExternalSecureNoninvasiveDebugEnabled() == TRUE.
 
-                                                                 Other values are reserved.  For CNXXXX allowed values of 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SNID[1]=1, SNID[0]=(SPIDEN || SPNIDEN) && (NIDEN || DBGEN). */
+                                                                 Other values are reserved.  For CNXXXX allowed values of 0x2 and 0x3. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn9;
@@ -2014,10 +1966,6 @@ static inline uint64_t CAVM_DBGX_EDDEVID(uint64_t a)
  *
  * AP DBG Device Id Register 1
  * Device id1 register for ap core.
- * Internal:
- * RTL:
- * Read only register, Read to this register will be provided by DAP and
- * DAP will not generate OWB access.
  */
 union cavm_dbgx_eddevid1
 {
@@ -2113,10 +2061,6 @@ static inline uint64_t CAVM_DBGX_EDDEVID1(uint64_t a)
  *
  * AP DBG Device Id Register 2
  * Device id2 register for ap core.
- * Internal:
- * RTL:
- * Read only register, Read to this register will be provided by DAP and
- * DAP will not generate OWB access.
  */
 union cavm_dbgx_eddevid2
 {
@@ -3690,10 +3634,6 @@ static inline uint64_t CAVM_DBGX_EDPIDR7(uint64_t a)
  * AP DBG External Debug Power/Reset Control Register
  * Controls processor functionality related to powerup, reset,
  * and powerdown.
- *
- * Internal:
- * RTL: Powerup request for ap core. This is write only register.
- * write one to bit[3] to request powerup.
  */
 union cavm_dbgx_edprcr
 {
@@ -3798,11 +3738,6 @@ static inline uint64_t CAVM_DBGX_EDPRCR(uint64_t a)
  * AP DBG External Debug Processor Status Register
  * This register holds information about the reset and powerdown state of the
  * processor.
- *
- * Internal:
- * RTL: Powerup status for ap core and only bit[1:0] used
- * If AP CORE power down, read to register will not generate OWB access.
- * If AP CORE power up, read to register will generate OWB access.
  */
 union cavm_dbgx_edprsr
 {
@@ -4617,10 +4552,6 @@ static inline uint64_t CAVM_DBGX_EDWAR_LO(uint64_t a)
  * AP DBG Main Id Register
  * Main id register for ap core.
  * Read only register
- *
- * Internal:
- * RTL: Read to this register will be provided by DAP and
- * DAP will not generate OWB access.
  */
 union cavm_dbgx_midr_el1
 {

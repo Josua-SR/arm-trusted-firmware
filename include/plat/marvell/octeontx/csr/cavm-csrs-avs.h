@@ -242,44 +242,6 @@ static inline uint64_t CAVM_AVS_CONST_FUNC(void)
 #define arguments_CAVM_AVS_CONST -1,-1,-1,-1
 
 /**
- * Register (NCB) avs_eco
- *
- * INTERNAL: AVS ECO Register
- */
-union cavm_avs_eco
-{
-    uint64_t u;
-    struct cavm_avs_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_avs_eco_s cn; */
-};
-typedef union cavm_avs_eco cavm_avs_eco_t;
-
-#define CAVM_AVS_ECO CAVM_AVS_ECO_FUNC()
-static inline uint64_t CAVM_AVS_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AVS_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x80a000000120ll;
-    __cavm_csr_fatal("AVS_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_AVS_ECO cavm_avs_eco_t
-#define bustype_CAVM_AVS_ECO CSR_TYPE_NCB
-#define basename_CAVM_AVS_ECO "AVS_ECO"
-#define device_bar_CAVM_AVS_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_AVS_ECO 0
-#define arguments_CAVM_AVS_ECO -1,-1,-1,-1
-
-/**
  * Register (NCB) avs_int_ena_w1c
  *
  * AVS Interrupt Enable Clear Register

@@ -551,45 +551,6 @@ static inline uint64_t CAVM_DLFE_CONTROL_FUNC(void)
 #define arguments_CAVM_DLFE_CONTROL -1,-1,-1,-1
 
 /**
- * Register (RSL) dlfe_eco
- *
- * INTERNAL: DLFE ECO Register
- */
-union cavm_dlfe_eco
-{
-    uint64_t u;
-    struct cavm_dlfe_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dlfe_eco_s cn; */
-};
-typedef union cavm_dlfe_eco cavm_dlfe_eco_t;
-
-#define CAVM_DLFE_ECO CAVM_DLFE_ECO_FUNC()
-static inline uint64_t CAVM_DLFE_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DLFE_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX))
-        return 0x87e043180008ll;
-    __cavm_csr_fatal("DLFE_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DLFE_ECO cavm_dlfe_eco_t
-#define bustype_CAVM_DLFE_ECO CSR_TYPE_RSL
-#define basename_CAVM_DLFE_ECO "DLFE_ECO"
-#define busnum_CAVM_DLFE_ECO 0
-#define arguments_CAVM_DLFE_ECO -1,-1,-1,-1
-
-/**
  * Register (RSL) dlfe_error_enable0
  *
  * DLFE Error Enable 0 Register
@@ -723,43 +684,6 @@ static inline uint64_t CAVM_DLFE_RES_MAPX(uint64_t a)
 #define basename_CAVM_DLFE_RES_MAPX(a) "DLFE_RES_MAPX"
 #define busnum_CAVM_DLFE_RES_MAPX(a) (a)
 #define arguments_CAVM_DLFE_RES_MAPX(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) dlfe_scratch
- *
- * INTERNAL: Scratch Registers
- *
- * Scratch register.
- */
-union cavm_dlfe_scratch
-{
-    uint64_t u;
-    struct cavm_dlfe_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dlfe_scratch_s cn; */
-};
-typedef union cavm_dlfe_scratch cavm_dlfe_scratch_t;
-
-#define CAVM_DLFE_SCRATCH CAVM_DLFE_SCRATCH_FUNC()
-static inline uint64_t CAVM_DLFE_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_DLFE_SCRATCH_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX))
-        return 0x87e043180080ll;
-    __cavm_csr_fatal("DLFE_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_DLFE_SCRATCH cavm_dlfe_scratch_t
-#define bustype_CAVM_DLFE_SCRATCH CSR_TYPE_RSL
-#define basename_CAVM_DLFE_SCRATCH "DLFE_SCRATCH"
-#define busnum_CAVM_DLFE_SCRATCH 0
-#define arguments_CAVM_DLFE_SCRATCH -1,-1,-1,-1
 
 /**
  * Register (RSL) dlfe_status

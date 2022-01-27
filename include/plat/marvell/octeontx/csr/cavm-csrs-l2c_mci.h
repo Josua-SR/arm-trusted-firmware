@@ -108,15 +108,9 @@ union cavm_l2c_mcix_err
         uint64_t vbfsbe0               : 1;  /**< [ 60: 60](RO/H) INDEX/SYN0 corresponds to a single-bit VBF ECC error. */
         uint64_t reserved_48_59        : 12;
         uint64_t syn1                  : 8;  /**< [ 47: 40](RO/H) Error syndrome for QW1 ([127:64]).
-                                                                 Records only on single bit errors.
-
-                                                                 Internal:
-                                                                 See bug26334. */
+                                                                 Records only on single bit errors. */
         uint64_t syn0                  : 8;  /**< [ 39: 32](RO/H) Error syndrome for QW0 ([63:0]).
-                                                                 Records only on single bit errors.
-
-                                                                 Internal:
-                                                                 See bug26334. */
+                                                                 Records only on single bit errors. */
         uint64_t reserved_12_31        : 20;
         uint64_t vbf4                  : 1;  /**< [ 11: 11](RO/H) When 1, errors were from VBF (4+a), when 0, from VBF (0+a). */
         uint64_t index                 : 7;  /**< [ 10:  4](RO/H) VBF index which was read and had the error(s). */
@@ -127,15 +121,9 @@ union cavm_l2c_mcix_err
         uint64_t vbf4                  : 1;  /**< [ 11: 11](RO/H) When 1, errors were from VBF (4+a), when 0, from VBF (0+a). */
         uint64_t reserved_12_31        : 20;
         uint64_t syn0                  : 8;  /**< [ 39: 32](RO/H) Error syndrome for QW0 ([63:0]).
-                                                                 Records only on single bit errors.
-
-                                                                 Internal:
-                                                                 See bug26334. */
+                                                                 Records only on single bit errors. */
         uint64_t syn1                  : 8;  /**< [ 47: 40](RO/H) Error syndrome for QW1 ([127:64]).
-                                                                 Records only on single bit errors.
-
-                                                                 Internal:
-                                                                 See bug26334. */
+                                                                 Records only on single bit errors. */
         uint64_t reserved_48_59        : 12;
         uint64_t vbfsbe0               : 1;  /**< [ 60: 60](RO/H) INDEX/SYN0 corresponds to a single-bit VBF ECC error. */
         uint64_t vbfsbe1               : 1;  /**< [ 61: 61](RO/H) INDEX/SYN1 corresponds to a single-bit VBF ECC error. */
@@ -519,47 +507,5 @@ static inline uint64_t CAVM_L2C_MCIX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
 #define device_bar_CAVM_L2C_MCIX_MSIX_VECX_CTL(a,b) 0x4 /* PF_BAR4 */
 #define busnum_CAVM_L2C_MCIX_MSIX_VECX_CTL(a,b) (a)
 #define arguments_CAVM_L2C_MCIX_MSIX_VECX_CTL(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) l2c_mci#_scratch
- *
- * INTERNAL: L2C MCI General Purpose Scratch Register
- *
- * These registers are only reset by hardware during chip cold reset. The values of the CSR
- * fields in these registers do not change during chip warm or soft resets.
- */
-union cavm_l2c_mcix_scratch
-{
-    uint64_t u;
-    struct cavm_l2c_mcix_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t scratch               : 8;  /**< [  7:  0](R/W) General purpose scratch register. */
-#else /* Word 0 - Little Endian */
-        uint64_t scratch               : 8;  /**< [  7:  0](R/W) General purpose scratch register. */
-        uint64_t reserved_8_63         : 56;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_l2c_mcix_scratch_s cn; */
-};
-typedef union cavm_l2c_mcix_scratch cavm_l2c_mcix_scratch_t;
-
-static inline uint64_t CAVM_L2C_MCIX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_L2C_MCIX_SCRATCH(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
-        return 0x87e05c030000ll + 0x1000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
-        return 0x87e05c030000ll + 0x1000000ll * ((a) & 0x3);
-    __cavm_csr_fatal("L2C_MCIX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_L2C_MCIX_SCRATCH(a) cavm_l2c_mcix_scratch_t
-#define bustype_CAVM_L2C_MCIX_SCRATCH(a) CSR_TYPE_RSL
-#define basename_CAVM_L2C_MCIX_SCRATCH(a) "L2C_MCIX_SCRATCH"
-#define device_bar_CAVM_L2C_MCIX_SCRATCH(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_L2C_MCIX_SCRATCH(a) (a)
-#define arguments_CAVM_L2C_MCIX_SCRATCH(a) (a),-1,-1,-1
 
 #endif /* __CAVM_CSRS_L2C_MCI_H__ */

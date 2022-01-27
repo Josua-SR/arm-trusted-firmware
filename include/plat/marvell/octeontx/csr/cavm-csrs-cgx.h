@@ -68,26 +68,9 @@
 #define CAVM_CGX_LMAC_TYPES_E_XAUI (1)
 
 /**
- * Enumeration cgx_opcode_e
- *
- * INTERNAL: CGX Error Opcode Enumeration
- *
- * Enumerates the error opcodes created by CGX and presented to NCSI/NIX.
- */
-#define CAVM_CGX_OPCODE_E_RE_FCS (7)
-#define CAVM_CGX_OPCODE_E_RE_FCS_RCV (8)
-#define CAVM_CGX_OPCODE_E_RE_JABBER (2)
-#define CAVM_CGX_OPCODE_E_RE_NONE (0)
-#define CAVM_CGX_OPCODE_E_RE_PARTIAL (1)
-#define CAVM_CGX_OPCODE_E_RE_RX_CTL (0xb)
-#define CAVM_CGX_OPCODE_E_RE_SKIP (0xc)
-#define CAVM_CGX_OPCODE_E_RE_TERMINATE (9)
-
-/**
  * Enumeration cgx_spu_br_train_cst_e
  *
- * INTERNAL: CGX Training Coefficient Status Enumeration
- *
+ * CGX Training Coefficient Status Enumeration
  * 2-bit status for each coefficient as defined in IEEE 802.3, Table 72-5.
  */
 #define CAVM_CGX_SPU_BR_TRAIN_CST_E_MAXIMUM (3)
@@ -98,8 +81,7 @@
 /**
  * Enumeration cgx_spu_br_train_cup_e
  *
- * INTERNAL:CGX Training Coefficient Enumeration
- *
+ * CGX Training Coefficient Enumeration
  * 2-bit command for each coefficient as defined in IEEE 802.3, Table 72-4.
  */
 #define CAVM_CGX_SPU_BR_TRAIN_CUP_E_DECREMENT (1)
@@ -155,8 +137,7 @@
 /**
  * Structure cgx_spu_br_lane_train_status_s
  *
- * INTERNAL:CGX Lane Training Status Structure
- *
+ * CGX Lane Training Status Structure
  * This is the group of lane status bits for a single lane in the BASE-R PMD status register
  * (MDIO address 1.151) as defined in IEEE 802.3ba-2010, Table 45-55.
  */
@@ -193,8 +174,7 @@ union cavm_cgx_spu_br_lane_train_status_s
 /**
  * Structure cgx_spu_br_train_cup_s
  *
- * INTERNAL:CGX Lane Training Coefficient Structure
- *
+ * CGX Lane Training Coeffiecient Structure
  * This is the coefficient update field of the BASE-R link training packet as defined in
  * IEEE 802.3, Table 72-4.
  */
@@ -276,8 +256,7 @@ union cavm_cgx_spu_br_train_cup_s
 /**
  * Structure cgx_spu_br_train_rep_s
  *
- * INTERNAL:CGX Training Report Structure
- *
+ * CGX Training Report Structure
  * This is the status report field of the BASE-R link training packet as defined in IEEE 802.3,
  * Table 72-5.
  */
@@ -311,40 +290,6 @@ union cavm_cgx_spu_br_train_rep_s
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_cgx_spu_br_train_rep_s_s cn; */
-};
-
-/**
- * Structure cgx_spu_sds_cu_s
- *
- * INTERNAL: CGX Training Coeffiecient Structure
- *
- * This structure is similar to CGX_SPU_BR_TRAIN_CUP_S format, but with reserved fields removed
- * and [RCVR_READY] field added.
- */
-union cavm_cgx_spu_sds_cu_s
-{
-    uint32_t u;
-    struct cavm_cgx_spu_sds_cu_s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_9_31         : 23;
-        uint32_t rcvr_ready            : 1;  /**< [  8:  8] See CGX_SPU_BR_TRAIN_REP_S[RX_READY]. */
-        uint32_t preset                : 1;  /**< [  7:  7] See CGX_SPU_BR_TRAIN_CUP_S[PRESET]. */
-        uint32_t initialize            : 1;  /**< [  6:  6] See CGX_SPU_BR_TRAIN_CUP_S[INIT]. */
-        uint32_t post_cu               : 2;  /**< [  5:  4] See CGX_SPU_BR_TRAIN_CUP_S[POST_CUP]. */
-        uint32_t main_cu               : 2;  /**< [  3:  2] See CGX_SPU_BR_TRAIN_CUP_S[MAIN_CUP]. */
-        uint32_t pre_cu                : 2;  /**< [  1:  0] See CGX_SPU_BR_TRAIN_CUP_S[PRE_CUP]. */
-#else /* Word 0 - Little Endian */
-        uint32_t pre_cu                : 2;  /**< [  1:  0] See CGX_SPU_BR_TRAIN_CUP_S[PRE_CUP]. */
-        uint32_t main_cu               : 2;  /**< [  3:  2] See CGX_SPU_BR_TRAIN_CUP_S[MAIN_CUP]. */
-        uint32_t post_cu               : 2;  /**< [  5:  4] See CGX_SPU_BR_TRAIN_CUP_S[POST_CUP]. */
-        uint32_t initialize            : 1;  /**< [  6:  6] See CGX_SPU_BR_TRAIN_CUP_S[INIT]. */
-        uint32_t preset                : 1;  /**< [  7:  7] See CGX_SPU_BR_TRAIN_CUP_S[PRESET]. */
-        uint32_t rcvr_ready            : 1;  /**< [  8:  8] See CGX_SPU_BR_TRAIN_REP_S[RX_READY]. */
-        uint32_t reserved_9_31         : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgx_spu_sds_cu_s_s cn; */
 };
 
 /**
@@ -384,33 +329,6 @@ union cavm_cgx_spu_sds_skew_status_s
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_cgx_spu_sds_skew_status_s_s cn; */
-};
-
-/**
- * Structure cgx_spu_sds_sr_s
- *
- * INTERNAL: CGX Lane Training Coefficient Structure
- *
- * Similar to CGX_SPU_BR_TRAIN_REP_S format, but with reserved and RX ready fields removed.
- */
-union cavm_cgx_spu_sds_sr_s
-{
-    uint32_t u;
-    struct cavm_cgx_spu_sds_sr_s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_6_31         : 26;
-        uint32_t post_status           : 2;  /**< [  5:  4] See CGX_SPU_BR_TRAIN_REP_S[POST_CST]. */
-        uint32_t main_status           : 2;  /**< [  3:  2] See CGX_SPU_BR_TRAIN_REP_S[MAIN_CST]. */
-        uint32_t pre_status            : 2;  /**< [  1:  0] See CGX_SPU_BR_TRAIN_REP_S[PRE_CST]. */
-#else /* Word 0 - Little Endian */
-        uint32_t pre_status            : 2;  /**< [  1:  0] See CGX_SPU_BR_TRAIN_REP_S[PRE_CST]. */
-        uint32_t main_status           : 2;  /**< [  3:  2] See CGX_SPU_BR_TRAIN_REP_S[MAIN_CST]. */
-        uint32_t post_status           : 2;  /**< [  5:  4] See CGX_SPU_BR_TRAIN_REP_S[POST_CST]. */
-        uint32_t reserved_6_31         : 26;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgx_spu_sds_sr_s_s cn; */
 };
 
 /**
@@ -523,69 +441,6 @@ static inline uint64_t CAVM_CGXX_CMRX_ACTIVITY(uint64_t a, uint64_t b)
  * Logical MAC/PCS configuration registers; one per LMAC. The maximum number of LMACs (and
  * maximum LMAC ID) that can be enabled by these registers is limited by
  * CGX()_CMR_RX_LMACS[LMACS] and CGX()_CMR_TX_LMACS[LMACS].
- *
- * Internal:
- * \<pre\>
- * Example configurations:
- *   ---------------------------------------------------------------------------
- *   Configuration           LMACS  Register             [ENABLE]    [LMAC_TYPE]
- *   ---------------------------------------------------------------------------
- *   1x50G+1x25G+1xSGMII     4      CGXn_CMR0_CONFIG     1           8
- *                                  CGXn_CMR1_CONFIG     0           --
- *                                  CGXn_CMR2_CONFIG     1           7
- *                                  CGXn_CMR3_CONFIG     1           0
- *   ---------------------------------------------------------------------------
- *   USXGMII                 1-4    CGXn_CMR0_CONFIG     1           a
- *                                  CGXn_CMR1_CONFIG     1           a
- *                                  CGXn_CMR2_CONFIG     1           a
- *                                  CGXn_CMR3_CONFIG     1           a
- *   ---------------------------------------------------------------------------
- *   1x100GBASE-R4           1      CGXn_CMR0_CONFIG     1           9
- *                                  CGXn_CMR1_CONFIG     0           --
- *                                  CGXn_CMR2_CONFIG     0           --
- *                                  CGXn_CMR3_CONFIG     0           --
- *   ---------------------------------------------------------------------------
- *   2x50GBASE-R2            2      CGXn_CMR0_CONFIG     1           8
- *                                  CGXn_CMR1_CONFIG     1           8
- *                                  CGXn_CMR2_CONFIG     0           --
- *                                  CGXn_CMR3_CONFIG     0           --
- *   ---------------------------------------------------------------------------
- *   4x25GBASE-R             4      CGXn_CMR0_CONFIG     1           7
- *                                  CGXn_CMR1_CONFIG     1           7
- *                                  CGXn_CMR2_CONFIG     1           7
- *                                  CGXn_CMR3_CONFIG     1           7
- *   ---------------------------------------------------------------------------
- *   QSGMII                  4      CGXn_CMR0_CONFIG     1           6
- *                                  CGXn_CMR1_CONFIG     1           6
- *                                  CGXn_CMR2_CONFIG     1           6
- *                                  CGXn_CMR3_CONFIG     1           6
- *   ---------------------------------------------------------------------------
- *   1x40GBASE-R4            1      CGXn_CMR0_CONFIG     1           4
- *                                  CGXn_CMR1_CONFIG     0           --
- *                                  CGXn_CMR2_CONFIG     0           --
- *                                  CGXn_CMR3_CONFIG     0           --
- *   ---------------------------------------------------------------------------
- *   4x10GBASE-R             4      CGXn_CMR0_CONFIG     1           3
- *                                  CGXn_CMR1_CONFIG     1           3
- *                                  CGXn_CMR2_CONFIG     1           3
- *                                  CGXn_CMR3_CONFIG     1           3
- *   ---------------------------------------------------------------------------
- *   2xRXAUI                 2      CGXn_CMR0_CONFIG     1           2
- *                                  CGXn_CMR1_CONFIG     1           2
- *                                  CGXn_CMR2_CONFIG     0           --
- *                                  CGXn_CMR3_CONFIG     0           --
- *   ---------------------------------------------------------------------------
- *   1x10GBASE-X/XAUI/DXAUI  1      CGXn_CMR0_CONFIG     1           1
- *                                  CGXn_CMR1_CONFIG     0           --
- *                                  CGXn_CMR2_CONFIG     0           --
- *                                  CGXn_CMR3_CONFIG     0           --
- *   ---------------------------------------------------------------------------
- *   4xSGMII/1000BASE-X      4      CGXn_CMR0_CONFIG     1           0
- *                                  CGXn_CMR1_CONFIG     1           0
- *                                  CGXn_CMR2_CONFIG     1           0
- *                                  CGXn_CMR3_CONFIG     1           0
- *   ---------------------------------------------------------------------------
- * \</pre\>
  */
 union cavm_cgxx_cmrx_config
 {
@@ -1124,21 +979,13 @@ union cavm_cgxx_cmrx_int
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) TX channel out-of-range from NIX0 interface.
                                                                  Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
                                                                  Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reserved. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) RX overflow. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) RX PAUSE packet was dropped due to full RXB FIFO or during partner reset. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) RX PAUSE packet was dropped due to full RXB FIFO or during partner reset. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) RX overflow. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reserved. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) TX channel out-of-range from NIX0 interface.
                                                                  Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
                                                                  Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
@@ -1200,21 +1047,13 @@ union cavm_cgxx_cmrx_int_ena_w1c
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..2)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1232,21 +1071,13 @@ union cavm_cgxx_cmrx_int_ena_w1c
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..4)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1263,21 +1094,13 @@ union cavm_cgxx_cmrx_int_ena_w1c
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..1)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1293,21 +1116,13 @@ union cavm_cgxx_cmrx_int_ena_w1c
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1361,21 +1176,13 @@ union cavm_cgxx_cmrx_int_ena_w1s
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..2)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1393,21 +1200,13 @@ union cavm_cgxx_cmrx_int_ena_w1s
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..4)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1424,21 +1223,13 @@ union cavm_cgxx_cmrx_int_ena_w1s
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..1)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1454,21 +1245,13 @@ union cavm_cgxx_cmrx_int_ena_w1s
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1522,21 +1305,13 @@ union cavm_cgxx_cmrx_int_w1s
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..2)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1554,21 +1329,13 @@ union cavm_cgxx_cmrx_int_w1s
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..4)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1585,21 +1352,13 @@ union cavm_cgxx_cmrx_int_w1s
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..1)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1615,21 +1374,13 @@ union cavm_cgxx_cmrx_int_w1s
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIX0_E_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIX0_NXC]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[OVERFLW]. */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[PAUSE_DRP]. */
 #else /* Word 0 - Little Endian */
         uint64_t pause_drp             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[PAUSE_DRP]. */
         uint64_t overflw               : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[OVERFLW]. */
-        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIC_NXC].
-                                                                 Internal:
-                                                                 TX channel out-of-range from NIC interface.
-                                                                 Reported on this LMAC for ids in the range of lmac_id+4, lmac_id+8 and lmac_id+12.
-                                                                 Reported regardless of LMAC enable or CGX()_CMR()_CONFIG[P2X_SELECT] association for this LMAC. */
+        uint64_t nic_nxc               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIC_NXC]. */
         uint64_t nix0_nxc              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIX0_NXC]. */
         uint64_t nix1_nxc              : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIX1_NXC]. */
         uint64_t nix0_e_nxc            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_INT[NIX0_E_NXC]. */
@@ -1683,34 +1434,14 @@ union cavm_cgxx_cmrx_led_timing
                                                                  * For RX, LED is on for the data transfer length through minimum IFG +
                                                                  [EXTENSION] number of coprocessor-clock cycles.
                                                                  * For TX, LED on for data transfers through transition to IDLE + [EXTENSION]
-                                                                 number of coprocessor-clock cycles.
-
-                                                                 Internal:
-                                                                 Per LMAC, SMU TX treats any 128-bus cycle that carries packet data and/or IFG as BUSY
-                                                                 (called activity high cycle); any 128-bus carries all IDLE, or LPI, or FAULT sequence as
-                                                                 IDLE (called activity low cycle). The extension counter starts when a high to low
-                                                                 transition detected on the first low cycles. The counter continues counting on sclk until
-                                                                 it reaches [EXTENSION]. If any BUSY cycle occurs during the counting procedure, the
-                                                                 counter resets to 0. After the counter reaches [EXTENSION], once a low cycle occurs, the
-                                                                 activity indication line switches to 0. A HIGH cycle will always switch the activity
-                                                                 indication line to 1. */
+                                                                 number of coprocessor-clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t extension             : 8;  /**< [  7:  0](R/W) Extension number of cycles for activity LED illumination. The same register is
                                                                  used for both MAC RX and TX.
                                                                  * For RX, LED is on for the data transfer length through minimum IFG +
                                                                  [EXTENSION] number of coprocessor-clock cycles.
                                                                  * For TX, LED on for data transfers through transition to IDLE + [EXTENSION]
-                                                                 number of coprocessor-clock cycles.
-
-                                                                 Internal:
-                                                                 Per LMAC, SMU TX treats any 128-bus cycle that carries packet data and/or IFG as BUSY
-                                                                 (called activity high cycle); any 128-bus carries all IDLE, or LPI, or FAULT sequence as
-                                                                 IDLE (called activity low cycle). The extension counter starts when a high to low
-                                                                 transition detected on the first low cycles. The counter continues counting on sclk until
-                                                                 it reaches [EXTENSION]. If any BUSY cycle occurs during the counting procedure, the
-                                                                 counter resets to 0. After the counter reaches [EXTENSION], once a low cycle occurs, the
-                                                                 activity indication line switches to 0. A HIGH cycle will always switch the activity
-                                                                 indication line to 1. */
+                                                                 number of coprocessor-clock cycles. */
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } s;
@@ -2037,35 +1768,6 @@ static inline uint64_t CAVM_CGXX_CMRX_RX_BP_STATUS(uint64_t a, uint64_t b)
  * Received packets are only passed to X2P/NIX when the DMAC0 filter result is
  * ACCEPT and STEERING0 filter result is PASS. See also CGX()_CMR_RX_DMAC()_CAM0
  * and CGX()_CMR_RX_STEERING0().
- *
- * Internal:
- * "* ALGORITHM
- * Here is some pseudo code that represents the address filter behavior.
- * \<pre\>
- * dmac_addr_filter(uint8 prt, uint48 dmac) {
- * for (lmac=0, lmac\<4, lmac++) {
- *   if (is_bcst(dmac))                               // broadcast accept
- *     return (CGX()_CMR(lmac)_RX_DMAC_CTL0[BCST_ACCEPT] ? ACCEPT : REJECT);
- *   if (is_mcst(dmac) && CGX()_CMR(lmac)_RX_DMAC_CTL0[MCST_MODE] == 0)   // multicast reject
- *     return REJECT;
- *   if (is_mcst(dmac) && CGX()_CMR(lmac)_RX_DMAC_CTL0[MCST_MODE] == 1)   // multicast accept
- *     return ACCEPT;
- *   else        // DMAC CAM filter
- *     cam_hit = 0;
- *   for (i=0; i\<32; i++) {
- *     cam = CGX()_CMR_RX_DMAC(i)_CAM0;
- *     if (cam[EN] && cam[ID] == lmac && cam[ADR] == dmac) {
- *       cam_hit = 1;
- *       break;
- *     }
- *   }
- *   if (cam_hit) {
- *     return (CGX()_CMR(lmac)_RX_DMAC_CTL0[CAM_ACCEPT] ? ACCEPT : REJECT);
- *   else
- *     return (CGX()_CMR(lmac)_RX_DMAC_CTL0[CAM_ACCEPT] ? REJECT : ACCEPT);
- *   }
- * }
- * \</pre\>"
  */
 union cavm_cgxx_cmrx_rx_dmac_ctl0
 {
@@ -2138,9 +1840,6 @@ static inline uint64_t CAVM_CGXX_CMRX_RX_DMAC_CTL0(uint64_t a, uint64_t b)
  * STEERING1 filter result is PASS. See also CGX()_CMR_RX_DMAC()_CAM1 and
  * CGX()_CMR_RX_STEERING1().
  * For use with the LMAC associated with NCSI; see CGX()_CMR_GLOBAL_CONFIG[NCSI_LMAC_ID].
- *
- * Internal:
- * ALGORITHM: See CGX()_CMR()_RX_DMAC_CTL0.
  */
 union cavm_cgxx_cmrx_rx_dmac_ctl1
 {
@@ -2274,37 +1973,13 @@ union cavm_cgxx_cmrx_rx_id_map
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_15_63        : 49;
-        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Defeatured. Reassembly ID for Octeon PKI; not used in CN9XXX.
-                                                                 Reassembly ID map for this LMAC. A shared pool of 96 reassembly IDs (RIDs) exists for all
-                                                                 MACs.
-
-                                                                 The RID for this LMAC must be constrained such that it does not overlap with any other MAC
-                                                                 in the system. Its reset value has been chosen such that this condition is satisfied:
-
-                                                                 _ RID reset value = 4*(cgx_id + 1) + lmac_id
-
-                                                                 Changes to RID must only occur when the LMAC is quiescent (i.e. the LMAC receive interface
-                                                                 is down and the RX FIFO is empty). */
+        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved. */
         uint64_t unused                : 2;  /**< [  7:  6](RAZ) Reserved. */
         uint64_t pknd                  : 6;  /**< [  5:  0](R/W) Port kind for this LMAC. */
 #else /* Word 0 - Little Endian */
         uint64_t pknd                  : 6;  /**< [  5:  0](R/W) Port kind for this LMAC. */
         uint64_t unused                : 2;  /**< [  7:  6](RAZ) Reserved. */
-        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Defeatured. Reassembly ID for Octeon PKI; not used in CN9XXX.
-                                                                 Reassembly ID map for this LMAC. A shared pool of 96 reassembly IDs (RIDs) exists for all
-                                                                 MACs.
-
-                                                                 The RID for this LMAC must be constrained such that it does not overlap with any other MAC
-                                                                 in the system. Its reset value has been chosen such that this condition is satisfied:
-
-                                                                 _ RID reset value = 4*(cgx_id + 1) + lmac_id
-
-                                                                 Changes to RID must only occur when the LMAC is quiescent (i.e. the LMAC receive interface
-                                                                 is down and the RX FIFO is empty). */
+        uint64_t rid                   : 7;  /**< [ 14:  8](R/W) Reserved. */
         uint64_t reserved_15_63        : 49;
 #endif /* Word 0 - End */
     } s;
@@ -2756,22 +2431,6 @@ static inline uint64_t CAVM_CGXX_CMRX_RX_PAUSE_DROP_TIME(uint64_t a, uint64_t b)
  * * are not recognized as PAUSE packets.
  * * are not dropped due FIFO full status.
  * * are not dropped due DMAC0 or STEERING0 filtering.
- *
- * Internal:
- * "This pseudo code represents the RX STAT0 through STAT8 accounting:
- * \<pre\>
- * If (errored)
- *   incr RX_STAT8
- * else if (ctrl packet, i.e. Pause/PFC)
- *   incr RX_STAT2,3
- * else if (fifo full drop)
- *   incr RX_STAT6,7
- * else if (DMAC0/VLAN0 filter drop)
- *   incr RX_STAT4,5 if not a filter+decision
- * else
- *   incr RX_STAT0,1
- * end
- * \</pre\>"
  */
 union cavm_cgxx_cmrx_rx_stat0
 {
@@ -5133,53 +4792,6 @@ static inline uint64_t CAVM_CGXX_CMR_CHAN_MSK_OR(uint64_t a)
 #define arguments_CAVM_CGXX_CMR_CHAN_MSK_OR(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) cgx#_cmr_eco
- *
- * INTERNAL: CGX ECO Registers
- */
-union cavm_cgxx_cmr_eco
-{
-    uint64_t u;
-    struct cavm_cgxx_cmr_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_ro                : 32; /**< [ 63: 32](RO) Reserved for ECO usage. */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Reserved for ECO usage. */
-        uint64_t eco_ro                : 32; /**< [ 63: 32](RO) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_cmr_eco_s cn; */
-};
-typedef union cavm_cgxx_cmr_eco cavm_cgxx_cmr_eco_t;
-
-static inline uint64_t CAVM_CGXX_CMR_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_CMR_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=2))
-        return 0x87e0e0001028ll + 0x1000000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=4))
-        return 0x87e0e0001028ll + 0x1000000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
-        return 0x87e0e0001028ll + 0x1000000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x87e0e0001028ll + 0x1000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=3))
-        return 0x87e0e0001028ll + 0x1000000ll * ((a) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=3))
-        return 0x87e0e0001028ll + 0x1000000ll * ((a) & 0x3);
-    __cavm_csr_fatal("CGXX_CMR_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_CMR_ECO(a) cavm_cgxx_cmr_eco_t
-#define bustype_CAVM_CGXX_CMR_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_CMR_ECO(a) "CGXX_CMR_ECO"
-#define device_bar_CAVM_CGXX_CMR_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_CMR_ECO(a) (a)
-#define arguments_CAVM_CGXX_CMR_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) cgx#_cmr_global_config
  *
  * CGX CMR Global Configuration Register
@@ -6481,29 +6093,6 @@ static inline uint64_t CAVM_CGXX_CMR_RX_STAT9(uint64_t a)
  * Received packets are only passed to X2P/NIX when the DMAC0 filter result is
  * ACCEPT and STEERING0 filter result is PASS. See also
  * CGX()_CMR()_RX_DMAC_CTL0.
- *
- * Internal:
- * "* ALGORITHM
- * \<pre\>
- * rx_steering(uint48 pkt_dmac, uint16 pkt_etype, uint16 pkt_vlan_id) {
- *    for (int i = 0; i \< 8; i++) {
- *       steer = CGX()_CMR_RX_STEERING0(i);
- *       vetype = CGX()_CMR_RX_STEERING_VETYPE0(i);
- *       if (steer[MCST_EN] || steer[DMAC_EN] || vetype[VLAN_EN] || vetype[VLAN_TAG_EN]) {
- *          // Filter is enabled.
- *          if (   (!steer[MCST_EN] || is_mcst(pkt_dmac))
- *              && (!steer[DMAC_EN] || pkt_dmac == steer[DMAC])
- *              && (!vetype[VLAN_EN] || pkt_vlan_id == vetype[VLAN_ID])
- *              && (!vetype[VLAN_TAG_EN] || pkt_etype == vetype[VLAN_ETYPE]) )
- *          {
- *             // Filter match (all enabled matching criteria are met).
- *             return steer[PASS];
- *          }
- *       }
- *    }
- *    return CGX()_CMR_RX_STEERING_DEFAULT0[PASS]; // No match
- * }
- * \</pre\>"
  */
 union cavm_cgxx_cmr_rx_steering0x
 {
@@ -6575,9 +6164,6 @@ static inline uint64_t CAVM_CGXX_CMR_RX_STEERING0X(uint64_t a, uint64_t b)
  * STEERING1 filter result is PASS. See also CGX()_CMR_RX_DMAC()_CAM1 and
  * CGX()_CMR_RX_STEERING1().
  * For use with the LMAC associated with NCSI. See CGX()_CMR_GLOBAL_CONFIG[NCSI_LMAC_ID].
- *
- * Internal:
- * ALGORITHM: See CGX()_CMR_RX_STEERING0().
  */
 union cavm_cgxx_cmr_rx_steering1x
 {
@@ -7228,374 +6814,6 @@ static inline uint64_t CAVM_CGXX_GMP_GMIX_RX_WOL_CTRL1(uint64_t a, uint64_t b)
 #define arguments_CAVM_CGXX_GMP_GMIX_RX_WOL_CTRL1(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) cgx#_gmp_gmi#_tx_eee
- *
- * INTERNAL: CGX GMP GMI TX EEE Configure Registers
- *
- * Reserved.
- * Internal:
- * These registers control when GMP GMI TX requests to enter or exist LPI. Those
- * registers take effect only when EEE is supported and enabled for a given LMAC.
- */
-union cavm_cgxx_gmp_gmix_tx_eee
-{
-    uint64_t u;
-    struct cavm_cgxx_gmp_gmix_tx_eee_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_63           : 1;
-        uint64_t sync_status_lpi_enable : 1; /**< [ 62: 62](RO/H) Reserved.
-                                                                 Internal:
-                                                                 GMP GMI TX sync_status enables EEE LPI requests.  No LPI requests are allowed when
-                                                                 sync_status = FAIL or within CGX()_GMP_GMI()_TX_EEE_CFG1[SYNC2LPI_TIME]
-                                                                 microseconds (normally one second). */
-        uint64_t tx_lpi_wait           : 1;  /**< [ 61: 61](RO/H) Reserved.
-                                                                 Internal:
-                                                                 GMP GMI TX is in LPI state LPI_WAIT. GMI has stopped sending LPI_REQUEST, and is sending
-                                                                 IDLE requests instead. TX traffic is still deferred until the Tw_sys_tx counter has
-                                                                 expired.
-                                                                 Both pause and CMR source packets are still deferred until [TX_LPI_WAIT]=0 and [TX_LPI]=0.
-
-                                                                 [FORCE_LPI] is ignored in TX_LPI_WAIT state.  If [FORCE_LPI] is ignored when
-                                                                 [TX_LPI_WAIT]=1, and if still set when TX_LPI_WAIT transitions 0, will then
-                                                                 cause transition back to TX_LPI. */
-        uint64_t tx_lpi                : 1;  /**< [ 60: 60](RO/H) Reserved.
-                                                                 Internal:
-                                                                 GMP GMI TX is in LPI state LPI_ASSERTED. GMI is sending LPI_REQUEST to PCS.
-                                                                 TX traffic is deferred. Both pause and CMR sourced packets are being deferred until
-                                                                 [TX_LPI_WAIT]=0 and [TX_LPI]=0. */
-        uint64_t idle_cnt              : 28; /**< [ 59: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 The number of 128bit times that the LMAC has been idle. When [AUTO_LPI]=1 &&
-                                                                 [IDLE_CNT] \>= [IDLE_THRESH] && CGX()_GMP_GMI()_TX_EEE_CFG1[TX_EEE_ENABLE]=1, EEE
-                                                                 LPI will be asserted.
-
-                                                                 The current IDLE counter value is only valid when [AUTO_LPI] is set. The counter will be
-                                                                 incremented every 128bits of idle sent from the GMI to the PCS.  Time=128bits *
-                                                                 bit_time/bit = 128 bit times.
-                                                                 128 ns for 1000BASE-X.
-                                                                   * Counter saturates to [IDLE_THRESH].
-                                                                   * Counter is reset by srst_n.
-                                                                   * Counter is reset when this LMAC has any bytes indicated by CMR heartbeats.  Does not
-                                                                 require any threshold to be met.
-                                                                   * Counter is reset when TX side needs to send a Pause packet.
-                                                                   * Counter is reset when LMAC transitions from !enabled to enabled. */
-        uint64_t auto_lpi              : 1;  /**< [ 31: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 GMP GMI TX will send LPI requests to PCS when the bit is set and IDLE counter reaches
-                                                                 [IDLE_THRESH].
-                                                                 While in LPI state, GMP GMI TX will switch to send IDLE once TX has packets (including
-                                                                 flow control
-                                                                 packets) to send or [WAKEUP] is set by software. Packet transmission starts approx.
-                                                                 CGX()_GMP_GMI()_TX_EEE_CFG1[WAKE2DATA_TIME]
-                                                                 after the wakeup decision.
-                                                                 [AUTO_LPI] is ignored if CGX()_GMP_GMI()_TX_EEE_CFG1[TX_EEE_ENABLE] = 0. */
-        uint64_t wakeup                : 1;  /**< [ 30: 30](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 [WAKEUP] is valid only when [AUTO_LPI] is set.  [WAKEUP] is ignored by hardware if the TX
-                                                                 is not
-                                                                 in LPI state indicated by [TX_LPI]=1.
-                                                                 Setting [WAKEUP] to 1 causes hardware to exit [TX_LPI] = 1 state. Hardware clears [WAKEUP]
-                                                                 when
-                                                                 802.3-2012 tx lpi state == LPI_DEASSERTED. At this point hardware is ready to start
-                                                                 sending packets.
-                                                                 Setting [WAKEUP]=1 in TX_LPI_WAIT state does nothing, but the [WAKEUP] will remain set
-                                                                 until hardware
-                                                                 exits TX_LPI_WAIT.
-                                                                 Software clearing of [WAKEUP] after setting [WAKEUP] is not recommended.
-                                                                 Hardware can actually start sending packets IFG1+IFG2 time after [WAKEUP] clears. */
-        uint64_t force_lpi             : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 [FORCE_LPI] is only valid when [AUTO_LPI] is cleared. GMP GMI TX will send LPI requests to
-                                                                 PCS immediately after the current packet is transmitted when the bit is set.
-                                                                 On [FORCE_LPI] deassertion, the TX will switch to send IDLE. Assuming there are packets to
-                                                                 send, the
-                                                                 GMI will start sending packet data after
-                                                                 CGX()_GMP_GMI()_TX_EEE_CFG1[WAKE2DATA_TIME].
-
-                                                                 All TX traffic is differed in [FORCE_LPI]=1 mode.  There will be no pause flow
-                                                                 control transmitted.
-                                                                 Current packet being sent includes IFG & IFG2. */
-        uint64_t reserved_28           : 1;
-        uint64_t idle_thresh           : 28; /**< [ 27:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 IDLE threshold. [IDLE_THRESH] is only used when [AUTO_LPI] is set. GMP GMI TX
-                                                                 will send LPI requests to PCS when the idle counter reaches this threshold. The
-                                                                 unit of value is a 16 codegroups (same as SMU) at the GMI TX state machine. Note that
-                                                                 active flow
-                                                                 control of an enabled LMAC will keep the corresponding LMAC NOT idle. */
-#else /* Word 0 - Little Endian */
-        uint64_t idle_thresh           : 28; /**< [ 27:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 IDLE threshold. [IDLE_THRESH] is only used when [AUTO_LPI] is set. GMP GMI TX
-                                                                 will send LPI requests to PCS when the idle counter reaches this threshold. The
-                                                                 unit of value is a 16 codegroups (same as SMU) at the GMI TX state machine. Note that
-                                                                 active flow
-                                                                 control of an enabled LMAC will keep the corresponding LMAC NOT idle. */
-        uint64_t reserved_28           : 1;
-        uint64_t force_lpi             : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 [FORCE_LPI] is only valid when [AUTO_LPI] is cleared. GMP GMI TX will send LPI requests to
-                                                                 PCS immediately after the current packet is transmitted when the bit is set.
-                                                                 On [FORCE_LPI] deassertion, the TX will switch to send IDLE. Assuming there are packets to
-                                                                 send, the
-                                                                 GMI will start sending packet data after
-                                                                 CGX()_GMP_GMI()_TX_EEE_CFG1[WAKE2DATA_TIME].
-
-                                                                 All TX traffic is differed in [FORCE_LPI]=1 mode.  There will be no pause flow
-                                                                 control transmitted.
-                                                                 Current packet being sent includes IFG & IFG2. */
-        uint64_t wakeup                : 1;  /**< [ 30: 30](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 [WAKEUP] is valid only when [AUTO_LPI] is set.  [WAKEUP] is ignored by hardware if the TX
-                                                                 is not
-                                                                 in LPI state indicated by [TX_LPI]=1.
-                                                                 Setting [WAKEUP] to 1 causes hardware to exit [TX_LPI] = 1 state. Hardware clears [WAKEUP]
-                                                                 when
-                                                                 802.3-2012 tx lpi state == LPI_DEASSERTED. At this point hardware is ready to start
-                                                                 sending packets.
-                                                                 Setting [WAKEUP]=1 in TX_LPI_WAIT state does nothing, but the [WAKEUP] will remain set
-                                                                 until hardware
-                                                                 exits TX_LPI_WAIT.
-                                                                 Software clearing of [WAKEUP] after setting [WAKEUP] is not recommended.
-                                                                 Hardware can actually start sending packets IFG1+IFG2 time after [WAKEUP] clears. */
-        uint64_t auto_lpi              : 1;  /**< [ 31: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 GMP GMI TX will send LPI requests to PCS when the bit is set and IDLE counter reaches
-                                                                 [IDLE_THRESH].
-                                                                 While in LPI state, GMP GMI TX will switch to send IDLE once TX has packets (including
-                                                                 flow control
-                                                                 packets) to send or [WAKEUP] is set by software. Packet transmission starts approx.
-                                                                 CGX()_GMP_GMI()_TX_EEE_CFG1[WAKE2DATA_TIME]
-                                                                 after the wakeup decision.
-                                                                 [AUTO_LPI] is ignored if CGX()_GMP_GMI()_TX_EEE_CFG1[TX_EEE_ENABLE] = 0. */
-        uint64_t idle_cnt              : 28; /**< [ 59: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 The number of 128bit times that the LMAC has been idle. When [AUTO_LPI]=1 &&
-                                                                 [IDLE_CNT] \>= [IDLE_THRESH] && CGX()_GMP_GMI()_TX_EEE_CFG1[TX_EEE_ENABLE]=1, EEE
-                                                                 LPI will be asserted.
-
-                                                                 The current IDLE counter value is only valid when [AUTO_LPI] is set. The counter will be
-                                                                 incremented every 128bits of idle sent from the GMI to the PCS.  Time=128bits *
-                                                                 bit_time/bit = 128 bit times.
-                                                                 128 ns for 1000BASE-X.
-                                                                   * Counter saturates to [IDLE_THRESH].
-                                                                   * Counter is reset by srst_n.
-                                                                   * Counter is reset when this LMAC has any bytes indicated by CMR heartbeats.  Does not
-                                                                 require any threshold to be met.
-                                                                   * Counter is reset when TX side needs to send a Pause packet.
-                                                                   * Counter is reset when LMAC transitions from !enabled to enabled. */
-        uint64_t tx_lpi                : 1;  /**< [ 60: 60](RO/H) Reserved.
-                                                                 Internal:
-                                                                 GMP GMI TX is in LPI state LPI_ASSERTED. GMI is sending LPI_REQUEST to PCS.
-                                                                 TX traffic is deferred. Both pause and CMR sourced packets are being deferred until
-                                                                 [TX_LPI_WAIT]=0 and [TX_LPI]=0. */
-        uint64_t tx_lpi_wait           : 1;  /**< [ 61: 61](RO/H) Reserved.
-                                                                 Internal:
-                                                                 GMP GMI TX is in LPI state LPI_WAIT. GMI has stopped sending LPI_REQUEST, and is sending
-                                                                 IDLE requests instead. TX traffic is still deferred until the Tw_sys_tx counter has
-                                                                 expired.
-                                                                 Both pause and CMR source packets are still deferred until [TX_LPI_WAIT]=0 and [TX_LPI]=0.
-
-                                                                 [FORCE_LPI] is ignored in TX_LPI_WAIT state.  If [FORCE_LPI] is ignored when
-                                                                 [TX_LPI_WAIT]=1, and if still set when TX_LPI_WAIT transitions 0, will then
-                                                                 cause transition back to TX_LPI. */
-        uint64_t sync_status_lpi_enable : 1; /**< [ 62: 62](RO/H) Reserved.
-                                                                 Internal:
-                                                                 GMP GMI TX sync_status enables EEE LPI requests.  No LPI requests are allowed when
-                                                                 sync_status = FAIL or within CGX()_GMP_GMI()_TX_EEE_CFG1[SYNC2LPI_TIME]
-                                                                 microseconds (normally one second). */
-        uint64_t reserved_63           : 1;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_gmp_gmix_tx_eee_s cn; */
-};
-typedef union cavm_cgxx_gmp_gmix_tx_eee cavm_cgxx_gmp_gmix_tx_eee_t;
-
-static inline uint64_t CAVM_CGXX_GMP_GMIX_TX_EEE(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_GMP_GMIX_TX_EEE(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0038800ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0038800ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0038800ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0038800ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0038800ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0038800ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_GMP_GMIX_TX_EEE", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_GMP_GMIX_TX_EEE(a,b) cavm_cgxx_gmp_gmix_tx_eee_t
-#define bustype_CAVM_CGXX_GMP_GMIX_TX_EEE(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_GMP_GMIX_TX_EEE(a,b) "CGXX_GMP_GMIX_TX_EEE"
-#define device_bar_CAVM_CGXX_GMP_GMIX_TX_EEE(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_GMP_GMIX_TX_EEE(a,b) (a)
-#define arguments_CAVM_CGXX_GMP_GMIX_TX_EEE(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) cgx#_gmp_gmi#_tx_eee_cfg1
- *
- * INTERNAL: CGX GMP GMI TX EEE Configure More Configuration Registers
- *
- * Reserved.
- * Internal:
- * Controls the GMP exiting of LPI and starting to send data.
- */
-union cavm_cgxx_gmp_gmix_tx_eee_cfg1
-{
-    uint64_t u;
-    struct cavm_cgxx_gmp_gmix_tx_eee_cfg1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_61_63        : 3;
-        uint64_t sync2lpi_time         : 21; /**< [ 60: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 Time from sync_status FAIL to OK to when TX can assert LPI. 802.3-2012 35.2.1 specifies no
-                                                                 LPI when link_status=FAIL and for one second after status transitions to OK.
-                                                                 Time units are microseconds based on 100Mhz reference clock and
-                                                                 CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD].
-                                                                 (CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD] == 99 default results in 1 us time unit)
-
-                                                                 sync_status is observable in CGX()_GMP_PCS()_STATUS1[RECEIVE_LINK_STATUS] and
-                                                                 CGX()_GMP_PCS_RX()_SYNC[SYNC].
-                                                                 Microsecond unit is determined by divider on the 100mhz reference clock.
-                                                                 1 us = 100 MHz reference period * (CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD] + 1)
-                                                                 Simulation and PSV can change value to improve simulation efficiency and debug. */
-        uint64_t reserved_37_39        : 3;
-        uint64_t tx_eee_enable         : 1;  /**< [ 36: 36](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable bit for TX LPI. If clear, disables EEE, disables [FORCE_LPI], [AUTO_LPI]
-                                                                 CGX()_GMP_GMI()_TX_EEE[WAKEUP]. Setting [TX_EEE_ENABLE] is illegal in
-                                                                 half-duplex mode, and software must make sure it is cleared. */
-        uint64_t reserved_24_35        : 12;
-        uint64_t wake2data_time        : 24; /**< [ 23:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 The amount of time GMP must send /I/ (idle) after /LI/ before it starts sending data.
-                                                                 Units are 10 ns (100 MHz reference clock ticks).  Allows maximum of 167 ms.
-                                                                 Reset value gives 13.26 us. */
-#else /* Word 0 - Little Endian */
-        uint64_t wake2data_time        : 24; /**< [ 23:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 The amount of time GMP must send /I/ (idle) after /LI/ before it starts sending data.
-                                                                 Units are 10 ns (100 MHz reference clock ticks).  Allows maximum of 167 ms.
-                                                                 Reset value gives 13.26 us. */
-        uint64_t reserved_24_35        : 12;
-        uint64_t tx_eee_enable         : 1;  /**< [ 36: 36](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable bit for TX LPI. If clear, disables EEE, disables [FORCE_LPI], [AUTO_LPI]
-                                                                 CGX()_GMP_GMI()_TX_EEE[WAKEUP]. Setting [TX_EEE_ENABLE] is illegal in
-                                                                 half-duplex mode, and software must make sure it is cleared. */
-        uint64_t reserved_37_39        : 3;
-        uint64_t sync2lpi_time         : 21; /**< [ 60: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 Time from sync_status FAIL to OK to when TX can assert LPI. 802.3-2012 35.2.1 specifies no
-                                                                 LPI when link_status=FAIL and for one second after status transitions to OK.
-                                                                 Time units are microseconds based on 100Mhz reference clock and
-                                                                 CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD].
-                                                                 (CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD] == 99 default results in 1 us time unit)
-
-                                                                 sync_status is observable in CGX()_GMP_PCS()_STATUS1[RECEIVE_LINK_STATUS] and
-                                                                 CGX()_GMP_PCS_RX()_SYNC[SYNC].
-                                                                 Microsecond unit is determined by divider on the 100mhz reference clock.
-                                                                 1 us = 100 MHz reference period * (CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD] + 1)
-                                                                 Simulation and PSV can change value to improve simulation efficiency and debug. */
-        uint64_t reserved_61_63        : 3;
-#endif /* Word 0 - End */
-    } s;
-    struct cavm_cgxx_gmp_gmix_tx_eee_cfg1_cn
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_61_63        : 3;
-        uint64_t sync2lpi_time         : 21; /**< [ 60: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 Time from sync_status FAIL to OK to when TX can assert LPI. 802.3-2012 35.2.1 specifies no
-                                                                 LPI when link_status=FAIL and for one second after status transitions to OK.
-                                                                 Time units are microseconds based on 100Mhz reference clock and
-                                                                 CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD].
-                                                                 (CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD] == 99 default results in 1 us time unit)
-
-                                                                 sync_status is observable in CGX()_GMP_PCS()_STATUS1[RECEIVE_LINK_STATUS] and
-                                                                 CGX()_GMP_PCS_RX()_SYNC[SYNC].
-                                                                 Microsecond unit is determined by divider on the 100mhz reference clock.
-                                                                 1 us = 100 MHz reference period * (CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD] + 1)
-                                                                 Simulation and PSV can change value to improve simulation efficiency and debug. */
-        uint64_t reserved_37_39        : 3;
-        uint64_t tx_eee_enable         : 1;  /**< [ 36: 36](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable bit for TX LPI. If clear, disables EEE, disables [FORCE_LPI], [AUTO_LPI]
-                                                                 CGX()_GMP_GMI()_TX_EEE[WAKEUP]. Setting [TX_EEE_ENABLE] is illegal in
-                                                                 half-duplex mode, and software must make sure it is cleared. */
-        uint64_t reserved_32_35        : 4;
-        uint64_t reserved_24_31        : 8;
-        uint64_t wake2data_time        : 24; /**< [ 23:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 The amount of time GMP must send /I/ (idle) after /LI/ before it starts sending data.
-                                                                 Units are 10 ns (100 MHz reference clock ticks).  Allows maximum of 167 ms.
-                                                                 Reset value gives 13.26 us. */
-#else /* Word 0 - Little Endian */
-        uint64_t wake2data_time        : 24; /**< [ 23:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 The amount of time GMP must send /I/ (idle) after /LI/ before it starts sending data.
-                                                                 Units are 10 ns (100 MHz reference clock ticks).  Allows maximum of 167 ms.
-                                                                 Reset value gives 13.26 us. */
-        uint64_t reserved_24_31        : 8;
-        uint64_t reserved_32_35        : 4;
-        uint64_t tx_eee_enable         : 1;  /**< [ 36: 36](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable bit for TX LPI. If clear, disables EEE, disables [FORCE_LPI], [AUTO_LPI]
-                                                                 CGX()_GMP_GMI()_TX_EEE[WAKEUP]. Setting [TX_EEE_ENABLE] is illegal in
-                                                                 half-duplex mode, and software must make sure it is cleared. */
-        uint64_t reserved_37_39        : 3;
-        uint64_t sync2lpi_time         : 21; /**< [ 60: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 Time from sync_status FAIL to OK to when TX can assert LPI. 802.3-2012 35.2.1 specifies no
-                                                                 LPI when link_status=FAIL and for one second after status transitions to OK.
-                                                                 Time units are microseconds based on 100Mhz reference clock and
-                                                                 CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD].
-                                                                 (CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD] == 99 default results in 1 us time unit)
-
-                                                                 sync_status is observable in CGX()_GMP_PCS()_STATUS1[RECEIVE_LINK_STATUS] and
-                                                                 CGX()_GMP_PCS_RX()_SYNC[SYNC].
-                                                                 Microsecond unit is determined by divider on the 100mhz reference clock.
-                                                                 1 us = 100 MHz reference period * (CGX()_GMP_PCS()_DBG_CONTROL[US_CLK_PERIOD] + 1)
-                                                                 Simulation and PSV can change value to improve simulation efficiency and debug. */
-        uint64_t reserved_61_63        : 3;
-#endif /* Word 0 - End */
-    } cn;
-};
-typedef union cavm_cgxx_gmp_gmix_tx_eee_cfg1 cavm_cgxx_gmp_gmix_tx_eee_cfg1_t;
-
-static inline uint64_t CAVM_CGXX_GMP_GMIX_TX_EEE_CFG1(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_GMP_GMIX_TX_EEE_CFG1(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0038808ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0038808ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0038808ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0038808ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0038808ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0038808ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_GMP_GMIX_TX_EEE_CFG1", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_GMP_GMIX_TX_EEE_CFG1(a,b) cavm_cgxx_gmp_gmix_tx_eee_cfg1_t
-#define bustype_CAVM_CGXX_GMP_GMIX_TX_EEE_CFG1(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_GMP_GMIX_TX_EEE_CFG1(a,b) "CGXX_GMP_GMIX_TX_EEE_CFG1"
-#define device_bar_CAVM_CGXX_GMP_GMIX_TX_EEE_CFG1(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_GMP_GMIX_TX_EEE_CFG1(a,b) (a)
-#define arguments_CAVM_CGXX_GMP_GMIX_TX_EEE_CFG1(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) cgx#_gmp_gmi#_wol_int
  *
  * CGX GMP GMI RX WOL Interrupt Registers
@@ -7979,27 +7197,6 @@ static inline uint64_t CAVM_CGXX_GMP_GMI_PRTX_CFG(uint64_t a, uint64_t b)
  * [CNT]. In normal operation, the L2 header begins after the
  * PREAMBLE + SFD (CGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] = 1) and any optional UDD skip
  * data (CGX()_GMP_GMI_RX()_UDD_SKP[LEN]).
- *
- * Internal:
- * Notes:
- * As each byte in a packet is received by GMI, the L2 byte count is compared
- * against the [CNT].  The L2 byte count is the number of bytes
- * from the beginning of the L2 header (DMAC).  In normal operation, the L2
- * header begins after the PREAMBLE+SFD (CGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK]=1) and any
- * optional UDD skip data (CGX()_GMP_GMI_RX()_UDD_SKP[LEN]).
- * When CGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is clear, PREAMBLE+SFD are prepended to the
- * packet and would require UDD skip length to account for them.
- *
- * Full Duplex:
- * _   L2 Size \<  [CNT] - Accept packet. No filtering is applied.
- * _   L2 Size \>= [CNT] - Apply filter. Accept packet based on PAUSE packet filter.
- *
- * Half Duplex:
- * _   L2 Size \<  [CNT] - Drop packet. Packet is unconditionally dropped.
- * _   L2 Size \>= [CNT] - Accept packet.
- *
- * where L2_size = MAX(0, total_packet_size - CGX()_GMP_GMI_RX()_UDD_SKP[LEN] -
- *                        ((CGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK]==1)*8)).
  */
 union cavm_cgxx_gmp_gmi_rxx_decision
 {
@@ -8120,17 +7317,6 @@ static inline uint64_t CAVM_CGXX_GMP_GMI_RXX_FRM_CHK(uint64_t a, uint64_t b)
  * PAUSE
  * packets only apply to full duplex operation, any PAUSE packet would constitute an exception
  * which should be handled by the processing cores. PAUSE packets should not be forwarded.
- *
- * Internal:
- * Notes:
- * [PRE_STRP]:
- * When [PRE_CHK] is set (indicating that the PREAMBLE will be sent), [PRE_STRP]
- * determines if the PREAMBLE+SFD bytes are thrown away or sent to the Octane
- * core as part of the packet.
- * In either mode, the PREAMBLE+SFD bytes are not counted toward the packet
- * size when checking against the MIN and MAX bounds.  Furthermore, the bytes
- * are skipped when locating the start of the L2 header for DMAC and Control
- * frame recognition.
  */
 union cavm_cgxx_gmp_gmi_rxx_frm_ctl
 {
@@ -8427,60 +7613,6 @@ static inline uint64_t CAVM_CGXX_GMP_GMI_RXX_IFG(uint64_t a, uint64_t b)
  * set the error.
  * In half duplex operation, the expectation is that collisions will appear as either MINERR or
  * CAREXT errors.
- *
- * Internal:
- * Notes:
- * (1) exception conditions 10:0 can also set the rcv/opcode in the received
- * packet's workQ entry.  The CGX()_GMP_GMI_RX()_FRM_CHK register provides a bit mask
- * for configuring which conditions set the error.
- *
- * (2) in half duplex operation, the expectation is that collisions will appear
- * as either MINERR o r CAREXT errors.
- *
- * (3) JABBER An RX jabber error indicates that a packet was received which
- * is longer than the maximum allowed packet as defined by the
- * system.  GMI will truncate the packet at the JABBER count.
- * Failure to do so could lead to system instabilty.
- *
- * (4) NIBERR This error is illegal at 1000Mbs speeds
- * (CGX()_GMP_GMI_PRT()_CFG[SPEED]==0) and will never assert.
- *
- * (5) MINERR total frame DA+SA+TL+DATA+PAD+FCS \< 64
- *
- * (6) ALNERR Indicates that the packet received was not an integer number of
- * bytes.  If FCS checking is enabled, ALNERR will only assert if
- * the FCS is bad.  If FCS checking is disabled, ALNERR will
- * assert in all non-integer frame cases.
- *
- * (7) Collisions Collisions can only occur in half-duplex mode.  A collision
- * is assumed by the receiver when the slottime
- * (CGX()_GMP_GMI_PRT()_CFG[SLOTTIME]) is not satisfied.  In 10/100 mode,
- * this will result in a frame \< SLOTTIME.  In 1000 mode, it
- * could result either in frame \< SLOTTIME or a carrier extend
- * error with the SLOTTIME.  These conditions are visible by...
- * . transfer ended before slottime COLDET
- * . carrier extend error           CAREXT
- *
- * (A) LENERR Length errors occur when the received packet does not match the
- * length field.  LENERR is only checked for packets between 64
- * and 1500 bytes.  For untagged frames, the length must exact
- * match.  For tagged frames the length or length+4 must match.
- *
- * (B) PCTERR checks that the frame begins with a valid PREAMBLE sequence.
- * Does not check the number of PREAMBLE cycles.
- *
- * (C) OVRERR *DON'T PUT IN HRM*
- * OVRERR is an architectural assertion check internal to GMI to
- * make sure no assumption was violated.  In a correctly operating
- * system, this interrupt can never fire.
- * GMI has an internal arbiter which selects which of four ports to
- * buffer in the main RX FIFO.  If we normally buffer eight bytes,
- * then each port will typically push a tick every eight cycles if
- * the packet interface is going as fast as possible.  If there
- * are four ports, they push every two cycles.  So that's the
- * assumption.  That the inbound module will always be able to
- * consume the tick before another is produced.  If that doesn't
- * happen that's when OVRERR will assert."
  */
 union cavm_cgxx_gmp_gmi_rxx_int
 {
@@ -9313,30 +8445,6 @@ static inline uint64_t CAVM_CGXX_GMP_GMI_RXX_JABBER(uint64_t a, uint64_t b)
  * CGX GMP GMI User-Defined Data Skip Registers
  * This register specifies the amount of user-defined data (UDD) added before the start of the
  * L2C data.
- *
- * Internal:
- * Notes:
- * (1) The skip bytes are part of the packet and will be handled by NIX.
- *
- * (2) The system can determine if the UDD bytes are included in the FCS check
- * by using the FCSSEL field - if the FCS check is enabled.
- *
- * (3) Assume that the preamble/sfd is always at the start of the frame - even
- * before UDD bytes.  In most cases, there will be no preamble in these
- * cases since it will be packet interface in direct communication to
- * another packet interface (MAC to MAC) without a PHY involved.
- *
- * (4) We can still do address filtering and control packet filtering is the
- * user desires.
- *
- * (5) CGX()_GMP_GMI_RX()_UDD_SKP[LEN] must be 0 in half-duplex operation unless
- * CGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is clear.  If CGX()_GMP_GMI_RX()_FRM_CTL[PRE_CHK] is
- * clear,
- * then CGX()_GMP_GMI_RX()_UDD_SKP[LEN] will normally be 8.
- *
- * (6) In all cases, the UDD bytes will be sent down the packet interface as
- * part of the packet.  The UDD bytes are never stripped from the actual
- * packet.
  */
 union cavm_cgxx_gmp_gmi_rxx_udd_skp
 {
@@ -10200,25 +9308,6 @@ static inline uint64_t CAVM_CGXX_GMP_GMI_TXX_MIN_PKT(uint64_t a, uint64_t b)
  *
  * CGX GMI TX PAUSE-Packet Transmission-Interval Registers
  * This register specifies how often PAUSE packets are sent.
- * Internal:
- * Notes:
- * Choosing proper values of CGX()_GMP_GMI_TX()_PAUSE_PKT_TIME[PTIME] and
- * CGX()_GMP_GMI_TX()_PAUSE_PKT_INTERVAL[INTERVAL] can be challenging to the system
- * designer.  It is suggested that TIME be much greater than INTERVAL and
- * CGX()_GMP_GMI_TX()_PAUSE_ZERO[SEND] be set.  This allows a periodic refresh of the PAUSE
- * count and then when the backpressure condition is lifted, a PAUSE packet
- * with TIME==0 will be sent indicating that Octane is ready for additional
- * data.
- *
- * If the system chooses to not set CGX()_GMP_GMI_TX()_PAUSE_ZERO[SEND], then it is
- * suggested that TIME and INTERVAL are programmed such that they satisify the
- * following rule:
- *
- * _ INTERVAL \<= TIME - (largest_pkt_size + IFG + pause_pkt_size)
- *
- * where largest_pkt_size is that largest packet that the system can send
- * (normally 1518B), IFG is the interframe gap and pause_pkt_size is the size
- * of the PAUSE packet (normally 64B).
  */
 union cavm_cgxx_gmp_gmi_txx_pause_pkt_interval
 {
@@ -10968,9 +10057,6 @@ static inline uint64_t CAVM_CGXX_GMP_GMI_TX_PAUSE_PKT_TYPE(uint64_t a)
  * CGX GMP PCS Miscellaneous Control Registers
  * This register contains general configuration that should not need to be changed from reset
  * settings.
- *
- * Internal:
- * Per lmac diagnostic and chicken bits.
  */
 union cavm_cgxx_gmp_miscx_cfg
 {
@@ -10979,211 +10065,43 @@ union cavm_cgxx_gmp_miscx_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
-        uint64_t rx_cgp_edet_qlm_val   : 1;  /**< [ 18: 18](R/W) Reserved.
-                                                                 Internal:
-                                                                 Ignore QLM valid when edet=0.
-
-                                                                 0 = Valid from QLM will push data to FIFO for processing.
-                                                                 1 = Edet=0 will turn off pushing to FIFO. */
-        uint64_t rx_cgp_edet_filter    : 1;  /**< [ 17: 17](R/W) Reserved.
-                                                                 Internal:
-                                                                 Delay edet to PCS based on in-flight codegroups.
-
-                                                                 0 = Flush. Forward edet as quickly as possible.  Bytes in CGP are flushed while edet=0.
-                                                                 1 = Filter. Wait for CGP to finish processing codegroups before edet=0 before
-                                                                 dropping edet to PCS.
-
-                                                                 CGP has a FIFO + 3 stages of FLOPS after the input register. These registers can
-                                                                 contain codegroups sent before edet drops. */
-        uint64_t rx_cgp_gser_throttle  : 1;  /**< [ 16: 16](R/W) Emulate BGX operation by sending PCS two consecutive codegroups at a time.
-                                                                 Internal:
-                                                                 "Bit is ignored in QSGMII mode.
-                                                                   0 = CGX mode.  Serialize GSER transfers into bytes as fast as possible.
-                                                                   1 = Throttle to act more like earlier chips' BGX. Idle bus to PCS for two
-                                                                 cycles after sending every pair of bytes.
-
-                                                                 Normally CGP takes a 4 codegroup transfer and serializes the data into 4 consecutive
-                                                                 single codegroup transfers to PCS.  With minimum IPG of 2B, GMI EOP pipelining can cause
-                                                                 back to back packets to collide and merge.  This is probably not a realistic scenario, but
-                                                                 BGX did handle this correctly because of GSER width of only 2 codegroups. Setting this bit
-                                                                 will allow CGX to split up a GSER transfer as follows:
-                                                                   send byte0 ##1 send byte1 ##3 send byte2 ##1 send byte3 ##3 Potentially start sending
-                                                                 byte0 of next GSER transfer." */
+        uint64_t rx_cgp_edet_qlm_val   : 1;  /**< [ 18: 18](R/W) Reserved. */
+        uint64_t rx_cgp_edet_filter    : 1;  /**< [ 17: 17](R/W) Reserved. */
+        uint64_t rx_cgp_gser_throttle  : 1;  /**< [ 16: 16](R/W) Emulate BGX operation by sending PCS two consecutive codegroups at a time. */
         uint64_t reserved_14_15        : 2;
         uint64_t rx_pcs_alt_qlb2i      : 1;  /**< [ 13: 13](R/W) For QSGMII mode, enable use of alternate state machine to control idle insertion
                                                                  for RX clk \< TX clk. Not used unless LMAC is doing QSGMII LOOPBCK2 (RX
-                                                                 loopback).
-
-                                                                 Internal:
-                                                                 QSGMII single byte/xfer/lmac can prevent BGX from inserting idles.
-                                                                    0 = Use traditional idle insertion.
-                                                                    1 = Use state machine to insert idles. */
-        uint64_t rx_pcs_802_rx_k       : 1;  /**< [ 12: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable RX_K Control to exit RX_K per 802.3
-                                                                 BGX stayed in RX_K if xmit==DATA and a control character.
-                                                                 0 = BGX mode.  xmit == DATA and control will hold in RX_K.
-                                                                 1 = 802.3 mode. xmit == DATA and control will transition to IDLE_D. */
-        uint64_t rx_pcs_lpi_enable     : 1;  /**< [ 11: 11](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable LPI decoding in RX PCS.
-                                                                 "0 = Disable LPI processing.  /L/ acts like /I/
-                                                                 1 = Enable LPI Processing. Default." */
-        uint64_t rx_pcs_eee_mode_enable : 1; /**< [ 10: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable RX to send QUIET.  For debug. 0 = force MODE=DATA at all times. */
-        uint64_t rx_pcs_sync_timeout   : 1;  /**< [  9:  9](R/W) Reserved.
-                                                                 Internal:
-                                                                 BGX Synchronization mode
-
-                                                                 See 802.3-2012, Figure 36-9 Synchronization State Diagram.
-                                                                    0 = CGX mode. Ignore bit lock.
-                                                                    1 = BGX mode. Use bit_lock in place of signal_detect in RX synchronization.
-                                                                  bit_lock is a timeout on GSER transfers.  If no transfers occur for 64 cycles, bit_lock
-                                                                  is lost.
-
-                                                                  Either [RX_PCS_SYNC_TIMEOUT] or_PCS_SYNC_SIGNAL_DETECT] must be set. */
-        uint64_t rx_pcs_sync_signal_detect : 1;/**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Allow signal_detect to control PCS RX synchronization.
-                                                                 See 802.3-2012, Figure 36-9 Synchronization State Diagram.
-                                                                   0 = BGX mode. Ignore signal_detect.
-                                                                   1 = Use signal_detect (edet) from GSER.
-
-                                                                  Either [RX_PCS_SYNC_TIMEOUT] or_PCS_SYNC_SIGNAL_DETECT] must be set. */
+                                                                 loopback). */
+        uint64_t rx_pcs_802_rx_k       : 1;  /**< [ 12: 12](R/W) Reserved. */
+        uint64_t rx_pcs_lpi_enable     : 1;  /**< [ 11: 11](R/W) Reserved. */
+        uint64_t rx_pcs_eee_mode_enable : 1; /**< [ 10: 10](R/W) Reserved. */
+        uint64_t rx_pcs_sync_timeout   : 1;  /**< [  9:  9](R/W) Reserved. */
+        uint64_t rx_pcs_sync_signal_detect : 1;/**< [  8:  8](R/W) Reserved. */
         uint64_t reserved_5_7          : 3;
-        uint64_t pcs_alt_an            : 1;  /**< [  4:  4](R/W) Flip auto-negotiate mode.
-                                                                 Internal:
-                                                                 Allows GMP AN to behave like BGX did on t8x, o7x. Setting this bit
-                                                                 inverts csr__an_sgi_mode from the normal behavior of ! pcs_misc_ctl_reg_data[i].mode. */
-        uint64_t tx_eee_rx_sync_status_enable : 1;/**< [  3:  3](RAZ) Reserved.
-                                                                 Internal:
-                                                                 Enables RX sync status to enable TX EEE operation
-                                                                    0 = TX side ignores sync_status for RX.  TX EEE is enabled even when sync_status=0.
-                                                                    1 = TX side requires RX sync_status=1 + delay after  CGX()_GMP_GMI()_TX_EEE_CFG1[SYNC2LPI_TIME]. */
-        uint64_t tx_qsgmii_port0_init  : 1;  /**< [  2:  2](R/W) Reserved.
-                                                                 Internal:
-                                                                 Forces QSGMII startup sequence to wait for port0 data before starting to send
-                                                                 data; LMAC1..3 are unused. This bit slows down the GMP's first data sent to
-                                                                 GSER. For diagnostic use only. */
-        uint64_t tx_eee_wait_gmi_fast_idle : 1;/**< [  1:  1](R/W) Reserved.
-                                                                 Internal:
-                                                                 Normally the CGX GMI BCK FIFO is loaded with ASSERT_LPI when in low power mode.
-                                                                 This bit enables swapping ASSERT_LPI with normal idles so that PCS starts processing
-                                                                 idles for GMI-\>PCS data transfers following TX_LPI-\>TX_LPI_WAIT transition.
-                                                                 For diagnostic use only. */
-        uint64_t tx_eee_quiet_credit_mode : 1;/**< [  0:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable PCS state machines to transition out of LPI states without sending data
-                                                                 to GSER. Sending of data and state machines normally advance when a credit is
-                                                                 returned from the GSER. For diagnostic use only.
-                                                                 0 = PCS LPI state machines can transition to TX_ACTIVE
-                                                                 with no TX_OSET.indicate, meaning GSER might not send credits.
-                                                                 1 = Stricter interpretation where all transitions are governed by GSER returning
-                                                                 credits. */
+        uint64_t pcs_alt_an            : 1;  /**< [  4:  4](R/W) Flip auto-negotiate mode. */
+        uint64_t tx_eee_rx_sync_status_enable : 1;/**< [  3:  3](RAZ) Reserved. */
+        uint64_t tx_qsgmii_port0_init  : 1;  /**< [  2:  2](R/W) Reserved. */
+        uint64_t tx_eee_wait_gmi_fast_idle : 1;/**< [  1:  1](R/W) Reserved. */
+        uint64_t tx_eee_quiet_credit_mode : 1;/**< [  0:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t tx_eee_quiet_credit_mode : 1;/**< [  0:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable PCS state machines to transition out of LPI states without sending data
-                                                                 to GSER. Sending of data and state machines normally advance when a credit is
-                                                                 returned from the GSER. For diagnostic use only.
-                                                                 0 = PCS LPI state machines can transition to TX_ACTIVE
-                                                                 with no TX_OSET.indicate, meaning GSER might not send credits.
-                                                                 1 = Stricter interpretation where all transitions are governed by GSER returning
-                                                                 credits. */
-        uint64_t tx_eee_wait_gmi_fast_idle : 1;/**< [  1:  1](R/W) Reserved.
-                                                                 Internal:
-                                                                 Normally the CGX GMI BCK FIFO is loaded with ASSERT_LPI when in low power mode.
-                                                                 This bit enables swapping ASSERT_LPI with normal idles so that PCS starts processing
-                                                                 idles for GMI-\>PCS data transfers following TX_LPI-\>TX_LPI_WAIT transition.
-                                                                 For diagnostic use only. */
-        uint64_t tx_qsgmii_port0_init  : 1;  /**< [  2:  2](R/W) Reserved.
-                                                                 Internal:
-                                                                 Forces QSGMII startup sequence to wait for port0 data before starting to send
-                                                                 data; LMAC1..3 are unused. This bit slows down the GMP's first data sent to
-                                                                 GSER. For diagnostic use only. */
-        uint64_t tx_eee_rx_sync_status_enable : 1;/**< [  3:  3](RAZ) Reserved.
-                                                                 Internal:
-                                                                 Enables RX sync status to enable TX EEE operation
-                                                                    0 = TX side ignores sync_status for RX.  TX EEE is enabled even when sync_status=0.
-                                                                    1 = TX side requires RX sync_status=1 + delay after  CGX()_GMP_GMI()_TX_EEE_CFG1[SYNC2LPI_TIME]. */
-        uint64_t pcs_alt_an            : 1;  /**< [  4:  4](R/W) Flip auto-negotiate mode.
-                                                                 Internal:
-                                                                 Allows GMP AN to behave like BGX did on t8x, o7x. Setting this bit
-                                                                 inverts csr__an_sgi_mode from the normal behavior of ! pcs_misc_ctl_reg_data[i].mode. */
+        uint64_t tx_eee_quiet_credit_mode : 1;/**< [  0:  0](R/W) Reserved. */
+        uint64_t tx_eee_wait_gmi_fast_idle : 1;/**< [  1:  1](R/W) Reserved. */
+        uint64_t tx_qsgmii_port0_init  : 1;  /**< [  2:  2](R/W) Reserved. */
+        uint64_t tx_eee_rx_sync_status_enable : 1;/**< [  3:  3](RAZ) Reserved. */
+        uint64_t pcs_alt_an            : 1;  /**< [  4:  4](R/W) Flip auto-negotiate mode. */
         uint64_t reserved_5_7          : 3;
-        uint64_t rx_pcs_sync_signal_detect : 1;/**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Allow signal_detect to control PCS RX synchronization.
-                                                                 See 802.3-2012, Figure 36-9 Synchronization State Diagram.
-                                                                   0 = BGX mode. Ignore signal_detect.
-                                                                   1 = Use signal_detect (edet) from GSER.
-
-                                                                  Either [RX_PCS_SYNC_TIMEOUT] or_PCS_SYNC_SIGNAL_DETECT] must be set. */
-        uint64_t rx_pcs_sync_timeout   : 1;  /**< [  9:  9](R/W) Reserved.
-                                                                 Internal:
-                                                                 BGX Synchronization mode
-
-                                                                 See 802.3-2012, Figure 36-9 Synchronization State Diagram.
-                                                                    0 = CGX mode. Ignore bit lock.
-                                                                    1 = BGX mode. Use bit_lock in place of signal_detect in RX synchronization.
-                                                                  bit_lock is a timeout on GSER transfers.  If no transfers occur for 64 cycles, bit_lock
-                                                                  is lost.
-
-                                                                  Either [RX_PCS_SYNC_TIMEOUT] or_PCS_SYNC_SIGNAL_DETECT] must be set. */
-        uint64_t rx_pcs_eee_mode_enable : 1; /**< [ 10: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable RX to send QUIET.  For debug. 0 = force MODE=DATA at all times. */
-        uint64_t rx_pcs_lpi_enable     : 1;  /**< [ 11: 11](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable LPI decoding in RX PCS.
-                                                                 "0 = Disable LPI processing.  /L/ acts like /I/
-                                                                 1 = Enable LPI Processing. Default." */
-        uint64_t rx_pcs_802_rx_k       : 1;  /**< [ 12: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable RX_K Control to exit RX_K per 802.3
-                                                                 BGX stayed in RX_K if xmit==DATA and a control character.
-                                                                 0 = BGX mode.  xmit == DATA and control will hold in RX_K.
-                                                                 1 = 802.3 mode. xmit == DATA and control will transition to IDLE_D. */
+        uint64_t rx_pcs_sync_signal_detect : 1;/**< [  8:  8](R/W) Reserved. */
+        uint64_t rx_pcs_sync_timeout   : 1;  /**< [  9:  9](R/W) Reserved. */
+        uint64_t rx_pcs_eee_mode_enable : 1; /**< [ 10: 10](R/W) Reserved. */
+        uint64_t rx_pcs_lpi_enable     : 1;  /**< [ 11: 11](R/W) Reserved. */
+        uint64_t rx_pcs_802_rx_k       : 1;  /**< [ 12: 12](R/W) Reserved. */
         uint64_t rx_pcs_alt_qlb2i      : 1;  /**< [ 13: 13](R/W) For QSGMII mode, enable use of alternate state machine to control idle insertion
                                                                  for RX clk \< TX clk. Not used unless LMAC is doing QSGMII LOOPBCK2 (RX
-                                                                 loopback).
-
-                                                                 Internal:
-                                                                 QSGMII single byte/xfer/lmac can prevent BGX from inserting idles.
-                                                                    0 = Use traditional idle insertion.
-                                                                    1 = Use state machine to insert idles. */
+                                                                 loopback). */
         uint64_t reserved_14_15        : 2;
-        uint64_t rx_cgp_gser_throttle  : 1;  /**< [ 16: 16](R/W) Emulate BGX operation by sending PCS two consecutive codegroups at a time.
-                                                                 Internal:
-                                                                 "Bit is ignored in QSGMII mode.
-                                                                   0 = CGX mode.  Serialize GSER transfers into bytes as fast as possible.
-                                                                   1 = Throttle to act more like earlier chips' BGX. Idle bus to PCS for two
-                                                                 cycles after sending every pair of bytes.
-
-                                                                 Normally CGP takes a 4 codegroup transfer and serializes the data into 4 consecutive
-                                                                 single codegroup transfers to PCS.  With minimum IPG of 2B, GMI EOP pipelining can cause
-                                                                 back to back packets to collide and merge.  This is probably not a realistic scenario, but
-                                                                 BGX did handle this correctly because of GSER width of only 2 codegroups. Setting this bit
-                                                                 will allow CGX to split up a GSER transfer as follows:
-                                                                   send byte0 ##1 send byte1 ##3 send byte2 ##1 send byte3 ##3 Potentially start sending
-                                                                 byte0 of next GSER transfer." */
-        uint64_t rx_cgp_edet_filter    : 1;  /**< [ 17: 17](R/W) Reserved.
-                                                                 Internal:
-                                                                 Delay edet to PCS based on in-flight codegroups.
-
-                                                                 0 = Flush. Forward edet as quickly as possible.  Bytes in CGP are flushed while edet=0.
-                                                                 1 = Filter. Wait for CGP to finish processing codegroups before edet=0 before
-                                                                 dropping edet to PCS.
-
-                                                                 CGP has a FIFO + 3 stages of FLOPS after the input register. These registers can
-                                                                 contain codegroups sent before edet drops. */
-        uint64_t rx_cgp_edet_qlm_val   : 1;  /**< [ 18: 18](R/W) Reserved.
-                                                                 Internal:
-                                                                 Ignore QLM valid when edet=0.
-
-                                                                 0 = Valid from QLM will push data to FIFO for processing.
-                                                                 1 = Edet=0 will turn off pushing to FIFO. */
+        uint64_t rx_cgp_gser_throttle  : 1;  /**< [ 16: 16](R/W) Emulate BGX operation by sending PCS two consecutive codegroups at a time. */
+        uint64_t rx_cgp_edet_filter    : 1;  /**< [ 17: 17](R/W) Reserved. */
+        uint64_t rx_cgp_edet_qlm_val   : 1;  /**< [ 18: 18](R/W) Reserved. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } s;
@@ -11446,19 +10364,13 @@ union cavm_cgxx_gmp_pcsx_dbg_control
                                                                  The default value of 99 (0x63) results in a 1 us interval and should be used during
                                                                  normal operation. Other values may be used for test/debug purposes. Used for microsecond
                                                                  source for CGX()_GMP_PCS_LINK()_TIMER[COUNT].
-                                                                 Units = global 10 ns clock ticks.
-
-                                                                 Internal:
-                                                                 Also used for millisecond timer for CGX()_GMP_GMI()_TX_EEE_CFG1[SYNC2LPI_TIME]. */
+                                                                 Units = global 10 ns clock ticks. */
 #else /* Word 0 - Little Endian */
         uint64_t us_clk_period         : 7;  /**< [  6:  0](R/W) Microsecond clock period. Specifies the number of 10 ns cycles per microseconds, minus one.
                                                                  The default value of 99 (0x63) results in a 1 us interval and should be used during
                                                                  normal operation. Other values may be used for test/debug purposes. Used for microsecond
                                                                  source for CGX()_GMP_PCS_LINK()_TIMER[COUNT].
-                                                                 Units = global 10 ns clock ticks.
-
-                                                                 Internal:
-                                                                 Also used for millisecond timer for CGX()_GMP_GMI()_TX_EEE_CFG1[SYNC2LPI_TIME]. */
+                                                                 Units = global 10 ns clock ticks. */
         uint64_t reserved_7_63         : 57;
 #endif /* Word 0 - End */
     } s;
@@ -11492,169 +10404,6 @@ static inline uint64_t CAVM_CGXX_GMP_PCSX_DBG_CONTROL(uint64_t a, uint64_t b)
 #define arguments_CAVM_CGXX_GMP_PCSX_DBG_CONTROL(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) cgx#_gmp_pcs#_rx_eee_wake
- *
- * INTERNAL: CGX GMP PCS  RX EEE Wake Error Counter  Registers
- *
- * Reserved.
- * Internal:
- * This register is used by PHY types that support EEE to count wake time faults where
- * the PHY fails to complete its normal wake sequence within the time required for the
- * specific PHY type. The definition of the fault event to be counted is defined for
- * each PHY and may occur during a refresh or a wake-up as defined by the PHY. This
- * 16-bit counter shall be reset to all zeros upon execution of the PCS reset. This
- * counter shall be held at all ones in the case of overflow.
- */
-union cavm_cgxx_gmp_pcsx_rx_eee_wake
-{
-    uint64_t u;
-    struct cavm_cgxx_gmp_pcsx_rx_eee_wake_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t error_counter         : 16; /**< [ 15:  0](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 Accumulation of wake time faults.
-                                                                 This register is writeable to clear. Writes of nonzero values are for diagnostic use.
-                                                                 This register is reset by pcs__sw_rst.
-                                                                 Error events that occur after read and before write will be lost.
-                                                                 NOTE 802.3-2012 calls out RC/H but do not want read side effects. */
-#else /* Word 0 - Little Endian */
-        uint64_t error_counter         : 16; /**< [ 15:  0](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 Accumulation of wake time faults.
-                                                                 This register is writeable to clear. Writes of nonzero values are for diagnostic use.
-                                                                 This register is reset by pcs__sw_rst.
-                                                                 Error events that occur after read and before write will be lost.
-                                                                 NOTE 802.3-2012 calls out RC/H but do not want read side effects. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_gmp_pcsx_rx_eee_wake_s cn; */
-};
-typedef union cavm_cgxx_gmp_pcsx_rx_eee_wake cavm_cgxx_gmp_pcsx_rx_eee_wake_t;
-
-static inline uint64_t CAVM_CGXX_GMP_PCSX_RX_EEE_WAKE(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_GMP_PCSX_RX_EEE_WAKE(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0030910ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0030910ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0030910ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0030910ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0030910ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0030910ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_GMP_PCSX_RX_EEE_WAKE", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_GMP_PCSX_RX_EEE_WAKE(a,b) cavm_cgxx_gmp_pcsx_rx_eee_wake_t
-#define bustype_CAVM_CGXX_GMP_PCSX_RX_EEE_WAKE(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_GMP_PCSX_RX_EEE_WAKE(a,b) "CGXX_GMP_PCSX_RX_EEE_WAKE"
-#define device_bar_CAVM_CGXX_GMP_PCSX_RX_EEE_WAKE(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_GMP_PCSX_RX_EEE_WAKE(a,b) (a)
-#define arguments_CAVM_CGXX_GMP_PCSX_RX_EEE_WAKE(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) cgx#_gmp_pcs#_rx_lpi_timing
- *
- * INTERNAL: CGX GMP PCS  RX EEE LPI Timing Parameters Registers
- *
- * Reserved.
- * Internal:
- * Receiver LPI timing parameters Tqr, Twr and Twtf.
- */
-union cavm_cgxx_gmp_pcsx_rx_lpi_timing
-{
-    uint64_t u;
-    struct cavm_cgxx_gmp_pcsx_rx_lpi_timing_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t tqr                   : 20; /**< [ 51: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE time the receiver waits for signal detect to be set to OK while in the
-                                                                 LP_IDLE_D, LPI_K, and RX_QUIET states before asserting rx_fault.
-                                                                 802.3 Table 36-9, Figure 36-7c. Table specifies min of 3 ms, max of 4 ms.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value is 4 ms.
-                                                                 Maximum = 10.49 ms. */
-        uint64_t twr                   : 12; /**< [ 31: 20](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE time the receiver waits in RX_WAKE state before indicating wake time fault (WTF)
-                                                                 802.3 Table 36-9, Figure 36-7c. Table specifies max of 11 us.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value is 11 us.
-                                                                 Maximum = 40.95 us. */
-        uint64_t reserved_18_19        : 2;
-        uint64_t twtf                  : 18; /**< [ 17:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE wake time fault recovery. 802.3 Table 36-9, Figure 36-7c.
-                                                                 Table specifies maximum of 1 ms.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value is 1 ms.
-                                                                 Maximum = 2.621 ms. */
-#else /* Word 0 - Little Endian */
-        uint64_t twtf                  : 18; /**< [ 17:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE wake time fault recovery. 802.3 Table 36-9, Figure 36-7c.
-                                                                 Table specifies maximum of 1 ms.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value is 1 ms.
-                                                                 Maximum = 2.621 ms. */
-        uint64_t reserved_18_19        : 2;
-        uint64_t twr                   : 12; /**< [ 31: 20](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE time the receiver waits in RX_WAKE state before indicating wake time fault (WTF)
-                                                                 802.3 Table 36-9, Figure 36-7c. Table specifies max of 11 us.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value is 11 us.
-                                                                 Maximum = 40.95 us. */
-        uint64_t tqr                   : 20; /**< [ 51: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE time the receiver waits for signal detect to be set to OK while in the
-                                                                 LP_IDLE_D, LPI_K, and RX_QUIET states before asserting rx_fault.
-                                                                 802.3 Table 36-9, Figure 36-7c. Table specifies min of 3 ms, max of 4 ms.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value is 4 ms.
-                                                                 Maximum = 10.49 ms. */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_gmp_pcsx_rx_lpi_timing_s cn; */
-};
-typedef union cavm_cgxx_gmp_pcsx_rx_lpi_timing cavm_cgxx_gmp_pcsx_rx_lpi_timing_t;
-
-static inline uint64_t CAVM_CGXX_GMP_PCSX_RX_LPI_TIMING(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_GMP_PCSX_RX_LPI_TIMING(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0030900ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0030900ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0030900ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0030900ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0030900ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0030900ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_GMP_PCSX_RX_LPI_TIMING", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_GMP_PCSX_RX_LPI_TIMING(a,b) cavm_cgxx_gmp_pcsx_rx_lpi_timing_t
-#define bustype_CAVM_CGXX_GMP_PCSX_RX_LPI_TIMING(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_GMP_PCSX_RX_LPI_TIMING(a,b) "CGXX_GMP_PCSX_RX_LPI_TIMING"
-#define device_bar_CAVM_CGXX_GMP_PCSX_RX_LPI_TIMING(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_GMP_PCSX_RX_LPI_TIMING(a,b) (a)
-#define arguments_CAVM_CGXX_GMP_PCSX_RX_LPI_TIMING(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) cgx#_gmp_pcs#_status1
  *
  * CGX GMP PCS Status 1 Register
@@ -11667,26 +10416,10 @@ union cavm_cgxx_gmp_pcsx_status1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_12_63        : 52;
-        uint64_t tx_lpi_received       : 1;  /**< [ 11: 11](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Latched high version of [TX_LPI_INDICATION].
-                                                                 LPI events that occur after read and before write will be lost.
-
-                                                                 In order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                                 bit, rather than latching high read-only as specified in 802.3. */
-        uint64_t rx_lpi_received       : 1;  /**< [ 10: 10](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Latched high version of [RX_LPI_INDICATION].
-                                                                 LPI events that occur after read and before write will be lost.
-
-                                                                 In order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                                 bit, rather than latching high read-only as specified in 802.3. */
-        uint64_t tx_lpi_indication     : 1;  /**< [  9:  9](RO/H) Reserved.
-                                                                 Internal:
-                                                                 TX sending LPI.  TX LPI State not in TX_ACTIVE.  802.3-2012 Figure 36-10. */
-        uint64_t rx_lpi_indication     : 1;  /**< [  8:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 RX receiving LPI.  rx_lpi_active = TRUE. 802.3-2012, Figure 36-7a-c. */
+        uint64_t tx_lpi_received       : 1;  /**< [ 11: 11](R/W1C/H) Reserved. */
+        uint64_t rx_lpi_received       : 1;  /**< [ 10: 10](R/W1C/H) Reserved. */
+        uint64_t tx_lpi_indication     : 1;  /**< [  9:  9](RO/H) Reserved. */
+        uint64_t rx_lpi_indication     : 1;  /**< [  8:  8](RO/H) Reserved. */
         uint64_t reserved_3_7          : 5;
         uint64_t receive_link_status   : 1;  /**< [  2:  2](R/W1S/H) Sync state:
                                                                     0 = Not synchronized.
@@ -11716,26 +10449,10 @@ union cavm_cgxx_gmp_pcsx_status1
                                                                  In order to avoid read side effects, this is implemented as a write-1-to-set
                                                                  bit, rather than latching low read- only as specified in 802.3. */
         uint64_t reserved_3_7          : 5;
-        uint64_t rx_lpi_indication     : 1;  /**< [  8:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 RX receiving LPI.  rx_lpi_active = TRUE. 802.3-2012, Figure 36-7a-c. */
-        uint64_t tx_lpi_indication     : 1;  /**< [  9:  9](RO/H) Reserved.
-                                                                 Internal:
-                                                                 TX sending LPI.  TX LPI State not in TX_ACTIVE.  802.3-2012 Figure 36-10. */
-        uint64_t rx_lpi_received       : 1;  /**< [ 10: 10](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Latched high version of [RX_LPI_INDICATION].
-                                                                 LPI events that occur after read and before write will be lost.
-
-                                                                 In order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                                 bit, rather than latching high read-only as specified in 802.3. */
-        uint64_t tx_lpi_received       : 1;  /**< [ 11: 11](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Latched high version of [TX_LPI_INDICATION].
-                                                                 LPI events that occur after read and before write will be lost.
-
-                                                                 In order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                                 bit, rather than latching high read-only as specified in 802.3. */
+        uint64_t rx_lpi_indication     : 1;  /**< [  8:  8](RO/H) Reserved. */
+        uint64_t tx_lpi_indication     : 1;  /**< [  9:  9](RO/H) Reserved. */
+        uint64_t rx_lpi_received       : 1;  /**< [ 10: 10](R/W1C/H) Reserved. */
+        uint64_t tx_lpi_received       : 1;  /**< [ 11: 11](R/W1C/H) Reserved. */
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } s;
@@ -11767,97 +10484,6 @@ static inline uint64_t CAVM_CGXX_GMP_PCSX_STATUS1(uint64_t a, uint64_t b)
 #define device_bar_CAVM_CGXX_GMP_PCSX_STATUS1(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_CGXX_GMP_PCSX_STATUS1(a,b) (a)
 #define arguments_CAVM_CGXX_GMP_PCSX_STATUS1(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) cgx#_gmp_pcs#_tx_lpi_timing
- *
- * INTERNAL: CGX GMP GMI  TX EEE LPI Timing Parameters Registers
- *
- * Reserved.
- * Internal:
- * Transmitter LPI timing parameters Tsl, Tql and Tul.
- */
-union cavm_cgxx_gmp_pcsx_tx_lpi_timing
-{
-    uint64_t u;
-    struct cavm_cgxx_gmp_pcsx_tx_lpi_timing_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_60_63        : 4;
-        uint64_t tsl                   : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local sleep time from entering the TX_SLEEP state to when tx_quiet is set to TRUE
-                                                                 802.3 Table 36-8, Figure 36-10. Table specifies min of 19.9 us, max of 20.1 us.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value is 20 us.
-                                                                 Maximum = 40.95 us. */
-        uint64_t reserved_44_47        : 4;
-        uint64_t tul                   : 12; /**< [ 43: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local refresh time from entry into the TX_REFRESH state to entry into the TX_QUIET state.
-                                                                 802.3 Table 36-8, Figure 36-10. Table specifies min of 19.9 us, max of 20.1 us.
-                                                                 Reset value is 20 us.
-                                                                 Maximum = 40.95 us. */
-        uint64_t reserved_19_31        : 13;
-        uint64_t tql                   : 19; /**< [ 18:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local quiet time from when tx_quiet is set to TRUE to entry into the TX_REFRESH state
-                                                                 802.3 Table 36-8, Figure 36-10. Table specifies min of 2.5 ms, max of 2.6 ms.
-                                                                 Reset value is 2.55 ms.
-                                                                 Maximum = 5.243 ms. */
-#else /* Word 0 - Little Endian */
-        uint64_t tql                   : 19; /**< [ 18:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local quiet time from when tx_quiet is set to TRUE to entry into the TX_REFRESH state
-                                                                 802.3 Table 36-8, Figure 36-10. Table specifies min of 2.5 ms, max of 2.6 ms.
-                                                                 Reset value is 2.55 ms.
-                                                                 Maximum = 5.243 ms. */
-        uint64_t reserved_19_31        : 13;
-        uint64_t tul                   : 12; /**< [ 43: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local refresh time from entry into the TX_REFRESH state to entry into the TX_QUIET state.
-                                                                 802.3 Table 36-8, Figure 36-10. Table specifies min of 19.9 us, max of 20.1 us.
-                                                                 Reset value is 20 us.
-                                                                 Maximum = 40.95 us. */
-        uint64_t reserved_44_47        : 4;
-        uint64_t tsl                   : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local sleep time from entering the TX_SLEEP state to when tx_quiet is set to TRUE
-                                                                 802.3 Table 36-8, Figure 36-10. Table specifies min of 19.9 us, max of 20.1 us.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value is 20 us.
-                                                                 Maximum = 40.95 us. */
-        uint64_t reserved_60_63        : 4;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_gmp_pcsx_tx_lpi_timing_s cn; */
-};
-typedef union cavm_cgxx_gmp_pcsx_tx_lpi_timing cavm_cgxx_gmp_pcsx_tx_lpi_timing_t;
-
-static inline uint64_t CAVM_CGXX_GMP_PCSX_TX_LPI_TIMING(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_GMP_PCSX_TX_LPI_TIMING(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0030800ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0030800ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0030800ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0030800ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0030800ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0030800ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_GMP_PCSX_TX_LPI_TIMING", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_GMP_PCSX_TX_LPI_TIMING(a,b) cavm_cgxx_gmp_pcsx_tx_lpi_timing_t
-#define bustype_CAVM_CGXX_GMP_PCSX_TX_LPI_TIMING(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_GMP_PCSX_TX_LPI_TIMING(a,b) "CGXX_GMP_PCSX_TX_LPI_TIMING"
-#define device_bar_CAVM_CGXX_GMP_PCSX_TX_LPI_TIMING(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_GMP_PCSX_TX_LPI_TIMING(a,b) (a)
-#define arguments_CAVM_CGXX_GMP_PCSX_TX_LPI_TIMING(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) cgx#_gmp_pcs_an#_adv
@@ -12169,20 +10795,9 @@ union cavm_cgxx_gmp_pcs_intx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reserved. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reserved. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reserved. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Auto-negotiation sequence has completed. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Received an auto-negotiation page.  Either a base page or next page. */
@@ -12240,20 +10855,9 @@ union cavm_cgxx_gmp_pcs_intx
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Received an auto-negotiation page.  Either a base page or next page. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Auto-negotiation sequence has completed. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reserved. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reserved. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reserved. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } s;
@@ -12299,20 +10903,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12348,20 +10941,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1c
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } s;
@@ -12371,20 +10953,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12420,20 +10991,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1c
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cn98xx;
@@ -12442,20 +11002,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12491,20 +11040,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1c
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } f95mm;
@@ -12512,20 +11050,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12561,20 +11088,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1c
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1C/H) Reads or clears enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } f95o;
@@ -12620,20 +11136,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12669,20 +11174,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1s
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } s;
@@ -12692,20 +11186,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12741,20 +11224,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1s
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cn98xx;
@@ -12763,20 +11235,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12812,20 +11273,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1s
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } f95mm;
@@ -12833,20 +11283,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12882,20 +11321,9 @@ union cavm_cgxx_gmp_pcs_intx_ena_w1s
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets enable for CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } f95o;
@@ -12941,20 +11369,9 @@ union cavm_cgxx_gmp_pcs_intx_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -12990,20 +11407,9 @@ union cavm_cgxx_gmp_pcs_intx_w1s
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..2)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } s;
@@ -13013,20 +11419,9 @@ union cavm_cgxx_gmp_pcs_intx_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -13062,20 +11457,9 @@ union cavm_cgxx_gmp_pcs_intx_w1s
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..4)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cn98xx;
@@ -13084,20 +11468,9 @@ union cavm_cgxx_gmp_pcs_intx_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -13133,20 +11506,9 @@ union cavm_cgxx_gmp_pcs_intx_w1s
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..1)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } f95mm;
@@ -13154,20 +11516,9 @@ union cavm_cgxx_gmp_pcs_intx_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_23_63        : 41;
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
         uint64_t reserved_18_19        : 2;
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
@@ -13203,20 +11554,9 @@ union cavm_cgxx_gmp_pcs_intx_w1s
         uint64_t an_page_received      : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[AN_PAGE_RECEIVED]. */
         uint64_t an_complete           : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[AN_COMPLETE]. */
         uint64_t reserved_18_19        : 2;
-        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE].
-                                                                 Internal:
-                                                                 PCS TX entered or left XMIT_LPIDLE state. 802.3 Figure 36-5, B or C transitions. */
-        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE].
-                                                                 Internal:
-                                                                 PCS RX entered or left EEE state.  Basically entered or
-                                                                 left 802.3 Figure 36-7c.
-                                                                 Transitions include RX_K to RX_SLEEP, RX_LINK_FAIL to LINK_FAILED,
-                                                                 and LPI_K to RX_CB, RX_INVALID, or IDLE_D.
-                                                                 Change in rx_lpi_active state. */
-        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL].
-                                                                 Internal:
-                                                                 PCS RX entered RX_LINK_FAIL state.  Indicates that RX LPI Sequence described
-                                                                 in 802.3-2012 Figure 36-7c has being violated. */
+        uint64_t eee_tx_change         : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_TX_CHANGE]. */
+        uint64_t eee_rx_change         : 1;  /**< [ 21: 21](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_CHANGE]. */
+        uint64_t eee_rx_link_fail      : 1;  /**< [ 22: 22](R/W1S/H) Reads or sets CGX(0..3)_GMP_PCS_INT(0..3)[EEE_RX_LINK_FAIL]. */
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } f95o;
@@ -13305,14 +11645,6 @@ static inline uint64_t CAVM_CGXX_GMP_PCS_LINKX_TIMER(uint64_t a, uint64_t b)
  * Register (RSL) cgx#_gmp_pcs_misc#_ctl
  *
  * CGX GMP SGMII Miscellaneous Control Registers
- * Internal:
- * SGMII bit [12] is really a misnomer, it is a decode  of pi_qlm_cfg pins to indicate SGMII or
- * 1000Base-X modes.
- *
- * Note: The SGMII AN Advertisement Register above will be sent during Auto Negotiation if
- * [MAC_PHY] is set (1=PHY mode). If the bit is not set (0=MAC mode), the
- * tx_Config_Reg\<14\> becomes ACK bit and tx_Config_Reg\<0\> is always 1.
- * All other bits in tx_Config_Reg sent will be 0. The PHY dictates the Auto Negotiation results.
  */
 union cavm_cgxx_gmp_pcs_miscx_ctl
 {
@@ -14408,107 +12740,9 @@ static inline uint64_t CAVM_CGXX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
 #define arguments_CAVM_CGXX_MSIX_VECX_CTL(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) cgx#_smu#_bp_test
- *
- * INTERNAL: CGX SMU TX Backpressure Test Registers
- */
-union cavm_cgxx_smux_bp_test
-{
-    uint64_t u;
-    struct cavm_cgxx_smux_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t enable                : 4;  /**< [ 51: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\> = Randomly defer TX.
-                                                                 \<50\> = Mask LMAC TX ELB FIFO NPA (Next Packet Available) indication (introduce
-                                                                 more IFG) and only works in RX to TX loopback mode.
-                                                                 \<49\> = Mask LMAC TX FIFO NPA (Next Packet Available) indication (introduce more IFG).
-                                                                 \<48\> = Mask LMAC PMAC TX length FIFO valid .
-                                                                 NOTE: Setting multiple ENABLEs could slow down TX pipe significantly. */
-        uint64_t reserved_24_47        : 24;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                    \<23:22\> = Config 3.
-                                                                    \<21:20\> = Config 2.
-                                                                    \<19:18\> = Config 1.
-                                                                    \<17:16\> = Config 0.
-
-                                                                  When using 0x0, the constant backpressure means the testbench must toggle the
-                                                                  corresponding [ENABLE] bit to keep traffic flowing. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                    \<23:22\> = Config 3.
-                                                                    \<21:20\> = Config 2.
-                                                                    \<19:18\> = Config 1.
-                                                                    \<17:16\> = Config 0.
-
-                                                                  When using 0x0, the constant backpressure means the testbench must toggle the
-                                                                  corresponding [ENABLE] bit to keep traffic flowing. */
-        uint64_t reserved_24_47        : 24;
-        uint64_t enable                : 4;  /**< [ 51: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\> = Randomly defer TX.
-                                                                 \<50\> = Mask LMAC TX ELB FIFO NPA (Next Packet Available) indication (introduce
-                                                                 more IFG) and only works in RX to TX loopback mode.
-                                                                 \<49\> = Mask LMAC TX FIFO NPA (Next Packet Available) indication (introduce more IFG).
-                                                                 \<48\> = Mask LMAC PMAC TX length FIFO valid .
-                                                                 NOTE: Setting multiple ENABLEs could slow down TX pipe significantly. */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_smux_bp_test_s cn; */
-};
-typedef union cavm_cgxx_smux_bp_test cavm_cgxx_smux_bp_test_t;
-
-static inline uint64_t CAVM_CGXX_SMUX_BP_TEST(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_SMUX_BP_TEST(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0020230ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0020230ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0020230ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0020230ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0020230ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0020230ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_SMUX_BP_TEST", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_SMUX_BP_TEST(a,b) cavm_cgxx_smux_bp_test_t
-#define bustype_CAVM_CGXX_SMUX_BP_TEST(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_SMUX_BP_TEST(a,b) "CGXX_SMUX_BP_TEST"
-#define device_bar_CAVM_CGXX_SMUX_BP_TEST(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_SMUX_BP_TEST(a,b) (a)
-#define arguments_CAVM_CGXX_SMUX_BP_TEST(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) cgx#_smu#_cbfc_ctl
  *
  * CGX SMU PFC Control Registers
- * Internal:
- * INTERNAL: XOFF for a specific class/channel \<i\> is XOFF\<i\> = ([PHYS_EN]\<i\> & cmr_rx_phys_bp) |
- * ([LOGL_EN]\<i\> & cmr_rx_logl_xoff\<i\>).
  */
 union cavm_cgxx_smux_cbfc_ctl
 {
@@ -14791,11 +13025,7 @@ union cavm_cgxx_smux_mmsi_ctl_sta
                                                                  attempts in number of 100 MHz reference clock cyucles. Valid range of verifyTime
                                                                  is from 1 ms to 128 ms inclusive. The default value 0xF4240 represents 10 ms.
 
-                                                                 _ [V_TIME] = verifyTime * 0x186A0 where verifyTime is in [1, 128].
-
-                                                                 Internal:
-                                                                 This field can be set to less than 0x186A0 for diagnostic use to speed up
-                                                                 verification. */
+                                                                 _ [V_TIME] = verifyTime * 0x186A0 where verifyTime is in [1, 128]. */
         uint64_t reserved_8_31         : 24;
         uint64_t tx_pactive            : 1;  /**< [  7:  7](RO/H) Transmit preemption status.  See also [DIS_V].
                                                                  0 = Transmit preemption is inactive (disabled or enabled but not verified).
@@ -14855,11 +13085,7 @@ union cavm_cgxx_smux_mmsi_ctl_sta
                                                                  attempts in number of 100 MHz reference clock cyucles. Valid range of verifyTime
                                                                  is from 1 ms to 128 ms inclusive. The default value 0xF4240 represents 10 ms.
 
-                                                                 _ [V_TIME] = verifyTime * 0x186A0 where verifyTime is in [1, 128].
-
-                                                                 Internal:
-                                                                 This field can be set to less than 0x186A0 for diagnostic use to speed up
-                                                                 verification. */
+                                                                 _ [V_TIME] = verifyTime * 0x186A0 where verifyTime is in [1, 128]. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } s;
@@ -15344,10 +13570,6 @@ static inline uint64_t CAVM_CGXX_SMUX_RX_FRM_CTL(uint64_t a, uint64_t b)
  *
  * CGX SMU Receive Interrupt Registers
  * SMU Interrupt Register.
- * Internal:
- * Exception conditions \<9\> and \<4:0\> can also set the rcv/opcode in the received packet's work
- * queue entry. CGX()_SMU()_RX_FRM_CHK provides a bit mask for configuring which
- * conditions set the error.
  */
 union cavm_cgxx_smux_rx_int
 {
@@ -16021,10 +14243,6 @@ static inline uint64_t CAVM_CGXX_SMUX_RX_INT_W1S(uint64_t a, uint64_t b)
  *
  * CGX SMU Maximum Packet-Size Registers
  * This register specifies the maximum size for packets, beyond which the SMU truncates.
- * Internal:
- * JABBER[CNT] is checked against the packet that arrives from SPU.  The checking
- * is performed before preamble is stripped or PTP is inserted.  If present, preamble is
- * counted as eight bytes of the incoming packet.
  */
 union cavm_cgxx_smux_rx_jabber
 {
@@ -16076,24 +14294,6 @@ static inline uint64_t CAVM_CGXX_SMUX_RX_JABBER(uint64_t a, uint64_t b)
  * Register (RSL) cgx#_smu#_rx_udd_skp
  *
  * CGX SMU User-Defined Data Skip Registers
- * Internal:
- * (1) The skip bytes are part of the packet and will be sent down the NCB
- * packet interface and will be handled by NIX.
- *
- * (2) The system can determine if the UDD bytes are included in the FCS check
- * by using the FCSSEL field if the FCS check is enabled.
- *
- * (3) Assume that the preamble/sfd is always at the start of the frame even
- * before UDD bytes.  In most cases, there will be no preamble in these
- * cases since it will be packet interface in direct communication to
- * another packet interface (MAC to MAC) without a PHY involved.
- *
- * (4) We can still do address filtering and control packet filtering if the
- * user desires.
- *
- * (5) In all cases, the UDD bytes will be sent down the packet interface as
- * part of the packet.  The UDD bytes are never stripped from the actual
- * packet.
  */
 union cavm_cgxx_smux_rx_udd_skp
 {
@@ -16890,286 +15090,6 @@ static inline uint64_t CAVM_CGXX_SMUX_TX_DCNT(uint64_t a, uint64_t b)
 #define arguments_CAVM_CGXX_SMUX_TX_DCNT(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) cgx#_smu#_tx_eee
- *
- * INTERNAL: CGX SMU TX EEE Configure Registers
- *
- * Resvered.
- * Internal:
- * These registers control when SMU TX requests to enter or exist LPI. Those registers
- * take effect only when EEE is supported and enabled for a given LMAC.
- */
-union cavm_cgxx_smux_tx_eee
-{
-    uint64_t u;
-    struct cavm_cgxx_smux_tx_eee_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t tx_lpi                : 1;  /**< [ 63: 63](RO/H) Reserved.
-                                                                 Internal:
-                                                                 SMU TX is in LPI state. */
-        uint64_t tx_lpi_wake           : 1;  /**< [ 62: 62](RO/H) Reserved.
-                                                                 Internal:
-                                                                 SMU TX is in LPI WAKE state. */
-        uint64_t reserved_60_61        : 2;
-        uint64_t idle_cnt              : 28; /**< [ 59: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 The current idle counter value is only valid when [AUTO_LPI] is set. The counter
-                                                                 will be increased during idle state while 128 bits have been transmitted. The
-                                                                 counter will be saturated at [IDLE_THRESH]. */
-        uint64_t auto_lpi              : 1;  /**< [ 31: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 SMU TX will send LPI requests to SPU when the bit is set and the idle counter
-                                                                 reaches [IDLE_THRESH]. While in LPI state, SMU TX will switch to send idle once
-                                                                 the transmitter has packets (including flow control packets) to send or [WAKEUP]
-                                                                 is set by software. */
-        uint64_t wakeup                : 1;  /**< [ 30: 30](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 [WAKEUP] is valid only when [AUTO_LPI] is set and only writable by software
-                                                                 when the transmitter is in LPI state. While SMU transmitter is in LPI state,
-                                                                 software can use this bit to switch SMU TX from sending LPI to sending idle to
-                                                                 SPU. [WAKEUP] will be automatically cleared by CGX when the switching is
-                                                                 initiated by CGX. */
-        uint64_t force_lpi             : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 [FORCE_LPI] is only valid when [AUTO_LPI] is cleared. SMU TX will send LPI
-                                                                 requests to SPU immediately after the current packet is transmitted when the bit
-                                                                 is set. While in LPI mode, SMU transmitter will switch to send idle once the bit
-                                                                 is cleared. */
-        uint64_t reserved_28           : 1;
-        uint64_t idle_thresh           : 28; /**< [ 27:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Idle threshold. [IDLE_THRESH] is only used when [AUTO_LPI] is set. SMU
-                                                                 transmitter will send LPI requests to SPU when the idle counter reaches this
-                                                                 threshold. The units of this value are 128-bit word (or a SPU heart beat). Note
-                                                                 that active flow control of a enabled LMAC will keep the corresponding LMAC not
-                                                                 idle. */
-#else /* Word 0 - Little Endian */
-        uint64_t idle_thresh           : 28; /**< [ 27:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Idle threshold. [IDLE_THRESH] is only used when [AUTO_LPI] is set. SMU
-                                                                 transmitter will send LPI requests to SPU when the idle counter reaches this
-                                                                 threshold. The units of this value are 128-bit word (or a SPU heart beat). Note
-                                                                 that active flow control of a enabled LMAC will keep the corresponding LMAC not
-                                                                 idle. */
-        uint64_t reserved_28           : 1;
-        uint64_t force_lpi             : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 [FORCE_LPI] is only valid when [AUTO_LPI] is cleared. SMU TX will send LPI
-                                                                 requests to SPU immediately after the current packet is transmitted when the bit
-                                                                 is set. While in LPI mode, SMU transmitter will switch to send idle once the bit
-                                                                 is cleared. */
-        uint64_t wakeup                : 1;  /**< [ 30: 30](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 [WAKEUP] is valid only when [AUTO_LPI] is set and only writable by software
-                                                                 when the transmitter is in LPI state. While SMU transmitter is in LPI state,
-                                                                 software can use this bit to switch SMU TX from sending LPI to sending idle to
-                                                                 SPU. [WAKEUP] will be automatically cleared by CGX when the switching is
-                                                                 initiated by CGX. */
-        uint64_t auto_lpi              : 1;  /**< [ 31: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 SMU TX will send LPI requests to SPU when the bit is set and the idle counter
-                                                                 reaches [IDLE_THRESH]. While in LPI state, SMU TX will switch to send idle once
-                                                                 the transmitter has packets (including flow control packets) to send or [WAKEUP]
-                                                                 is set by software. */
-        uint64_t idle_cnt              : 28; /**< [ 59: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 The current idle counter value is only valid when [AUTO_LPI] is set. The counter
-                                                                 will be increased during idle state while 128 bits have been transmitted. The
-                                                                 counter will be saturated at [IDLE_THRESH]. */
-        uint64_t reserved_60_61        : 2;
-        uint64_t tx_lpi_wake           : 1;  /**< [ 62: 62](RO/H) Reserved.
-                                                                 Internal:
-                                                                 SMU TX is in LPI WAKE state. */
-        uint64_t tx_lpi                : 1;  /**< [ 63: 63](RO/H) Reserved.
-                                                                 Internal:
-                                                                 SMU TX is in LPI state. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_smux_tx_eee_s cn; */
-};
-typedef union cavm_cgxx_smux_tx_eee cavm_cgxx_smux_tx_eee_t;
-
-static inline uint64_t CAVM_CGXX_SMUX_TX_EEE(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_SMUX_TX_EEE(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0020190ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0020190ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0020190ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0020190ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0020190ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0020190ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_SMUX_TX_EEE", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_SMUX_TX_EEE(a,b) cavm_cgxx_smux_tx_eee_t
-#define bustype_CAVM_CGXX_SMUX_TX_EEE(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_SMUX_TX_EEE(a,b) "CGXX_SMUX_TX_EEE"
-#define device_bar_CAVM_CGXX_SMUX_TX_EEE(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_SMUX_TX_EEE(a,b) (a)
-#define arguments_CAVM_CGXX_SMUX_TX_EEE(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) cgx#_smu#_tx_eee_timer_status
- *
- * INTERNAL: CGX SMU TX EEE TIMER STATUS Registers
- *
- * Reserved.
- * Internal:
- * These registers configure SMU TX EEE timing parameters.
- */
-union cavm_cgxx_smux_tx_eee_timer_status
-{
-    uint64_t u;
-    struct cavm_cgxx_smux_tx_eee_timer_status_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t link_timer_done       : 1;  /**< [ 63: 63](RO/H) Reserved. */
-        uint64_t reserved_62           : 1;
-        uint64_t link_ok_cnt           : 30; /**< [ 61: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 The current value of LINK OK timer. The timer will saturated at
-                                                                 CGX()_SMU()_TX_EEE_TIMING[LINK_OK_MIN] when [LINK_TIMER_DONE] is set. */
-        uint64_t wake_timer_done       : 1;  /**< [ 31: 31](RO/H) Reserved. */
-        uint64_t reserved_16_30        : 15;
-        uint64_t lpi_wake_cnt          : 16; /**< [ 15:  0](RO/H) Reserved.
-                                                                 Internal:
-                                                                 The current value of LPI wake timer. The timer will saturated at
-                                                                 CGX()_SMU()_TX_EEE_TIMING[W_SYS_TX_MIN] when [WAKE_TIMER_DONE]
-                                                                 is set. */
-#else /* Word 0 - Little Endian */
-        uint64_t lpi_wake_cnt          : 16; /**< [ 15:  0](RO/H) Reserved.
-                                                                 Internal:
-                                                                 The current value of LPI wake timer. The timer will saturated at
-                                                                 CGX()_SMU()_TX_EEE_TIMING[W_SYS_TX_MIN] when [WAKE_TIMER_DONE]
-                                                                 is set. */
-        uint64_t reserved_16_30        : 15;
-        uint64_t wake_timer_done       : 1;  /**< [ 31: 31](RO/H) Reserved. */
-        uint64_t link_ok_cnt           : 30; /**< [ 61: 32](RO/H) Reserved.
-                                                                 Internal:
-                                                                 The current value of LINK OK timer. The timer will saturated at
-                                                                 CGX()_SMU()_TX_EEE_TIMING[LINK_OK_MIN] when [LINK_TIMER_DONE] is set. */
-        uint64_t reserved_62           : 1;
-        uint64_t link_timer_done       : 1;  /**< [ 63: 63](RO/H) Reserved. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_smux_tx_eee_timer_status_s cn; */
-};
-typedef union cavm_cgxx_smux_tx_eee_timer_status cavm_cgxx_smux_tx_eee_timer_status_t;
-
-static inline uint64_t CAVM_CGXX_SMUX_TX_EEE_TIMER_STATUS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_SMUX_TX_EEE_TIMER_STATUS(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00201a0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e00201a0ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00201a0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e00201a0ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e00201a0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e00201a0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_SMUX_TX_EEE_TIMER_STATUS", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_SMUX_TX_EEE_TIMER_STATUS(a,b) cavm_cgxx_smux_tx_eee_timer_status_t
-#define bustype_CAVM_CGXX_SMUX_TX_EEE_TIMER_STATUS(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_SMUX_TX_EEE_TIMER_STATUS(a,b) "CGXX_SMUX_TX_EEE_TIMER_STATUS"
-#define device_bar_CAVM_CGXX_SMUX_TX_EEE_TIMER_STATUS(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_SMUX_TX_EEE_TIMER_STATUS(a,b) (a)
-#define arguments_CAVM_CGXX_SMUX_TX_EEE_TIMER_STATUS(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) cgx#_smu#_tx_eee_timing
- *
- * INTERNAL: CGX SMU TX EEE TIMING Parameter Registers
- *
- * Reserved.
- * Internal:
- * These registers configure SMU TX EEE timing parameters.
- */
-union cavm_cgxx_smux_tx_eee_timing
-{
-    uint64_t u;
-    struct cavm_cgxx_smux_tx_eee_timing_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_62_63        : 2;
-        uint64_t link_ok_min           : 30; /**< [ 61: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 LPI request shall not be asserted unless the attached link has been operational
-                                                                 for at least one second (i.e link_status == OK according to the underlying
-                                                                 PCS/PMA). See clause 81.1.7 of IEEE 802.3bj-2014 for this requirement for
-                                                                 100 Gbps/40 Gbps operation and clause 46.1.7 for 10 Gbps. Reset value gives one
-                                                                 second delay. Time units are 10 ns based on 100 MHz reference clock. */
-        uint64_t reserved_16_31        : 16;
-        uint64_t w_sys_tx_min          : 16; /**< [ 15:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Parameter employed by the system that corresponds to its requirement. This is
-                                                                 the minimal requirement of period of time the system has to wait between a
-                                                                 request to transmit and its readiness to transmit. See Table 78-4 of IEEE Std
-                                                                 802.3bj-2014 for the summary of the LPI timing parameters for supported PHYs or
-                                                                 interfaces. Reset values gives 5.5 us delay. Time units are 10 ns based on 100
-                                                                 MHz reference clock. */
-#else /* Word 0 - Little Endian */
-        uint64_t w_sys_tx_min          : 16; /**< [ 15:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Parameter employed by the system that corresponds to its requirement. This is
-                                                                 the minimal requirement of period of time the system has to wait between a
-                                                                 request to transmit and its readiness to transmit. See Table 78-4 of IEEE Std
-                                                                 802.3bj-2014 for the summary of the LPI timing parameters for supported PHYs or
-                                                                 interfaces. Reset values gives 5.5 us delay. Time units are 10 ns based on 100
-                                                                 MHz reference clock. */
-        uint64_t reserved_16_31        : 16;
-        uint64_t link_ok_min           : 30; /**< [ 61: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 LPI request shall not be asserted unless the attached link has been operational
-                                                                 for at least one second (i.e link_status == OK according to the underlying
-                                                                 PCS/PMA). See clause 81.1.7 of IEEE 802.3bj-2014 for this requirement for
-                                                                 100 Gbps/40 Gbps operation and clause 46.1.7 for 10 Gbps. Reset value gives one
-                                                                 second delay. Time units are 10 ns based on 100 MHz reference clock. */
-        uint64_t reserved_62_63        : 2;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_smux_tx_eee_timing_s cn; */
-};
-typedef union cavm_cgxx_smux_tx_eee_timing cavm_cgxx_smux_tx_eee_timing_t;
-
-static inline uint64_t CAVM_CGXX_SMUX_TX_EEE_TIMING(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_SMUX_TX_EEE_TIMING(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0020198ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0020198ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0020198ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0020198ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0020198ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0020198ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_SMUX_TX_EEE_TIMING", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_SMUX_TX_EEE_TIMING(a,b) cavm_cgxx_smux_tx_eee_timing_t
-#define bustype_CAVM_CGXX_SMUX_TX_EEE_TIMING(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_SMUX_TX_EEE_TIMING(a,b) "CGXX_SMUX_TX_EEE_TIMING"
-#define device_bar_CAVM_CGXX_SMUX_TX_EEE_TIMING(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_SMUX_TX_EEE_TIMING(a,b) (a)
-#define arguments_CAVM_CGXX_SMUX_TX_EEE_TIMING(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) cgx#_smu#_tx_ifg
  *
  * CGX SMU TX Interframe-Gap Cycles Registers
@@ -17183,12 +15103,6 @@ static inline uint64_t CAVM_CGXX_SMUX_TX_EEE_TIMING(uint64_t a, uint64_t b)
  * * When CGX()_SMU()_TX_CTL[DIC_EN] is cleared, the minimum value of [IFG1]+[IFG2] is 1
  * for 40G/50G/100G LMAC_TYPE configurations and 5 for all other values. The behavior
  * of smaller values is un-determined.
- *
- * Internal:
- * When CGX()_SMU()_TX_CTL[DIC_EN] is set, SMU TX treats ([IFG1]+[IFG2]) \< 8 as 8 for
- * 40G/50G/100G MACs and ([IFG1]+[IFG2]) \< 8 as 8 for other MACs. When
- * CGX()_SMU()_TX_CTL[DIC_EN] is cleared, SMU TX can work correctly with any IFG1 and
- * IFG2.
  */
 union cavm_cgxx_smux_tx_ifg
 {
@@ -17694,8 +15608,6 @@ static inline uint64_t CAVM_CGXX_SMUX_TX_INT_W1S(uint64_t a, uint64_t b)
  * Register (RSL) cgx#_smu#_tx_min_pkt
  *
  * CGX SMU TX Minimum-Size-Packet Registers
- * Internal:
- * [MIN_SIZE] less than 16 will be ignored by hardware which will use 16 instead.
  */
 union cavm_cgxx_smux_tx_min_pkt
 {
@@ -18401,11 +16313,7 @@ union cavm_cgxx_spux_an_control
                                                                  autonegotiation is enabled (CGX()_SPU()_USX_AN_CONTROL[AN_EN] is set), this bit controls
                                                                  the behavior of the autonegotiation arbitration state machine when it reaches the IDLE_DETECT
                                                                  CHECK state after AN page is successfully exchanged, as defined in Figure 37-6 in
-                                                                 IEEE 802.3.
-
-                                                                 Internal:
-                                                                 FUTURE - compare to [AN_ARB_LINK_CHK_EN], complete description and
-                                                                 implementation. Possible use in software USXGMII Auto-Negotiation. */
+                                                                 IEEE 802.3. */
         uint64_t an_arb_link_chk_en    : 1;  /**< [ 16: 16](R/W) Enable link status checking by autonegotiation arbitration state machine. When
                                                                  autonegotiation is enabled (CGX()_SPU()_AN_CONTROL[AN_EN] is set), this bit controls
                                                                  the behavior of the autonegotiation arbitration state machine when it reaches the AN GOOD
@@ -18499,11 +16407,7 @@ union cavm_cgxx_spux_an_control
                                                                  autonegotiation is enabled (CGX()_SPU()_USX_AN_CONTROL[AN_EN] is set), this bit controls
                                                                  the behavior of the autonegotiation arbitration state machine when it reaches the IDLE_DETECT
                                                                  CHECK state after AN page is successfully exchanged, as defined in Figure 37-6 in
-                                                                 IEEE 802.3.
-
-                                                                 Internal:
-                                                                 FUTURE - compare to [AN_ARB_LINK_CHK_EN], complete description and
-                                                                 implementation. Possible use in software USXGMII Auto-Negotiation. */
+                                                                 IEEE 802.3. */
         uint64_t reserved_18_63        : 46;
 #endif /* Word 0 - End */
     } s;
@@ -18513,38 +16417,8 @@ union cavm_cgxx_spux_an_control
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_18_63        : 46;
-        uint64_t usx_an_arb_link_chk_en : 1; /**< [ 17: 17](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Enable USXGMII link status checking by autonegotiation
-                                                                 arbitration state machine. When autonegotiation is enabled
-                                                                 (CGX()_SPU()_USX_AN_CONTROL[AN_EN] is set), this bit controls the behavior of
-                                                                 the autonegotiation arbitration state machine when it reaches the IDLE_DETECT
-                                                                 CHECK state after AN page is successfully exchanged, as defined in Figure 37-6
-                                                                 in IEEE 802.3.| FUTURE - compare to [AN_ARB_LINK_CHK_EN], complete description
-                                                                 and implementation. Possible use in software USXGMII Auto-Negotiation. */
-        uint64_t an_arb_link_chk_en    : 1;  /**< [ 16: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Enable link status checking by autonegotiation
-                                                                 arbitration state machine. When autonegotiation is enabled
-                                                                 (CGX()_SPU()_AN_CONTROL[AN_EN] is set), this bit controls the behavior of the
-                                                                 autonegotiation arbitration state machine when it reaches the AN GOOD CHECK
-                                                                 state after DME pages are successfully exchanged, as defined in Figure 73-11 in
-                                                                 IEEE 802.3.| When this bit is set and the negotiated highest common denominator
-                                                                 (HCD) technology matches CGX()_CMR()_CONFIG[LMAC_TYPE], the autonegotiation
-                                                                 arbitration SM performs the actions defined for the AN GOOD CHECK state in
-                                                                 Figure 73-11, i.e. run the link_fail_inhibit timer and eventually transition to
-                                                                 the AN GOOD or TRANSMIT DISABLE state.| When this bit is clear or the HCD
-                                                                 technology does not match CGX()_CMR()_CONFIG[LMAC_TYPE], the AN arbitration SM
-                                                                 stays in the AN GOOD CHECK state, with the expectation that software will
-                                                                 perform the appropriate actions to complete the autonegotiation protocol, as
-                                                                 follows:| * If this bit is clear and the HCD technology matches
-                                                                 CGX()_CMR()_CONFIG[LMAC_TYPE], clear CGX()_SPU()_AN_CONTROL[AN_EN].| *
-                                                                 Otherwise, disable the LPCS by clearing the CGX()_CMR()_CONFIG[ENABLE], clear
-                                                                 CGX()_SPU()_AN_CONTROL[AN_EN], reconfigure the LPCS with the correct
-                                                                 CGX()_CMR()_CONFIG[LMAC_TYPE], and re-enable the LPCS by setting
-                                                                 CGX()_CMR()_CONFIG[ENABLE].| In both cases, software should implement the
-                                                                 link_fail_inhibit timer and verify the link status as specified for the AN GOOD
-                                                                 CHECK state. */
+        uint64_t usx_an_arb_link_chk_en : 1; /**< [ 17: 17](R/W) Reserved. */
+        uint64_t an_arb_link_chk_en    : 1;  /**< [ 16: 16](R/W) Reserved. */
         uint64_t an_reset              : 1;  /**< [ 15: 15](R/W1S/H) Autonegotiation reset. Setting this bit or CGX()_SPU()_CONTROL1[RESET]
                                                                  or CGX()_SPU()_USX_AN_CONTROL[AN_RESET] to 1 causes the following to happen:
                                                                  * Resets the logical PCS (LPCS).
@@ -18580,38 +16454,8 @@ union cavm_cgxx_spux_an_control
 
                                                                  It takes up to 32 coprocessor-clock cycles to reset the LPCS, after which RESET is
                                                                  automatically cleared. */
-        uint64_t an_arb_link_chk_en    : 1;  /**< [ 16: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Enable link status checking by autonegotiation
-                                                                 arbitration state machine. When autonegotiation is enabled
-                                                                 (CGX()_SPU()_AN_CONTROL[AN_EN] is set), this bit controls the behavior of the
-                                                                 autonegotiation arbitration state machine when it reaches the AN GOOD CHECK
-                                                                 state after DME pages are successfully exchanged, as defined in Figure 73-11 in
-                                                                 IEEE 802.3.| When this bit is set and the negotiated highest common denominator
-                                                                 (HCD) technology matches CGX()_CMR()_CONFIG[LMAC_TYPE], the autonegotiation
-                                                                 arbitration SM performs the actions defined for the AN GOOD CHECK state in
-                                                                 Figure 73-11, i.e. run the link_fail_inhibit timer and eventually transition to
-                                                                 the AN GOOD or TRANSMIT DISABLE state.| When this bit is clear or the HCD
-                                                                 technology does not match CGX()_CMR()_CONFIG[LMAC_TYPE], the AN arbitration SM
-                                                                 stays in the AN GOOD CHECK state, with the expectation that software will
-                                                                 perform the appropriate actions to complete the autonegotiation protocol, as
-                                                                 follows:| * If this bit is clear and the HCD technology matches
-                                                                 CGX()_CMR()_CONFIG[LMAC_TYPE], clear CGX()_SPU()_AN_CONTROL[AN_EN].| *
-                                                                 Otherwise, disable the LPCS by clearing the CGX()_CMR()_CONFIG[ENABLE], clear
-                                                                 CGX()_SPU()_AN_CONTROL[AN_EN], reconfigure the LPCS with the correct
-                                                                 CGX()_CMR()_CONFIG[LMAC_TYPE], and re-enable the LPCS by setting
-                                                                 CGX()_CMR()_CONFIG[ENABLE].| In both cases, software should implement the
-                                                                 link_fail_inhibit timer and verify the link status as specified for the AN GOOD
-                                                                 CHECK state. */
-        uint64_t usx_an_arb_link_chk_en : 1; /**< [ 17: 17](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Enable USXGMII link status checking by autonegotiation
-                                                                 arbitration state machine. When autonegotiation is enabled
-                                                                 (CGX()_SPU()_USX_AN_CONTROL[AN_EN] is set), this bit controls the behavior of
-                                                                 the autonegotiation arbitration state machine when it reaches the IDLE_DETECT
-                                                                 CHECK state after AN page is successfully exchanged, as defined in Figure 37-6
-                                                                 in IEEE 802.3.| FUTURE - compare to [AN_ARB_LINK_CHK_EN], complete description
-                                                                 and implementation. Possible use in software USXGMII Auto-Negotiation. */
+        uint64_t an_arb_link_chk_en    : 1;  /**< [ 16: 16](R/W) Reserved. */
+        uint64_t usx_an_arb_link_chk_en : 1; /**< [ 17: 17](R/W) Reserved. */
         uint64_t reserved_18_63        : 46;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -19248,37 +17092,13 @@ union cavm_cgxx_spux_br_pmd_control
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_3_63         : 61;
-        uint64_t use_lane_poly         : 1;  /**< [  2:  2](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| When this bit is 0, training will generate the pseudo-
-                                                                 random sequence using the polynomial specified in 802.3-2012 section 5 CL
-                                                                 72.6.10.2.6 for all lanes. When this bit is 1, the per-physical-lane polynomials
-                                                                 specified in 802.3bj-2014 CL 92.7.12 will be used. */
-        uint64_t train_en              : 1;  /**< [  1:  1](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R training enable. */
-        uint64_t train_restart         : 1;  /**< [  0:  0](R/W1S/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R training restart. Writing a 1 to this bit restarts
-                                                                 the training process if [TRAIN_EN] is also set. This is a self-clearing bit.
-                                                                 Software should wait a minimum of 1.7 ms after CGX()_SPU()_INT[TRAINING_FAILURE]
-                                                                 is set before restarting the training process. */
+        uint64_t use_lane_poly         : 1;  /**< [  2:  2](R/W) Reserved. */
+        uint64_t train_en              : 1;  /**< [  1:  1](R/W) Reserved. */
+        uint64_t train_restart         : 1;  /**< [  0:  0](R/W1S/H) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t train_restart         : 1;  /**< [  0:  0](R/W1S/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R training restart. Writing a 1 to this bit restarts
-                                                                 the training process if [TRAIN_EN] is also set. This is a self-clearing bit.
-                                                                 Software should wait a minimum of 1.7 ms after CGX()_SPU()_INT[TRAINING_FAILURE]
-                                                                 is set before restarting the training process. */
-        uint64_t train_en              : 1;  /**< [  1:  1](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R training enable. */
-        uint64_t use_lane_poly         : 1;  /**< [  2:  2](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| When this bit is 0, training will generate the pseudo-
-                                                                 random sequence using the polynomial specified in 802.3-2012 section 5 CL
-                                                                 72.6.10.2.6 for all lanes. When this bit is 1, the per-physical-lane polynomials
-                                                                 specified in 802.3bj-2014 CL 92.7.12 will be used. */
+        uint64_t train_restart         : 1;  /**< [  0:  0](R/W1S/H) Reserved. */
+        uint64_t train_en              : 1;  /**< [  1:  1](R/W) Reserved. */
+        uint64_t use_lane_poly         : 1;  /**< [  2:  2](R/W) Reserved. */
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -19319,8 +17139,7 @@ static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_CONTROL(uint64_t a, uint64_t b)
 /**
  * Register (RSL) cgx#_spu#_br_pmd_ld_cup
  *
- * INTERNAL:CGX SPU BASE-R PMD Local Device Coefficient Update Registers
- *
+ * CGX SPU BASE-R PMD Local Device Coefficient Update Registers
  * This register implements MDIO register 1.154 of 802.3-2012 Section 5 CL45 for 10GBASE-R and
  * and of 802.3by-2016 CL45 for 25GBASE-R. Note that for 10G, 25G LN0_ only is used.
  *
@@ -19363,17 +17182,9 @@ typedef union cavm_cgxx_spux_br_pmd_ld_cup cavm_cgxx_spux_br_pmd_ld_cup_t;
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LD_CUP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LD_CUP(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100c8ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e00100c8ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00100c8ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e00100c8ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e00100c8ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100c8ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_SPUX_BR_PMD_LD_CUP", 2, a, b, 0, 0, 0, 0);
 }
@@ -19388,8 +17199,7 @@ static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LD_CUP(uint64_t a, uint64_t b)
 /**
  * Register (RSL) cgx#_spu#_br_pmd_ld_rep
  *
- * INTERNAL:CGX SPU BASE-R PMD Local Device Status Report Registers
- *
+ * CGX SPU BASE-R PMD Local Device Status Report Registers
  * This register implements MDIO register 1.155 of 802.3-2012 Section 5 CL45 for 10GBASE-R and
  * and of 802.3by-2016 CL45 for 25GBASE-R. Note that for 10G, 25G LN0_ only is used.
  *
@@ -19432,17 +17242,9 @@ typedef union cavm_cgxx_spux_br_pmd_ld_rep cavm_cgxx_spux_br_pmd_ld_rep_t;
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LD_REP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LD_REP(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100d0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e00100d0ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00100d0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e00100d0ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e00100d0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100d0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_SPUX_BR_PMD_LD_REP", 2, a, b, 0, 0, 0, 0);
 }
@@ -19457,8 +17259,7 @@ static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LD_REP(uint64_t a, uint64_t b)
 /**
  * Register (RSL) cgx#_spu#_br_pmd_lp_cup
  *
- * INTERNAL:CGX SPU BASE-R PMD Link Partner Coefficient Update Registers
- *
+ * CGX SPU BASE-R PMD Link Partner Coefficient Update Registers
  * This register implements MDIO register 1.152 of 802.3-2012 Section 5 CL45 for 10GBASE-R and
  * and of 802.3by-2016 CL45 for 25GBASE-R. Note that for 10G, 25G LN0_ only is used.
  *
@@ -19495,17 +17296,9 @@ typedef union cavm_cgxx_spux_br_pmd_lp_cup cavm_cgxx_spux_br_pmd_lp_cup_t;
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LP_CUP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LP_CUP(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100b8ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e00100b8ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00100b8ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e00100b8ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e00100b8ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100b8ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_SPUX_BR_PMD_LP_CUP", 2, a, b, 0, 0, 0, 0);
 }
@@ -19520,8 +17313,7 @@ static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LP_CUP(uint64_t a, uint64_t b)
 /**
  * Register (RSL) cgx#_spu#_br_pmd_lp_rep
  *
- * INTERNAL:CGX SPU BASE-R PMD Link Partner Status Report Registers
- *
+ * CGX SPU BASE-R PMD Link Partner Status Report Registers
  * This register implements MDIO register 1.153 of 802.3-2012 Section 5 CL45 for 10GBASE-R and
  * and of 802.3by-2016 CL45 for 25GBASE-R. Note that for 10G, 25G LN0_ only is used.
  *
@@ -19558,17 +17350,9 @@ typedef union cavm_cgxx_spux_br_pmd_lp_rep cavm_cgxx_spux_br_pmd_lp_rep_t;
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LP_REP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LP_REP(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100c0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e00100c0ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00100c0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e00100c0ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e00100c0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100c0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_SPUX_BR_PMD_LP_REP", 2, a, b, 0, 0, 0, 0);
 }
@@ -19583,8 +17367,7 @@ static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_LP_REP(uint64_t a, uint64_t b)
 /**
  * Register (RSL) cgx#_spu#_br_pmd_status
  *
- * INTERNAL:CGX SPU BASE-R PMD Status Registers
- *
+ * CGX SPU BASE-R PMD Status Registers
  * The lane fields in this register are indexed by logical PCS lane ID. The lane 0 field (LN0_*)
  * is valid for 10GBASE-R, 25GBASE-R, 40GBASE-R, 50GBASE-R and 100GBASE-R. The lane 1 field
  * (LN1_*) is valid for 40GBASE-R, 50GBASE-R and 100GBASE-R. The remaining fields (LN2_*, LN3_*)
@@ -19616,17 +17399,9 @@ typedef union cavm_cgxx_spux_br_pmd_status cavm_cgxx_spux_br_pmd_status_t;
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_STATUS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_CGXX_SPUX_BR_PMD_STATUS(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100b0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e00100b0ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00100b0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e00100b0ll + 0x1000000ll * ((a) & 0x1) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e00100b0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=2) && (b<=3)))
         return 0x87e0e00100b0ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_SPUX_BR_PMD_STATUS", 2, a, b, 0, 0, 0, 0);
 }
@@ -21564,20 +19339,8 @@ union cavm_cgxx_spux_int
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Applicable only to modes implementing RS-FEC, USXGMII, 25G, 50G, 100G.
                                                                  Indicates the FEC alignment state machine RF_CW_MON reached ALIGN_ACQUIRED. See also
                                                                  CGX()_SPU()_RSFEC_STATUS[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reserved. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reserved. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Autonegotiation complete. Set when CGX()_SPU()_AN_STATUS[AN_COMPLETE] is set,
                                                                  indicating that the autonegotiation process has been completed and the link is up and
                                                                  running using the negotiated highest common denominator (HCD) technology. */
@@ -21683,20 +19446,8 @@ union cavm_cgxx_spux_int
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Autonegotiation complete. Set when CGX()_SPU()_AN_STATUS[AN_COMPLETE] is set,
                                                                  indicating that the autonegotiation process has been completed and the link is up and
                                                                  running using the negotiated highest common denominator (HCD) technology. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reserved. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reserved. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Applicable only to modes implementing RS-FEC, USXGMII, 25G, 50G, 100G.
                                                                  Indicates the FEC alignment state machine RF_CW_MON reached ALIGN_ACQUIRED. See also
                                                                  CGX()_SPU()_RSFEC_STATUS[FEC_ALIGN_STATUS]. */
@@ -21817,81 +19568,7 @@ union cavm_cgxx_spux_int_ena_w1c
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_cgxx_spux_int_ena_w1c_s cn9; */
-    /* struct cavm_cgxx_spux_int_ena_w1c_s cn96xxp1; */
-    struct cavm_cgxx_spux_int_ena_w1c_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_21_63        : 43;
-        uint64_t usx_an_cpt            : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[USX_AN_CPT]. */
-        uint64_t usx_an_lnk_st         : 1;  /**< [ 19: 19](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[USX_AN_LNK_ST]. */
-        uint64_t hi_ser                : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[HI_SER]. */
-        uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[RSFEC_UNCORR]. */
-        uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[RSFEC_CORR]. */
-        uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[AN_LINK_GOOD]. */
-        uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[AN_PAGE_RX]. */
-        uint64_t fec_uncorr            : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[FEC_UNCORR]. */
-        uint64_t fec_corr              : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[FEC_CORR]. */
-        uint64_t bip_err               : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[BIP_ERR]. */
-        uint64_t dbg_sync              : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[DBG_SYNC]. */
-        uint64_t algnlos               : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[ALGNLOS]. */
-        uint64_t synlos                : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[SYNLOS]. */
-        uint64_t bitlckls              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[BITLCKLS]. */
-        uint64_t err_blk               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[ERR_BLK]. */
-        uint64_t rx_link_down          : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[RX_LINK_DOWN]. */
-        uint64_t rx_link_up            : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[RX_LINK_UP]. */
-#else /* Word 0 - Little Endian */
-        uint64_t rx_link_up            : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[RX_LINK_UP]. */
-        uint64_t rx_link_down          : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[RX_LINK_DOWN]. */
-        uint64_t err_blk               : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[ERR_BLK]. */
-        uint64_t bitlckls              : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[BITLCKLS]. */
-        uint64_t synlos                : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[SYNLOS]. */
-        uint64_t algnlos               : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[ALGNLOS]. */
-        uint64_t dbg_sync              : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[DBG_SYNC]. */
-        uint64_t bip_err               : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[BIP_ERR]. */
-        uint64_t fec_corr              : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[FEC_CORR]. */
-        uint64_t fec_uncorr            : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[FEC_UNCORR]. */
-        uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[AN_PAGE_RX]. */
-        uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[AN_LINK_GOOD]. */
-        uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[RSFEC_CORR]. */
-        uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[RSFEC_UNCORR]. */
-        uint64_t hi_ser                : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[HI_SER]. */
-        uint64_t usx_an_lnk_st         : 1;  /**< [ 19: 19](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[USX_AN_LNK_ST]. */
-        uint64_t usx_an_cpt            : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for CGX(0..2)_SPU(0..3)_INT[USX_AN_CPT]. */
-        uint64_t reserved_21_63        : 43;
-#endif /* Word 0 - End */
-    } cn96xxp3;
+    /* struct cavm_cgxx_spux_int_ena_w1c_s cn96xx; */
     struct cavm_cgxx_spux_int_ena_w1c_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -21902,20 +19579,8 @@ union cavm_cgxx_spux_int_ena_w1c
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -21943,20 +19608,8 @@ union cavm_cgxx_spux_int_ena_w1c
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..4)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -21966,8 +19619,7 @@ union cavm_cgxx_spux_int_ena_w1c
         uint64_t reserved_21_63        : 43;
 #endif /* Word 0 - End */
     } cn98xx;
-    /* struct cavm_cgxx_spux_int_ena_w1c_s cnf95xxp1; */
-    /* struct cavm_cgxx_spux_int_ena_w1c_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_cgxx_spux_int_ena_w1c_s cnf95xx; */
     struct cavm_cgxx_spux_int_ena_w1c_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -21978,20 +19630,8 @@ union cavm_cgxx_spux_int_ena_w1c
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -22019,20 +19659,8 @@ union cavm_cgxx_spux_int_ena_w1c
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..1)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -22052,20 +19680,8 @@ union cavm_cgxx_spux_int_ena_w1c
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -22093,20 +19709,8 @@ union cavm_cgxx_spux_int_ena_w1c
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for CGX(0..3)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -22205,81 +19809,7 @@ union cavm_cgxx_spux_int_ena_w1s
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_cgxx_spux_int_ena_w1s_s cn9; */
-    /* struct cavm_cgxx_spux_int_ena_w1s_s cn96xxp1; */
-    struct cavm_cgxx_spux_int_ena_w1s_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_21_63        : 43;
-        uint64_t usx_an_cpt            : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[USX_AN_CPT]. */
-        uint64_t usx_an_lnk_st         : 1;  /**< [ 19: 19](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[USX_AN_LNK_ST]. */
-        uint64_t hi_ser                : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[HI_SER]. */
-        uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[RSFEC_UNCORR]. */
-        uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[RSFEC_CORR]. */
-        uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[AN_LINK_GOOD]. */
-        uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[AN_PAGE_RX]. */
-        uint64_t fec_uncorr            : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[FEC_UNCORR]. */
-        uint64_t fec_corr              : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[FEC_CORR]. */
-        uint64_t bip_err               : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[BIP_ERR]. */
-        uint64_t dbg_sync              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[DBG_SYNC]. */
-        uint64_t algnlos               : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[ALGNLOS]. */
-        uint64_t synlos                : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[SYNLOS]. */
-        uint64_t bitlckls              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[BITLCKLS]. */
-        uint64_t err_blk               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[ERR_BLK]. */
-        uint64_t rx_link_down          : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[RX_LINK_DOWN]. */
-        uint64_t rx_link_up            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[RX_LINK_UP]. */
-#else /* Word 0 - Little Endian */
-        uint64_t rx_link_up            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[RX_LINK_UP]. */
-        uint64_t rx_link_down          : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[RX_LINK_DOWN]. */
-        uint64_t err_blk               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[ERR_BLK]. */
-        uint64_t bitlckls              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[BITLCKLS]. */
-        uint64_t synlos                : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[SYNLOS]. */
-        uint64_t algnlos               : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[ALGNLOS]. */
-        uint64_t dbg_sync              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[DBG_SYNC]. */
-        uint64_t bip_err               : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[BIP_ERR]. */
-        uint64_t fec_corr              : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[FEC_CORR]. */
-        uint64_t fec_uncorr            : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[FEC_UNCORR]. */
-        uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[AN_PAGE_RX]. */
-        uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[AN_LINK_GOOD]. */
-        uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[RSFEC_CORR]. */
-        uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[RSFEC_UNCORR]. */
-        uint64_t hi_ser                : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[HI_SER]. */
-        uint64_t usx_an_lnk_st         : 1;  /**< [ 19: 19](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[USX_AN_LNK_ST]. */
-        uint64_t usx_an_cpt            : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for CGX(0..2)_SPU(0..3)_INT[USX_AN_CPT]. */
-        uint64_t reserved_21_63        : 43;
-#endif /* Word 0 - End */
-    } cn96xxp3;
+    /* struct cavm_cgxx_spux_int_ena_w1s_s cn96xx; */
     struct cavm_cgxx_spux_int_ena_w1s_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -22290,20 +19820,8 @@ union cavm_cgxx_spux_int_ena_w1s
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -22331,20 +19849,8 @@ union cavm_cgxx_spux_int_ena_w1s
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..4)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -22354,8 +19860,7 @@ union cavm_cgxx_spux_int_ena_w1s
         uint64_t reserved_21_63        : 43;
 #endif /* Word 0 - End */
     } cn98xx;
-    /* struct cavm_cgxx_spux_int_ena_w1s_s cnf95xxp1; */
-    /* struct cavm_cgxx_spux_int_ena_w1s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_cgxx_spux_int_ena_w1s_s cnf95xx; */
     struct cavm_cgxx_spux_int_ena_w1s_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -22366,20 +19871,8 @@ union cavm_cgxx_spux_int_ena_w1s
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -22407,20 +19900,8 @@ union cavm_cgxx_spux_int_ena_w1s
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..1)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -22440,20 +19921,8 @@ union cavm_cgxx_spux_int_ena_w1s
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -22481,20 +19950,8 @@ union cavm_cgxx_spux_int_ena_w1s
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for CGX(0..3)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -22593,81 +20050,7 @@ union cavm_cgxx_spux_int_w1s
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_cgxx_spux_int_w1s_s cn9; */
-    /* struct cavm_cgxx_spux_int_w1s_s cn96xxp1; */
-    struct cavm_cgxx_spux_int_w1s_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_21_63        : 43;
-        uint64_t usx_an_cpt            : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[USX_AN_CPT]. */
-        uint64_t usx_an_lnk_st         : 1;  /**< [ 19: 19](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[USX_AN_LNK_ST]. */
-        uint64_t hi_ser                : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[HI_SER]. */
-        uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[RSFEC_UNCORR]. */
-        uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[RSFEC_CORR]. */
-        uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[AN_LINK_GOOD]. */
-        uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[AN_PAGE_RX]. */
-        uint64_t fec_uncorr            : 1;  /**< [  9:  9](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[FEC_UNCORR]. */
-        uint64_t fec_corr              : 1;  /**< [  8:  8](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[FEC_CORR]. */
-        uint64_t bip_err               : 1;  /**< [  7:  7](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[BIP_ERR]. */
-        uint64_t dbg_sync              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[DBG_SYNC]. */
-        uint64_t algnlos               : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[ALGNLOS]. */
-        uint64_t synlos                : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[SYNLOS]. */
-        uint64_t bitlckls              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[BITLCKLS]. */
-        uint64_t err_blk               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[ERR_BLK]. */
-        uint64_t rx_link_down          : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[RX_LINK_DOWN]. */
-        uint64_t rx_link_up            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[RX_LINK_UP]. */
-#else /* Word 0 - Little Endian */
-        uint64_t rx_link_up            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[RX_LINK_UP]. */
-        uint64_t rx_link_down          : 1;  /**< [  1:  1](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[RX_LINK_DOWN]. */
-        uint64_t err_blk               : 1;  /**< [  2:  2](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[ERR_BLK]. */
-        uint64_t bitlckls              : 1;  /**< [  3:  3](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[BITLCKLS]. */
-        uint64_t synlos                : 1;  /**< [  4:  4](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[SYNLOS]. */
-        uint64_t algnlos               : 1;  /**< [  5:  5](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[ALGNLOS]. */
-        uint64_t dbg_sync              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[DBG_SYNC]. */
-        uint64_t bip_err               : 1;  /**< [  7:  7](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[BIP_ERR]. */
-        uint64_t fec_corr              : 1;  /**< [  8:  8](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[FEC_CORR]. */
-        uint64_t fec_uncorr            : 1;  /**< [  9:  9](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[FEC_UNCORR]. */
-        uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[AN_PAGE_RX]. */
-        uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[AN_LINK_GOOD]. */
-        uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[RSFEC_CORR]. */
-        uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[RSFEC_UNCORR]. */
-        uint64_t hi_ser                : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[HI_SER]. */
-        uint64_t usx_an_lnk_st         : 1;  /**< [ 19: 19](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[USX_AN_LNK_ST]. */
-        uint64_t usx_an_cpt            : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets CGX(0..2)_SPU(0..3)_INT[USX_AN_CPT]. */
-        uint64_t reserved_21_63        : 43;
-#endif /* Word 0 - End */
-    } cn96xxp3;
+    /* struct cavm_cgxx_spux_int_w1s_s cn96xx; */
     struct cavm_cgxx_spux_int_w1s_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -22678,20 +20061,8 @@ union cavm_cgxx_spux_int_w1s
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -22719,20 +20090,8 @@ union cavm_cgxx_spux_int_w1s
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..4)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -22742,8 +20101,7 @@ union cavm_cgxx_spux_int_w1s
         uint64_t reserved_21_63        : 43;
 #endif /* Word 0 - End */
     } cn98xx;
-    /* struct cavm_cgxx_spux_int_w1s_s cnf95xxp1; */
-    /* struct cavm_cgxx_spux_int_w1s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_cgxx_spux_int_w1s_s cnf95xx; */
     struct cavm_cgxx_spux_int_w1s_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -22754,20 +20112,8 @@ union cavm_cgxx_spux_int_w1s
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -22795,20 +20141,8 @@ union cavm_cgxx_spux_int_w1s
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..1)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -22828,20 +20162,8 @@ union cavm_cgxx_spux_int_w1s
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[RSFEC_UNCORR]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE]. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[AN_COMPLETE]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[AN_PAGE_RX]. */
@@ -22869,20 +20191,8 @@ union cavm_cgxx_spux_int_w1s
         uint64_t an_page_rx            : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[AN_PAGE_RX]. */
         uint64_t an_link_good          : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[AN_LINK_GOOD]. */
         uint64_t an_complete           : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[AN_COMPLETE]. */
-        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training done. Set when the 10G or 25GBASE-R
-                                                                 lane or all 40G, 50G, 100GBASE-R lanes have successfully completed BASE-R PMD
-                                                                 link training. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE]
-                                                                 is 10G, 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is
-                                                                 1, and never set otherwise. */
-        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE].
-                                                                 Internal:
-                                                                 Deprecated with GSERR| BASE-R PMD training failure. Set when BASE-R PMD link
-                                                                 training has failed on the 10G or 25GBASE-R lane or any 40G, 50G, 100GBASE-R
-                                                                 lane. Valid if the LPCS type selected by CGX()_CMR()_CONFIG[LMAC_TYPE] is 10G,
-                                                                 25G, 40G, 50G or 100GBASE-R and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is 1, and
-                                                                 never set otherwise. */
+        uint64_t training_done         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[TRAINING_DONE]. */
+        uint64_t training_failure      : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[TRAINING_FAILURE]. */
         uint64_t fec_align_status      : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[FEC_ALIGN_STATUS]. */
         uint64_t rsfec_corr            : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[RSFEC_CORR]. */
         uint64_t rsfec_uncorr          : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets CGX(0..3)_SPU(0..3)_INT[RSFEC_UNCORR]. */
@@ -23627,69 +20937,11 @@ static inline uint64_t CAVM_CGXX_SPUX_RSFEC_UNCORR(uint64_t a, uint64_t b)
 #define arguments_CAVM_CGXX_SPUX_RSFEC_UNCORR(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) cgx#_spu#_rx_eee_wake
- *
- * INTERNAL: CGX SPU  RX EEE Wake Error Counter  Registers
- *
- * Reserved.
- * Internal:
- * A counter that is incremented each time that the LPI receive state diagram enters
- * the RX_WTF state indicating that a wake time fault has been detected.
- */
-union cavm_cgxx_spux_rx_eee_wake
-{
-    uint64_t u;
-    struct cavm_cgxx_spux_rx_eee_wake_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t wtf_error_counter     : 16; /**< [ 15:  0](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Accumulation of wake time faults (rolls over). */
-#else /* Word 0 - Little Endian */
-        uint64_t wtf_error_counter     : 16; /**< [ 15:  0](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Accumulation of wake time faults (rolls over). */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_spux_rx_eee_wake_s cn; */
-};
-typedef union cavm_cgxx_spux_rx_eee_wake cavm_cgxx_spux_rx_eee_wake_t;
-
-static inline uint64_t CAVM_CGXX_SPUX_RX_EEE_WAKE(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_SPUX_RX_EEE_WAKE(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00103e0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e00103e0ll + 0x1000000ll * ((a) & 0x7) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e00103e0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e00103e0ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e00103e0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e00103e0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_SPUX_RX_EEE_WAKE", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_SPUX_RX_EEE_WAKE(a,b) cavm_cgxx_spux_rx_eee_wake_t
-#define bustype_CAVM_CGXX_SPUX_RX_EEE_WAKE(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_SPUX_RX_EEE_WAKE(a,b) "CGXX_SPUX_RX_EEE_WAKE"
-#define device_bar_CAVM_CGXX_SPUX_RX_EEE_WAKE(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_SPUX_RX_EEE_WAKE(a,b) (a)
-#define arguments_CAVM_CGXX_SPUX_RX_EEE_WAKE(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) cgx#_spu#_rx_lpi_timing
  *
  * INTERNAL: CGX SPU RX EEE LPI Timing Parameters Registers
  *
  * Reserved.
- * Internal:
- * This register specifies receiver LPI timing parameters Tqr, Twr and Twtf.
  */
 union cavm_cgxx_spux_rx_lpi_timing
 {
@@ -23697,73 +20949,19 @@ union cavm_cgxx_spux_rx_lpi_timing
     struct cavm_cgxx_spux_rx_lpi_timing_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t rx_lpi_en             : 1;  /**< [ 63: 63](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receive EEE enable. When set, EEE is enabled. */
-        uint64_t rx_lpi_fw             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receive EEE fast wake enable.
-                                                                 When set to 1, fast wake is enabled (i.e. deep sleep is disabled).
-                                                                 The only modes that support fast wake are 25GBASE-R, 40GBASE-R, 50GBASE-R, and 100GBASE-R. */
+        uint64_t rx_lpi_en             : 1;  /**< [ 63: 63](R/W) Reserved. */
+        uint64_t rx_lpi_fw             : 1;  /**< [ 62: 62](R/W) Reserved. */
         uint64_t reserved_60_61        : 2;
-        uint64_t tqr                   : 20; /**< [ 59: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE time the receiver waits for signal detect to be set to OK while in the
-                                                                 RX_SLEEP and RX_QUIET states before asserting rx_fault
-                                                                 802.3-2012 Tables 48-10/49-3, Figures 48-12/49-13.
-                                                                 Tables specifies min of 3 ms/2 ms, max of 4 ms/3 ms.
-                                                                 Also used as rx_quiet_timer for RS-FEC in 802.3bj-2014 Figure 91-11.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value gives 3 ms. */
-        uint64_t twr                   : 20; /**< [ 39: 20](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE time the receiver waits in RX_WAKE state before indicating wake time fault (WTF)
-                                                                 802.3-2012 Tables 48-10/49-3, Figures 48-12/49-13.
-                                                                 Tables specifies max of 9 us/11.5 us/13.7 us.
-                                                                 Also used as first_ramps_counter initial value for RS-FEC in 802.3bj-2014 Figure 91-11.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value gives 9 us. */
-        uint64_t twtf                  : 20; /**< [ 19:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE wake time fault recovery. 802.3-2012 Tables 48-10/49-3, Figures 48-12/49-13.
-                                                                 Tables specifies maximum of 1 ms/10 ms.
-                                                                 Also used as ramps_counter initial value for RS-FEC in 802.3bj-2014 Figure 91-11.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value gives 1 ms. */
+        uint64_t tqr                   : 20; /**< [ 59: 40](R/W) Reserved. */
+        uint64_t twr                   : 20; /**< [ 39: 20](R/W) Reserved. */
+        uint64_t twtf                  : 20; /**< [ 19:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t twtf                  : 20; /**< [ 19:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE wake time fault recovery. 802.3-2012 Tables 48-10/49-3, Figures 48-12/49-13.
-                                                                 Tables specifies maximum of 1 ms/10 ms.
-                                                                 Also used as ramps_counter initial value for RS-FEC in 802.3bj-2014 Figure 91-11.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value gives 1 ms. */
-        uint64_t twr                   : 20; /**< [ 39: 20](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE time the receiver waits in RX_WAKE state before indicating wake time fault (WTF)
-                                                                 802.3-2012 Tables 48-10/49-3, Figures 48-12/49-13.
-                                                                 Tables specifies max of 9 us/11.5 us/13.7 us.
-                                                                 Also used as first_ramps_counter initial value for RS-FEC in 802.3bj-2014 Figure 91-11.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value gives 9 us. */
-        uint64_t tqr                   : 20; /**< [ 59: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE time the receiver waits for signal detect to be set to OK while in the
-                                                                 RX_SLEEP and RX_QUIET states before asserting rx_fault
-                                                                 802.3-2012 Tables 48-10/49-3, Figures 48-12/49-13.
-                                                                 Tables specifies min of 3 ms/2 ms, max of 4 ms/3 ms.
-                                                                 Also used as rx_quiet_timer for RS-FEC in 802.3bj-2014 Figure 91-11.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value gives 3 ms. */
+        uint64_t twtf                  : 20; /**< [ 19:  0](R/W) Reserved. */
+        uint64_t twr                   : 20; /**< [ 39: 20](R/W) Reserved. */
+        uint64_t tqr                   : 20; /**< [ 59: 40](R/W) Reserved. */
         uint64_t reserved_60_61        : 2;
-        uint64_t rx_lpi_fw             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receive EEE fast wake enable.
-                                                                 When set to 1, fast wake is enabled (i.e. deep sleep is disabled).
-                                                                 The only modes that support fast wake are 25GBASE-R, 40GBASE-R, 50GBASE-R, and 100GBASE-R. */
-        uint64_t rx_lpi_en             : 1;  /**< [ 63: 63](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receive EEE enable. When set, EEE is enabled. */
+        uint64_t rx_lpi_fw             : 1;  /**< [ 62: 62](R/W) Reserved. */
+        uint64_t rx_lpi_en             : 1;  /**< [ 63: 63](R/W) Reserved. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_cgxx_spux_rx_lpi_timing_s cn; */
@@ -23796,65 +20994,6 @@ static inline uint64_t CAVM_CGXX_SPUX_RX_LPI_TIMING(uint64_t a, uint64_t b)
 #define arguments_CAVM_CGXX_SPUX_RX_LPI_TIMING(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) cgx#_spu#_rx_lpi_timing2
- *
- * INTERNAL: CGX SPU RX EEE LPI Timing2 Parameters Registers
- *
- * Reserved.
- * Internal:
- * This register specifies receiver LPI timing parameters hold_off_timer.
- */
-union cavm_cgxx_spux_rx_lpi_timing2
-{
-    uint64_t u;
-    struct cavm_cgxx_spux_rx_lpi_timing2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_20_63        : 44;
-        uint64_t hold_off_timer        : 20; /**< [ 19:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 802.3-2008 Figure 108-6 hold off timer for 25G RS-FEC.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 11.5 us. */
-#else /* Word 0 - Little Endian */
-        uint64_t hold_off_timer        : 20; /**< [ 19:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 802.3-2008 Figure 108-6 hold off timer for 25G RS-FEC.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 11.5 us. */
-        uint64_t reserved_20_63        : 44;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_spux_rx_lpi_timing2_s cn; */
-};
-typedef union cavm_cgxx_spux_rx_lpi_timing2 cavm_cgxx_spux_rx_lpi_timing2_t;
-
-static inline uint64_t CAVM_CGXX_SPUX_RX_LPI_TIMING2(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_SPUX_RX_LPI_TIMING2(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0010420ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0010420ll + 0x1000000ll * ((a) & 0x7) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0010420ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0010420ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0010420ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0010420ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_SPUX_RX_LPI_TIMING2", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_SPUX_RX_LPI_TIMING2(a,b) cavm_cgxx_spux_rx_lpi_timing2_t
-#define bustype_CAVM_CGXX_SPUX_RX_LPI_TIMING2(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_SPUX_RX_LPI_TIMING2(a,b) "CGXX_SPUX_RX_LPI_TIMING2"
-#define device_bar_CAVM_CGXX_SPUX_RX_LPI_TIMING2(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_SPUX_RX_LPI_TIMING2(a,b) (a)
-#define arguments_CAVM_CGXX_SPUX_RX_LPI_TIMING2(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) cgx#_spu#_rx_mrk_cnt
  *
  * CGX SPU Receiver Marker Interval Count Control Registers
@@ -23866,15 +21005,7 @@ union cavm_cgxx_spux_rx_mrk_cnt
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
-        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 BASE-R rapid alignment marker receive period for EEE support. For a multilane
-                                                                 40,50,100GBASE-R
-                                                                 logical PCS, this field specifies the expected rapid alignment marker receive period per
-                                                                 lane, i.e. the expected number of received 66b non-marker blocks between consecutive
-                                                                 markers on the same lane. The default value corresponds to a period of 15 blocks
-                                                                 (exclusive) as specified in 802.3bj-2014 Figure 82-9a for 40G, 50G. Should be programmed to
-                                                                 0x7 for 100G per 802.3bj-2014. */
+        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_45_47        : 3;
         uint64_t by_mrk_100g           : 1;  /**< [ 44: 44](R/W) Use alignment marker from 802.3 Table 82-2 (100G) PCS lane 0 as first (of four)
                                                                  RS-FEC CWMs for 25G, 50G and USXGMII LMAC types if this bit is set and if RS-FEC
@@ -23956,15 +21087,7 @@ union cavm_cgxx_spux_rx_mrk_cnt
                                                                  to bullets b), c) and d)). Irrelevant for non- 25G, 50G or USXGMII LMAC types,
                                                                  or if RS-FEC is not enabled. */
         uint64_t reserved_45_47        : 3;
-        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 BASE-R rapid alignment marker receive period for EEE support. For a multilane
-                                                                 40,50,100GBASE-R
-                                                                 logical PCS, this field specifies the expected rapid alignment marker receive period per
-                                                                 lane, i.e. the expected number of received 66b non-marker blocks between consecutive
-                                                                 markers on the same lane. The default value corresponds to a period of 15 blocks
-                                                                 (exclusive) as specified in 802.3bj-2014 Figure 82-9a for 40G, 50G. Should be programmed to
-                                                                 0x7 for 100G per 802.3bj-2014. */
+        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } s;
@@ -23974,15 +21097,7 @@ union cavm_cgxx_spux_rx_mrk_cnt
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
-        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 BASE-R rapid alignment marker receive period for EEE support. For a multilane
-                                                                 40,50,100GBASE-R
-                                                                 logical PCS, this field specifies the expected rapid alignment marker receive period per
-                                                                 lane, i.e. the expected number of received 66b non-marker blocks between consecutive
-                                                                 markers on the same lane. The default value corresponds to a period of 15 blocks
-                                                                 (exclusive) as specified in 802.3bj-2014 Figure 82-9a for 40G, 50G. Should be programmed to
-                                                                 0x7 for 100G per 802.3bj-2014. */
+        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_45_47        : 3;
         uint64_t by_mrk_100g           : 1;  /**< [ 44: 44](R/W) Use alignment marker from 802.3 Table 82-2 (100G) PCS lane 0 as first (of four)
                                                                  RS-FEC CWMs for 25G, 50G and USXGMII LMAC types if this bit is set and if RS-FEC
@@ -24072,15 +21187,7 @@ union cavm_cgxx_spux_rx_mrk_cnt
                                                                  to bullets b), c) and d)). Irrelevant for non- 25G, 50G or USXGMII LMAC types,
                                                                  or if RS-FEC is not enabled. */
         uint64_t reserved_45_47        : 3;
-        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 BASE-R rapid alignment marker receive period for EEE support. For a multilane
-                                                                 40,50,100GBASE-R
-                                                                 logical PCS, this field specifies the expected rapid alignment marker receive period per
-                                                                 lane, i.e. the expected number of received 66b non-marker blocks between consecutive
-                                                                 markers on the same lane. The default value corresponds to a period of 15 blocks
-                                                                 (exclusive) as specified in 802.3bj-2014 Figure 82-9a for 40G, 50G. Should be programmed to
-                                                                 0x7 for 100G per 802.3bj-2014. */
+        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -24188,26 +21295,10 @@ union cavm_cgxx_spux_status1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_12_63        : 52;
-        uint64_t tx_lpi_received       : 1;  /**< [ 11: 11](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Latched high version of [TX_LPI_INDICATION].
-                                                                 LPI events that occur after read and before write will be lost.
-
-                                                                 In order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                                 bit, rather than latching high read-only as specified in 802.3. */
-        uint64_t rx_lpi_received       : 1;  /**< [ 10: 10](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Latched high version of [RX_LPI_INDICATION].
-                                                                 LPI events that occur after read and before write will be lost.
-
-                                                                 In order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                                 bit, rather than latching high read-only as specified in 802.3. */
-        uint64_t tx_lpi_indication     : 1;  /**< [  9:  9](RO/H) Reserved.
-                                                                 Internal:
-                                                                 TX sending LPI.  TX LPI State not in TX_ACTIVE.  802.3-2012 Figure 36-10. */
-        uint64_t rx_lpi_indication     : 1;  /**< [  8:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 RX receiving LPI.  rx_lpi_active = TRUE. 802.3-2012, Figure 36-7a-c. */
+        uint64_t tx_lpi_received       : 1;  /**< [ 11: 11](R/W1C/H) Reserved. */
+        uint64_t rx_lpi_received       : 1;  /**< [ 10: 10](R/W1C/H) Reserved. */
+        uint64_t tx_lpi_indication     : 1;  /**< [  9:  9](RO/H) Reserved. */
+        uint64_t rx_lpi_indication     : 1;  /**< [  8:  8](RO/H) Reserved. */
         uint64_t flt                   : 1;  /**< [  7:  7](RO/H) Fault condition detected.
                                                                  This bit is a logical OR of CGX()_SPU()_STATUS2[XMTFLT, RCVFLT]. */
         uint64_t reserved_3_6          : 4;
@@ -24243,26 +21334,10 @@ union cavm_cgxx_spux_status1
         uint64_t reserved_3_6          : 4;
         uint64_t flt                   : 1;  /**< [  7:  7](RO/H) Fault condition detected.
                                                                  This bit is a logical OR of CGX()_SPU()_STATUS2[XMTFLT, RCVFLT]. */
-        uint64_t rx_lpi_indication     : 1;  /**< [  8:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 RX receiving LPI.  rx_lpi_active = TRUE. 802.3-2012, Figure 36-7a-c. */
-        uint64_t tx_lpi_indication     : 1;  /**< [  9:  9](RO/H) Reserved.
-                                                                 Internal:
-                                                                 TX sending LPI.  TX LPI State not in TX_ACTIVE.  802.3-2012 Figure 36-10. */
-        uint64_t rx_lpi_received       : 1;  /**< [ 10: 10](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Latched high version of [RX_LPI_INDICATION].
-                                                                 LPI events that occur after read and before write will be lost.
-
-                                                                 In order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                                 bit, rather than latching high read-only as specified in 802.3. */
-        uint64_t tx_lpi_received       : 1;  /**< [ 11: 11](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Latched high version of [TX_LPI_INDICATION].
-                                                                 LPI events that occur after read and before write will be lost.
-
-                                                                 In order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                                 bit, rather than latching high read-only as specified in 802.3. */
+        uint64_t rx_lpi_indication     : 1;  /**< [  8:  8](RO/H) Reserved. */
+        uint64_t tx_lpi_indication     : 1;  /**< [  9:  9](RO/H) Reserved. */
+        uint64_t rx_lpi_received       : 1;  /**< [ 10: 10](R/W1C/H) Reserved. */
+        uint64_t tx_lpi_received       : 1;  /**< [ 11: 11](R/W1C/H) Reserved. */
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } s;
@@ -24376,8 +21451,6 @@ static inline uint64_t CAVM_CGXX_SPUX_STATUS2(uint64_t a, uint64_t b)
  * INTERNAL: CGX SPU TX EEE LPI Timing Parameters Registers
  *
  * Reserved.
- * Internal:
- * Transmit LPI timing parameters Tsl, Tql and Tul
  */
 union cavm_cgxx_spux_tx_lpi_timing
 {
@@ -24385,79 +21458,25 @@ union cavm_cgxx_spux_tx_lpi_timing
     struct cavm_cgxx_spux_tx_lpi_timing_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t tx_lpi_en             : 1;  /**< [ 63: 63](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit EEE enable. When set, EEE is enabled. */
-        uint64_t tx_lpi_fw             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit EEE fast wake enable.
-                                                                 When set to 1, fast wake is enabled (i.e. deep sleep is disabled).
-                                                                 The only modes that support fast wake are 25G-BASER, 40G-BASER, 50GBASE-R and 100G-BASER. */
-        uint64_t tx_lpi_ignore_twl     : 1;  /**< [ 61: 61](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit EEE ignore TWL and TWL2 parameters, instead using down_count=22 and down_count=0
-                                                                 for TX_WAKE to TX_WAKE2, and TX_WAKE2 to TX_ACTIVE transitions.
-                                                                 When set to 1, and EEE is enabled and FastWake is disabled for 40G-BASER, 50G-BASER and
-                                                                 100G-BASER, the LPI Transmit state transitions occur on the down_count values.
-                                                                 The only modes using this setting are 50G-BASER, 40G-BASER and 100G-BASER. */
+        uint64_t tx_lpi_en             : 1;  /**< [ 63: 63](R/W) Reserved. */
+        uint64_t tx_lpi_fw             : 1;  /**< [ 62: 62](R/W) Reserved. */
+        uint64_t tx_lpi_ignore_twl     : 1;  /**< [ 61: 61](R/W) Reserved. */
         uint64_t reserved_60           : 1;
-        uint64_t tsl                   : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local sleep time from entering the TX_SLEEP state to when tx_quiet is set to TRUE
-                                                                 802.3 Table 36-8, Figure 36-10.  Table specifies min of 19.9 us, max of 20.1 us.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value gives 20 us. */
+        uint64_t tsl                   : 12; /**< [ 59: 48](R/W) Reserved. */
         uint64_t reserved_44_47        : 4;
-        uint64_t tul                   : 12; /**< [ 43: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local refresh time from entry into the TX_REFRESH state to entry into the TX_QUIET
-                                                                 state.
-                                                                 802.3 Table 36-8, Figure 36-10.  Table specifies min of 19.9 us, max of 20.1 us.
-                                                                 Reset value gives 20 us. */
+        uint64_t tul                   : 12; /**< [ 43: 32](R/W) Reserved. */
         uint64_t reserved_19_31        : 13;
-        uint64_t tql                   : 19; /**< [ 18:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local quiet time from when tx_quiet is set to TRUE to entry into the TX_REFRESH
-                                                                 state
-                                                                 802.3 Table 36-8, Figure 36-10.  Table specifies min of 2.5 ms, max of 2.6 ms.
-                                                                 Reset value gives 2.55 ms. */
+        uint64_t tql                   : 19; /**< [ 18:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t tql                   : 19; /**< [ 18:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local quiet time from when tx_quiet is set to TRUE to entry into the TX_REFRESH
-                                                                 state
-                                                                 802.3 Table 36-8, Figure 36-10.  Table specifies min of 2.5 ms, max of 2.6 ms.
-                                                                 Reset value gives 2.55 ms. */
+        uint64_t tql                   : 19; /**< [ 18:  0](R/W) Reserved. */
         uint64_t reserved_19_31        : 13;
-        uint64_t tul                   : 12; /**< [ 43: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local refresh time from entry into the TX_REFRESH state to entry into the TX_QUIET
-                                                                 state.
-                                                                 802.3 Table 36-8, Figure 36-10.  Table specifies min of 19.9 us, max of 20.1 us.
-                                                                 Reset value gives 20 us. */
+        uint64_t tul                   : 12; /**< [ 43: 32](R/W) Reserved. */
         uint64_t reserved_44_47        : 4;
-        uint64_t tsl                   : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Local sleep time from entering the TX_SLEEP state to when tx_quiet is set to TRUE
-                                                                 802.3 Table 36-8, Figure 36-10.  Table specifies min of 19.9 us, max of 20.1 us.
-                                                                 Units = global 10 ns clock ticks.
-                                                                 Reset value gives 20 us. */
+        uint64_t tsl                   : 12; /**< [ 59: 48](R/W) Reserved. */
         uint64_t reserved_60           : 1;
-        uint64_t tx_lpi_ignore_twl     : 1;  /**< [ 61: 61](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit EEE ignore TWL and TWL2 parameters, instead using down_count=22 and down_count=0
-                                                                 for TX_WAKE to TX_WAKE2, and TX_WAKE2 to TX_ACTIVE transitions.
-                                                                 When set to 1, and EEE is enabled and FastWake is disabled for 40G-BASER, 50G-BASER and
-                                                                 100G-BASER, the LPI Transmit state transitions occur on the down_count values.
-                                                                 The only modes using this setting are 50G-BASER, 40G-BASER and 100G-BASER. */
-        uint64_t tx_lpi_fw             : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit EEE fast wake enable.
-                                                                 When set to 1, fast wake is enabled (i.e. deep sleep is disabled).
-                                                                 The only modes that support fast wake are 25G-BASER, 40G-BASER, 50GBASE-R and 100G-BASER. */
-        uint64_t tx_lpi_en             : 1;  /**< [ 63: 63](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit EEE enable. When set, EEE is enabled. */
+        uint64_t tx_lpi_ignore_twl     : 1;  /**< [ 61: 61](R/W) Reserved. */
+        uint64_t tx_lpi_fw             : 1;  /**< [ 62: 62](R/W) Reserved. */
+        uint64_t tx_lpi_en             : 1;  /**< [ 63: 63](R/W) Reserved. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_cgxx_spux_tx_lpi_timing_s cn; */
@@ -24490,101 +21509,6 @@ static inline uint64_t CAVM_CGXX_SPUX_TX_LPI_TIMING(uint64_t a, uint64_t b)
 #define arguments_CAVM_CGXX_SPUX_TX_LPI_TIMING(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) cgx#_spu#_tx_lpi_timing2
- *
- * INTERNAL: CGX SPU TX EEE LPI Timing2 Parameters Registers
- *
- * Reserved.
- * Internal:
- * This register specifies transmit LPI timer parameters.
- */
-union cavm_cgxx_spux_tx_lpi_timing2
-{
-    uint64_t u;
-    struct cavm_cgxx_spux_tx_lpi_timing2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_60_63        : 4;
-        uint64_t tbyp                  : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit scrambler bypass timer for timing TX_SCR_BYPASS EEE state.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 2.0 us. */
-        uint64_t reserved_44_47        : 4;
-        uint64_t twl2                  : 12; /**< [ 43: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit Wake2 timer for timing TX_WAKE2 EEE state.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 2.45 us. */
-        uint64_t reserved_24_31        : 8;
-        uint64_t twl                   : 12; /**< [ 23: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit Wake timer for timing TX_WAKE EEE state.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 11.0 us. */
-        uint64_t reserved_8_11         : 4;
-        uint64_t t1u                   : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 One micro-second timer for timing TX_ALERT EEE state.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 1.2 us. */
-#else /* Word 0 - Little Endian */
-        uint64_t t1u                   : 8;  /**< [  7:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 One micro-second timer for timing TX_ALERT EEE state.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 1.2 us. */
-        uint64_t reserved_8_11         : 4;
-        uint64_t twl                   : 12; /**< [ 23: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit Wake timer for timing TX_WAKE EEE state.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 11.0 us. */
-        uint64_t reserved_24_31        : 8;
-        uint64_t twl2                  : 12; /**< [ 43: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit Wake2 timer for timing TX_WAKE2 EEE state.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 2.45 us. */
-        uint64_t reserved_44_47        : 4;
-        uint64_t tbyp                  : 12; /**< [ 59: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmit scrambler bypass timer for timing TX_SCR_BYPASS EEE state.
-                                                                 Units in global 10 ns period clock ticks.
-                                                                 Reset value gives 2.0 us. */
-        uint64_t reserved_60_63        : 4;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_cgxx_spux_tx_lpi_timing2_s cn; */
-};
-typedef union cavm_cgxx_spux_tx_lpi_timing2 cavm_cgxx_spux_tx_lpi_timing2_t;
-
-static inline uint64_t CAVM_CGXX_SPUX_TX_LPI_TIMING2(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CGXX_SPUX_TX_LPI_TIMING2(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0010440ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
-        return 0x87e0e0010440ll + 0x1000000ll * ((a) & 0x7) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=3)))
-        return 0x87e0e0010440ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x87e0e0010440ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=3) && (b<=3)))
-        return 0x87e0e0010440ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
-        return 0x87e0e0010440ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
-    __cavm_csr_fatal("CGXX_SPUX_TX_LPI_TIMING2", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_CGXX_SPUX_TX_LPI_TIMING2(a,b) cavm_cgxx_spux_tx_lpi_timing2_t
-#define bustype_CAVM_CGXX_SPUX_TX_LPI_TIMING2(a,b) CSR_TYPE_RSL
-#define basename_CAVM_CGXX_SPUX_TX_LPI_TIMING2(a,b) "CGXX_SPUX_TX_LPI_TIMING2"
-#define device_bar_CAVM_CGXX_SPUX_TX_LPI_TIMING2(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_CGXX_SPUX_TX_LPI_TIMING2(a,b) (a)
-#define arguments_CAVM_CGXX_SPUX_TX_LPI_TIMING2(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) cgx#_spu#_tx_mrk_cnt
  *
  * CGX SPU Transmitter Marker Interval Count Control Registers
@@ -24596,15 +21520,7 @@ union cavm_cgxx_spux_tx_mrk_cnt
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
-        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 BASE-R rapid alignment marker transmit period for EEE support. For a multilane
-                                                                 40,50,100GBASE-R
-                                                                 logical PCS, this field specifies the rapid alignment marker period per lane used by the
-                                                                 transmitter, i.e. the number of 66b non-marker blocks transmitted between consecutive
-                                                                 markers on the same lane. The default value corresponds to a period of 15 blocks
-                                                                 (exclusive) as specified in 802.3bj-2014 Figure 82-9a for 40G, 50G. Should be programmed to
-                                                                 0x7 for 100G per 802.3bj-2014. */
+        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_45_47        : 3;
         uint64_t by_mrk_100g           : 1;  /**< [ 44: 44](R/W) Use alignment marker from 802.3-2012 Table 82-2 (100G) PCS lane 0 as first (of four)
                                                                  RS-FEC CWMs for 25G, 50G and USXGMII LMAC types if this bit is set and if RS-FEC
@@ -24680,15 +21596,7 @@ union cavm_cgxx_spux_tx_mrk_cnt
                                                                  to bullets b), c) and d)). Irrelevant for non- 25G, 50G or USXGMII LMAC types,
                                                                  or if RS-FEC is not enabled. */
         uint64_t reserved_45_47        : 3;
-        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 BASE-R rapid alignment marker transmit period for EEE support. For a multilane
-                                                                 40,50,100GBASE-R
-                                                                 logical PCS, this field specifies the rapid alignment marker period per lane used by the
-                                                                 transmitter, i.e. the number of 66b non-marker blocks transmitted between consecutive
-                                                                 markers on the same lane. The default value corresponds to a period of 15 blocks
-                                                                 (exclusive) as specified in 802.3bj-2014 Figure 82-9a for 40G, 50G. Should be programmed to
-                                                                 0x7 for 100G per 802.3bj-2014. */
+        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } s;
@@ -24698,15 +21606,7 @@ union cavm_cgxx_spux_tx_mrk_cnt
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
-        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 BASE-R rapid alignment marker transmit period for EEE support. For a multilane
-                                                                 40,50,100GBASE-R
-                                                                 logical PCS, this field specifies the rapid alignment marker period per lane used by the
-                                                                 transmitter, i.e. the number of 66b non-marker blocks transmitted between consecutive
-                                                                 markers on the same lane. The default value corresponds to a period of 15 blocks
-                                                                 (exclusive) as specified in 802.3bj-2014 Figure 82-9a for 40G, 50G. Should be programmed to
-                                                                 0x7 for 100G per 802.3bj-2014. */
+        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_45_47        : 3;
         uint64_t by_mrk_100g           : 1;  /**< [ 44: 44](R/W) Use alignment marker from 802.3-2012 Table 82-2 (100G) PCS lane 0 as first (of four)
                                                                  RS-FEC CWMs for 25G, 50G and USXGMII LMAC types if this bit is set and if RS-FEC
@@ -24788,15 +21688,7 @@ union cavm_cgxx_spux_tx_mrk_cnt
                                                                  to bullets b), c) and d)). Irrelevant for non- 25G, 50G or USXGMII LMAC types,
                                                                  or if RS-FEC is not enabled. */
         uint64_t reserved_45_47        : 3;
-        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved.
-                                                                 Internal:
-                                                                 BASE-R rapid alignment marker transmit period for EEE support. For a multilane
-                                                                 40,50,100GBASE-R
-                                                                 logical PCS, this field specifies the rapid alignment marker period per lane used by the
-                                                                 transmitter, i.e. the number of 66b non-marker blocks transmitted between consecutive
-                                                                 markers on the same lane. The default value corresponds to a period of 15 blocks
-                                                                 (exclusive) as specified in 802.3bj-2014 Figure 82-9a for 40G, 50G. Should be programmed to
-                                                                 0x7 for 100G per 802.3bj-2014. */
+        uint64_t ram_mrk_cnt           : 8;  /**< [ 55: 48](R/W) Reserved. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -24865,23 +21757,15 @@ union cavm_cgxx_spux_usx_an_adv
                                                                  0x5 = 5 Gb/s.
                                                                  0x6 = Reserved.
                                                                  0x7 = Reserved. */
-        uint64_t eee_abil              : 1;  /**< [  8:  8](RO) Reserved.
-                                                                 Internal:
-                                                                 Indicates EEE capability. Always 0. */
-        uint64_t eee_clk_stop_abil     : 1;  /**< [  7:  7](RO) Reserved.
-                                                                 Internal:
-                                                                 Indicates EEE clock stop capability. Always 0. */
+        uint64_t eee_abil              : 1;  /**< [  8:  8](RO) Reserved. */
+        uint64_t eee_clk_stop_abil     : 1;  /**< [  7:  7](RO) Reserved. */
         uint64_t reserved_1_6          : 6;
         uint64_t set                   : 1;  /**< [  0:  0](RO) Reserved. */
 #else /* Word 0 - Little Endian */
         uint64_t set                   : 1;  /**< [  0:  0](RO) Reserved. */
         uint64_t reserved_1_6          : 6;
-        uint64_t eee_clk_stop_abil     : 1;  /**< [  7:  7](RO) Reserved.
-                                                                 Internal:
-                                                                 Indicates EEE clock stop capability. Always 0. */
-        uint64_t eee_abil              : 1;  /**< [  8:  8](RO) Reserved.
-                                                                 Internal:
-                                                                 Indicates EEE capability. Always 0. */
+        uint64_t eee_clk_stop_abil     : 1;  /**< [  7:  7](RO) Reserved. */
+        uint64_t eee_abil              : 1;  /**< [  8:  8](RO) Reserved. */
         uint64_t spd                   : 3;  /**< [ 11:  9](R/W) Link speed selection as follows:
                                                                  0x0 = 10 Mb/s.
                                                                  0x1 = 100 Mb/s.
@@ -25204,23 +22088,15 @@ union cavm_cgxx_spux_usx_an_lp_abil
                                                                  0x5 = 5 Gb/s.
                                                                  0x6 = Reserved.
                                                                  0x7 = Reserved. */
-        uint64_t eee_abil              : 1;  /**< [  8:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Indicates EEE capability. Always 0. */
-        uint64_t eee_clk_stop_abil     : 1;  /**< [  7:  7](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Indicates EEE clock stop capability. Always 0. */
+        uint64_t eee_abil              : 1;  /**< [  8:  8](RO/H) Reserved. */
+        uint64_t eee_clk_stop_abil     : 1;  /**< [  7:  7](RO/H) Reserved. */
         uint64_t reserved_1_6          : 6;
         uint64_t set                   : 1;  /**< [  0:  0](RO/H) Reserved. */
 #else /* Word 0 - Little Endian */
         uint64_t set                   : 1;  /**< [  0:  0](RO/H) Reserved. */
         uint64_t reserved_1_6          : 6;
-        uint64_t eee_clk_stop_abil     : 1;  /**< [  7:  7](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Indicates EEE clock stop capability. Always 0. */
-        uint64_t eee_abil              : 1;  /**< [  8:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Indicates EEE capability. Always 0. */
+        uint64_t eee_clk_stop_abil     : 1;  /**< [  7:  7](RO/H) Reserved. */
+        uint64_t eee_abil              : 1;  /**< [  8:  8](RO/H) Reserved. */
         uint64_t spd                   : 3;  /**< [ 11:  9](RO/H) Link speed selection as follows:
                                                                  0x0 = 10 Mb/s.
                                                                  0x1 = 100 Mb/s.
@@ -25366,10 +22242,7 @@ union cavm_cgxx_spu_dbg_control
                                                                  802.3by-2016 Figure 108-6) resides will retain knowledge of uncorrectable errors in the system
                                                                  from the moment the Reed-Solomon decoder is up and running and until the SM leaves
                                                                  ALIGN_ACQUIRED. If any uncorrectable errors occur in that interval, the SM will go to THREE_BAD
-                                                                 and cause restart lock to occur. This behavior will be preempted if this bit is set to 1.
-
-                                                                 Internal:
-                                                                 This was added to disable part of the fix to bug 36607. */
+                                                                 and cause restart lock to occur. This behavior will be preempted if this bit is set to 1. */
         uint64_t br_ber_mon_dis        : 1;  /**< [ 30: 30](R/W) BASE-R bit error rate monitor disable. This bit should be clear for normal operation.
                                                                  Setting it disables the BASE-R BER monitor state machine defined in 802.3-2008 Figure
                                                                  49-13 for 10G, 25GBASE-R, also used for USXGMII and 802.3ba-2010 Figure 82-13 for
@@ -25507,10 +22380,7 @@ union cavm_cgxx_spu_dbg_control
                                                                  802.3by-2016 Figure 108-6) resides will retain knowledge of uncorrectable errors in the system
                                                                  from the moment the Reed-Solomon decoder is up and running and until the SM leaves
                                                                  ALIGN_ACQUIRED. If any uncorrectable errors occur in that interval, the SM will go to THREE_BAD
-                                                                 and cause restart lock to occur. This behavior will be preempted if this bit is set to 1.
-
-                                                                 Internal:
-                                                                 This was added to disable part of the fix to bug 36607. */
+                                                                 and cause restart lock to occur. This behavior will be preempted if this bit is set to 1. */
         uint64_t us_clk_period         : 12; /**< [ 43: 32](R/W) Microsecond clock period. Specifies the number of 100MHz cycles per microseconds, minus one.
                                                                  Only sensical value is 100 - 1 == 99 == 0x63.
                                                                  This is used by the BASE-R BER monitor timers. */
@@ -25689,10 +22559,7 @@ union cavm_cgxx_spu_dbg_control
                                                                  802.3by-2016 Figure 108-6) resides will retain knowledge of uncorrectable errors in the system
                                                                  from the moment the Reed-Solomon decoder is up and running and until the SM leaves
                                                                  ALIGN_ACQUIRED. If any uncorrectable errors occur in that interval, the SM will go to THREE_BAD
-                                                                 and cause restart lock to occur. This behavior will be preempted if this bit is set to 1.
-
-                                                                 Internal:
-                                                                 This was added to disable part of the fix to bug 36607. */
+                                                                 and cause restart lock to occur. This behavior will be preempted if this bit is set to 1. */
         uint64_t br_ber_mon_dis        : 1;  /**< [ 30: 30](R/W) BASE-R bit error rate monitor disable. This bit should be clear for normal operation.
                                                                  Setting it disables the BASE-R BER monitor state machine defined in 802.3-2008 Figure
                                                                  49-13 for 10G, 25GBASE-R, also used for USXGMII and 802.3ba-2010 Figure 82-13 for
@@ -25739,18 +22606,7 @@ union cavm_cgxx_spu_dbg_control
                                                                  Normalization improves accuracy for larger skew values but reduces the accuracy (due to
                                                                  timestamp measurement errors) for small skew values. */
         uint64_t reserved_20_27        : 8;
-        uint64_t br_pmd_train_soft_en  : 1;  /**< [ 19: 19](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Enable BASE-R PMD software controlled link training. This
-                                                                 bit configures the operation mode for BASE-R link training for all LMACs and
-                                                                 lanes. When this bit is set along with CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] for
-                                                                 a given LMAC, the BASE-R link training protocol for that LMAC is executed under
-                                                                 software control, whereby the contents the CGX()_SPU()_BR_PMD_LD_CUP and
-                                                                 CGX()_SPU()_BR_PMD_LD_REP registers are updated by software. When this bit is
-                                                                 clear and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is set, the link training
-                                                                 protocol is fully automated in hardware, whereby the contents
-                                                                 CGX()_SPU()_BR_PMD_LD_CUP and CGX()_SPU()_BR_PMD_LD_REP registers are
-                                                                 automatically updated by hardware. */
+        uint64_t br_pmd_train_soft_en  : 1;  /**< [ 19: 19](R/W) Reserved. */
         uint64_t reserved_17_18        : 2;
         uint64_t scramble_dis          : 1;  /**< [ 16: 16](R/W) BASE-R scrambler/descrambler disable. Setting this bit to 1 disables the BASE-R scrambler
                                                                  & descrambler functions and FEC PN-2112 scrambler & descrambler functions for debug
@@ -25774,18 +22630,7 @@ union cavm_cgxx_spu_dbg_control
                                                                  & descrambler functions and FEC PN-2112 scrambler & descrambler functions for debug
                                                                  purposes. */
         uint64_t reserved_17_18        : 2;
-        uint64_t br_pmd_train_soft_en  : 1;  /**< [ 19: 19](R/W) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Enable BASE-R PMD software controlled link training. This
-                                                                 bit configures the operation mode for BASE-R link training for all LMACs and
-                                                                 lanes. When this bit is set along with CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] for
-                                                                 a given LMAC, the BASE-R link training protocol for that LMAC is executed under
-                                                                 software control, whereby the contents the CGX()_SPU()_BR_PMD_LD_CUP and
-                                                                 CGX()_SPU()_BR_PMD_LD_REP registers are updated by software. When this bit is
-                                                                 clear and CGX()_SPU()_BR_PMD_CONTROL[TRAIN_EN] is set, the link training
-                                                                 protocol is fully automated in hardware, whereby the contents
-                                                                 CGX()_SPU()_BR_PMD_LD_CUP and CGX()_SPU()_BR_PMD_LD_REP registers are
-                                                                 automatically updated by hardware. */
+        uint64_t br_pmd_train_soft_en  : 1;  /**< [ 19: 19](R/W) Reserved. */
         uint64_t reserved_20_27        : 8;
         uint64_t timestamp_norm_dis    : 1;  /**< [ 28: 28](R/W) Multi-lane BASE-R RX timestamp normalization disable. This bit controls the generation
                                                                  of the receive SOP timestamp passed to the SMU sub-block for a 40G, 50G or 100GBASE-R
@@ -25836,10 +22681,7 @@ union cavm_cgxx_spu_dbg_control
                                                                  802.3by-2016 Figure 108-6) resides will retain knowledge of uncorrectable errors in the system
                                                                  from the moment the Reed-Solomon decoder is up and running and until the SM leaves
                                                                  ALIGN_ACQUIRED. If any uncorrectable errors occur in that interval, the SM will go to THREE_BAD
-                                                                 and cause restart lock to occur. This behavior will be preempted if this bit is set to 1.
-
-                                                                 Internal:
-                                                                 This was added to disable part of the fix to bug 36607. */
+                                                                 and cause restart lock to occur. This behavior will be preempted if this bit is set to 1. */
         uint64_t us_clk_period         : 12; /**< [ 43: 32](R/W) Microsecond clock period. Specifies the number of 100MHz cycles per microseconds, minus one.
                                                                  Only sensical value is 100 - 1 == 99 == 0x63.
                                                                  This is used by the BASE-R BER monitor timers. */
@@ -25995,21 +22837,11 @@ union cavm_cgxx_spu_sdsx_states
         uint64_t am_lock_invld_cnt     : 2;  /**< [ 51: 50](RO/H) Multi-lane BASE-R alignment marker lock state machine invalid AM counter. */
         uint64_t am_lock_sm            : 2;  /**< [ 49: 48](RO/H) Multi-lane BASE-R alignment marker lock state machine state. */
         uint64_t reserved_45_47        : 3;
-        uint64_t train_sm              : 3;  /**< [ 44: 42](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training state machine state. */
-        uint64_t train_code_viol       : 1;  /**< [ 41: 41](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training code violation in received control channel. */
-        uint64_t train_frame_lock      : 1;  /**< [ 40: 40](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training frame lock status. */
-        uint64_t train_lock_found_1st_marker : 1;/**< [ 39: 39](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training frame lock status. */
-        uint64_t train_lock_bad_markers : 3; /**< [ 38: 36](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training lock state machine bad markers counter. */
+        uint64_t train_sm              : 3;  /**< [ 44: 42](RO/H) Reserved. */
+        uint64_t train_code_viol       : 1;  /**< [ 41: 41](RO/H) Reserved. */
+        uint64_t train_frame_lock      : 1;  /**< [ 40: 40](RO/H) Reserved. */
+        uint64_t train_lock_found_1st_marker : 1;/**< [ 39: 39](RO/H) Reserved. */
+        uint64_t train_lock_bad_markers : 3; /**< [ 38: 36](RO/H) Reserved. */
         uint64_t reserved_35           : 1;
         uint64_t an_arb_sm             : 3;  /**< [ 34: 32](RO/H) Autonegotiation arbitration state machine state. */
         uint64_t an_rx_sm              : 2;  /**< [ 31: 30](RO/H) Autonegotiation receive state machine state. */
@@ -26033,21 +22865,11 @@ union cavm_cgxx_spu_sdsx_states
         uint64_t an_rx_sm              : 2;  /**< [ 31: 30](RO/H) Autonegotiation receive state machine state. */
         uint64_t an_arb_sm             : 3;  /**< [ 34: 32](RO/H) Autonegotiation arbitration state machine state. */
         uint64_t reserved_35           : 1;
-        uint64_t train_lock_bad_markers : 3; /**< [ 38: 36](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training lock state machine bad markers counter. */
-        uint64_t train_lock_found_1st_marker : 1;/**< [ 39: 39](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training frame lock status. */
-        uint64_t train_frame_lock      : 1;  /**< [ 40: 40](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training frame lock status. */
-        uint64_t train_code_viol       : 1;  /**< [ 41: 41](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training code violation in received control channel. */
-        uint64_t train_sm              : 3;  /**< [ 44: 42](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Deprecated with GSERR| Link training state machine state. */
+        uint64_t train_lock_bad_markers : 3; /**< [ 38: 36](RO/H) Reserved. */
+        uint64_t train_lock_found_1st_marker : 1;/**< [ 39: 39](RO/H) Reserved. */
+        uint64_t train_frame_lock      : 1;  /**< [ 40: 40](RO/H) Reserved. */
+        uint64_t train_code_viol       : 1;  /**< [ 41: 41](RO/H) Reserved. */
+        uint64_t train_sm              : 3;  /**< [ 44: 42](RO/H) Reserved. */
         uint64_t reserved_45_47        : 3;
         uint64_t am_lock_sm            : 2;  /**< [ 49: 48](RO/H) Multi-lane BASE-R alignment marker lock state machine state. */
         uint64_t am_lock_invld_cnt     : 2;  /**< [ 51: 50](RO/H) Multi-lane BASE-R alignment marker lock state machine invalid AM counter. */

@@ -79,9 +79,6 @@
  * NIX_RX_PARSE_S[CHAN], NIX_SQ_CTX_S[DEFAULT_CHAN]. CNXXXX implements a subset of
  * these channels. Specifically, only channels for links enumerated by NIX_LINK_E
  * are implemented.
- *
- * Internal:
- * P2X/X2P channel enumeration for t9x.
  */
 #define CAVM_NIX_CHAN_E_CGXX_LMACX_CHX(a,b,c) (0x800 + 0x100 * (a) + 0x10 * (b) + (c))
 #define CAVM_NIX_CHAN_E_LBKX_CHX(a,b) (0 + 0x100 * (a) + (b))
@@ -384,17 +381,6 @@
  *
  * NIX Send Layer 3 Header Type Enumeration
  * Enumerates values of NIX_SEND_HDR_S[OL3TYPE], NIX_SEND_HDR_S[IL3TYPE].
- * Internal:
- * Encoding matches DPDK TX IP types:
- * \<pre\>
- * PKT_TX_IP_CKSUM      (1ULL \<\< 54)
- * PKT_TX_IPV4          (1ULL \<\< 55)
- * PKT_TX_IPV6          (1ULL \<\< 56)
- *
- * PKT_TX_OUTER_IP_CKSUM(1ULL \<\< 58)
- * PKT_TX_OUTER_IPV4    (1ULL \<\< 59)
- * PKT_TX_OUTER_IPV6    (1ULL \<\< 60)
- * \</pre\>
  */
 #define CAVM_NIX_SENDL3TYPE_E_IP4 (2)
 #define CAVM_NIX_SENDL3TYPE_E_IP4_CKSUM (3)
@@ -406,14 +392,6 @@
  *
  * NIX Send Layer 4 Header Type Enumeration
  * Enumerates values of NIX_SEND_HDR_S[OL4TYPE], NIX_SEND_HDR_S[IL4TYPE].
- * Internal:
- * Encoding matches DPDK TX L4 types.
- * \<pre\>
- * PKT_TX_L4_NO_CKSUM   (0ULL \<\< 52)  // Disable L4 cksum of TX pkt.
- * PKT_TX_TCP_CKSUM     (1ULL \<\< 52)  // TCP cksum of TX pkt. computed by nic.
- * PKT_TX_SCTP_CKSUM    (2ULL \<\< 52)  // SCTP cksum of TX pkt. computed by nic.
- * PKT_TX_UDP_CKSUM     (3ULL \<\< 52)  // UDP cksum of TX pkt. computed by nic.
- * \</pre\>
  */
 #define CAVM_NIX_SENDL4TYPE_E_NONE (0)
 #define CAVM_NIX_SENDL4TYPE_E_SCTP_CKSUM (2)
@@ -426,9 +404,6 @@
  * NIX Send Load Type Enumeration
  * Enumerates the load transaction types for reading segment bytes specified by
  * NIX_SEND_SG_S[LD_TYPE] and NIX_SEND_JUMP_S[LD_TYPE].
- *
- * Internal:
- * The hardware implementation treats undefined encodings as LDD load type.
  */
 #define CAVM_NIX_SENDLDTYPE_E_LDD (0)
 #define CAVM_NIX_SENDLDTYPE_E_LDT (1)
@@ -652,12 +627,7 @@ union cavm_nix_aq_inst_s
         uint64_t lf                    : 7;  /**< [ 14:  8] Local function. Software must map the LF to a PF and function with
                                                                  NIX_PRIV_LF()_CFG[PF_FUNC] before issuing the AQ instruction.
                                                                  NIX_PRIV_LF()_CFG[ENA] is not required to be set when executing AQ
-                                                                 instructions.
-
-                                                                 Internal:
-                                                                 Hardware uses PF(0)'s stream ID when accessing hardware context structures
-                                                                 in LLC/DRAM, but NDC tracks the LF for context structures in its cache
-                                                                 using the NIX_PRIV_LF()_CFG[PF_FUNC]'s stream ID. */
+                                                                 instructions. */
         uint64_t ctype                 : 4;  /**< [  7:  4] Context type of instruction enumerated by NIX_AQ_CTYPE_E. */
         uint64_t op                    : 4;  /**< [  3:  0] Instruction op code enumerated by NIX_AQ_INSTOP_E. */
 #else /* Word 0 - Little Endian */
@@ -666,12 +636,7 @@ union cavm_nix_aq_inst_s
         uint64_t lf                    : 7;  /**< [ 14:  8] Local function. Software must map the LF to a PF and function with
                                                                  NIX_PRIV_LF()_CFG[PF_FUNC] before issuing the AQ instruction.
                                                                  NIX_PRIV_LF()_CFG[ENA] is not required to be set when executing AQ
-                                                                 instructions.
-
-                                                                 Internal:
-                                                                 Hardware uses PF(0)'s stream ID when accessing hardware context structures
-                                                                 in LLC/DRAM, but NDC tracks the LF for context structures in its cache
-                                                                 using the NIX_PRIV_LF()_CFG[PF_FUNC]'s stream ID. */
+                                                                 instructions. */
         uint64_t reserved_15_23        : 9;
         uint64_t cindex                : 20; /**< [ 43: 24] Context index. Index of context of type [CTYPE] within [LF]. For example,
                                                                  if [CTYPE] = NIX_AQ_CTYPE_E::RQ, this is the RQ index within the [LF]. */
@@ -697,10 +662,7 @@ union cavm_nix_aq_inst_s
                                                                  * Otherwise, software must reserve at least one cache line.
 
                                                                  Hardware always stores full cache lines when writing NIX_AQ_RES_S and
-                                                                 following context structures (e.g. NIX_RQ_CTX_S), if any.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 following context structures (e.g. NIX_RQ_CTX_S), if any. */
 #else /* Word 1 - Little Endian */
         uint64_t res_addr              : 64; /**< [127: 64] Result IOVA. Specifies where to write NIX_AQ_RES_S.
 
@@ -717,10 +679,7 @@ union cavm_nix_aq_inst_s
                                                                  * Otherwise, software must reserve at least one cache line.
 
                                                                  Hardware always stores full cache lines when writing NIX_AQ_RES_S and
-                                                                 following context structures (e.g. NIX_RQ_CTX_S), if any.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 following context structures (e.g. NIX_RQ_CTX_S), if any. */
 #endif /* Word 1 - End */
     } s;
     /* struct cavm_nix_aq_inst_s_s cn; */
@@ -855,19 +814,13 @@ union cavm_nix_cq_ctx_s
 
                                                                  Bits \<8:0\> must be zero; address must be 512-byte aligned.
                                                                  Bits \<63:53\> are ignored by hardware; software should use a sign-extended
-                                                                 bit \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 bit \<52\> for forward compatibility. */
 #else /* Word 0 - Little Endian */
         uint64_t base                  : 64; /**< [ 63:  0] Base LF IOVA of CQ ring in LLC/DRAM.
 
                                                                  Bits \<8:0\> must be zero; address must be 512-byte aligned.
                                                                  Bits \<63:53\> are ignored by hardware; software should use a sign-extended
-                                                                 bit \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 bit \<52\> for forward compatibility. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t wrptr                 : 20; /**< [127:108] Internal pointer for writing to the CQ ring. */
@@ -903,10 +856,7 @@ union cavm_nix_cq_ctx_s
                                                                  when the corresponding error is detected for a send completion CQE. The CQ is
                                                                  stopped and all new CQEs to be added to it are dropped. */
         uint64_t qint_idx              : 7;  /**< [ 90: 84] Error queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [CQ_ERR_INT] events.
-
-                                                                 Internal:
-                                                                 See QINT message generation note in NIX_RQ_CTX_S[QINT_IDX]. */
+                                                                 NIX_LF_QINT()*) which receives [CQ_ERR_INT] events. */
         uint64_t reserved_81_83        : 3;
         uint64_t bpid                  : 9;  /**< [ 80: 72] Backpressure ID (index {a} of NIX_AF_RX_BPID()_STATUS) to which
                                                                  backpressure is asserted when [BP_ENA] bit is set. */
@@ -921,10 +871,7 @@ union cavm_nix_cq_ctx_s
                                                                  backpressure is asserted when [BP_ENA] bit is set. */
         uint64_t reserved_81_83        : 3;
         uint64_t qint_idx              : 7;  /**< [ 90: 84] Error queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [CQ_ERR_INT] events.
-
-                                                                 Internal:
-                                                                 See QINT message generation note in NIX_RQ_CTX_S[QINT_IDX]. */
+                                                                 NIX_LF_QINT()*) which receives [CQ_ERR_INT] events. */
         uint64_t cq_err                : 1;  /**< [ 91: 91] CQ error. Set along with the NIX_CQERRINT_E::WR_FULL bit in [CQ_ERR_INT]
                                                                  when the corresponding error is detected for a send completion CQE. The CQ is
                                                                  stopped and all new CQEs to be added to it are dropped. */
@@ -1090,19 +1037,13 @@ union cavm_nix_cq_ctx_s
 
                                                                  Bits \<8:0\> must be zero; address must be 512-byte aligned.
                                                                  Bits \<63:53\> are ignored by hardware; software should use a sign-extended
-                                                                 bit \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 bit \<52\> for forward compatibility. */
 #else /* Word 0 - Little Endian */
         uint64_t base                  : 64; /**< [ 63:  0] Base LF IOVA of CQ ring in LLC/DRAM.
 
                                                                  Bits \<8:0\> must be zero; address must be 512-byte aligned.
                                                                  Bits \<63:53\> are ignored by hardware; software should use a sign-extended
-                                                                 bit \<52\> for forward compatibility.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<6:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 bit \<52\> for forward compatibility. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t wrptr                 : 20; /**< [127:108] Internal pointer for writing to the CQ ring. */
@@ -1149,14 +1090,7 @@ union cavm_nix_cq_ctx_s
 
                                                                  Software should set CQ threshold fields which are compared with shifted_CNT or
                                                                  [AVG_LEVEL] accordingly, including [BP], [DROP], NIX_RQ_CTX_S[XQE_DROP] and
-                                                                 NIX_RQ_CTX_S[XQE_PASS].
-
-                                                                 Internal:
-                                                                 Setting [AVG_CON] \<= 240 ensures that [AVG_LEVEL] is properly updated when
-                                                                 the CQ is less than 15/16 full. With a higher [AVG_CON] value, if
-                                                                 [AVG_LEVEL] reaches 0, it may remain stuck at 0 because the following
-                                                                 expression may evaluate to 0 due to integer truncation:
-                                                                 _ ((256 - adjusted_CON)*shifted_CNT) / 256. */
+                                                                 NIX_RQ_CTX_S[XQE_PASS]. */
         uint64_t cint_idx              : 7;  /**< [ 98: 92] Completion interrupt index. Select the CINT within LF (index {a} of
                                                                  NIX_LF_CINT()*) which receives completion events for
                                                                  this CQ. */
@@ -1164,10 +1098,7 @@ union cavm_nix_cq_ctx_s
                                                                  when the corresponding error is detected for a send completion CQE. The CQ is
                                                                  stopped and all new CQEs to be added to it are dropped. */
         uint64_t qint_idx              : 7;  /**< [ 90: 84] Error queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [CQ_ERR_INT] events.
-
-                                                                 Internal:
-                                                                 See QINT message generation note in NIX_RQ_CTX_S[QINT_IDX]. */
+                                                                 NIX_LF_QINT()*) which receives [CQ_ERR_INT] events. */
         uint64_t reserved_81_83        : 3;
         uint64_t bpid                  : 9;  /**< [ 80: 72] Backpressure ID (index {a} of NIX_AF_RX_BPID()_STATUS) to which
                                                                  backpressure is asserted when [BP_ENA] bit is set. */
@@ -1182,10 +1113,7 @@ union cavm_nix_cq_ctx_s
                                                                  backpressure is asserted when [BP_ENA] bit is set. */
         uint64_t reserved_81_83        : 3;
         uint64_t qint_idx              : 7;  /**< [ 90: 84] Error queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [CQ_ERR_INT] events.
-
-                                                                 Internal:
-                                                                 See QINT message generation note in NIX_RQ_CTX_S[QINT_IDX]. */
+                                                                 NIX_LF_QINT()*) which receives [CQ_ERR_INT] events. */
         uint64_t cq_err                : 1;  /**< [ 91: 91] CQ error. Set along with the NIX_CQERRINT_E::WR_FULL bit in [CQ_ERR_INT]
                                                                  when the corresponding error is detected for a send completion CQE. The CQ is
                                                                  stopped and all new CQEs to be added to it are dropped. */
@@ -1235,14 +1163,7 @@ union cavm_nix_cq_ctx_s
 
                                                                  Software should set CQ threshold fields which are compared with shifted_CNT or
                                                                  [AVG_LEVEL] accordingly, including [BP], [DROP], NIX_RQ_CTX_S[XQE_DROP] and
-                                                                 NIX_RQ_CTX_S[XQE_PASS].
-
-                                                                 Internal:
-                                                                 Setting [AVG_CON] \<= 240 ensures that [AVG_LEVEL] is properly updated when
-                                                                 the CQ is less than 15/16 full. With a higher [AVG_CON] value, if
-                                                                 [AVG_LEVEL] reaches 0, it may remain stuck at 0 because the following
-                                                                 expression may evaluate to 0 due to integer truncation:
-                                                                 _ ((256 - adjusted_CON)*shifted_CNT) / 256. */
+                                                                 NIX_RQ_CTX_S[XQE_PASS]. */
         uint64_t wrptr                 : 20; /**< [127:108] Internal pointer for writing to the CQ ring. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
@@ -1392,9 +1313,7 @@ union cavm_nix_cqe_hdr_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t cqe_type              : 4;  /**< [ 63: 60] Completion queue entry type. Enumerated by NIX_XQE_TYPE_E. */
-        uint64_t node                  : 2;  /**< [ 59: 58] Node number on which the packet was received or transmitted.
-                                                                 Internal:
-                                                                 This is needed by software; do not remove on single-node parts. */
+        uint64_t node                  : 2;  /**< [ 59: 58] Node number on which the packet was received or transmitted. */
         uint64_t reserved_52_57        : 6;
         uint64_t q                     : 20; /**< [ 51: 32] RQ or SQ within VF/PF. */
         uint64_t tag                   : 32; /**< [ 31:  0] Tag computed for the RX packet. Valid for receive descriptor only.
@@ -1404,9 +1323,7 @@ union cavm_nix_cqe_hdr_s
                                                                  See pseudocode in NIX_RQ_CTX_S[LTAG]. */
         uint64_t q                     : 20; /**< [ 51: 32] RQ or SQ within VF/PF. */
         uint64_t reserved_52_57        : 6;
-        uint64_t node                  : 2;  /**< [ 59: 58] Node number on which the packet was received or transmitted.
-                                                                 Internal:
-                                                                 This is needed by software; do not remove on single-node parts. */
+        uint64_t node                  : 2;  /**< [ 59: 58] Node number on which the packet was received or transmitted. */
         uint64_t cqe_type              : 4;  /**< [ 63: 60] Completion queue entry type. Enumerated by NIX_XQE_TYPE_E. */
 #endif /* Word 0 - End */
     } s;
@@ -1464,10 +1381,11 @@ union cavm_nix_iova_s
 /**
  * Structure nix_ipsec_dyno_s
  *
- * INTERNAL: NIX IPSEC Dynamic Ordering Counter Structure
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX IPSEC Dynamic Ordering Counter Structure
+ * This structure specifies the format of an IPSEC dynamic ordering (DYNO) counter
+ * in NDC/LLC/DRAM. See NIX_AF_LF()_RX_IPSEC_DYNO_CFG[DYNO_ENA].
+ * Software uses the same structure format to read and write a DYNO counter with
+ * the NIX admin queue.
  */
 union cavm_nix_ipsec_dyno_s
 {
@@ -2059,21 +1977,13 @@ union cavm_nix_rq_ctx_s
                                                                  otherwise) to the first WQE byte stored in the buffer. */
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t reserved_128_139      : 12;
 #else /* Word 2 - Little Endian */
         uint64_t reserved_128_139      : 12;
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t wqe_skip              : 2;  /**< [147:146] WQE start offset. The number of 128-byte cache lines to skip from the WQE
                                                                  buffer pointer (from [LPB_AURA] when [ENA_WQWD] is set and [WQE_AURA]
                                                                  otherwise) to the first WQE byte stored in the buffer. */
@@ -2323,13 +2233,7 @@ union cavm_nix_rq_ctx_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t reserved_315_319      : 5;
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t reserved_288_291      : 4;
@@ -2378,13 +2282,7 @@ union cavm_nix_rq_ctx_s
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t reserved_315_319      : 5;
 #endif /* Word 4 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
@@ -2814,21 +2712,13 @@ union cavm_nix_rq_ctx_s
                                                                  otherwise) to the first WQE byte stored in the buffer. */
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t reserved_128_139      : 12;
 #else /* Word 2 - Little Endian */
         uint64_t reserved_128_139      : 12;
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t wqe_skip              : 2;  /**< [147:146] WQE start offset. The number of 128-byte cache lines to skip from the WQE
                                                                  buffer pointer (from [LPB_AURA] when [ENA_WQWD] is set and [WQE_AURA]
                                                                  otherwise) to the first WQE byte stored in the buffer. */
@@ -3078,13 +2968,7 @@ union cavm_nix_rq_ctx_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t reserved_315_319      : 5;
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t reserved_288_291      : 4;
@@ -3133,13 +3017,7 @@ union cavm_nix_rq_ctx_s
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t reserved_315_319      : 5;
 #endif /* Word 4 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
@@ -3309,9 +3187,7 @@ union cavm_nix_rq_ctx_s
 
                                                                  When [SSO_ENA] is set and [ENA_WQWD] is clear, the WQE is written to a
                                                                  dedicated buffer allocated from [WQE_AURA]. */
-        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved. */
         uint64_t sso_ena               : 1;  /**< [  1:  1] WQE enable. Selects the receive descriptor type and destination generated for the LF.
                                                                  0 = The descriptor type is a CQE written to the CQ ring selected by NIX_RQ_CTX_S[CQ].
                                                                  1 = The descriptor type is a WQE sent to SSO. */
@@ -3321,9 +3197,7 @@ union cavm_nix_rq_ctx_s
         uint64_t sso_ena               : 1;  /**< [  1:  1] WQE enable. Selects the receive descriptor type and destination generated for the LF.
                                                                  0 = The descriptor type is a CQE written to the CQ ring selected by NIX_RQ_CTX_S[CQ].
                                                                  1 = The descriptor type is a WQE sent to SSO. */
-        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved. */
         uint64_t ena_wqwd              : 1;  /**< [  3:  3] Enable WQE with data. Not used when [SSO_ENA] is clear.
 
                                                                  When [SSO_ENA] and [ENA_WQWD] are both set, [SPB_ENA] must be clear and the WQE is
@@ -3574,21 +3448,13 @@ union cavm_nix_rq_ctx_s
                                                                  otherwise) to the first WQE byte stored in the buffer. */
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t reserved_128_139      : 12;
 #else /* Word 2 - Little Endian */
         uint64_t reserved_128_139      : 12;
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t wqe_skip              : 2;  /**< [147:146] WQE start offset. The number of 128-byte cache lines to skip from the WQE
                                                                  buffer pointer (from [LPB_AURA] when [ENA_WQWD] is set and [WQE_AURA]
                                                                  otherwise) to the first WQE byte stored in the buffer. */
@@ -3838,13 +3704,7 @@ union cavm_nix_rq_ctx_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t reserved_315_319      : 5;
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t reserved_288_291      : 4;
@@ -3893,13 +3753,7 @@ union cavm_nix_rq_ctx_s
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t reserved_315_319      : 5;
 #endif /* Word 4 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
@@ -4062,9 +3916,7 @@ union cavm_nix_rq_ctx_s
 
                                                                  When [SSO_ENA] is set and [ENA_WQWD] is clear, the WQE is written to a
                                                                  dedicated buffer allocated from [WQE_AURA]. */
-        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved. */
         uint64_t sso_ena               : 1;  /**< [  1:  1] WQE enable. Selects the receive descriptor type and destination generated for the LF.
                                                                  0 = The descriptor type is a CQE written to the CQ ring selected by NIX_RQ_CTX_S[CQ].
                                                                  1 = The descriptor type is a WQE sent to SSO. */
@@ -4074,9 +3926,7 @@ union cavm_nix_rq_ctx_s
         uint64_t sso_ena               : 1;  /**< [  1:  1] WQE enable. Selects the receive descriptor type and destination generated for the LF.
                                                                  0 = The descriptor type is a CQE written to the CQ ring selected by NIX_RQ_CTX_S[CQ].
                                                                  1 = The descriptor type is a WQE sent to SSO. */
-        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved. */
         uint64_t ena_wqwd              : 1;  /**< [  3:  3] Enable WQE with data. Not used when [SSO_ENA] is clear.
 
                                                                  When [SSO_ENA] and [ENA_WQWD] are both set, [SPB_ENA] must be clear and the WQE is
@@ -4327,21 +4177,13 @@ union cavm_nix_rq_ctx_s
                                                                  otherwise) to the first WQE byte stored in the buffer. */
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t reserved_128_139      : 12;
 #else /* Word 2 - Little Endian */
         uint64_t reserved_128_139      : 12;
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t wqe_skip              : 2;  /**< [147:146] WQE start offset. The number of 128-byte cache lines to skip from the WQE
                                                                  buffer pointer (from [LPB_AURA] when [ENA_WQWD] is set and [WQE_AURA]
                                                                  otherwise) to the first WQE byte stored in the buffer. */
@@ -4591,13 +4433,7 @@ union cavm_nix_rq_ctx_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t reserved_315_319      : 5;
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t reserved_288_291      : 4;
@@ -4646,13 +4482,7 @@ union cavm_nix_rq_ctx_s
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t reserved_315_319      : 5;
 #endif /* Word 4 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
@@ -4808,9 +4638,7 @@ union cavm_nix_rq_ctx_s
 
                                                                  When [SSO_ENA] is set and [ENA_WQWD] is clear, the WQE is written to a
                                                                  dedicated buffer allocated from [WQE_AURA]. */
-        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved. */
         uint64_t sso_ena               : 1;  /**< [  1:  1] WQE enable. Selects the receive descriptor type and destination generated for the LF.
                                                                  0 = The descriptor type is a CQE written to the CQ ring selected by NIX_RQ_CTX_S[CQ].
                                                                  1 = The descriptor type is a WQE sent to SSO. */
@@ -4820,9 +4648,7 @@ union cavm_nix_rq_ctx_s
         uint64_t sso_ena               : 1;  /**< [  1:  1] WQE enable. Selects the receive descriptor type and destination generated for the LF.
                                                                  0 = The descriptor type is a CQE written to the CQ ring selected by NIX_RQ_CTX_S[CQ].
                                                                  1 = The descriptor type is a WQE sent to SSO. */
-        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsech_ena            : 1;  /**< [  2:  2] Reserved. */
         uint64_t ena_wqwd              : 1;  /**< [  3:  3] Enable WQE with data. Not used when [SSO_ENA] is clear.
 
                                                                  When [SSO_ENA] and [ENA_WQWD] are both set, [SPB_ENA] must be clear and the WQE is
@@ -5073,21 +4899,13 @@ union cavm_nix_rq_ctx_s
                                                                  otherwise) to the first WQE byte stored in the buffer. */
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t reserved_128_139      : 12;
 #else /* Word 2 - Little Endian */
         uint64_t reserved_128_139      : 12;
         uint64_t spb_sizem1            : 6;  /**< [145:140] Small packet buffer size minus one. The number of eight-byte words (minus one)
                                                                  between the start of a buffer from [SPB_AURA] and the last word that NIX may
-                                                                 write into that buffer. See [SPB_AURA].
-
-                                                                 Internal:
-                                                                 Limited to 6 bits (512 bytes) to enable early SPB/LBP decision and avoid
-                                                                 store-and-forward of larger packets. */
+                                                                 write into that buffer. See [SPB_AURA]. */
         uint64_t wqe_skip              : 2;  /**< [147:146] WQE start offset. The number of 128-byte cache lines to skip from the WQE
                                                                  buffer pointer (from [LPB_AURA] when [ENA_WQWD] is set and [WQE_AURA]
                                                                  otherwise) to the first WQE byte stored in the buffer. */
@@ -5337,13 +5155,7 @@ union cavm_nix_rq_ctx_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t reserved_315_319      : 5;
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t reserved_288_291      : 4;
@@ -5392,13 +5204,7 @@ union cavm_nix_rq_ctx_s
         uint64_t rq_int                : 8;  /**< [299:292] RQ interrupts. Bits enumerated by NIX_RQINT_E. */
         uint64_t rq_int_ena            : 8;  /**< [307:300] RQ interrupt enables. Bits enumerated by NIX_RQINT_E. */
         uint64_t qint_idx              : 7;  /**< [314:308] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events.
-
-                                                                 Internal:
-                                                                 QINT update message is generated on an interrupt update event or when [ENA]
-                                                                 changes. Message op code (INCR/DECR/NOP) is based on current and next
-                                                                 interrupt states:
-                                                                 _ [ENA] && |([RQ_INT] & [RQ_INT_ENA]) */
+                                                                 NIX_LF_QINT()*) which receives [RQ_INT] events. */
         uint64_t reserved_315_319      : 5;
 #endif /* Word 4 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
@@ -5823,11 +5629,7 @@ union cavm_nix_rx_parse_s
         uint64_t vtag0_tci             : 16; /**< [111: 96] Vtag 0 tag control information. First two bytes of Vtag's TCI field from the
                                                                  packet header.
                                                                  Valid when [VTAG0_VALID] is set. */
-        uint64_t nix_idx               : 2;  /**< [ 95: 94] NIX index. Identifies which NIX instance generated this structure.
-                                                                 Internal:
-                                                                 When [CHAN] = NIX_CHAN_E::SDP_CH(), this field identifies which SDP the
-                                                                 packet was received from. NIX(0) receives from SDP(0) and NIX(1) receives
-                                                                 from SDP(1). */
+        uint64_t nix_idx               : 2;  /**< [ 95: 94] NIX index. Identifies which NIX instance generated this structure. */
         uint64_t pkind                 : 6;  /**< [ 93: 88] Port kind supplied by CGX or LBK for received packet. */
         uint64_t vtag1_gone            : 1;  /**< [ 87: 87] Vtag 1 gone. See [VTAG0_GONE]. */
         uint64_t vtag1_valid           : 1;  /**< [ 86: 86] Vtag 1 valid. See [VTAG0_VALID]. */
@@ -5857,11 +5659,7 @@ union cavm_nix_rx_parse_s
         uint64_t vtag1_valid           : 1;  /**< [ 86: 86] Vtag 1 valid. See [VTAG0_VALID]. */
         uint64_t vtag1_gone            : 1;  /**< [ 87: 87] Vtag 1 gone. See [VTAG0_GONE]. */
         uint64_t pkind                 : 6;  /**< [ 93: 88] Port kind supplied by CGX or LBK for received packet. */
-        uint64_t nix_idx               : 2;  /**< [ 95: 94] NIX index. Identifies which NIX instance generated this structure.
-                                                                 Internal:
-                                                                 When [CHAN] = NIX_CHAN_E::SDP_CH(), this field identifies which SDP the
-                                                                 packet was received from. NIX(0) receives from SDP(0) and NIX(1) receives
-                                                                 from SDP(1). */
+        uint64_t nix_idx               : 2;  /**< [ 95: 94] NIX index. Identifies which NIX instance generated this structure. */
         uint64_t vtag0_tci             : 16; /**< [111: 96] Vtag 0 tag control information. First two bytes of Vtag's TCI field from the
                                                                  packet header.
                                                                  Valid when [VTAG0_VALID] is set. */
@@ -6185,14 +5983,7 @@ union cavm_nix_rx_parse_s
                                                                  packet data starts in the same buffer as the WQE, i.e. the first NIX_IOVA_S
                                                                  of the first NIX_RX_SG_S in the receive descriptor points to an address
                                                                  within the WQE's buffer. */
-        uint64_t express               : 1;  /**< [ 18: 18] Reserved.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 Express packet.
-                                                                 0 = Normal (potentially preemptable) packet.
-                                                                 1 = Express packet. */
+        uint64_t express               : 1;  /**< [ 18: 18] Reserved. */
         uint64_t imm_copy              : 1;  /**< [ 17: 17] The immediate data following NIX_RX_IMM_S is a copy of data appearing the
                                                                  segment buffers due to NIX_RQ_CTX_S[XQE_IMM_COPY] being set. */
         uint64_t desc_sizem1           : 5;  /**< [ 16: 12] Number of 128-bit words minus one in receive descriptor following NIX_RX_PARSE_S,
@@ -6206,14 +5997,7 @@ union cavm_nix_rx_parse_s
                                                                  data and IOVAs in the descriptor. */
         uint64_t imm_copy              : 1;  /**< [ 17: 17] The immediate data following NIX_RX_IMM_S is a copy of data appearing the
                                                                  segment buffers due to NIX_RQ_CTX_S[XQE_IMM_COPY] being set. */
-        uint64_t express               : 1;  /**< [ 18: 18] Reserved.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 Express packet.
-                                                                 0 = Normal (potentially preemptable) packet.
-                                                                 1 = Express packet. */
+        uint64_t express               : 1;  /**< [ 18: 18] Reserved. */
         uint64_t wqwd                  : 1;  /**< [ 19: 19] WQE with data. Valid when NIX_RX_PARSE_S is included in a WQE, always clear in
                                                                  a CQE. Value from NIX_RQ_CTX_S[ENA_WQWD]. When set, indicates that the
                                                                  packet data starts in the same buffer as the WQE, i.e. the first NIX_IOVA_S
@@ -6399,14 +6183,7 @@ union cavm_nix_rx_parse_s
                                                                  packet data starts in the same buffer as the WQE, i.e. the first NIX_IOVA_S
                                                                  of the first NIX_RX_SG_S in the receive descriptor points to an address
                                                                  within the WQE's buffer. */
-        uint64_t express               : 1;  /**< [ 18: 18] Reserved.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 Express packet.
-                                                                 0 = Normal (potentially preemptable) packet.
-                                                                 1 = Express packet. */
+        uint64_t express               : 1;  /**< [ 18: 18] Reserved. */
         uint64_t imm_copy              : 1;  /**< [ 17: 17] The immediate data following NIX_RX_IMM_S is a copy of data appearing the
                                                                  segment buffers due to NIX_RQ_CTX_S[XQE_IMM_COPY] being set. */
         uint64_t desc_sizem1           : 5;  /**< [ 16: 12] Number of 128-bit words minus one in receive descriptor following NIX_RX_PARSE_S,
@@ -6420,14 +6197,7 @@ union cavm_nix_rx_parse_s
                                                                  data and IOVAs in the descriptor. */
         uint64_t imm_copy              : 1;  /**< [ 17: 17] The immediate data following NIX_RX_IMM_S is a copy of data appearing the
                                                                  segment buffers due to NIX_RQ_CTX_S[XQE_IMM_COPY] being set. */
-        uint64_t express               : 1;  /**< [ 18: 18] Reserved.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 Express packet.
-                                                                 0 = Normal (potentially preemptable) packet.
-                                                                 1 = Express packet. */
+        uint64_t express               : 1;  /**< [ 18: 18] Reserved. */
         uint64_t wqwd                  : 1;  /**< [ 19: 19] WQE with data. Valid when NIX_RX_PARSE_S is included in a WQE, always clear in
                                                                  a CQE. Value from NIX_RQ_CTX_S[ENA_WQWD]. When set, indicates that the
                                                                  packet data starts in the same buffer as the WQE, i.e. the first NIX_IOVA_S
@@ -6464,11 +6234,7 @@ union cavm_nix_rx_parse_s
         uint64_t vtag0_tci             : 16; /**< [111: 96] Vtag 0 tag control information. First two bytes of Vtag's TCI field from the
                                                                  packet header.
                                                                  Valid when [VTAG0_VALID] is set. */
-        uint64_t nix_idx               : 2;  /**< [ 95: 94] NIX index. Identifies which NIX instance generated this structure.
-                                                                 Internal:
-                                                                 When [CHAN] = NIX_CHAN_E::SDP_CH(), this field identifies which SDP the
-                                                                 packet was received from. NIX(0) receives from SDP(0) and NIX(1) receives
-                                                                 from SDP(1). */
+        uint64_t nix_idx               : 2;  /**< [ 95: 94] NIX index. Identifies which NIX instance generated this structure. */
         uint64_t pkind                 : 6;  /**< [ 93: 88] Port kind supplied by CGX or LBK for received packet. */
         uint64_t vtag1_gone            : 1;  /**< [ 87: 87] Vtag 1 gone. See [VTAG0_GONE]. */
         uint64_t vtag1_valid           : 1;  /**< [ 86: 86] Vtag 1 valid. See [VTAG0_VALID]. */
@@ -6498,11 +6264,7 @@ union cavm_nix_rx_parse_s
         uint64_t vtag1_valid           : 1;  /**< [ 86: 86] Vtag 1 valid. See [VTAG0_VALID]. */
         uint64_t vtag1_gone            : 1;  /**< [ 87: 87] Vtag 1 gone. See [VTAG0_GONE]. */
         uint64_t pkind                 : 6;  /**< [ 93: 88] Port kind supplied by CGX or LBK for received packet. */
-        uint64_t nix_idx               : 2;  /**< [ 95: 94] NIX index. Identifies which NIX instance generated this structure.
-                                                                 Internal:
-                                                                 When [CHAN] = NIX_CHAN_E::SDP_CH(), this field identifies which SDP the
-                                                                 packet was received from. NIX(0) receives from SDP(0) and NIX(1) receives
-                                                                 from SDP(1). */
+        uint64_t nix_idx               : 2;  /**< [ 95: 94] NIX index. Identifies which NIX instance generated this structure. */
         uint64_t vtag0_tci             : 16; /**< [111: 96] Vtag 0 tag control information. First two bytes of Vtag's TCI field from the
                                                                  packet header.
                                                                  Valid when [VTAG0_VALID] is set. */
@@ -7427,10 +7189,7 @@ union cavm_nix_send_hdr_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t sq                    : 20; /**< [ 63: 44] Send queue within LF. Valid in the first NIX_SEND_HDR_S of an LMT store to
                                                                  NIX_LF_OP_SEND(). If multiple SQEs are enqueued by the LMT store,
-                                                                 ignored in all NIX_SEND_HDR_S other than the first one.
-
-                                                                 Internal:
-                                                                 Included in LMTST, removed by hardware. */
+                                                                 ignored in all NIX_SEND_HDR_S other than the first one. */
         uint64_t pnc                   : 1;  /**< [ 43: 43] Post normal completion. If set along with NIX_SQ_CTX_S[CQ_ENA], a CQE is
                                                                  created with NIX_CQE_HDR_S[CQE_TYPE] = NIX_XQE_TYPE_E::SEND when the send
                                                                  descriptor's operation completes. If NIX_SEND_EXT_S[LSO] is set, a CQE is
@@ -7512,10 +7271,7 @@ union cavm_nix_send_hdr_s
                                                                  all NIX_SEND_MEM_S subdescriptors in the descriptor complete and commit. */
         uint64_t sq                    : 20; /**< [ 63: 44] Send queue within LF. Valid in the first NIX_SEND_HDR_S of an LMT store to
                                                                  NIX_LF_OP_SEND(). If multiple SQEs are enqueued by the LMT store,
-                                                                 ignored in all NIX_SEND_HDR_S other than the first one.
-
-                                                                 Internal:
-                                                                 Included in LMTST, removed by hardware. */
+                                                                 ignored in all NIX_SEND_HDR_S other than the first one. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t sqe_id                : 16; /**< [127:112] Software defined SQE identifier copied to NIX_SEND_COMP_S[SQE_ID]. */
@@ -7796,47 +7552,7 @@ union cavm_nix_send_mem_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send memory. Enumerated by NIX_SUBDC_E::MEM. */
         uint64_t alg                   : 4;  /**< [ 59: 56] Adder algorithm. How to modify the memory location, for example by setting or atomically
-                                                                 incrementing. Enumerated by NIX_SENDMEMALG_E.
-
-                                                                 Internal:
-                                                                 NCB command type is selected as follows:
-                                                                 \<pre\>
-                                                                 switch ([ALG]) {
-                                                                    case NIX_SENDMEMALG_E::SET :
-                                                                    case NIX_SENDMEMALG_E::SETTSTMP :
-                                                                    case NIX_SENDMEMALG_E::SETRSLT :
-                                                                       cmd_type = RSTP;
-
-                                                                    case NIX_SENDMEMALG_E::ADD :
-                                                                    case NIX_SENDMEMALG_E::ADDLEN :
-                                                                    case NIX_SENDMEMALG_E::SUBLEN :
-                                                                    case NIX_SENDMEMALG_E::ADDMBUF :
-                                                                    case NIX_SENDMEMALG_E::SUBMBUF :
-                                                                       switch ([DSZ]) {
-                                                                          case NIX_SENDMEMDSZ_E::B8 :
-                                                                          case NIX_SENDMEMDSZ_E::B16 :
-                                                                             unpredictable();
-                                                                          case NIX_SENDMEMDSZ_E::B32 :
-                                                                             cmd_type = SAA32;
-                                                                          case NIX_SENDMEMDSZ_E::B64 :
-                                                                             cmd_type = SAA64;
-                                                                       }
-
-                                                                    NIX_SENDMEMALG_E::SUB :
-                                                                       switch ([DSZ]) {
-                                                                          case NIX_SENDMEMDSZ_E::B8 :
-                                                                          case NIX_SENDMEMDSZ_E::B16 :
-                                                                             unpredictable();
-                                                                          case NIX_SENDMEMDSZ_E::B32 :
-                                                                             cmd_type = ([OFFSET] == 1) ? SAAM132 : SAA32;
-                                                                          case NIX_SENDMEMDSZ_E::B64 :
-                                                                             cmd_type = ([OFFSET] == 1) ? SAAM164 : SAA64;
-                                                                       }
-
-                                                                    default:
-                                                                       unpredictable();
-                                                                 }
-                                                                 \</pre\> */
+                                                                 incrementing. Enumerated by NIX_SENDMEMALG_E. */
         uint64_t dsz                   : 2;  /**< [ 55: 54] Memory data size. The size of the word in memory, enumerated by NIX_SENDMEMDSZ_E. */
         uint64_t wmem                  : 1;  /**< [ 53: 53] Wait for memory.
                                                                  0 = The memory operation may complete after the CQE is posted and/or add work is
@@ -7850,21 +7566,11 @@ union cavm_nix_send_mem_s
         uint64_t reserved_16_52        : 37;
         uint64_t offset                : 16; /**< [ 15:  0] Adder offset. Constant value to add or subtract or set. If the count being
                                                                  modified is to represent the true packet size, then the offset may
-                                                                 represent the pad and FCS appended to the packet.
-
-                                                                 Internal:
-                                                                 Note IOB hardware has a special encoding for atomic decrement,
-                                                                 therefore a change of minus one is twice as IOB bandwidth efficient as adding/subtracting
-                                                                 other values or setting. */
+                                                                 represent the pad and FCS appended to the packet. */
 #else /* Word 0 - Little Endian */
         uint64_t offset                : 16; /**< [ 15:  0] Adder offset. Constant value to add or subtract or set. If the count being
                                                                  modified is to represent the true packet size, then the offset may
-                                                                 represent the pad and FCS appended to the packet.
-
-                                                                 Internal:
-                                                                 Note IOB hardware has a special encoding for atomic decrement,
-                                                                 therefore a change of minus one is twice as IOB bandwidth efficient as adding/subtracting
-                                                                 other values or setting. */
+                                                                 represent the pad and FCS appended to the packet. */
         uint64_t reserved_16_52        : 37;
         uint64_t wmem                  : 1;  /**< [ 53: 53] Wait for memory.
                                                                  0 = The memory operation may complete after the CQE is posted and/or add work is
@@ -7877,47 +7583,7 @@ union cavm_nix_send_mem_s
                                                                  performance over not waiting. */
         uint64_t dsz                   : 2;  /**< [ 55: 54] Memory data size. The size of the word in memory, enumerated by NIX_SENDMEMDSZ_E. */
         uint64_t alg                   : 4;  /**< [ 59: 56] Adder algorithm. How to modify the memory location, for example by setting or atomically
-                                                                 incrementing. Enumerated by NIX_SENDMEMALG_E.
-
-                                                                 Internal:
-                                                                 NCB command type is selected as follows:
-                                                                 \<pre\>
-                                                                 switch ([ALG]) {
-                                                                    case NIX_SENDMEMALG_E::SET :
-                                                                    case NIX_SENDMEMALG_E::SETTSTMP :
-                                                                    case NIX_SENDMEMALG_E::SETRSLT :
-                                                                       cmd_type = RSTP;
-
-                                                                    case NIX_SENDMEMALG_E::ADD :
-                                                                    case NIX_SENDMEMALG_E::ADDLEN :
-                                                                    case NIX_SENDMEMALG_E::SUBLEN :
-                                                                    case NIX_SENDMEMALG_E::ADDMBUF :
-                                                                    case NIX_SENDMEMALG_E::SUBMBUF :
-                                                                       switch ([DSZ]) {
-                                                                          case NIX_SENDMEMDSZ_E::B8 :
-                                                                          case NIX_SENDMEMDSZ_E::B16 :
-                                                                             unpredictable();
-                                                                          case NIX_SENDMEMDSZ_E::B32 :
-                                                                             cmd_type = SAA32;
-                                                                          case NIX_SENDMEMDSZ_E::B64 :
-                                                                             cmd_type = SAA64;
-                                                                       }
-
-                                                                    NIX_SENDMEMALG_E::SUB :
-                                                                       switch ([DSZ]) {
-                                                                          case NIX_SENDMEMDSZ_E::B8 :
-                                                                          case NIX_SENDMEMDSZ_E::B16 :
-                                                                             unpredictable();
-                                                                          case NIX_SENDMEMDSZ_E::B32 :
-                                                                             cmd_type = ([OFFSET] == 1) ? SAAM132 : SAA32;
-                                                                          case NIX_SENDMEMDSZ_E::B64 :
-                                                                             cmd_type = ([OFFSET] == 1) ? SAAM164 : SAA64;
-                                                                       }
-
-                                                                    default:
-                                                                       unpredictable();
-                                                                 }
-                                                                 \</pre\> */
+                                                                 incrementing. Enumerated by NIX_SENDMEMALG_E. */
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send memory. Enumerated by NIX_SUBDC_E::MEM. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
@@ -8293,10 +7959,7 @@ union cavm_nix_sq_ctx_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t sqe_way_mask          : 16; /**< [ 63: 48] Way partitioning mask for allocating SQB data in NDC (1 means do not use).
-                                                                 All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 All ones disables allocation in NDC. */
         uint64_t cq                    : 20; /**< [ 47: 28] Completion queue for this SQ. Valid when [CQ_ENA] is set. */
         uint64_t sdp_mcast             : 1;  /**< [ 27: 27] SDP multicast. Valid if the SQ sends packets to SDP (corresponding
                                                                  NIX_AF_TL4()_SDP_LINK_CFG[ENA] is set):
@@ -8304,18 +7967,12 @@ union cavm_nix_sq_ctx_s
                                                                  1 = SQ sends SDP multicast packets. */
         uint64_t substream             : 20; /**< [ 26:  7] Reserved. */
         uint64_t qint_idx              : 6;  /**< [  6:  1] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [SQ_INT] events.
-
-                                                                 Internal:
-                                                                 See QINT message generation note in NIX_RQ_CTX_S[QINT_IDX]. */
+                                                                 NIX_LF_QINT()*) which receives [SQ_INT] events. */
         uint64_t ena                   : 1;  /**< [  0:  0] SQ enable. */
 #else /* Word 0 - Little Endian */
         uint64_t ena                   : 1;  /**< [  0:  0] SQ enable. */
         uint64_t qint_idx              : 6;  /**< [  6:  1] Queue interrupt index. Select the QINT within LF (index {a} of
-                                                                 NIX_LF_QINT()*) which receives [SQ_INT] events.
-
-                                                                 Internal:
-                                                                 See QINT message generation note in NIX_RQ_CTX_S[QINT_IDX]. */
+                                                                 NIX_LF_QINT()*) which receives [SQ_INT] events. */
         uint64_t substream             : 20; /**< [ 26:  7] Reserved. */
         uint64_t sdp_mcast             : 1;  /**< [ 27: 27] SDP multicast. Valid if the SQ sends packets to SDP (corresponding
                                                                  NIX_AF_TL4()_SDP_LINK_CFG[ENA] is set):
@@ -8323,10 +7980,7 @@ union cavm_nix_sq_ctx_s
                                                                  1 = SQ sends SDP multicast packets. */
         uint64_t cq                    : 20; /**< [ 47: 28] Completion queue for this SQ. Valid when [CQ_ENA] is set. */
         uint64_t sqe_way_mask          : 16; /**< [ 63: 48] Way partitioning mask for allocating SQB data in NDC (1 means do not use).
-                                                                 All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 All ones disables allocation in NDC. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t sqb_count             : 16; /**< [127:112] Number of SQBs currently in use. Includes the SQBs at [HEAD_SQB] and
@@ -8450,13 +8104,9 @@ union cavm_nix_sq_ctx_s
                                                                  Packets will not be sent from the SQ if the available space in the
                                                                  associated CQ (see shifted_CNT in NIX_CQ_CTX_S[AVG_CON]) is less than the
                                                                  [CQ_LIMIT] value. */
-        uint64_t max_sqe_size          : 2;  /**< [193:192] Selects maximum SQE size for this SQ. Enumerated by NIX_MAXSQESZ_E.
-                                                                 Internal:
-                                                                 Hardware allocates this size for each SQE stored in an SQB. */
+        uint64_t max_sqe_size          : 2;  /**< [193:192] Selects maximum SQE size for this SQ. Enumerated by NIX_MAXSQESZ_E. */
 #else /* Word 3 - Little Endian */
-        uint64_t max_sqe_size          : 2;  /**< [193:192] Selects maximum SQE size for this SQ. Enumerated by NIX_MAXSQESZ_E.
-                                                                 Internal:
-                                                                 Hardware allocates this size for each SQE stored in an SQB. */
+        uint64_t max_sqe_size          : 2;  /**< [193:192] Selects maximum SQE size for this SQ. Enumerated by NIX_MAXSQESZ_E. */
         uint64_t cq_limit              : 8;  /**< [201:194] Threshold level for suppressing packet send, in units of 1/256th of CQ
                                                                  level.  0xff represents an empty CQ ring, 0x0 represents a full ring.
                                                                  Packets will not be sent from the SQ if the available space in the
@@ -8787,9 +8437,7 @@ union cavm_nix_wqe_hdr_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t wqe_type              : 4;  /**< [ 63: 60] WQE type enumerated by NIX_XQE_TYPE_E. */
         uint64_t q                     : 14; /**< [ 59: 46] Lower 14 bits of RQ or SQ within VF/PF. */
-        uint64_t node                  : 2;  /**< [ 45: 44] Node number on which the packet was received or transmitted.
-                                                                 Internal:
-                                                                 This is needed by software; do not remove on single-node parts. */
+        uint64_t node                  : 2;  /**< [ 45: 44] Node number on which the packet was received or transmitted. */
         uint64_t grp                   : 10; /**< [ 43: 34] The SSO guest-group number used for the packet's add work from
                                                                  NIX_RQ_CTX_S[SSO_GRP]. [GRP]\<9:8\> is always zero. */
         uint64_t tt                    : 2;  /**< [ 33: 32] The initial tag type for the packet's SSO add work from
@@ -8803,9 +8451,7 @@ union cavm_nix_wqe_hdr_s
                                                                  NIX_RQ_CTX_S[SSO_TT]. Enumerated by SSO_TT_E. */
         uint64_t grp                   : 10; /**< [ 43: 34] The SSO guest-group number used for the packet's add work from
                                                                  NIX_RQ_CTX_S[SSO_GRP]. [GRP]\<9:8\> is always zero. */
-        uint64_t node                  : 2;  /**< [ 45: 44] Node number on which the packet was received or transmitted.
-                                                                 Internal:
-                                                                 This is needed by software; do not remove on single-node parts. */
+        uint64_t node                  : 2;  /**< [ 45: 44] Node number on which the packet was received or transmitted. */
         uint64_t q                     : 14; /**< [ 59: 46] Lower 14 bits of RQ or SQ within VF/PF. */
         uint64_t wqe_type              : 4;  /**< [ 63: 60] WQE type enumerated by NIX_XQE_TYPE_E. */
 #endif /* Word 0 - End */
@@ -8884,15 +8530,7 @@ union cavm_nixx_af_aq_cfg
                                                                  0x4-0xF = Reserved.
 
                                                                  Note that the usable size of the ring is the specified size minus 1 (HEAD==TAIL always
-                                                                 means empty).
-
-                                                                 Internal:
-                                                                 For diagnostic use only:
-                                                                 0x4 = 4K entries.
-                                                                 0x5 = 16K entries.
-                                                                 0x6 = 64K entries.
-                                                                 0x7 = 256K entries.
-                                                                 0x8 = 1M entries. */
+                                                                 means empty). */
 #else /* Word 0 - Little Endian */
         uint64_t qsize                 : 4;  /**< [  3:  0](R/W) Specifies AQ ring size in entries of 16 bytes:
                                                                  0x0 = 16 entries.
@@ -8902,15 +8540,7 @@ union cavm_nixx_af_aq_cfg
                                                                  0x4-0xF = Reserved.
 
                                                                  Note that the usable size of the ring is the specified size minus 1 (HEAD==TAIL always
-                                                                 means empty).
-
-                                                                 Internal:
-                                                                 For diagnostic use only:
-                                                                 0x4 = 4K entries.
-                                                                 0x5 = 16K entries.
-                                                                 0x6 = 64K entries.
-                                                                 0x7 = 256K entries.
-                                                                 0x8 = 1M entries. */
+                                                                 means empty). */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
@@ -9152,21 +8782,13 @@ union cavm_nixx_af_aq_done_ack
 
                                                                  Written by software to acknowledge interrupts. If NIX_AF_AQ_DONE[DONE] is still
                                                                  nonzero the interrupt will be resent if the conditions described in
-                                                                 NIX_AF_AQ_DONE[DONE] are satisfied.
-
-                                                                 Internal:
-                                                                 If [DONE_ACK] write value is greater than NIX_AF_AQ_DONE[DONE], hardware
-                                                                 resets NIX_AF_AQ_DONE[DONE] to zero. */
+                                                                 NIX_AF_AQ_DONE[DONE] are satisfied. */
 #else /* Word 0 - Little Endian */
         uint64_t done_ack              : 20; /**< [ 19:  0](R/W/H) Number of decrements to NIX_AF_AQ_DONE[DONE]. Reads NIX_AF_AQ_DONE[DONE].
 
                                                                  Written by software to acknowledge interrupts. If NIX_AF_AQ_DONE[DONE] is still
                                                                  nonzero the interrupt will be resent if the conditions described in
-                                                                 NIX_AF_AQ_DONE[DONE] are satisfied.
-
-                                                                 Internal:
-                                                                 If [DONE_ACK] write value is greater than NIX_AF_AQ_DONE[DONE], hardware
-                                                                 resets NIX_AF_AQ_DONE[DONE] to zero. */
+                                                                 NIX_AF_AQ_DONE[DONE] are satisfied. */
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } s;
@@ -9298,112 +8920,6 @@ static inline uint64_t CAVM_NIXX_AF_AQ_DONE_ENA_W1S(uint64_t a)
 #define device_bar_CAVM_NIXX_AF_AQ_DONE_ENA_W1S(a) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_AQ_DONE_ENA_W1S(a) (a)
 #define arguments_CAVM_NIXX_AF_AQ_DONE_ENA_W1S(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_aq_done_int
- *
- * INTERNAL: NIX AF Admin Queue Done Interrupt Register
- */
-union cavm_nixx_af_aq_done_int
-{
-    uint64_t u;
-    struct cavm_nixx_af_aq_done_int_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See NIX_AF_AQ_DONE[DONE]. Note this bit is read-only, to acknowledge
-                                                                 interrupts use NIX_AF_AQ_DONE_ACK. To test interrupts, write nonzero to
-                                                                 NIX_AF_AQ_DONE[DONE]. */
-#else /* Word 0 - Little Endian */
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See NIX_AF_AQ_DONE[DONE]. Note this bit is read-only, to acknowledge
-                                                                 interrupts use NIX_AF_AQ_DONE_ACK. To test interrupts, write nonzero to
-                                                                 NIX_AF_AQ_DONE[DONE]. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_aq_done_int_s cn; */
-};
-typedef union cavm_nixx_af_aq_done_int cavm_nixx_af_aq_done_int_t;
-
-static inline uint64_t CAVM_NIXX_AF_AQ_DONE_INT(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_AQ_DONE_INT(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000480ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000480ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000480ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000480ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000480ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000480ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000480ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_AQ_DONE_INT", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_AQ_DONE_INT(a) cavm_nixx_af_aq_done_int_t
-#define bustype_CAVM_NIXX_AF_AQ_DONE_INT(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_AQ_DONE_INT(a) "NIXX_AF_AQ_DONE_INT"
-#define device_bar_CAVM_NIXX_AF_AQ_DONE_INT(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_AQ_DONE_INT(a) (a)
-#define arguments_CAVM_NIXX_AF_AQ_DONE_INT(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_aq_done_int_w1s
- *
- * INTERNAL: NIX AF Admin Queue Done Interrupt Set Register
- */
-union cavm_nixx_af_aq_done_int_w1s
-{
-    uint64_t u;
-    struct cavm_nixx_af_aq_done_int_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See NIX_AF_AQ_DONE[DONE]. Note this bit is read-only, to acknowledge
-                                                                 interrupts use NIX_AF_AQ_DONE_ACK. To test interrupts, write nonzero to
-                                                                 NIX_AF_AQ_DONE[DONE]. */
-#else /* Word 0 - Little Endian */
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See NIX_AF_AQ_DONE[DONE]. Note this bit is read-only, to acknowledge
-                                                                 interrupts use NIX_AF_AQ_DONE_ACK. To test interrupts, write nonzero to
-                                                                 NIX_AF_AQ_DONE[DONE]. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_aq_done_int_w1s_s cn; */
-};
-typedef union cavm_nixx_af_aq_done_int_w1s cavm_nixx_af_aq_done_int_w1s_t;
-
-static inline uint64_t CAVM_NIXX_AF_AQ_DONE_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_AQ_DONE_INT_W1S(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000488ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000488ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000488ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000488ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000488ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000488ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000488ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_AQ_DONE_INT_W1S", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_AQ_DONE_INT_W1S(a) cavm_nixx_af_aq_done_int_w1s_t
-#define bustype_CAVM_NIXX_AF_AQ_DONE_INT_W1S(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_AQ_DONE_INT_W1S(a) "NIXX_AF_AQ_DONE_INT_W1S"
-#define device_bar_CAVM_NIXX_AF_AQ_DONE_INT_W1S(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_AQ_DONE_INT_W1S(a) (a)
-#define arguments_CAVM_NIXX_AF_AQ_DONE_INT_W1S(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_aq_done_timer
@@ -9817,9 +9333,6 @@ static inline uint64_t CAVM_NIXX_AF_AVG_DELAY(uint64_t a)
  * NIX Admin Function  BAR2 Alias Registers
  * These registers alias to the NIX BAR2 registers for the PF and function
  * selected by NIX_AF_BAR2_SEL[PF_FUNC].
- *
- * Internal:
- * Not implemented. Placeholder for bug33464.
  */
 union cavm_nixx_af_bar2_aliasx
 {
@@ -9868,8 +9381,6 @@ static inline uint64_t CAVM_NIXX_AF_BAR2_ALIASX(uint64_t a, uint64_t b)
  *
  * NIX Admin Function BAR2 Select Register
  * This register configures BAR2 accesses from the NIX_AF_BAR2_ALIAS() registers in BAR0.
- * Internal:
- * Not implemented. Placeholder for bug33464.
  */
 union cavm_nixx_af_bar2_sel
 {
@@ -10246,12 +9757,8 @@ union cavm_nixx_af_const
         uint64_t links                 : 8;  /**< [ 55: 48](RO) Number of links enumerated by NIX_LINK_E, including the internal
                                                                  RX multicast/mirror replay interface, NIX_LINK_E::MC. */
         uint64_t reserved_32_47        : 16;
-        uint64_t num_sdp               : 4;  /**< [ 31: 28](RO) Number of SDP links enumerated in NIX_LINK_E. 0x0 or 0x1 means one link.
-                                                                 Internal:
-                                                                 Not present in T93 pass 1, thus 0x0. */
-        uint64_t num_lbk               : 4;  /**< [ 27: 24](RO) Number of LBK links enumerated in NIX_LINK_E. 0x0 or 0x1 means one link.
-                                                                 Internal:
-                                                                 Not present in T93 pass 1, thus 0x0. */
+        uint64_t num_sdp               : 4;  /**< [ 31: 28](RO) Number of SDP links enumerated in NIX_LINK_E. 0x0 or 0x1 means one link. */
+        uint64_t num_lbk               : 4;  /**< [ 27: 24](RO) Number of LBK links enumerated in NIX_LINK_E. 0x0 or 0x1 means one link. */
         uint64_t lbk_channels          : 8;  /**< [ 23: 16](RO) Number of channels per LBK interface/link. */
         uint64_t num_cgx               : 4;  /**< [ 15: 12](RO) Number of CGX interfaces enumerated in NIX_LINK_E. */
         uint64_t cgx_lmacs             : 4;  /**< [ 11:  8](RO) Number of LMACs (links) per CGX. */
@@ -10261,12 +9768,8 @@ union cavm_nixx_af_const
         uint64_t cgx_lmacs             : 4;  /**< [ 11:  8](RO) Number of LMACs (links) per CGX. */
         uint64_t num_cgx               : 4;  /**< [ 15: 12](RO) Number of CGX interfaces enumerated in NIX_LINK_E. */
         uint64_t lbk_channels          : 8;  /**< [ 23: 16](RO) Number of channels per LBK interface/link. */
-        uint64_t num_lbk               : 4;  /**< [ 27: 24](RO) Number of LBK links enumerated in NIX_LINK_E. 0x0 or 0x1 means one link.
-                                                                 Internal:
-                                                                 Not present in T93 pass 1, thus 0x0. */
-        uint64_t num_sdp               : 4;  /**< [ 31: 28](RO) Number of SDP links enumerated in NIX_LINK_E. 0x0 or 0x1 means one link.
-                                                                 Internal:
-                                                                 Not present in T93 pass 1, thus 0x0. */
+        uint64_t num_lbk               : 4;  /**< [ 27: 24](RO) Number of LBK links enumerated in NIX_LINK_E. 0x0 or 0x1 means one link. */
+        uint64_t num_sdp               : 4;  /**< [ 31: 28](RO) Number of SDP links enumerated in NIX_LINK_E. 0x0 or 0x1 means one link. */
         uint64_t reserved_32_47        : 16;
         uint64_t links                 : 8;  /**< [ 55: 48](RO) Number of links enumerated by NIX_LINK_E, including the internal
                                                                  RX multicast/mirror replay interface, NIX_LINK_E::MC. */
@@ -10531,9 +10034,7 @@ union cavm_nixx_af_const3
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_32_63        : 32;
-        uint64_t dyno_log2bytes        : 4;  /**< [ 31: 28](RO) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t dyno_log2bytes        : 4;  /**< [ 31: 28](RO) Reserved. */
         uint64_t cint_log2bytes        : 4;  /**< [ 27: 24](RO) Completion interrupt context size as log2(bytes). Size of each
                                                                  NIX_CINT_HW_S structure in a local function's completion interrupt context
                                                                  table NDC/LLC/DRAM. See NIX_AF_LF()_CINTS_BASE and NIX_AF_LF()_CINTS_CFG. */
@@ -10577,9 +10078,7 @@ union cavm_nixx_af_const3
         uint64_t cint_log2bytes        : 4;  /**< [ 27: 24](RO) Completion interrupt context size as log2(bytes). Size of each
                                                                  NIX_CINT_HW_S structure in a local function's completion interrupt context
                                                                  table NDC/LLC/DRAM. See NIX_AF_LF()_CINTS_BASE and NIX_AF_LF()_CINTS_CFG. */
-        uint64_t dyno_log2bytes        : 4;  /**< [ 31: 28](RO) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t dyno_log2bytes        : 4;  /**< [ 31: 28](RO) Reserved. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cnf95xx;
@@ -10665,217 +10164,6 @@ static inline uint64_t CAVM_NIXX_AF_CQ_CONST(uint64_t a)
 #define device_bar_CAVM_NIXX_AF_CQ_CONST(a) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_CQ_CONST(a) (a)
 #define arguments_CAVM_NIXX_AF_CQ_CONST(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_cqm_bp_test
- *
- * INTERNAL: NIX AF CQM Backpressure Test Registers
- */
-union cavm_nixx_af_cqm_bp_test
-{
-    uint64_t u;
-    struct cavm_nixx_af_cqm_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t enable                : 12; /**< [ 51: 40](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\>   = pipe_int.
-                                                                 \<50\>   = pipe_aqs.
-                                                                 \<48\>   = pipe_qry.
-                                                                 \<48\>   = pipe_stg5.
-                                                                 \<47\>   = pipe_stg4.
-                                                                 \<46\>   = pipe_stg3.
-                                                                 \<45\>   = pipe_stg2.
-                                                                 \<44\>   = pipe_stg1.
-                                                                 \<43\>   = pipe_stg0.
-                                                                 \<42\>   = pipe_ndc_cqs.
-                                                                 \<41\>   = pipe_ndc_cqe.
-                                                                 \<40\>   = pipe_ndc_cints. */
-        uint64_t bp_cfg                : 24; /**< [ 39: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<39:38\> = pipe_int.
-                                                                 \<37:36\> = pipe_aqs.
-                                                                 \<35:34\> = pipe_qry.
-                                                                 \<33:32\> = pipe_stg5.
-                                                                 \<31:30\> = pipe_stg4.
-                                                                 \<29:28\> = pipe_stg3.
-                                                                 \<27:26\> = pipe_stg2.
-                                                                 \<25:24\> = pipe_stg1.
-                                                                 \<23:22\> = pipe_stg0.
-                                                                 \<21:20\> = pipe_ndc_cqs.
-                                                                 \<19:18\> = pipe_ndc_cqe.
-                                                                 \<17:16\> = pipe_ndc_cints. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 24; /**< [ 39: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<39:38\> = pipe_int.
-                                                                 \<37:36\> = pipe_aqs.
-                                                                 \<35:34\> = pipe_qry.
-                                                                 \<33:32\> = pipe_stg5.
-                                                                 \<31:30\> = pipe_stg4.
-                                                                 \<29:28\> = pipe_stg3.
-                                                                 \<27:26\> = pipe_stg2.
-                                                                 \<25:24\> = pipe_stg1.
-                                                                 \<23:22\> = pipe_stg0.
-                                                                 \<21:20\> = pipe_ndc_cqs.
-                                                                 \<19:18\> = pipe_ndc_cqe.
-                                                                 \<17:16\> = pipe_ndc_cints. */
-        uint64_t enable                : 12; /**< [ 51: 40](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\>   = pipe_int.
-                                                                 \<50\>   = pipe_aqs.
-                                                                 \<48\>   = pipe_qry.
-                                                                 \<48\>   = pipe_stg5.
-                                                                 \<47\>   = pipe_stg4.
-                                                                 \<46\>   = pipe_stg3.
-                                                                 \<45\>   = pipe_stg2.
-                                                                 \<44\>   = pipe_stg1.
-                                                                 \<43\>   = pipe_stg0.
-                                                                 \<42\>   = pipe_ndc_cqs.
-                                                                 \<41\>   = pipe_ndc_cqe.
-                                                                 \<40\>   = pipe_ndc_cints. */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_cqm_bp_test_s cn; */
-};
-typedef union cavm_nixx_af_cqm_bp_test cavm_nixx_af_cqm_bp_test_t;
-
-static inline uint64_t CAVM_NIXX_AF_CQM_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_CQM_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x8400400048c0ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x8400400048c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x8400400048c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x8400400048c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x8400400048c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x8400400048c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x8400400048c0ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_CQM_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_CQM_BP_TEST(a) cavm_nixx_af_cqm_bp_test_t
-#define bustype_CAVM_NIXX_AF_CQM_BP_TEST(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_CQM_BP_TEST(a) "NIXX_AF_CQM_BP_TEST"
-#define device_bar_CAVM_NIXX_AF_CQM_BP_TEST(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_CQM_BP_TEST(a) (a)
-#define arguments_CAVM_NIXX_AF_CQM_BP_TEST(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_cqm_eco
- *
- * INTERNAL: AF CQM ECO Register
- */
-union cavm_nixx_af_cqm_eco
-{
-    uint64_t u;
-    struct cavm_nixx_af_cqm_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_cqm_eco_s cn; */
-};
-typedef union cavm_nixx_af_cqm_eco cavm_nixx_af_cqm_eco_t;
-
-static inline uint64_t CAVM_NIXX_AF_CQM_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_CQM_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000590ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000590ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000590ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000590ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000590ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000590ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000590ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_CQM_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_CQM_ECO(a) cavm_nixx_af_cqm_eco_t
-#define bustype_CAVM_NIXX_AF_CQM_ECO(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_CQM_ECO(a) "NIXX_AF_CQM_ECO"
-#define device_bar_CAVM_NIXX_AF_CQM_ECO(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_CQM_ECO(a) (a)
-#define arguments_CAVM_NIXX_AF_CQM_ECO(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_csi_eco
- *
- * INTERNAL: AF CSI ECO Register
- */
-union cavm_nixx_af_csi_eco
-{
-    uint64_t u;
-    struct cavm_nixx_af_csi_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_csi_eco_s cn; */
-};
-typedef union cavm_nixx_af_csi_eco cavm_nixx_af_csi_eco_t;
-
-static inline uint64_t CAVM_NIXX_AF_CSI_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_CSI_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000580ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000580ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000580ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000580ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000580ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000580ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000580ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_CSI_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_CSI_ECO(a) cavm_nixx_af_csi_eco_t
-#define bustype_CAVM_NIXX_AF_CSI_ECO(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_CSI_ECO(a) "NIXX_AF_CSI_ECO"
-#define device_bar_CAVM_NIXX_AF_CSI_ECO(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_CSI_ECO(a) (a)
-#define arguments_CAVM_NIXX_AF_CSI_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_err_int
@@ -11201,12 +10489,7 @@ static inline uint64_t CAVM_NIXX_AF_ERR_INT_W1S(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) nix#_af_expr_tx_fifo_status
  *
- * INTERNAL: NIX AF Express Transmit FIFO Status Register
- *
- * Internal:
- * 802.3br frame preemption/express path is defeatured.
- * Old definition:
- *
+ * NIX AF Express Transmit FIFO Status Register
  * Status of FIFO which transmits express packets to CGX and LBK.
  */
 union cavm_nixx_af_expr_tx_fifo_status
@@ -11231,17 +10514,7 @@ static inline uint64_t CAVM_NIXX_AF_EXPR_TX_FIFO_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
         return 0x840040000640ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000640ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000640ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000640ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000640ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000640ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && (a<=1))
         return 0x840040000640ll + 0x10000000ll * ((a) & 0x1);
     __cavm_csr_fatal("NIXX_AF_EXPR_TX_FIFO_STATUS", 1, a, 0, 0, 0, 0, 0);
 }
@@ -11669,18 +10942,12 @@ union cavm_nixx_af_lfx_cints_cfg
                                                                  Context structure writes that are not allocated in NDC will always allocate
                                                                  into LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating context structures in NDC (1 means do
-                                                                 not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 not use). All ones disables allocation in NDC. */
         uint64_t reserved_0_19         : 20;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_19         : 20;
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating context structures in NDC (1 means do
-                                                                 not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style read for accessing context structures in LLC/DRAM:
                                                                  0 = Context structure reads will not allocate into the LLC.
                                                                  1 = Context structure reads are allocated into the LLC.
@@ -11795,18 +11062,12 @@ union cavm_nixx_af_lfx_cqs_cfg
                                                                  0 = Reads and writes of context data will not allocate into the LLC.
                                                                  1 = Reads and full cache line writes of context data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating queue context structures in NDC (1
-                                                                 means do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 means do not use). All ones disables allocation in NDC. */
         uint64_t max_queuesm1          : 20; /**< [ 19:  0](R/W) Maximum number of queues minus one. */
 #else /* Word 0 - Little Endian */
         uint64_t max_queuesm1          : 20; /**< [ 19:  0](R/W) Maximum number of queues minus one. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating queue context structures in NDC (1
-                                                                 means do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 means do not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style of write and read for accessing queue context structures
                                                                  in LLC/DRAM:
                                                                  0 = Reads and writes of context data will not allocate into the LLC.
@@ -11849,10 +11110,6 @@ static inline uint64_t CAVM_NIXX_AF_LFX_CQS_CFG(uint64_t a, uint64_t b)
  * Register (RVU_PF_BAR0) nix#_af_lf#_lock#
  *
  * NIX AF Local Function Lockdown Registers
- * Internal:
- * The NIX lockdown depth of 32 bytes is shallow compared to 96 bytes for NIC and meant for outer
- * MAC and/or VLAN (optionally preceded by a small number of skip bytes). NPC's MCAM can be used
- * for deeper protocol-aware lockdown.
  */
 union cavm_nixx_af_lfx_lockx
 {
@@ -12130,18 +11387,12 @@ union cavm_nixx_af_lfx_qints_cfg
                                                                  Context structure writes that are not allocated in NDC will always allocate
                                                                  into LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating context structures in NDC (1 means do
-                                                                 not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 not use). All ones disables allocation in NDC. */
         uint64_t reserved_0_19         : 20;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_19         : 20;
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating context structures in NDC (1 means do
-                                                                 not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style read for accessing context structures in LLC/DRAM:
                                                                  0 = Context structure reads will not allocate into the LLC.
                                                                  1 = Context structure reads are allocated into the LLC.
@@ -12256,18 +11507,12 @@ union cavm_nixx_af_lfx_rqs_cfg
                                                                  0 = Reads and writes of context data will not allocate into the LLC.
                                                                  1 = Reads and full cache line writes of context data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating queue context structures in NDC (1
-                                                                 means do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 means do not use). All ones disables allocation in NDC. */
         uint64_t max_queuesm1          : 20; /**< [ 19:  0](R/W) Maximum number of queues minus one. */
 #else /* Word 0 - Little Endian */
         uint64_t max_queuesm1          : 20; /**< [ 19:  0](R/W) Maximum number of queues minus one. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating queue context structures in NDC (1
-                                                                 means do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 means do not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style of write and read for accessing queue context structures
                                                                  in LLC/DRAM:
                                                                  0 = Reads and writes of context data will not allocate into the LLC.
@@ -12384,10 +11629,7 @@ union cavm_nixx_af_lfx_rss_cfg
                                                                  NIX_RX_MCE_S writes that are not allocated in NDC will always allocate
                                                                  into LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating NIX_RSSE_S structures in NDC (1 means
-                                                                 do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 do not use). All ones disables allocation in NDC. */
         uint64_t reserved_6_19         : 14;
         uint64_t adder_is_tag_lsb      : 1;  /**< [  5:  5](R/W) Selects how a packet's RSS adder is computed from the flow tag.
                                                                  When set, the RSS adder is the least significant byte of the flow tag.
@@ -12414,10 +11656,7 @@ union cavm_nixx_af_lfx_rss_cfg
                                                                  pseudocode in NIX_AF_LF()_RSS_GRP()[SIZEM1]. */
         uint64_t reserved_6_19         : 14;
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating NIX_RSSE_S structures in NDC (1 means
-                                                                 do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 do not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style of read for accessing NIX_RSSE_S structures in LLC/DRAM:
                                                                  0 = NIX_RSSE_S reads will not allocate into the LLC.
                                                                  1 = NIX_RSSE_S reads are allocated into the LLC.
@@ -12439,10 +11678,7 @@ union cavm_nixx_af_lfx_rss_cfg
                                                                  NIX_RX_MCE_S writes that are not allocated in NDC will always allocate
                                                                  into LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating NIX_RSSE_S structures in NDC (1 means
-                                                                 do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 do not use). All ones disables allocation in NDC. */
         uint64_t reserved_5_19         : 15;
         uint64_t ena                   : 1;  /**< [  4:  4](R/W) RSS is enabled for the LF. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Specifies table size in NIX_RSSE_S entries of four bytes when [ENA] is set:
@@ -12461,10 +11697,7 @@ union cavm_nixx_af_lfx_rss_cfg
         uint64_t ena                   : 1;  /**< [  4:  4](R/W) RSS is enabled for the LF. */
         uint64_t reserved_5_19         : 15;
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating NIX_RSSE_S structures in NDC (1 means
-                                                                 do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 do not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style of read for accessing NIX_RSSE_S structures in LLC/DRAM:
                                                                  0 = NIX_RSSE_S reads will not allocate into the LLC.
                                                                  1 = NIX_RSSE_S reads are allocated into the LLC.
@@ -13120,10 +12353,7 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_CFG(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_lf#_rx_ipsec_cfg0
  *
- * INTERNAL: NIX AF LF Receive IPSEC Configuration Registers
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF LF Receive IPSEC Configuration Registers
  */
 union cavm_nixx_af_lfx_rx_ipsec_cfg0
 {
@@ -13242,31 +12472,6 @@ union cavm_nixx_af_lfx_rx_ipsec_cfg0
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } cn98xx;
-    struct cavm_nixx_af_lfx_rx_ipsec_cfg0_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t hshcpt                : 1;  /**< [ 47: 47](RAZ) Reserved. */
-        uint64_t defcpt                : 1;  /**< [ 46: 46](RAZ) Reserved. */
-        uint64_t tt                    : 2;  /**< [ 45: 44](R/W) Reserved. */
-        uint64_t tag_const             : 24; /**< [ 43: 20](R/W) Reserved. */
-        uint64_t sa_pow2_size          : 4;  /**< [ 19: 16](R/W) Reserved. */
-        uint64_t reserved_14_15        : 2;
-        uint64_t lenm1_max             : 14; /**< [ 13:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t lenm1_max             : 14; /**< [ 13:  0](R/W) Reserved. */
-        uint64_t reserved_14_15        : 2;
-        uint64_t sa_pow2_size          : 4;  /**< [ 19: 16](R/W) Reserved. */
-        uint64_t tag_const             : 24; /**< [ 43: 20](R/W) Reserved. */
-        uint64_t tt                    : 2;  /**< [ 45: 44](R/W) Reserved. */
-        uint64_t defcpt                : 1;  /**< [ 46: 46](RAZ) Reserved. */
-        uint64_t hshcpt                : 1;  /**< [ 47: 47](RAZ) Reserved. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg0_cnf95xx f95mm; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg0_cnf95xx f95o; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg0_cnf95xx loki; */
 };
 typedef union cavm_nixx_af_lfx_rx_ipsec_cfg0 cavm_nixx_af_lfx_rx_ipsec_cfg0_t;
 
@@ -13278,14 +12483,6 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_CFG0(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=127)))
         return 0x840040004140ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=127)))
-        return 0x840040004140ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=127)))
-        return 0x840040004140ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=127)))
-        return 0x840040004140ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=127)))
-        return 0x840040004140ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=127)))
         return 0x840040004140ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     __cavm_csr_fatal("NIXX_AF_LFX_RX_IPSEC_CFG0", 2, a, b, 0, 0, 0, 0);
 }
@@ -13300,10 +12497,7 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_CFG0(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_lf#_rx_ipsec_cfg1
  *
- * INTERNAL: NIX AF LF Receive IPSEC Security Association Configuration Register
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF LF Receive IPSEC Security Association Configuration Register
  */
 union cavm_nixx_af_lfx_rx_ipsec_cfg1
 {
@@ -13379,21 +12573,6 @@ union cavm_nixx_af_lfx_rx_ipsec_cfg1
 #endif /* Word 0 - End */
     } cn96xxp3;
     /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_cn96xxp3 cn98xx; */
-    struct cavm_nixx_af_lfx_rx_ipsec_cfg1_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_37_63        : 27;
-        uint64_t sa_idx_w              : 5;  /**< [ 36: 32](R/W) Reserved. */
-        uint64_t sa_idx_max            : 32; /**< [ 31:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t sa_idx_max            : 32; /**< [ 31:  0](R/W) Reserved. */
-        uint64_t sa_idx_w              : 5;  /**< [ 36: 32](R/W) Reserved. */
-        uint64_t reserved_37_63        : 27;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_cnf95xx f95mm; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_cnf95xx f95o; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_cnf95xx loki; */
 };
 typedef union cavm_nixx_af_lfx_rx_ipsec_cfg1 cavm_nixx_af_lfx_rx_ipsec_cfg1_t;
 
@@ -13405,14 +12584,6 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_CFG1(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=127)))
         return 0x840040004148ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=127)))
-        return 0x840040004148ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=127)))
-        return 0x840040004148ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=127)))
-        return 0x840040004148ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=127)))
-        return 0x840040004148ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=127)))
         return 0x840040004148ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     __cavm_csr_fatal("NIXX_AF_LFX_RX_IPSEC_CFG1", 2, a, b, 0, 0, 0, 0);
 }
@@ -13427,10 +12598,11 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_CFG1(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_lf#_rx_ipsec_dyno_base
  *
- * INTERNAL: NIX AF LF Receive IPSEC Dynamic Ordering Base Address Registers
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF LF Receive IPSEC Dynamic Ordering Base Address Registers
+ * This register specifies the base AF IOVA of the LF's IPSEC dynamic ordering
+ * counter table in NDC/LLC/DRAM. The table consists of 1 \<\<
+ * (NIX_AF_LF()_RX_IPSEC_DYNO_CFG[DYNO_IDX_W]) NIX_IPSEC_DYNO_S structures.
+ * See NIX_AF_LF()_RX_IPSEC_DYNO_CFG[DYNO_ENA].
  */
 union cavm_nixx_af_lfx_rx_ipsec_dyno_base
 {
@@ -13462,14 +12634,6 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_DYNO_BASE(uint64_t a, uint64_t 
         return 0x840040004158ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=127)))
         return 0x840040004158ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=127)))
-        return 0x840040004158ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=127)))
-        return 0x840040004158ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=127)))
-        return 0x840040004158ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=127)))
-        return 0x840040004158ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     __cavm_csr_fatal("NIXX_AF_LFX_RX_IPSEC_DYNO_BASE", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -13483,10 +12647,7 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_DYNO_BASE(uint64_t a, uint64_t 
 /**
  * Register (RVU_PF_BAR0) nix#_af_lf#_rx_ipsec_dyno_cfg
  *
- * INTERNAL: NIX AF LF Receive IPSEC Dynamic Ordering Base Address Registers
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF LF Receive IPSEC Dynamic Ordering Base Address Registers
  */
 union cavm_nixx_af_lfx_rx_ipsec_dyno_cfg
 {
@@ -13503,10 +12664,7 @@ union cavm_nixx_af_lfx_rx_ipsec_dyno_cfg
                                                                  NIX_IPSEC_DYNO_S writes that are not allocated in NDC and will always
                                                                  allocate into LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating NIX_IPSEC_DYNO_S structures in NDC (1 means
-                                                                 do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 do not use). All ones disables allocation in NDC. */
         uint64_t reserved_5_19         : 15;
         uint64_t dyno_ena              : 1;  /**< [  4:  4](R/W) Dynamic ordering enable. When set, enables use of dynamic ordering counters
                                                                  (NIX_IPSEC_DYNO_S) to enforce ordering between IPSEC hardware fast-path
@@ -13551,10 +12709,7 @@ union cavm_nixx_af_lfx_rx_ipsec_dyno_cfg
                                                                  when the counter is non-zero. */
         uint64_t reserved_5_19         : 15;
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating NIX_IPSEC_DYNO_S structures in NDC (1 means
-                                                                 do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 do not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style of read for accessing dynamic ordering counters in
                                                                  LLC/DRAM:
                                                                  0 = NIX_IPSEC_DYNO_S reads will not allocate into the LLC.
@@ -13565,34 +12720,7 @@ union cavm_nixx_af_lfx_rx_ipsec_dyno_cfg
         uint64_t reserved_37_63        : 27;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_s cn9; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_s cn96xx; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_s cn98xx; */
-    struct cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_37_63        : 27;
-        uint64_t caching               : 1;  /**< [ 36: 36](R/W) Reserved. */
-        uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved. */
-        uint64_t reserved_5_19         : 15;
-        uint64_t dyno_ena              : 1;  /**< [  4:  4](R/W) Reserved. */
-        uint64_t dyno_idx_w            : 4;  /**< [  3:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t dyno_idx_w            : 4;  /**< [  3:  0](R/W) Reserved. */
-        uint64_t dyno_ena              : 1;  /**< [  4:  4](R/W) Reserved. */
-        uint64_t reserved_5_19         : 15;
-        uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Reserved.
-                                                                 Internal:
-                                                                 Reserved. */
-        uint64_t caching               : 1;  /**< [ 36: 36](R/W) Reserved. */
-        uint64_t reserved_37_63        : 27;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_cnf95xx f95mm; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_cnf95xx f95o; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_cnf95xx loki; */
+    /* struct cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_s cn; */
 };
 typedef union cavm_nixx_af_lfx_rx_ipsec_dyno_cfg cavm_nixx_af_lfx_rx_ipsec_dyno_cfg_t;
 
@@ -13604,14 +12732,6 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_DYNO_CFG(uint64_t a, uint64_t b
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=127)))
         return 0x840040004150ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=127)))
-        return 0x840040004150ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=127)))
-        return 0x840040004150ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=127)))
-        return 0x840040004150ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=127)))
-        return 0x840040004150ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=127)))
         return 0x840040004150ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     __cavm_csr_fatal("NIXX_AF_LFX_RX_IPSEC_DYNO_CFG", 2, a, b, 0, 0, 0, 0);
 }
@@ -13626,10 +12746,8 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_DYNO_CFG(uint64_t a, uint64_t b
 /**
  * Register (RVU_PF_BAR0) nix#_af_lf#_rx_ipsec_sa_base
  *
- * INTERNAL: NIX AF LF Receive IPSEC Security Association Base Address Register
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF LF Receive IPSEC Security Association Base Address Register
+ * This register specifies the base IOVA of CPT's IPSEC SA table in LLC/DRAM.
  */
 union cavm_nixx_af_lfx_rx_ipsec_sa_base
 {
@@ -13660,14 +12778,6 @@ static inline uint64_t CAVM_NIXX_AF_LFX_RX_IPSEC_SA_BASE(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=127)))
         return 0x840040004170ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=127)))
-        return 0x840040004170ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=127)))
-        return 0x840040004170ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=127)))
-        return 0x840040004170ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=127)))
-        return 0x840040004170ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=127)))
         return 0x840040004170ll + 0x10000000ll * ((a) & 0x1) + 0x20000ll * ((b) & 0x7f);
     __cavm_csr_fatal("NIXX_AF_LFX_RX_IPSEC_SA_BASE", 2, a, b, 0, 0, 0, 0);
 }
@@ -13864,18 +12974,12 @@ union cavm_nixx_af_lfx_sqs_cfg
                                                                  0 = Reads and writes of context data will not allocate into the LLC.
                                                                  1 = Reads and full cache line writes of context data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating queue context structures in NDC (1
-                                                                 means do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 means do not use). All ones disables allocation in NDC. */
         uint64_t max_queuesm1          : 20; /**< [ 19:  0](R/W) Maximum number of queues minus one. */
 #else /* Word 0 - Little Endian */
         uint64_t max_queuesm1          : 20; /**< [ 19:  0](R/W) Maximum number of queues minus one. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating queue context structures in NDC (1
-                                                                 means do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 means do not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style of write and read for accessing queue context structures
                                                                  in LLC/DRAM:
                                                                  0 = Reads and writes of context data will not allocate into the LLC.
@@ -14216,17 +13320,7 @@ union cavm_nixx_af_lf_rst
         uint64_t reserved_13_63        : 51;
         uint64_t exec                  : 1;  /**< [ 12: 12](R/W1S/H) Execute LF software-initiated reset. When software writes a one to set this bit, hardware
                                                                  resets the local function selected by [LF]. Hardware clears this bit when
-                                                                 done.
-
-                                                                 Internal:
-                                                                 This comment applies to all blocks that refer to this register:
-
-                                                                 This should preferrably reset all registers/state associated with the LF, including
-                                                                 any BLK_LF_* and BLK_AF_LF()_* registers. It would also be nice to reset any per-LF
-                                                                 bits in other registers but its OK to have exceptions as long as the AF software has
-                                                                 another way to reset them, e.g. by writing to the bits. Such additional steps
-                                                                 expected from software should be documented in the HRM, e.g. in section 19.11.5
-                                                                 "VF Function Level Reset". */
+                                                                 done. */
         uint64_t reserved_8_11         : 4;
         uint64_t lf                    : 8;  /**< [  7:  0](R/W) Local function that is reset when [EXEC] is set. */
 #else /* Word 0 - Little Endian */
@@ -14234,17 +13328,7 @@ union cavm_nixx_af_lf_rst
         uint64_t reserved_8_11         : 4;
         uint64_t exec                  : 1;  /**< [ 12: 12](R/W1S/H) Execute LF software-initiated reset. When software writes a one to set this bit, hardware
                                                                  resets the local function selected by [LF]. Hardware clears this bit when
-                                                                 done.
-
-                                                                 Internal:
-                                                                 This comment applies to all blocks that refer to this register:
-
-                                                                 This should preferrably reset all registers/state associated with the LF, including
-                                                                 any BLK_LF_* and BLK_AF_LF()_* registers. It would also be nice to reset any per-LF
-                                                                 bits in other registers but its OK to have exceptions as long as the AF software has
-                                                                 another way to reset them, e.g. by writing to the bits. Such additional steps
-                                                                 expected from software should be documented in the HRM, e.g. in section 19.11.5
-                                                                 "VF Function Level Reset". */
+                                                                 done. */
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } s;
@@ -14610,17 +13694,7 @@ union cavm_nixx_af_mdqx_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -14639,17 +13713,7 @@ union cavm_nixx_af_mdqx_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -14858,17 +13922,7 @@ union cavm_nixx_af_mdqx_pir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -14887,17 +13941,7 @@ union cavm_nixx_af_mdqx_pir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -14938,114 +13982,6 @@ static inline uint64_t CAVM_NIXX_AF_MDQX_PIR(uint64_t a, uint64_t b)
 #define device_bar_CAVM_NIXX_AF_MDQX_PIR(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_MDQX_PIR(a,b) (a)
 #define arguments_CAVM_NIXX_AF_MDQX_PIR(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_mdq#_pointers
- *
- * INTERNAL: NIX AF Meta Descriptor 4 Linked List Pointers Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL4()_POINTERS.
- */
-union cavm_nixx_af_mdqx_pointers
-{
-    uint64_t u;
-    struct cavm_nixx_af_mdqx_pointers_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_25_63        : 39;
-        uint64_t prev                  : 9;  /**< [ 24: 16](R/W/H) See NIX_AF_TL2()_POINTERS[PREV]. */
-        uint64_t reserved_9_15         : 7;
-        uint64_t next                  : 9;  /**< [  8:  0](R/W/H) See NIX_AF_TL2()_POINTERS[NEXT]. */
-#else /* Word 0 - Little Endian */
-        uint64_t next                  : 9;  /**< [  8:  0](R/W/H) See NIX_AF_TL2()_POINTERS[NEXT]. */
-        uint64_t reserved_9_15         : 7;
-        uint64_t prev                  : 9;  /**< [ 24: 16](R/W/H) See NIX_AF_TL2()_POINTERS[PREV]. */
-        uint64_t reserved_25_63        : 39;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_mdqx_pointers_s cn; */
-};
-typedef union cavm_nixx_af_mdqx_pointers cavm_nixx_af_mdqx_pointers_t;
-
-static inline uint64_t CAVM_NIXX_AF_MDQX_POINTERS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_MDQX_POINTERS(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=511)))
-        return 0x840040001460ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=511)))
-        return 0x840040001460ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=511)))
-        return 0x840040001460ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=511)))
-        return 0x840040001460ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=511)))
-        return 0x840040001460ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=511)))
-        return 0x840040001460ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=511)))
-        return 0x840040001460ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    __cavm_csr_fatal("NIXX_AF_MDQX_POINTERS", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_MDQX_POINTERS(a,b) cavm_nixx_af_mdqx_pointers_t
-#define bustype_CAVM_NIXX_AF_MDQX_POINTERS(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_MDQX_POINTERS(a,b) "NIXX_AF_MDQX_POINTERS"
-#define device_bar_CAVM_NIXX_AF_MDQX_POINTERS(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_MDQX_POINTERS(a,b) (a)
-#define arguments_CAVM_NIXX_AF_MDQX_POINTERS(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_mdq#_ptr_fifo
- *
- * INTERNAL: NIX Meta Descriptor Queue Pointer FIFO State Debug Registers
- */
-union cavm_nixx_af_mdqx_ptr_fifo
-{
-    uint64_t u;
-    struct cavm_nixx_af_mdqx_ptr_fifo_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_9_63         : 55;
-        uint64_t p_con                 : 1;  /**< [  8:  8](R/W/H) parent connect. Asserted when MDQ is connected to its parent. */
-        uint64_t head                  : 4;  /**< [  7:  4](R/W/H) MDQ DESC FIFO head pointer. */
-        uint64_t tail                  : 4;  /**< [  3:  0](R/W/H) MDQ DESC FIFO tail pointer. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 4;  /**< [  3:  0](R/W/H) MDQ DESC FIFO tail pointer. */
-        uint64_t head                  : 4;  /**< [  7:  4](R/W/H) MDQ DESC FIFO head pointer. */
-        uint64_t p_con                 : 1;  /**< [  8:  8](R/W/H) parent connect. Asserted when MDQ is connected to its parent. */
-        uint64_t reserved_9_63         : 55;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_mdqx_ptr_fifo_s cn; */
-};
-typedef union cavm_nixx_af_mdqx_ptr_fifo cavm_nixx_af_mdqx_ptr_fifo_t;
-
-static inline uint64_t CAVM_NIXX_AF_MDQX_PTR_FIFO(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_MDQX_PTR_FIFO(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=511)))
-        return 0x8400400014d0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=511)))
-        return 0x8400400014d0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=511)))
-        return 0x8400400014d0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=511)))
-        return 0x8400400014d0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=511)))
-        return 0x8400400014d0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=511)))
-        return 0x8400400014d0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=511)))
-        return 0x8400400014d0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    __cavm_csr_fatal("NIXX_AF_MDQX_PTR_FIFO", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_MDQX_PTR_FIFO(a,b) cavm_nixx_af_mdqx_ptr_fifo_t
-#define bustype_CAVM_NIXX_AF_MDQX_PTR_FIFO(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_MDQX_PTR_FIFO(a,b) "NIXX_AF_MDQX_PTR_FIFO"
-#define device_bar_CAVM_NIXX_AF_MDQX_PTR_FIFO(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_MDQX_PTR_FIFO(a,b) (a)
-#define arguments_CAVM_NIXX_AF_MDQX_PTR_FIFO(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_mdq#_sched_state
@@ -15222,52 +14158,7 @@ union cavm_nixx_af_mdqx_shape
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_mdqx_shape_s cn9; */
-    /* struct cavm_nixx_af_mdqx_shape_s cn96xxp1; */
-    struct cavm_nixx_af_mdqx_shape_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_27_63        : 37;
-        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
-                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
-                                                                   0x1 = Green-only.
-                                                                   0x2 = Yellow-only.
-                                                                   0x3 = Red-only.
-
-                                                                 Internal:
-                                                                 Deprecated feature. */
-        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
-                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
-        uint64_t reserved_13_23        : 11;
-        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
-        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
-        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
-        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
-#else /* Word 0 - Little Endian */
-        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
-        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
-        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
-        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
-        uint64_t reserved_13_23        : 11;
-        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
-                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
-        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
-                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
-                                                                   0x1 = Green-only.
-                                                                   0x2 = Yellow-only.
-                                                                   0x3 = Red-only.
-
-                                                                 Internal:
-                                                                 Deprecated feature. */
-        uint64_t reserved_27_63        : 37;
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_mdqx_shape_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_mdqx_shape_s cnf95xxp1; */
-    /* struct cavm_nixx_af_mdqx_shape_cn96xxp3 cnf95xxp2; */
-    /* struct cavm_nixx_af_mdqx_shape_cn96xxp3 f95mm; */
-    /* struct cavm_nixx_af_mdqx_shape_s f95o; */
-    /* struct cavm_nixx_af_mdqx_shape_cn96xxp3 loki; */
+    /* struct cavm_nixx_af_mdqx_shape_s cn; */
 };
 typedef union cavm_nixx_af_mdqx_shape cavm_nixx_af_mdqx_shape_t;
 
@@ -15565,9 +14456,7 @@ union cavm_nixx_af_ndc_cfg
         uint64_t byp_rsse              : 1;  /**< [  8:  8](R/W) Force all NIX_RSSE_S transactions to bypass NDC. */
         uint64_t byp_rqc               : 1;  /**< [  7:  7](R/W) Force all NIX_RQ_CTX_HW_S transactions to bypass NDC. */
         uint64_t byp_mce               : 1;  /**< [  6:  6](R/W) Force all NIX_RX_MCE_S transactions to bypass NDC. */
-        uint64_t byp_dyno              : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t byp_dyno              : 1;  /**< [  5:  5](R/W) Reserved. */
         uint64_t byp_cints             : 1;  /**< [  4:  4](R/W) Force all NIX_CINT_HW_S transactions to bypass NDC. */
         uint64_t byp_cqs               : 1;  /**< [  3:  3](R/W) Force all NIX_CQ_CTX_S transactions to bypass NDC. */
         uint64_t byp_sqb               : 1;  /**< [  2:  2](R/W) Force all SQB transactions to bypass NDC. */
@@ -15579,9 +14468,7 @@ union cavm_nixx_af_ndc_cfg
         uint64_t byp_sqb               : 1;  /**< [  2:  2](R/W) Force all SQB transactions to bypass NDC. */
         uint64_t byp_cqs               : 1;  /**< [  3:  3](R/W) Force all NIX_CQ_CTX_S transactions to bypass NDC. */
         uint64_t byp_cints             : 1;  /**< [  4:  4](R/W) Force all NIX_CINT_HW_S transactions to bypass NDC. */
-        uint64_t byp_dyno              : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t byp_dyno              : 1;  /**< [  5:  5](R/W) Reserved. */
         uint64_t byp_mce               : 1;  /**< [  6:  6](R/W) Force all NIX_RX_MCE_S transactions to bypass NDC. */
         uint64_t byp_rqc               : 1;  /**< [  7:  7](R/W) Force all NIX_RQ_CTX_HW_S transactions to bypass NDC. */
         uint64_t byp_rsse              : 1;  /**< [  8:  8](R/W) Force all NIX_RSSE_S transactions to bypass NDC. */
@@ -15793,515 +14680,6 @@ static inline uint64_t CAVM_NIXX_AF_NORM_TX_FIFO_STATUS(uint64_t a)
 #define arguments_CAVM_NIXX_AF_NORM_TX_FIFO_STATUS(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_pq#_dbg_arb_link_exp
- *
- * INTERNAL: NIX AF PQ Arb Link EXPRESS Debug Register
- */
-union cavm_nixx_af_pqx_dbg_arb_link_exp
-{
-    uint64_t u;
-    struct cavm_nixx_af_pqx_dbg_arb_link_exp_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_7_63         : 57;
-        uint64_t rr_mask               : 1;  /**< [  6:  6](R/W/H) Debug state of rr_mask, the mask off active link when RR Round Over asserted. */
-        uint64_t reserved_4_5          : 2;
-        uint64_t cnt                   : 2;  /**< [  3:  2](R/W/H) Debug state of cnt, a 2-bit counter for each packet type for each link. */
-        uint64_t act_c_con             : 1;  /**< [  1:  1](R/W/H) Debug state of act_c_con, a bit that gets cleared when link_cnt decrements to 0. */
-        uint64_t req                   : 1;  /**< [  0:  0](R/W/H) Debug state of link_req, a bit that together with all indexes in this
-                                                                 register forms the request vector for the arb. */
-#else /* Word 0 - Little Endian */
-        uint64_t req                   : 1;  /**< [  0:  0](R/W/H) Debug state of link_req, a bit that together with all indexes in this
-                                                                 register forms the request vector for the arb. */
-        uint64_t act_c_con             : 1;  /**< [  1:  1](R/W/H) Debug state of act_c_con, a bit that gets cleared when link_cnt decrements to 0. */
-        uint64_t cnt                   : 2;  /**< [  3:  2](R/W/H) Debug state of cnt, a 2-bit counter for each packet type for each link. */
-        uint64_t reserved_4_5          : 2;
-        uint64_t rr_mask               : 1;  /**< [  6:  6](R/W/H) Debug state of rr_mask, the mask off active link when RR Round Over asserted. */
-        uint64_t reserved_7_63         : 57;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pqx_dbg_arb_link_exp_s cn; */
-};
-typedef union cavm_nixx_af_pqx_dbg_arb_link_exp cavm_nixx_af_pqx_dbg_arb_link_exp_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQX_DBG_ARB_LINK_EXP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQX_DBG_ARB_LINK_EXP(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=27)))
-        return 0x840040000ce8ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=27)))
-        return 0x840040000ce8ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    __cavm_csr_fatal("NIXX_AF_PQX_DBG_ARB_LINK_EXP", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_EXP(a,b) cavm_nixx_af_pqx_dbg_arb_link_exp_t
-#define bustype_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_EXP(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_EXP(a,b) "NIXX_AF_PQX_DBG_ARB_LINK_EXP"
-#define device_bar_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_EXP(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_EXP(a,b) (a)
-#define arguments_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_EXP(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq#_dbg_arb_link_nrm
- *
- * INTERNAL: NIX AF PQ Arb Link NORMAL Debug Register
- */
-union cavm_nixx_af_pqx_dbg_arb_link_nrm
-{
-    uint64_t u;
-    struct cavm_nixx_af_pqx_dbg_arb_link_nrm_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_7_63         : 57;
-        uint64_t rr_mask               : 1;  /**< [  6:  6](R/W/H) Debug state of rr_mask, the mask off active link when RR Round Over asserted. */
-        uint64_t reserved_4_5          : 2;
-        uint64_t cnt                   : 2;  /**< [  3:  2](R/W/H) Debug state of cnt, a 2-bit counter for each packet type for each link. */
-        uint64_t act_c_con             : 1;  /**< [  1:  1](R/W/H) Debug state of act_c_con, a bit that gets cleared when link_cnt decrements to 0. */
-        uint64_t req                   : 1;  /**< [  0:  0](R/W/H) Debug state of link_req, a bit that together with all indexes in this
-                                                                 register forms the request vector for the arb. */
-#else /* Word 0 - Little Endian */
-        uint64_t req                   : 1;  /**< [  0:  0](R/W/H) Debug state of link_req, a bit that together with all indexes in this
-                                                                 register forms the request vector for the arb. */
-        uint64_t act_c_con             : 1;  /**< [  1:  1](R/W/H) Debug state of act_c_con, a bit that gets cleared when link_cnt decrements to 0. */
-        uint64_t cnt                   : 2;  /**< [  3:  2](R/W/H) Debug state of cnt, a 2-bit counter for each packet type for each link. */
-        uint64_t reserved_4_5          : 2;
-        uint64_t rr_mask               : 1;  /**< [  6:  6](R/W/H) Debug state of rr_mask, the mask off active link when RR Round Over asserted. */
-        uint64_t reserved_7_63         : 57;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pqx_dbg_arb_link_nrm_s cn; */
-};
-typedef union cavm_nixx_af_pqx_dbg_arb_link_nrm cavm_nixx_af_pqx_dbg_arb_link_nrm_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQX_DBG_ARB_LINK_NRM(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQX_DBG_ARB_LINK_NRM(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=27)))
-        return 0x840040000ce0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=27)))
-        return 0x840040000ce0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    __cavm_csr_fatal("NIXX_AF_PQX_DBG_ARB_LINK_NRM", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_NRM(a,b) cavm_nixx_af_pqx_dbg_arb_link_nrm_t
-#define bustype_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_NRM(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_NRM(a,b) "NIXX_AF_PQX_DBG_ARB_LINK_NRM"
-#define device_bar_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_NRM(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_NRM(a,b) (a)
-#define arguments_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_NRM(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq#_dbg_arb_link_sdp
- *
- * INTERNAL: NIX AF PQ Arb Link SDP Debug Register
- */
-union cavm_nixx_af_pqx_dbg_arb_link_sdp
-{
-    uint64_t u;
-    struct cavm_nixx_af_pqx_dbg_arb_link_sdp_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_7_63         : 57;
-        uint64_t rr_mask               : 1;  /**< [  6:  6](R/W/H) Debug state of rr_mask, the mask off active link when RR Round Over asserted. */
-        uint64_t reserved_4_5          : 2;
-        uint64_t cnt                   : 2;  /**< [  3:  2](R/W/H) Debug state of cnt, a 2-bit counter for each packet type for each link. */
-        uint64_t act_c_con             : 1;  /**< [  1:  1](R/W/H) Debug state of act_c_con, a bit that gets cleared when link_cnt decrements to 0. */
-        uint64_t req                   : 1;  /**< [  0:  0](R/W/H) Debug state of link_req, a bit that together with all indexes in this
-                                                                 register forms the request vector for the arb. */
-#else /* Word 0 - Little Endian */
-        uint64_t req                   : 1;  /**< [  0:  0](R/W/H) Debug state of link_req, a bit that together with all indexes in this
-                                                                 register forms the request vector for the arb. */
-        uint64_t act_c_con             : 1;  /**< [  1:  1](R/W/H) Debug state of act_c_con, a bit that gets cleared when link_cnt decrements to 0. */
-        uint64_t cnt                   : 2;  /**< [  3:  2](R/W/H) Debug state of cnt, a 2-bit counter for each packet type for each link. */
-        uint64_t reserved_4_5          : 2;
-        uint64_t rr_mask               : 1;  /**< [  6:  6](R/W/H) Debug state of rr_mask, the mask off active link when RR Round Over asserted. */
-        uint64_t reserved_7_63         : 57;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pqx_dbg_arb_link_sdp_s cn; */
-};
-typedef union cavm_nixx_af_pqx_dbg_arb_link_sdp cavm_nixx_af_pqx_dbg_arb_link_sdp_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQX_DBG_ARB_LINK_SDP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQX_DBG_ARB_LINK_SDP(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=27)))
-        return 0x840040000cf0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=27)))
-        return 0x840040000cf0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    __cavm_csr_fatal("NIXX_AF_PQX_DBG_ARB_LINK_SDP", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_SDP(a,b) cavm_nixx_af_pqx_dbg_arb_link_sdp_t
-#define bustype_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_SDP(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_SDP(a,b) "NIXX_AF_PQX_DBG_ARB_LINK_SDP"
-#define device_bar_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_SDP(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_SDP(a,b) (a)
-#define arguments_CAVM_NIXX_AF_PQX_DBG_ARB_LINK_SDP(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq_arb_crd_rdy_debug
- *
- * INTERNAL: NIX AF PQ_ARB Node Credit Ready Registers
- *
- * NIX AF PQ ARB Credit ready register
- */
-union cavm_nixx_af_pq_arb_crd_rdy_debug
-{
-    uint64_t u;
-    struct cavm_nixx_af_pq_arb_crd_rdy_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t node_crd_rdy          : 28; /**< [ 27:  0](RO/H) pq_arb physical nodes that have credit ready. */
-#else /* Word 0 - Little Endian */
-        uint64_t node_crd_rdy          : 28; /**< [ 27:  0](RO/H) pq_arb physical nodes that have credit ready. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pq_arb_crd_rdy_debug_s cn; */
-};
-typedef union cavm_nixx_af_pq_arb_crd_rdy_debug cavm_nixx_af_pq_arb_crd_rdy_debug_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_CRD_RDY_DEBUG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_CRD_RDY_DEBUG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000f10ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000f10ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000f10ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000f10ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PQ_ARB_CRD_RDY_DEBUG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQ_ARB_CRD_RDY_DEBUG(a) cavm_nixx_af_pq_arb_crd_rdy_debug_t
-#define bustype_CAVM_NIXX_AF_PQ_ARB_CRD_RDY_DEBUG(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQ_ARB_CRD_RDY_DEBUG(a) "NIXX_AF_PQ_ARB_CRD_RDY_DEBUG"
-#define device_bar_CAVM_NIXX_AF_PQ_ARB_CRD_RDY_DEBUG(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQ_ARB_CRD_RDY_DEBUG(a) (a)
-#define arguments_CAVM_NIXX_AF_PQ_ARB_CRD_RDY_DEBUG(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq_arb_dwrr_msk_debug
- *
- * INTERNAL: NIX AF PQ_ARB DWRR mask set read only debug Registers
- */
-union cavm_nixx_af_pq_arb_dwrr_msk_debug
-{
-    uint64_t u;
-    struct cavm_nixx_af_pq_arb_dwrr_msk_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t node_dwrr_mask_set    : 28; /**< [ 27:  0](RO/H) pq_arb - set if any DWRR mask is set for a node */
-#else /* Word 0 - Little Endian */
-        uint64_t node_dwrr_mask_set    : 28; /**< [ 27:  0](RO/H) pq_arb - set if any DWRR mask is set for a node */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pq_arb_dwrr_msk_debug_s cn; */
-};
-typedef union cavm_nixx_af_pq_arb_dwrr_msk_debug cavm_nixx_af_pq_arb_dwrr_msk_debug_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000f30ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000f30ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000f30ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000f30ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG(a) cavm_nixx_af_pq_arb_dwrr_msk_debug_t
-#define bustype_CAVM_NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG(a) "NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG"
-#define device_bar_CAVM_NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG(a) (a)
-#define arguments_CAVM_NIXX_AF_PQ_ARB_DWRR_MSK_DEBUG(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq_arb_node_gnt_debug
- *
- * INTERNAL: NIX AF PQ_ARB Node Grant vector Registers
- */
-union cavm_nixx_af_pq_arb_node_gnt_debug
-{
-    uint64_t u;
-    struct cavm_nixx_af_pq_arb_node_gnt_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t node_grant_vec        : 28; /**< [ 27:  0](RO/H) pq_arb Node grant vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t node_grant_vec        : 28; /**< [ 27:  0](RO/H) pq_arb Node grant vector. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pq_arb_node_gnt_debug_s cn; */
-};
-typedef union cavm_nixx_af_pq_arb_node_gnt_debug cavm_nixx_af_pq_arb_node_gnt_debug_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_NODE_GNT_DEBUG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_NODE_GNT_DEBUG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000f20ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000f20ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000f20ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000f20ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PQ_ARB_NODE_GNT_DEBUG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQ_ARB_NODE_GNT_DEBUG(a) cavm_nixx_af_pq_arb_node_gnt_debug_t
-#define bustype_CAVM_NIXX_AF_PQ_ARB_NODE_GNT_DEBUG(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQ_ARB_NODE_GNT_DEBUG(a) "NIXX_AF_PQ_ARB_NODE_GNT_DEBUG"
-#define device_bar_CAVM_NIXX_AF_PQ_ARB_NODE_GNT_DEBUG(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQ_ARB_NODE_GNT_DEBUG(a) (a)
-#define arguments_CAVM_NIXX_AF_PQ_ARB_NODE_GNT_DEBUG(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq_arb_node_req_debug
- *
- * INTERNAL: NIX AF PQ_ARB Node Request Debug Registers
- *
- * NIX AF PQ ARB Node Request Debug register
- */
-union cavm_nixx_af_pq_arb_node_req_debug
-{
-    uint64_t u;
-    struct cavm_nixx_af_pq_arb_node_req_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t node_req              : 28; /**< [ 27:  0](R/W/H) pq_arb node_request debug, vector of requesting nodes. */
-#else /* Word 0 - Little Endian */
-        uint64_t node_req              : 28; /**< [ 27:  0](R/W/H) pq_arb node_request debug, vector of requesting nodes. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pq_arb_node_req_debug_s cn; */
-};
-typedef union cavm_nixx_af_pq_arb_node_req_debug cavm_nixx_af_pq_arb_node_req_debug_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_NODE_REQ_DEBUG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_NODE_REQ_DEBUG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000f00ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000f00ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000f00ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000f00ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PQ_ARB_NODE_REQ_DEBUG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQ_ARB_NODE_REQ_DEBUG(a) cavm_nixx_af_pq_arb_node_req_debug_t
-#define bustype_CAVM_NIXX_AF_PQ_ARB_NODE_REQ_DEBUG(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQ_ARB_NODE_REQ_DEBUG(a) "NIXX_AF_PQ_ARB_NODE_REQ_DEBUG"
-#define device_bar_CAVM_NIXX_AF_PQ_ARB_NODE_REQ_DEBUG(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQ_ARB_NODE_REQ_DEBUG(a) (a)
-#define arguments_CAVM_NIXX_AF_PQ_ARB_NODE_REQ_DEBUG(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq_arb_shape_vld_dbg
- *
- * INTERNAL: NIX AF PQ_ARB shape valid set Register
- */
-union cavm_nixx_af_pq_arb_shape_vld_dbg
-{
-    uint64_t u;
-    struct cavm_nixx_af_pq_arb_shape_vld_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t node_shape_vld_set    : 28; /**< [ 27:  0](R/W/H) pq_arb shape valid bit is set for a given node. */
-#else /* Word 0 - Little Endian */
-        uint64_t node_shape_vld_set    : 28; /**< [ 27:  0](R/W/H) pq_arb shape valid bit is set for a given node. */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pq_arb_shape_vld_dbg_s cn; */
-};
-typedef union cavm_nixx_af_pq_arb_shape_vld_dbg cavm_nixx_af_pq_arb_shape_vld_dbg_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_SHAPE_VLD_DBG(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQ_ARB_SHAPE_VLD_DBG(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000f40ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000f40ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000f40ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000f40ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PQ_ARB_SHAPE_VLD_DBG", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQ_ARB_SHAPE_VLD_DBG(a) cavm_nixx_af_pq_arb_shape_vld_dbg_t
-#define bustype_CAVM_NIXX_AF_PQ_ARB_SHAPE_VLD_DBG(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQ_ARB_SHAPE_VLD_DBG(a) "NIXX_AF_PQ_ARB_SHAPE_VLD_DBG"
-#define device_bar_CAVM_NIXX_AF_PQ_ARB_SHAPE_VLD_DBG(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQ_ARB_SHAPE_VLD_DBG(a) (a)
-#define arguments_CAVM_NIXX_AF_PQ_ARB_SHAPE_VLD_DBG(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq_dbg_arb_0
- *
- * INTERNAL: NIX AF PQ Arb Debug 0 Register
- */
-union cavm_nixx_af_pq_dbg_arb_0
-{
-    uint64_t u;
-    struct cavm_nixx_af_pq_dbg_arb_0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t rr_mask_clr           : 1;  /**< [  0:  0](R/W/H) Debug state of rr_mask_clr, the signal that clears the rr_mask. */
-#else /* Word 0 - Little Endian */
-        uint64_t rr_mask_clr           : 1;  /**< [  0:  0](R/W/H) Debug state of rr_mask_clr, the signal that clears the rr_mask. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pq_dbg_arb_0_s cn; */
-};
-typedef union cavm_nixx_af_pq_dbg_arb_0 cavm_nixx_af_pq_dbg_arb_0_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQ_DBG_ARB_0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQ_DBG_ARB_0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && (a<=1))
-        return 0x840040000cf8ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000cf8ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PQ_DBG_ARB_0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQ_DBG_ARB_0(a) cavm_nixx_af_pq_dbg_arb_0_t
-#define bustype_CAVM_NIXX_AF_PQ_DBG_ARB_0(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQ_DBG_ARB_0(a) "NIXX_AF_PQ_DBG_ARB_0"
-#define device_bar_CAVM_NIXX_AF_PQ_DBG_ARB_0(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQ_DBG_ARB_0(a) (a)
-#define arguments_CAVM_NIXX_AF_PQ_DBG_ARB_0(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pq_lnk_#_dwrr_msk_dbg
- *
- * INTERNAL: NIX AF PQ_ARB Physical Link DWRR MASK Registers
- */
-union cavm_nixx_af_pq_lnk_x_dwrr_msk_dbg
-{
-    uint64_t u;
-    struct cavm_nixx_af_pq_lnk_x_dwrr_msk_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_28_63        : 36;
-        uint64_t link_dwrr_mask_set    : 28; /**< [ 27:  0](R/W/H) pq_arb DWRR mask set/clr for each link (2 bits per link). */
-#else /* Word 0 - Little Endian */
-        uint64_t link_dwrr_mask_set    : 28; /**< [ 27:  0](R/W/H) pq_arb DWRR mask set/clr for each link (2 bits per link). */
-        uint64_t reserved_28_63        : 36;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pq_lnk_x_dwrr_msk_dbg_s cn; */
-};
-typedef union cavm_nixx_af_pq_lnk_x_dwrr_msk_dbg cavm_nixx_af_pq_lnk_x_dwrr_msk_dbg_t;
-
-static inline uint64_t CAVM_NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=13)))
-        return 0x840040001100ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=22)))
-        return 0x840040001100ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=13)))
-        return 0x840040001100ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=13)))
-        return 0x840040001100ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    __cavm_csr_fatal("NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG(a,b) cavm_nixx_af_pq_lnk_x_dwrr_msk_dbg_t
-#define bustype_CAVM_NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG(a,b) "NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG"
-#define device_bar_CAVM_NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG(a,b) (a)
-#define arguments_CAVM_NIXX_AF_PQ_LNK_X_DWRR_MSK_DBG(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pse_400_rate_divider
- *
- * INTERNAL: NIX AF PSE 400 Rate Divider Register
- */
-union cavm_nixx_af_pse_400_rate_divider
-{
-    uint64_t u;
-    struct cavm_nixx_af_pse_400_rate_divider_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_9_63         : 55;
-        uint64_t rate_div_cfg          : 9;  /**< [  8:  0](R/W) Used to speed up generate a rate divider tick every 400
-                                                                 rst__gbl_100mhz_sclk_edge. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 Refer to the NIX_AF_TL*()_PIR register, instead of having a hardwired value of 400, the
-                                                                 register is provided to speed up testing. The rate divider increments every time
-                                                                 that internal counter matches the register value. */
-#else /* Word 0 - Little Endian */
-        uint64_t rate_div_cfg          : 9;  /**< [  8:  0](R/W) Used to speed up generate a rate divider tick every 400
-                                                                 rst__gbl_100mhz_sclk_edge. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 Refer to the NIX_AF_TL*()_PIR register, instead of having a hardwired value of 400, the
-                                                                 register is provided to speed up testing. The rate divider increments every time
-                                                                 that internal counter matches the register value. */
-        uint64_t reserved_9_63         : 55;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pse_400_rate_divider_s cn; */
-};
-typedef union cavm_nixx_af_pse_400_rate_divider cavm_nixx_af_pse_400_rate_divider_t;
-
-static inline uint64_t CAVM_NIXX_AF_PSE_400_RATE_DIVIDER(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PSE_400_RATE_DIVIDER(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000830ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000830ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000830ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000830ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000830ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000830ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000830ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PSE_400_RATE_DIVIDER", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PSE_400_RATE_DIVIDER(a) cavm_nixx_af_pse_400_rate_divider_t
-#define bustype_CAVM_NIXX_AF_PSE_400_RATE_DIVIDER(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PSE_400_RATE_DIVIDER(a) "NIXX_AF_PSE_400_RATE_DIVIDER"
-#define device_bar_CAVM_NIXX_AF_PSE_400_RATE_DIVIDER(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PSE_400_RATE_DIVIDER(a) (a)
-#define arguments_CAVM_NIXX_AF_PSE_400_RATE_DIVIDER(a) (a),-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_pse_active_cycles_pc
  *
  * NIX AF Active Cycles Register
@@ -16348,906 +14726,6 @@ static inline uint64_t CAVM_NIXX_AF_PSE_ACTIVE_CYCLES_PC(uint64_t a)
 #define device_bar_CAVM_NIXX_AF_PSE_ACTIVE_CYCLES_PC(a) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_PSE_ACTIVE_CYCLES_PC(a) (a)
 #define arguments_CAVM_NIXX_AF_PSE_ACTIVE_CYCLES_PC(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pse_bp_test0
- *
- * INTERNAL: NIX AF PSE Backpressure Test 0 Register
- */
-union cavm_nixx_af_pse_bp_test0
-{
-    uint64_t u;
-    struct cavm_nixx_af_pse_bp_test0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_12_63        : 52;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_63        : 52;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pse_bp_test0_s cn9; */
-    struct cavm_nixx_af_pse_bp_test0_cn96xxp1
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, enables SDP credit FIFO grant backpressure, credit requests
-                                                                 waiting in FIFO is not granted
-                                                                 even if there are credits available.
-                                                                 \<62\> = When set, enables SDP wake up backpressure, credits granted already, delaying TW request.
-                                                                 \<61\> = When set, enables MDQ PKT_ADD backpressure, MDQ stops requesting PKT_ADD to TL4.
-                                                                 \<60\> = When set, enables backpressure on SQM to MDQ FIFO interface, MDQ does
-                                                                 not return FIFO credits and recived packets are not poped from FIFO. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, enables SDP credit FIFO grant backpressure, credit requests
-                                                                 waiting in FIFO is not granted
-                                                                 even if there are credits available.
-                                                                 \<62\> = When set, enables SDP wake up backpressure, credits granted already, delaying TW request.
-                                                                 \<61\> = When set, enables MDQ PKT_ADD backpressure, MDQ stops requesting PKT_ADD to TL4.
-                                                                 \<60\> = When set, enables backpressure on SQM to MDQ FIFO interface, MDQ does
-                                                                 not return FIFO credits and recived packets are not poped from FIFO. */
-#endif /* Word 0 - End */
-    } cn96xxp1;
-    struct cavm_nixx_af_pse_bp_test0_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 6;  /**< [ 63: 58](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at PQ and Misc level. Note between bits[63:60], bit[60] if set is going to
-                                                                 backpressure other grants as well and so on.
-                                                                 \<63\> = When set, backpressure ADD request gnt from TW, BP, TL1 other PE.
-                                                                 \<62\> = When set, backpressure ADD request grant to TL1 one of the PE's.
-                                                                 \<61\> = When set, backpressure GET request grant to PQ_ARB.
-                                                                 \<60\> = When set, backpressure PE to PE gnt at PQ level.
-                                                                 \<59\> = When set, backpressure Normal Output FIFO.
-                                                                 \<58\> = When set, backpressure SDP Output FIFO. */
-        uint64_t reserved_56_57        : 2;
-        uint64_t reserved_32_55        : 24;
-        uint64_t bp_cfg                : 12; /**< [ 31: 20](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<31:30\> = Config for Enable bit [63].
-                                                                 \<29:28\> = Config for Enable bit [62].
-                                                                 \<27:26\> = Config for Enable bit [61].
-                                                                 \<25:24\> = Config for Enable bit [60].
-                                                                 \<23:22\> = Config for Enable bit [59].
-                                                                 \<21:20\> = Config for Enable bit [58]. */
-        uint64_t reserved_16_19        : 4;
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t reserved_16_19        : 4;
-        uint64_t bp_cfg                : 12; /**< [ 31: 20](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<31:30\> = Config for Enable bit [63].
-                                                                 \<29:28\> = Config for Enable bit [62].
-                                                                 \<27:26\> = Config for Enable bit [61].
-                                                                 \<25:24\> = Config for Enable bit [60].
-                                                                 \<23:22\> = Config for Enable bit [59].
-                                                                 \<21:20\> = Config for Enable bit [58]. */
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_56_57        : 2;
-        uint64_t enable                : 6;  /**< [ 63: 58](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at PQ and Misc level. Note between bits[63:60], bit[60] if set is going to
-                                                                 backpressure other grants as well and so on.
-                                                                 \<63\> = When set, backpressure ADD request gnt from TW, BP, TL1 other PE.
-                                                                 \<62\> = When set, backpressure ADD request grant to TL1 one of the PE's.
-                                                                 \<61\> = When set, backpressure GET request grant to PQ_ARB.
-                                                                 \<60\> = When set, backpressure PE to PE gnt at PQ level.
-                                                                 \<59\> = When set, backpressure Normal Output FIFO.
-                                                                 \<58\> = When set, backpressure SDP Output FIFO. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_pse_bp_test0_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_pse_bp_test0_cn96xxp1 cnf95xxp1; */
-    struct cavm_nixx_af_pse_bp_test0_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, enables SDP credit FIFO grant backpressure, credit requests
-                                                                 waiting in FIFO is not granted
-                                                                 even if there are credits available.
-                                                                 \<62\> = When set, enables SDP wake up backpressure, credits granted already, delaying TW request.
-                                                                 \<61\> = When set, enables MDQ PKT_ADD backpressure, MDQ stops requesting PKT_ADD to TL4.
-                                                                 \<60\> = When set, enables backpressure on SQM to MDQ FIFO interface, MDQ does
-                                                                 not return FIFO credits and recived packets are not poped from FIFO. */
-        uint64_t reserved_56_59        : 4;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_24_31        : 8;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_31        : 8;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_56_59        : 4;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, enables SDP credit FIFO grant backpressure, credit requests
-                                                                 waiting in FIFO is not granted
-                                                                 even if there are credits available.
-                                                                 \<62\> = When set, enables SDP wake up backpressure, credits granted already, delaying TW request.
-                                                                 \<61\> = When set, enables MDQ PKT_ADD backpressure, MDQ stops requesting PKT_ADD to TL4.
-                                                                 \<60\> = When set, enables backpressure on SQM to MDQ FIFO interface, MDQ does
-                                                                 not return FIFO credits and recived packets are not poped from FIFO. */
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_nixx_af_pse_bp_test0_cnf95xxp2 f95mm; */
-    /* struct cavm_nixx_af_pse_bp_test0_cn96xxp3 f95o; */
-    /* struct cavm_nixx_af_pse_bp_test0_cn96xxp3 loki; */
-};
-typedef union cavm_nixx_af_pse_bp_test0 cavm_nixx_af_pse_bp_test0_t;
-
-static inline uint64_t CAVM_NIXX_AF_PSE_BP_TEST0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PSE_BP_TEST0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000840ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000840ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000840ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000840ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000840ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000840ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000840ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PSE_BP_TEST0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PSE_BP_TEST0(a) cavm_nixx_af_pse_bp_test0_t
-#define bustype_CAVM_NIXX_AF_PSE_BP_TEST0(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PSE_BP_TEST0(a) "NIXX_AF_PSE_BP_TEST0"
-#define device_bar_CAVM_NIXX_AF_PSE_BP_TEST0(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PSE_BP_TEST0(a) (a)
-#define arguments_CAVM_NIXX_AF_PSE_BP_TEST0(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pse_bp_test1
- *
- * INTERNAL: NIX AF PSE Backpressure Test 1 Register
- */
-union cavm_nixx_af_pse_bp_test1
-{
-    uint64_t u;
-    struct cavm_nixx_af_pse_bp_test1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_26_63        : 38;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_26_63        : 38;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pse_bp_test1_s cn9; */
-    struct cavm_nixx_af_pse_bp_test1_cn96xxp1
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables SDP packet backpressure from PSE to SQM, SQM credits are ignored.
-                                                                 \<61\> = When set, enables Express packet backpressure from PSE to SQM, SQM credits are ignored.
-                                                                 \<60\> = When set, enables Normal packet backpressure from PSE to SQM, SQM credits are ignored. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables SDP packet backpressure from PSE to SQM, SQM credits are ignored.
-                                                                 \<61\> = When set, enables Express packet backpressure from PSE to SQM, SQM credits are ignored.
-                                                                 \<60\> = When set, enables Normal packet backpressure from PSE to SQM, SQM credits are ignored. */
-#endif /* Word 0 - End */
-    } cn96xxp1;
-    struct cavm_nixx_af_pse_bp_test1_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 5;  /**< [ 63: 59](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 TL1 backpressure on commands: there is a priority order between bits[63:60],
-                                                                 bit[60] has the highest and if set is going to backpressure other grants as well
-                                                                 and so on.
-                                                                 \<63\> = When set, backpressure ADD request gnt from TW, BP, TL2 other PE.
-                                                                 \<62\> = When set, backpressure ADD request grant to TL2 one of the PE's.
-                                                                 \<61\> = When set, backpressure GET request grant to PQ.
-                                                                 \<60\> = When set, backpressure PE to PE gnt at TL1 level.
-                                                                 \<59\> = Unused. */
-        uint64_t reserved_56_58        : 3;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_26_31        : 6;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<25:24\> = Config for Enable bit [63].
-                                                                 \<23:22\> = Config for Enable bit [62].
-                                                                 \<21:20\> = Config for Enable bit [61].
-                                                                 \<19:18\> = Config for Enable bit [60].
-                                                                 \<17:16\> = Config for Enable bit [59]. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<25:24\> = Config for Enable bit [63].
-                                                                 \<23:22\> = Config for Enable bit [62].
-                                                                 \<21:20\> = Config for Enable bit [61].
-                                                                 \<19:18\> = Config for Enable bit [60].
-                                                                 \<17:16\> = Config for Enable bit [59]. */
-        uint64_t reserved_26_31        : 6;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_56_58        : 3;
-        uint64_t enable                : 5;  /**< [ 63: 59](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 TL1 backpressure on commands: there is a priority order between bits[63:60],
-                                                                 bit[60] has the highest and if set is going to backpressure other grants as well
-                                                                 and so on.
-                                                                 \<63\> = When set, backpressure ADD request gnt from TW, BP, TL2 other PE.
-                                                                 \<62\> = When set, backpressure ADD request grant to TL2 one of the PE's.
-                                                                 \<61\> = When set, backpressure GET request grant to PQ.
-                                                                 \<60\> = When set, backpressure PE to PE gnt at TL1 level.
-                                                                 \<59\> = Unused. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_pse_bp_test1_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_pse_bp_test1_cn96xxp1 cnf95xxp1; */
-    struct cavm_nixx_af_pse_bp_test1_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables SDP packet backpressure from PSE to SQM, SQM credits are ignored.
-                                                                 \<61\> = When set, enables Express packet backpressure from PSE to SQM, SQM credits are ignored.
-                                                                 \<60\> = When set, enables Normal packet backpressure from PSE to SQM, SQM credits are ignored. */
-        uint64_t reserved_56_59        : 4;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_24_31        : 8;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_31        : 8;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_56_59        : 4;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables SDP packet backpressure from PSE to SQM, SQM credits are ignored.
-                                                                 \<61\> = When set, enables Express packet backpressure from PSE to SQM, SQM credits are ignored.
-                                                                 \<60\> = When set, enables Normal packet backpressure from PSE to SQM, SQM credits are ignored. */
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_nixx_af_pse_bp_test1_cnf95xxp2 f95mm; */
-    /* struct cavm_nixx_af_pse_bp_test1_cn96xxp3 f95o; */
-    /* struct cavm_nixx_af_pse_bp_test1_cn96xxp3 loki; */
-};
-typedef union cavm_nixx_af_pse_bp_test1 cavm_nixx_af_pse_bp_test1_t;
-
-static inline uint64_t CAVM_NIXX_AF_PSE_BP_TEST1(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PSE_BP_TEST1(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000850ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000850ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000850ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000850ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000850ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000850ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000850ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PSE_BP_TEST1", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PSE_BP_TEST1(a) cavm_nixx_af_pse_bp_test1_t
-#define bustype_CAVM_NIXX_AF_PSE_BP_TEST1(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PSE_BP_TEST1(a) "NIXX_AF_PSE_BP_TEST1"
-#define device_bar_CAVM_NIXX_AF_PSE_BP_TEST1(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PSE_BP_TEST1(a) (a)
-#define arguments_CAVM_NIXX_AF_PSE_BP_TEST1(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pse_bp_test2
- *
- * INTERNAL: NIX AF PSE Backpressure Test 2 Register
- */
-union cavm_nixx_af_pse_bp_test2
-{
-    uint64_t u;
-    struct cavm_nixx_af_pse_bp_test2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_26_63        : 38;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_26_63        : 38;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pse_bp_test2_s cn9; */
-    struct cavm_nixx_af_pse_bp_test2_cn96xxp1
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, enables TL4 TW1 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<62\> = When set, enables TL4 TW0 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<61\> = When set, enables TL3 TW1 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<60\> = When set, enables TL3 TW0 request backpressure, TW does not requests PKT_ADD to PEx. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, enables TL4 TW1 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<62\> = When set, enables TL4 TW0 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<61\> = When set, enables TL3 TW1 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<60\> = When set, enables TL3 TW0 request backpressure, TW does not requests PKT_ADD to PEx. */
-#endif /* Word 0 - End */
-    } cn96xxp1;
-    struct cavm_nixx_af_pse_bp_test2_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 5;  /**< [ 63: 59](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 TL2 Backpressure on commands: there is a priority order between bits[63:60],
-                                                                 bit[60] has the highest and if set is going to backpressure other grants as well
-                                                                 and so on.
-                                                                 \<63\> = When set, backpressure ADD request gnt from TW, BP, TL3 other PE.
-                                                                 \<62\> = When set, backpressure ADD request grant to TL3 one of the PE's.
-                                                                 \<61\> = When set, backpressure GET request grant to TL1.
-                                                                 \<60\> = When set, backpressure PE to PE gnt at TL2level.
-                                                                 \<59\> = Unused. */
-        uint64_t reserved_56_58        : 3;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_26_31        : 6;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<25:24\> = Config for Enable bit [63].
-                                                                 \<23:22\> = Config for Enable bit [62].
-                                                                 \<21:20\> = Config for Enable bit [61].
-                                                                 \<19:18\> = Config for Enable bit [60].
-                                                                 \<17:16\> = Config for Enable bit [59]. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<25:24\> = Config for Enable bit [63].
-                                                                 \<23:22\> = Config for Enable bit [62].
-                                                                 \<21:20\> = Config for Enable bit [61].
-                                                                 \<19:18\> = Config for Enable bit [60].
-                                                                 \<17:16\> = Config for Enable bit [59]. */
-        uint64_t reserved_26_31        : 6;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_56_58        : 3;
-        uint64_t enable                : 5;  /**< [ 63: 59](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 TL2 Backpressure on commands: there is a priority order between bits[63:60],
-                                                                 bit[60] has the highest and if set is going to backpressure other grants as well
-                                                                 and so on.
-                                                                 \<63\> = When set, backpressure ADD request gnt from TW, BP, TL3 other PE.
-                                                                 \<62\> = When set, backpressure ADD request grant to TL3 one of the PE's.
-                                                                 \<61\> = When set, backpressure GET request grant to TL1.
-                                                                 \<60\> = When set, backpressure PE to PE gnt at TL2level.
-                                                                 \<59\> = Unused. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_pse_bp_test2_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_pse_bp_test2_cn96xxp1 cnf95xxp1; */
-    struct cavm_nixx_af_pse_bp_test2_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, enables TL4 TW1 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<62\> = When set, enables TL4 TW0 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<61\> = When set, enables TL3 TW1 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<60\> = When set, enables TL3 TW0 request backpressure, TW does not requests PKT_ADD to PEx. */
-        uint64_t reserved_56_59        : 4;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_24_31        : 8;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_31        : 8;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_56_59        : 4;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = When set, enables TL4 TW1 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<62\> = When set, enables TL4 TW0 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<61\> = When set, enables TL3 TW1 request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<60\> = When set, enables TL3 TW0 request backpressure, TW does not requests PKT_ADD to PEx. */
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_nixx_af_pse_bp_test2_cnf95xxp2 f95mm; */
-    /* struct cavm_nixx_af_pse_bp_test2_cn96xxp3 f95o; */
-    /* struct cavm_nixx_af_pse_bp_test2_cn96xxp3 loki; */
-};
-typedef union cavm_nixx_af_pse_bp_test2 cavm_nixx_af_pse_bp_test2_t;
-
-static inline uint64_t CAVM_NIXX_AF_PSE_BP_TEST2(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PSE_BP_TEST2(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000860ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000860ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000860ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000860ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000860ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000860ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000860ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PSE_BP_TEST2", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PSE_BP_TEST2(a) cavm_nixx_af_pse_bp_test2_t
-#define bustype_CAVM_NIXX_AF_PSE_BP_TEST2(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PSE_BP_TEST2(a) "NIXX_AF_PSE_BP_TEST2"
-#define device_bar_CAVM_NIXX_AF_PSE_BP_TEST2(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PSE_BP_TEST2(a) (a)
-#define arguments_CAVM_NIXX_AF_PSE_BP_TEST2(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pse_bp_test3
- *
- * INTERNAL: NIX AF PSE Backpressure Test 3 Register
- */
-union cavm_nixx_af_pse_bp_test3
-{
-    uint64_t u;
-    struct cavm_nixx_af_pse_bp_test3_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_26_63        : 38;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_26_63        : 38;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pse_bp_test3_s cn9; */
-    struct cavm_nixx_af_pse_bp_test3_cn96xxp1
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables TL2 TW request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<61\> = When set, enables TL1 TW request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<60\> = When set, enables PQ TW request backpressure, TW does not requests PKT_ADD to PEx. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables TL2 TW request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<61\> = When set, enables TL1 TW request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<60\> = When set, enables PQ TW request backpressure, TW does not requests PKT_ADD to PEx. */
-#endif /* Word 0 - End */
-    } cn96xxp1;
-    struct cavm_nixx_af_pse_bp_test3_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 5;  /**< [ 63: 59](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 TL3 Backpressure on commands: there is a priority order between bits[63:60],
-                                                                  bit[60] has the highest and if set is going to backpressure other grants as well
-                                                                  and so on.
-                                                                  \<63\> = When set, backpressure ADD request gnt from TW, BP, TL3 other PE.
-                                                                  \<62\> = When set, backpressure ADD request grant to TL3 one of the PE's.
-                                                                  \<61\> = When set, backpressure GET request grant to TL1.
-                                                                  \<60\> = When set, backpressure PE to PE gnt at TL2level.
-                                                                  \<59\> = Unused. */
-        uint64_t reserved_56_58        : 3;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_26_31        : 6;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<25:24\> = Config for Enable bit [63].
-                                                                 \<23:22\> = Config for Enable bit [62].
-                                                                 \<21:20\> = Config for Enable bit [61].
-                                                                 \<19:18\> = Config for Enable bit [60].
-                                                                 \<17:16\> = Config for Enable bit [59]. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 10; /**< [ 25: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<25:24\> = Config for Enable bit [63].
-                                                                 \<23:22\> = Config for Enable bit [62].
-                                                                 \<21:20\> = Config for Enable bit [61].
-                                                                 \<19:18\> = Config for Enable bit [60].
-                                                                 \<17:16\> = Config for Enable bit [59]. */
-        uint64_t reserved_26_31        : 6;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_56_58        : 3;
-        uint64_t enable                : 5;  /**< [ 63: 59](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 TL3 Backpressure on commands: there is a priority order between bits[63:60],
-                                                                  bit[60] has the highest and if set is going to backpressure other grants as well
-                                                                  and so on.
-                                                                  \<63\> = When set, backpressure ADD request gnt from TW, BP, TL3 other PE.
-                                                                  \<62\> = When set, backpressure ADD request grant to TL3 one of the PE's.
-                                                                  \<61\> = When set, backpressure GET request grant to TL1.
-                                                                  \<60\> = When set, backpressure PE to PE gnt at TL2level.
-                                                                  \<59\> = Unused. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_pse_bp_test3_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_pse_bp_test3_cn96xxp1 cnf95xxp1; */
-    struct cavm_nixx_af_pse_bp_test3_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables TL2 TW request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<61\> = When set, enables TL1 TW request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<60\> = When set, enables PQ TW request backpressure, TW does not requests PKT_ADD to PEx. */
-        uint64_t reserved_56_59        : 4;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_24_31        : 8;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Reserved.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_31        : 8;
-        uint64_t reserved_32_55        : 24;
-        uint64_t reserved_56_59        : 4;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables TL2 TW request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<61\> = When set, enables TL1 TW request backpressure, TW does not requests PKT_ADD to PEx.
-                                                                 \<60\> = When set, enables PQ TW request backpressure, TW does not requests PKT_ADD to PEx. */
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_nixx_af_pse_bp_test3_cnf95xxp2 f95mm; */
-    /* struct cavm_nixx_af_pse_bp_test3_cn96xxp3 f95o; */
-    /* struct cavm_nixx_af_pse_bp_test3_cn96xxp3 loki; */
-};
-typedef union cavm_nixx_af_pse_bp_test3 cavm_nixx_af_pse_bp_test3_t;
-
-static inline uint64_t CAVM_NIXX_AF_PSE_BP_TEST3(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PSE_BP_TEST3(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000870ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000870ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000870ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000870ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000870ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000870ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000870ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PSE_BP_TEST3", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PSE_BP_TEST3(a) cavm_nixx_af_pse_bp_test3_t
-#define bustype_CAVM_NIXX_AF_PSE_BP_TEST3(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PSE_BP_TEST3(a) "NIXX_AF_PSE_BP_TEST3"
-#define device_bar_CAVM_NIXX_AF_PSE_BP_TEST3(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PSE_BP_TEST3(a) (a)
-#define arguments_CAVM_NIXX_AF_PSE_BP_TEST3(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_pse_channel_level
@@ -17440,445 +14918,6 @@ static inline uint64_t CAVM_NIXX_AF_PSE_CONST(uint64_t a)
 #define device_bar_CAVM_NIXX_AF_PSE_CONST(a) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_PSE_CONST(a) (a)
 #define arguments_CAVM_NIXX_AF_PSE_CONST(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pse_eco
- *
- * INTERNAL: AF PSE ECO Register
- */
-union cavm_nixx_af_pse_eco
-{
-    uint64_t u;
-    struct cavm_nixx_af_pse_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pse_eco_s cn; */
-};
-typedef union cavm_nixx_af_pse_eco cavm_nixx_af_pse_eco_t;
-
-static inline uint64_t CAVM_NIXX_AF_PSE_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PSE_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x8400400005d0ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x8400400005d0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x8400400005d0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x8400400005d0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x8400400005d0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x8400400005d0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x8400400005d0ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PSE_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PSE_ECO(a) cavm_nixx_af_pse_eco_t
-#define bustype_CAVM_NIXX_AF_PSE_ECO(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PSE_ECO(a) "NIXX_AF_PSE_ECO"
-#define device_bar_CAVM_NIXX_AF_PSE_ECO(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PSE_ECO(a) (a)
-#define arguments_CAVM_NIXX_AF_PSE_ECO(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pse_expr_bp_test
- *
- * INTERNAL: NIX AF PSE Express Backpressure Test Register
- *
- * Internal:
- * 802.3br frame preemption/express path is defeatured.
- */
-union cavm_nixx_af_pse_expr_bp_test
-{
-    uint64_t u;
-    struct cavm_nixx_af_pse_expr_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 16; /**< [ 63: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables Transmit Link 12 Express Credit FIFO backpressure,
-                                                                 credits are not granted.
-                                                                 \<61\> = When set, enables Transmit Link 11 Express Credit FIFO backpressure,
-                                                                 credits are not granted.
-                                                                 \<60\> = When set, enables Transmit Link 10 Express Credit FIFO backpressure,
-                                                                 credits are not granted.
-                                                                 \<59\> = When set, enables Transmit Link 9 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<58\> = When set, enables Transmit Link 8 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<57\> = When set, enables Transmit Link 7 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<56\> = When set, enables Transmit Link 6 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<55\> = When set, enables Transmit Link 5 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<54\> = When set, enables Transmit Link 4 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<53\> = When set, enables Transmit Link 3 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<52\> = When set, enables Transmit Link 2 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<51\> = When set, enables Transmit Link 1 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<50\> = When set, enables Transmit Link 0 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<49\> = When set, enables Transmit Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<48\> = When set, enables Express wake up backpressure, delay TW request. Applies
-                                                                 to packet, link granted and link request FIFOs. */
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<47:46\> = Reserved.
-                                                                   \<45:44\> = Config 14.
-                                                                   \<43:42\> = Config 13.
-                                                                   \<41:40\> = Config 12.
-                                                                   \<39:38\> = Config 11.
-                                                                   \<37:36\> = Config 10.
-                                                                   \<35:34\> = Config 9.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<47:46\> = Reserved.
-                                                                   \<45:44\> = Config 14.
-                                                                   \<43:42\> = Config 13.
-                                                                   \<41:40\> = Config 12.
-                                                                   \<39:38\> = Config 11.
-                                                                   \<37:36\> = Config 10.
-                                                                   \<35:34\> = Config 9.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t enable                : 16; /**< [ 63: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables Transmit Link 12 Express Credit FIFO backpressure,
-                                                                 credits are not granted.
-                                                                 \<61\> = When set, enables Transmit Link 11 Express Credit FIFO backpressure,
-                                                                 credits are not granted.
-                                                                 \<60\> = When set, enables Transmit Link 10 Express Credit FIFO backpressure,
-                                                                 credits are not granted.
-                                                                 \<59\> = When set, enables Transmit Link 9 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<58\> = When set, enables Transmit Link 8 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<57\> = When set, enables Transmit Link 7 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<56\> = When set, enables Transmit Link 6 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<55\> = When set, enables Transmit Link 5 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<54\> = When set, enables Transmit Link 4 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<53\> = When set, enables Transmit Link 3 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<52\> = When set, enables Transmit Link 2 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<51\> = When set, enables Transmit Link 1 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<50\> = When set, enables Transmit Link 0 Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<49\> = When set, enables Transmit Express Credit FIFO backpressure, credits are not granted.
-                                                                 \<48\> = When set, enables Express wake up backpressure, delay TW request. Applies
-                                                                 to packet, link granted and link request FIFOs. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pse_expr_bp_test_s cn; */
-};
-typedef union cavm_nixx_af_pse_expr_bp_test cavm_nixx_af_pse_expr_bp_test_t;
-
-static inline uint64_t CAVM_NIXX_AF_PSE_EXPR_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PSE_EXPR_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000890ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000890ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000890ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000890ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000890ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000890ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000890ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PSE_EXPR_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PSE_EXPR_BP_TEST(a) cavm_nixx_af_pse_expr_bp_test_t
-#define bustype_CAVM_NIXX_AF_PSE_EXPR_BP_TEST(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PSE_EXPR_BP_TEST(a) "NIXX_AF_PSE_EXPR_BP_TEST"
-#define device_bar_CAVM_NIXX_AF_PSE_EXPR_BP_TEST(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PSE_EXPR_BP_TEST(a) (a)
-#define arguments_CAVM_NIXX_AF_PSE_EXPR_BP_TEST(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_pse_norm_bp_test
- *
- * INTERNAL: NIX AF PSE Normal Backpressure Test Register
- */
-union cavm_nixx_af_pse_norm_bp_test
-{
-    uint64_t u;
-    struct cavm_nixx_af_pse_norm_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<47:46\> = Reserved.
-                                                                   \<45:44\> = Config 14.
-                                                                   \<43:42\> = Config 13.
-                                                                   \<41:40\> = Config 12.
-                                                                   \<39:38\> = Config 11.
-                                                                   \<37:36\> = Config 10.
-                                                                   \<35:34\> = Config 9.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<47:46\> = Reserved.
-                                                                   \<45:44\> = Config 14.
-                                                                   \<43:42\> = Config 13.
-                                                                   \<41:40\> = Config 12.
-                                                                   \<39:38\> = Config 11.
-                                                                   \<37:36\> = Config 10.
-                                                                   \<35:34\> = Config 9.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_pse_norm_bp_test_s cn9; */
-    struct cavm_nixx_af_pse_norm_bp_test_cn96xxp1
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 16; /**< [ 63: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables Transmit Link 12 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<61\> = When set, enables Transmit Link 11 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<60\> = When set, enables Transmit Link 10 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<59\> = When set, enables Transmit Link 9 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<58\> = When set, enables Transmit Link 8 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<57\> = When set, enables Transmit Link 7 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<56\> = When set, enables Transmit Link 6 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<55\> = When set, enables Transmit Link 5 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<54\> = When set, enables Transmit Link 4 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<53\> = When set, enables Transmit Link 3 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<52\> = When set, enables Transmit Link 2 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<51\> = When set, enables Transmit Link 1 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<50\> = When set, enables Transmit Link 0 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<49\> = When set, enables Transmit Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<48\> = When set, enables Normal wake up FIFO backpressure, delay TW request.
-                                                                 Applies to packet, link granted and link request FIFOs. */
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<47:46\> = Reserved.
-                                                                   \<45:44\> = Config 14.
-                                                                   \<43:42\> = Config 13.
-                                                                   \<41:40\> = Config 12.
-                                                                   \<39:38\> = Config 11.
-                                                                   \<37:36\> = Config 10.
-                                                                   \<35:34\> = Config 9.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<47:46\> = Reserved.
-                                                                   \<45:44\> = Config 14.
-                                                                   \<43:42\> = Config 13.
-                                                                   \<41:40\> = Config 12.
-                                                                   \<39:38\> = Config 11.
-                                                                   \<37:36\> = Config 10.
-                                                                   \<35:34\> = Config 9.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t enable                : 16; /**< [ 63: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = When set, enables Transmit Link 12 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<61\> = When set, enables Transmit Link 11 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<60\> = When set, enables Transmit Link 10 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<59\> = When set, enables Transmit Link 9 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<58\> = When set, enables Transmit Link 8 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<57\> = When set, enables Transmit Link 7 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<56\> = When set, enables Transmit Link 6 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<55\> = When set, enables Transmit Link 5 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<54\> = When set, enables Transmit Link 4 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<53\> = When set, enables Transmit Link 3 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<52\> = When set, enables Transmit Link 2 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<51\> = When set, enables Transmit Link 1 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<50\> = When set, enables Transmit Link 0 Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<49\> = When set, enables Transmit Normal Credit FIFO backpressure, credits are not granted.
-                                                                 \<48\> = When set, enables Normal wake up FIFO backpressure, delay TW request.
-                                                                 Applies to packet, link granted and link request FIFOs. */
-#endif /* Word 0 - End */
-    } cn96xxp1;
-    struct cavm_nixx_af_pse_norm_bp_test_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 6;  /**< [ 63: 58](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 TL4 backpressure on commands: there is a priority order between bits [63:60],
-                                                                 bit[60] has the highest and if set is going to backpressure other grants as
-                                                                 well.
-                                                                 \<63\> = When set, backpressure ADD request gnt from TW, BP.
-                                                                 \<62\> = When set, backpressure ADD request grant to MDQ.
-                                                                 \<61\> = When set, backpressure GET request grant to TL3.
-                                                                 \<60\> = When set, backpressure PE to PE gnt at TL4level.
-                                                                 \<59\> = When set, backpressure Popping of Interface FIFO SQM-\>PSE and this would
-                                                                 prevent returning Interface credits as well.
-                                                                 \<58\> = When set, backpressure Popping of Command FIFO and this would backpressure all MDQs. */
-        uint64_t reserved_28_57        : 30;
-        uint64_t bp_cfg                : 12; /**< [ 27: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<27:26\> = Config for Enable bit [63].
-                                                                 \<25:24\> = Config for Enable bit [62].
-                                                                 \<23:22\> = Config for Enable bit [61].
-                                                                 \<21:20\> = Config for Enable bit [60].
-                                                                 \<19:18\> = Config for Enable bit [59].
-                                                                 \<17:16\> = Config for Enable bit [58]. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 12; /**< [ 27: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                 \<27:26\> = Config for Enable bit [63].
-                                                                 \<25:24\> = Config for Enable bit [62].
-                                                                 \<23:22\> = Config for Enable bit [61].
-                                                                 \<21:20\> = Config for Enable bit [60].
-                                                                 \<19:18\> = Config for Enable bit [59].
-                                                                 \<17:16\> = Config for Enable bit [58]. */
-        uint64_t reserved_28_57        : 30;
-        uint64_t enable                : 6;  /**< [ 63: 58](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 TL4 backpressure on commands: there is a priority order between bits [63:60],
-                                                                 bit[60] has the highest and if set is going to backpressure other grants as
-                                                                 well.
-                                                                 \<63\> = When set, backpressure ADD request gnt from TW, BP.
-                                                                 \<62\> = When set, backpressure ADD request grant to MDQ.
-                                                                 \<61\> = When set, backpressure GET request grant to TL3.
-                                                                 \<60\> = When set, backpressure PE to PE gnt at TL4level.
-                                                                 \<59\> = When set, backpressure Popping of Interface FIFO SQM-\>PSE and this would
-                                                                 prevent returning Interface credits as well.
-                                                                 \<58\> = When set, backpressure Popping of Command FIFO and this would backpressure all MDQs. */
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_pse_norm_bp_test_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_pse_norm_bp_test_cn96xxp1 cnf95xx; */
-    /* struct cavm_nixx_af_pse_norm_bp_test_cn96xxp1 f95mm; */
-    /* struct cavm_nixx_af_pse_norm_bp_test_cn96xxp3 f95o; */
-    /* struct cavm_nixx_af_pse_norm_bp_test_cn96xxp3 loki; */
-};
-typedef union cavm_nixx_af_pse_norm_bp_test cavm_nixx_af_pse_norm_bp_test_t;
-
-static inline uint64_t CAVM_NIXX_AF_PSE_NORM_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_PSE_NORM_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000880ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000880ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_PSE_NORM_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_PSE_NORM_BP_TEST(a) cavm_nixx_af_pse_norm_bp_test_t
-#define bustype_CAVM_NIXX_AF_PSE_NORM_BP_TEST(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_PSE_NORM_BP_TEST(a) "NIXX_AF_PSE_NORM_BP_TEST"
-#define device_bar_CAVM_NIXX_AF_PSE_NORM_BP_TEST(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_PSE_NORM_BP_TEST(a) (a)
-#define arguments_CAVM_NIXX_AF_PSE_NORM_BP_TEST(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_pse_shaper_cfg
@@ -18300,97 +15339,6 @@ static inline uint64_t CAVM_NIXX_AF_RAS_W1S(uint64_t a)
 #define arguments_CAVM_NIXX_AF_RAS_W1S(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_reb_bp_test#
- *
- * INTERNAL: NIX AF REB Backpressure Test Registers
- */
-union cavm_nixx_af_reb_bp_testx
-{
-    uint64_t u;
-    struct cavm_nixx_af_reb_bp_testx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t enable                : 4;  /**< [ 51: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\> = Randomly make no ndc stdn credit in corresponding DMA cell.
-                                                                 \<50\> = Randomly make no ndc load credit in corresponding DMA cell.
-                                                                 \<49\> = Randomly make xqe not ready in corresponding DMA cell.
-                                                                 \<48\> = Randomly make all_ready not ready in corresponding DMA cell.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine to DMA packets. */
-        uint64_t reserved_24_47        : 24;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_47        : 24;
-        uint64_t enable                : 4;  /**< [ 51: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<51\> = Randomly make no ndc stdn credit in corresponding DMA cell.
-                                                                 \<50\> = Randomly make no ndc load credit in corresponding DMA cell.
-                                                                 \<49\> = Randomly make xqe not ready in corresponding DMA cell.
-                                                                 \<48\> = Randomly make all_ready not ready in corresponding DMA cell.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine to DMA packets. */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_reb_bp_testx_s cn; */
-};
-typedef union cavm_nixx_af_reb_bp_testx cavm_nixx_af_reb_bp_testx_t;
-
-static inline uint64_t CAVM_NIXX_AF_REB_BP_TESTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_REB_BP_TESTX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=28)))
-        return 0x840040004840ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=28)))
-        return 0x840040004840ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=24)))
-        return 0x840040004840ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=28)))
-        return 0x840040004840ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=28)))
-        return 0x840040004840ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=28)))
-        return 0x840040004840ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=28)))
-        return 0x840040004840ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    __cavm_csr_fatal("NIXX_AF_REB_BP_TESTX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_REB_BP_TESTX(a,b) cavm_nixx_af_reb_bp_testx_t
-#define bustype_CAVM_NIXX_AF_REB_BP_TESTX(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_REB_BP_TESTX(a,b) "NIXX_AF_REB_BP_TESTX"
-#define device_bar_CAVM_NIXX_AF_REB_BP_TESTX(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_REB_BP_TESTX(a,b) (a)
-#define arguments_CAVM_NIXX_AF_REB_BP_TESTX(a,b) (a),(b),-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_rq_const
  *
  * NIX AF RQ Constants Register
@@ -18441,160 +15389,6 @@ static inline uint64_t CAVM_NIXX_AF_RQ_CONST(uint64_t a)
 #define arguments_CAVM_NIXX_AF_RQ_CONST(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_rqm_bp_test
- *
- * INTERNAL: NIX AF REB Backpressure Test Registers
- */
-union cavm_nixx_af_rqm_bp_test
-{
-    uint64_t u;
-    struct cavm_nixx_af_rqm_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_56_63        : 8;
-        uint64_t enable                : 8;  /**< [ 55: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<55\> = Randomly backpressure on tx ndc port for rx (cpt/wqe, not include CQE).
-                                                                 \<54\> = Randomly backpressure on ndc port 5 (rss).
-                                                                 \<53\> = Randomly backpressure on ndc port 3 (mc/mirror).
-                                                                 \<52\> = Randomly backpressure on ndc port 0 (pnr0: qint,aqm,aqs).
-                                                                 \<51\> = Randomly backpressure on cqm query request.
-                                                                 \<50\> = Randomly backpressure on sso lwa.
-                                                                 \<49\> = Randomly backpressure on npa request.
-                                                                 \<48\> = Randomly backpressure on npc request.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the rqm pipelines. */
-        uint64_t reserved_32_47        : 16;
-        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_32_47        : 16;
-        uint64_t enable                : 8;  /**< [ 55: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<55\> = Randomly backpressure on tx ndc port for rx (cpt/wqe, not include CQE).
-                                                                 \<54\> = Randomly backpressure on ndc port 5 (rss).
-                                                                 \<53\> = Randomly backpressure on ndc port 3 (mc/mirror).
-                                                                 \<52\> = Randomly backpressure on ndc port 0 (pnr0: qint,aqm,aqs).
-                                                                 \<51\> = Randomly backpressure on cqm query request.
-                                                                 \<50\> = Randomly backpressure on sso lwa.
-                                                                 \<49\> = Randomly backpressure on npa request.
-                                                                 \<48\> = Randomly backpressure on npc request.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the rqm pipelines. */
-        uint64_t reserved_56_63        : 8;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_rqm_bp_test_s cn; */
-};
-typedef union cavm_nixx_af_rqm_bp_test cavm_nixx_af_rqm_bp_test_t;
-
-static inline uint64_t CAVM_NIXX_AF_RQM_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_RQM_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040004880ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040004880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040004880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040004880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040004880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040004880ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040004880ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_RQM_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_RQM_BP_TEST(a) cavm_nixx_af_rqm_bp_test_t
-#define bustype_CAVM_NIXX_AF_RQM_BP_TEST(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_RQM_BP_TEST(a) "NIXX_AF_RQM_BP_TEST"
-#define device_bar_CAVM_NIXX_AF_RQM_BP_TEST(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_RQM_BP_TEST(a) (a)
-#define arguments_CAVM_NIXX_AF_RQM_BP_TEST(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_rqm_eco
- *
- * INTERNAL: AF RQM ECO Register
- */
-union cavm_nixx_af_rqm_eco
-{
-    uint64_t u;
-    struct cavm_nixx_af_rqm_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_rqm_eco_s cn; */
-};
-typedef union cavm_nixx_af_rqm_eco cavm_nixx_af_rqm_eco_t;
-
-static inline uint64_t CAVM_NIXX_AF_RQM_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_RQM_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x8400400005a0ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x8400400005a0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x8400400005a0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x8400400005a0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x8400400005a0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x8400400005a0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x8400400005a0ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_RQM_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_RQM_ECO(a) cavm_nixx_af_rqm_eco_t
-#define bustype_CAVM_NIXX_AF_RQM_ECO(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_RQM_ECO(a) "NIXX_AF_RQM_ECO"
-#define device_bar_CAVM_NIXX_AF_RQM_ECO(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_RQM_ECO(a) (a)
-#define arguments_CAVM_NIXX_AF_RQM_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_rvu_int
  *
  * NIX AF RVU Interrupt Register
@@ -18608,16 +15402,10 @@ union cavm_nixx_af_rvu_int
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
         uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Unmapped slot. Received an I/O request to a VF/PF slot in BAR2 that is not
-                                                                 reverse mapped to an LF. See NIX_PRIV_LF()_CFG.
-
-                                                                 Internal:
-                                                                 A reverse lookup using NIX_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+                                                                 reverse mapped to an LF. See NIX_PRIV_LF()_CFG. */
 #else /* Word 0 - Little Endian */
         uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Unmapped slot. Received an I/O request to a VF/PF slot in BAR2 that is not
-                                                                 reverse mapped to an LF. See NIX_PRIV_LF()_CFG.
-
-                                                                 Internal:
-                                                                 A reverse lookup using NIX_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+                                                                 reverse mapped to an LF. See NIX_PRIV_LF()_CFG. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -18665,13 +15453,9 @@ union cavm_nixx_af_rvu_int_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for NIX_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using NIX_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for NIX_AF_RVU_INT[UNMAPPED_SLOT]. */
 #else /* Word 0 - Little Endian */
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for NIX_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using NIX_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for NIX_AF_RVU_INT[UNMAPPED_SLOT]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -18719,13 +15503,9 @@ union cavm_nixx_af_rvu_int_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for NIX_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using NIX_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for NIX_AF_RVU_INT[UNMAPPED_SLOT]. */
 #else /* Word 0 - Little Endian */
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for NIX_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using NIX_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for NIX_AF_RVU_INT[UNMAPPED_SLOT]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -18773,13 +15553,9 @@ union cavm_nixx_af_rvu_int_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets NIX_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using NIX_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets NIX_AF_RVU_INT[UNMAPPED_SLOT]. */
 #else /* Word 0 - Little Endian */
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets NIX_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using NIX_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets NIX_AF_RVU_INT[UNMAPPED_SLOT]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -19010,17 +15786,11 @@ union cavm_nixx_af_rx_cfg
         uint64_t reserved_1_63         : 63;
         uint64_t cbp_ena               : 1;  /**< [  0:  0](R/W) Channel backpressure enable. Software should set this bit before any
                                                                  NIX_AF_RX_CHAN()_CFG[BP_ENA] is set, and must not clear it unless all
-                                                                 NIX_AF_RX_CHAN()_CFG[BP_ENA] are clear for at least 10 microseconds.
-
-                                                                 Internal:
-                                                                 Enables sending of X2P backpressure. */
+                                                                 NIX_AF_RX_CHAN()_CFG[BP_ENA] are clear for at least 10 microseconds. */
 #else /* Word 0 - Little Endian */
         uint64_t cbp_ena               : 1;  /**< [  0:  0](R/W) Channel backpressure enable. Software should set this bit before any
                                                                  NIX_AF_RX_CHAN()_CFG[BP_ENA] is set, and must not clear it unless all
-                                                                 NIX_AF_RX_CHAN()_CFG[BP_ENA] are clear for at least 10 microseconds.
-
-                                                                 Internal:
-                                                                 Enables sending of X2P backpressure. */
+                                                                 NIX_AF_RX_CHAN()_CFG[BP_ENA] are clear for at least 10 microseconds. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -19127,10 +15897,7 @@ static inline uint64_t CAVM_NIXX_AF_RX_CHANX_CFG(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_rx_cpt#_credit
  *
- * INTERNAL: NIX AF Receive CPT Credit Register
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF Receive CPT Credit Register
  */
 union cavm_nixx_af_rx_cptx_credit
 {
@@ -19175,23 +15942,7 @@ union cavm_nixx_af_rx_cptx_credit
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_rx_cptx_credit_s cn9; */
-    /* struct cavm_nixx_af_rx_cptx_credit_s cn96xx; */
-    /* struct cavm_nixx_af_rx_cptx_credit_s cn98xx; */
-    /* struct cavm_nixx_af_rx_cptx_credit_s cnf95xxp1; */
-    struct cavm_nixx_af_rx_cptx_credit_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_22_63        : 42;
-        uint64_t inst_cred_cnt         : 22; /**< [ 21:  0](R/W/H) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t inst_cred_cnt         : 22; /**< [ 21:  0](R/W/H) Reserved. */
-        uint64_t reserved_22_63        : 42;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_nixx_af_rx_cptx_credit_cnf95xxp2 f95mm; */
-    /* struct cavm_nixx_af_rx_cptx_credit_s f95o; */
-    /* struct cavm_nixx_af_rx_cptx_credit_cnf95xxp2 loki; */
+    /* struct cavm_nixx_af_rx_cptx_credit_s cn; */
 };
 typedef union cavm_nixx_af_rx_cptx_credit cavm_nixx_af_rx_cptx_credit_t;
 
@@ -19204,13 +15955,9 @@ static inline uint64_t CAVM_NIXX_AF_RX_CPTX_CREDIT(uint64_t a, uint64_t b)
         return 0x840040000360ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
         return 0x840040000360ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b==0)))
-        return 0x840040000360ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b==0)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=1) && (b==0)))
         return 0x840040000360ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
     if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b==0)))
-        return 0x840040000360ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b==0)))
         return 0x840040000360ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
     __cavm_csr_fatal("NIXX_AF_RX_CPTX_CREDIT", 2, a, b, 0, 0, 0, 0);
 }
@@ -19225,10 +15972,8 @@ static inline uint64_t CAVM_NIXX_AF_RX_CPTX_CREDIT(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_rx_cpt#_inst_qsel
  *
- * INTERNAL: NIX AF Receive CPT Instruction Queue Select Register
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF Receive CPT Instruction Queue Select Register
+ * Selects the CPT queue to which instructions (CPT_INST_S) are sent.
  */
 union cavm_nixx_af_rx_cptx_inst_qsel
 {
@@ -19266,22 +16011,8 @@ union cavm_nixx_af_rx_cptx_inst_qsel
 #endif /* Word 0 - End */
     } cn96xxp3;
     /* struct cavm_nixx_af_rx_cptx_inst_qsel_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_rx_cptx_inst_qsel_s cnf95xxp1; */
-    struct cavm_nixx_af_rx_cptx_inst_qsel_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_24_63        : 40;
-        uint64_t pf_func               : 16; /**< [ 23:  8](R/W) Reserved. */
-        uint64_t slot                  : 8;  /**< [  7:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t slot                  : 8;  /**< [  7:  0](R/W) Reserved. */
-        uint64_t pf_func               : 16; /**< [ 23:  8](R/W) Reserved. */
-        uint64_t reserved_24_63        : 40;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_nixx_af_rx_cptx_inst_qsel_cnf95xxp2 f95mm; */
+    /* struct cavm_nixx_af_rx_cptx_inst_qsel_s cnf95xx; */
     /* struct cavm_nixx_af_rx_cptx_inst_qsel_cn96xxp3 f95o; */
-    /* struct cavm_nixx_af_rx_cptx_inst_qsel_cnf95xxp2 loki; */
 };
 typedef union cavm_nixx_af_rx_cptx_inst_qsel cavm_nixx_af_rx_cptx_inst_qsel_t;
 
@@ -19294,13 +16025,9 @@ static inline uint64_t CAVM_NIXX_AF_RX_CPTX_INST_QSEL(uint64_t a, uint64_t b)
         return 0x840040000320ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
         return 0x840040000320ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b==0)))
-        return 0x840040000320ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b==0)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=1) && (b==0)))
         return 0x840040000320ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
     if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b==0)))
-        return 0x840040000320ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b==0)))
         return 0x840040000320ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
     __cavm_csr_fatal("NIXX_AF_RX_CPTX_INST_QSEL", 2, a, b, 0, 0, 0, 0);
 }
@@ -19444,10 +16171,10 @@ static inline uint64_t CAVM_NIXX_AF_RX_DEF_IIP6(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) nix#_af_rx_def_ipsec#
  *
- * INTERNAL: NIX AF Receive IPSEC Header Definition Registers
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF Receive IPSEC Header Definition Registers
+ * These two registers define layer information in NPC_RESULT_S to identify an
+ * IPSEC header for up to two IPSEC packet formats. The two formats are typically
+ * IPSEC ESP (RFC 4303) and UDP-encapsulated IPSEC ESP (RFC 3948).
  */
 union cavm_nixx_af_rx_def_ipsecx
 {
@@ -19486,32 +16213,7 @@ union cavm_nixx_af_rx_def_ipsecx
         uint64_t reserved_17_63        : 47;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_rx_def_ipsecx_s cn9; */
-    /* struct cavm_nixx_af_rx_def_ipsecx_s cn96xx; */
-    /* struct cavm_nixx_af_rx_def_ipsecx_s cn98xx; */
-    struct cavm_nixx_af_rx_def_ipsecx_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_17_63        : 47;
-        uint64_t spi_nz                : 1;  /**< [ 16: 16](R/W) Reserved. */
-        uint64_t spi_offset            : 4;  /**< [ 15: 12](R/W) Reserved. */
-        uint64_t reserved_11           : 1;
-        uint64_t lid                   : 3;  /**< [ 10:  8](R/W) Reserved. */
-        uint64_t ltype_match           : 4;  /**< [  7:  4](R/W) Reserved. */
-        uint64_t ltype_mask            : 4;  /**< [  3:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t ltype_mask            : 4;  /**< [  3:  0](R/W) Reserved. */
-        uint64_t ltype_match           : 4;  /**< [  7:  4](R/W) Reserved. */
-        uint64_t lid                   : 3;  /**< [ 10:  8](R/W) Reserved. */
-        uint64_t reserved_11           : 1;
-        uint64_t spi_offset            : 4;  /**< [ 15: 12](R/W) Reserved. */
-        uint64_t spi_nz                : 1;  /**< [ 16: 16](R/W) Reserved. */
-        uint64_t reserved_17_63        : 47;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_af_rx_def_ipsecx_cnf95xx f95mm; */
-    /* struct cavm_nixx_af_rx_def_ipsecx_cnf95xx f95o; */
-    /* struct cavm_nixx_af_rx_def_ipsecx_cnf95xx loki; */
+    /* struct cavm_nixx_af_rx_def_ipsecx_s cn; */
 };
 typedef union cavm_nixx_af_rx_def_ipsecx cavm_nixx_af_rx_def_ipsecx_t;
 
@@ -19523,14 +16225,6 @@ static inline uint64_t CAVM_NIXX_AF_RX_DEF_IPSECX(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=1)))
         return 0x8400400002b0ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x8400400002b0ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x8400400002b0ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
-        return 0x8400400002b0ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x8400400002b0ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x8400400002b0ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("NIXX_AF_RX_DEF_IPSECX", 2, a, b, 0, 0, 0, 0);
 }
@@ -20132,16 +16826,6 @@ static inline uint64_t CAVM_NIXX_AF_RX_DEF_OUDP(uint64_t a)
  *
  * The algorithm (index {a} (ALG) of these registers) is selected by
  * NIX_RX_ACTION_S[FLOW_KEY_ALG] from the packet's NPC_RESULT_S[ACTION].
- *
- * Internal:
- * 40-byte FLOW_KEY is wide enough to support an IPv6 5-tuple that includes a
- * VXLAN/GENEVE/NVGRE tunnel ID, e.g:
- * _ Source IP: 16B.
- * _ Dest IP: 16B.
- * _ Source port: 2B.
- * _ Dest port: 2B.
- * _ Tunnel VNI/VSI: 3B.
- * _ Total: 39B.
  */
 union cavm_nixx_af_rx_flow_key_algx_fieldx
 {
@@ -20266,10 +16950,9 @@ static inline uint64_t CAVM_NIXX_AF_RX_FLOW_KEY_ALGX_FIELDX(uint64_t a, uint64_t
 /**
  * Register (RVU_PF_BAR0) nix#_af_rx_ipsec_gen_cfg
  *
- * INTERNAL: NIX AF Receive IPSEC General Configuration Register
- *
- * Internal:
- * Not used; no IPSEC fast-path.
+ * NIX AF Receive IPSEC General Configuration Register
+ * This register specifies the values of certain fields in CPT instructions
+ * (CPT_INST_S) generated by NIX for IPSEC hardware fast-path packets.
  */
 union cavm_nixx_af_rx_ipsec_gen_cfg
 {
@@ -20309,25 +16992,6 @@ union cavm_nixx_af_rx_ipsec_gen_cfg
 #endif /* Word 0 - End */
     } cn96xxp3;
     /* struct cavm_nixx_af_rx_ipsec_gen_cfg_cn96xxp3 cn98xx; */
-    struct cavm_nixx_af_rx_ipsec_gen_cfg_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_51_63        : 13;
-        uint64_t egrp                  : 3;  /**< [ 50: 48](R/W) Reserved. */
-        uint64_t opcode                : 16; /**< [ 47: 32](R/W) Reserved. */
-        uint64_t param1                : 16; /**< [ 31: 16](R/W) Reserved. */
-        uint64_t param2                : 16; /**< [ 15:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t param2                : 16; /**< [ 15:  0](R/W) Reserved. */
-        uint64_t param1                : 16; /**< [ 31: 16](R/W) Reserved. */
-        uint64_t opcode                : 16; /**< [ 47: 32](R/W) Reserved. */
-        uint64_t egrp                  : 3;  /**< [ 50: 48](R/W) Reserved. */
-        uint64_t reserved_51_63        : 13;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_af_rx_ipsec_gen_cfg_cnf95xx f95mm; */
-    /* struct cavm_nixx_af_rx_ipsec_gen_cfg_cnf95xx f95o; */
-    /* struct cavm_nixx_af_rx_ipsec_gen_cfg_cnf95xx loki; */
 };
 typedef union cavm_nixx_af_rx_ipsec_gen_cfg cavm_nixx_af_rx_ipsec_gen_cfg_t;
 
@@ -20339,14 +17003,6 @@ static inline uint64_t CAVM_NIXX_AF_RX_IPSEC_GEN_CFG(uint64_t a)
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
         return 0x840040000300ll + 0x10000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000300ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000300ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000300ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000300ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x840040000300ll + 0x10000000ll * ((a) & 0x1);
     __cavm_csr_fatal("NIXX_AF_RX_IPSEC_GEN_CFG", 1, a, 0, 0, 0, 0, 0);
 }
@@ -20427,72 +17083,6 @@ static inline uint64_t CAVM_NIXX_AF_RX_LINKX_CFG(uint64_t a, uint64_t b)
 #define arguments_CAVM_NIXX_AF_RX_LINKX_CFG(a,b) (a),(b),-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_rx_link#_sl#_spkt_cnt
- *
- * INTERNAL: NIX Receive Software Sync Link Packet Count Registers
- *
- * For diagnostic use only for debug of NIX_AF_RX_SW_SYNC[ENA] function. LINK
- * index is enumerated by NIX_LINK_E.
- * For the internal multicast/mirror link (NIX_LINK_E::MC), SL index is zero for
- * multicast replay, one for mirror replay. SL index one is reserved for all other
- * links.
- *
- * Internal:
- * 802.3br frame preemption/express path is defeatured.
- * Old definition of SL index:
- * SL index is zero for non-express packets, one for express packets. For the
- * internal NIX_LINK_E::MC, SL index is zero for multicast replay, one for mirror
- * replay.
- */
-union cavm_nixx_af_rx_linkx_slx_spkt_cnt
-{
-    uint64_t u;
-    struct cavm_nixx_af_rx_linkx_slx_spkt_cnt_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_52_63        : 12;
-        uint64_t out_cnt               : 20; /**< [ 51: 32](RO/H) Running count at output of machine. */
-        uint64_t reserved_20_31        : 12;
-        uint64_t in_cnt                : 20; /**< [ 19:  0](RO/H) Running count at input of machine. */
-#else /* Word 0 - Little Endian */
-        uint64_t in_cnt                : 20; /**< [ 19:  0](RO/H) Running count at input of machine. */
-        uint64_t reserved_20_31        : 12;
-        uint64_t out_cnt               : 20; /**< [ 51: 32](RO/H) Running count at output of machine. */
-        uint64_t reserved_52_63        : 12;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_rx_linkx_slx_spkt_cnt_s cn; */
-};
-typedef union cavm_nixx_af_rx_linkx_slx_spkt_cnt cavm_nixx_af_rx_linkx_slx_spkt_cnt_t;
-
-static inline uint64_t CAVM_NIXX_AF_RX_LINKX_SLX_SPKT_CNT(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_RX_LINKX_SLX_SPKT_CNT(uint64_t a, uint64_t b, uint64_t c)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=14) && (c<=1)))
-        return 0x840040000500ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xf) + 8ll * ((c) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=14) && (c<=1)))
-        return 0x840040000500ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf) + 8ll * ((c) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=23) && (c<=1)))
-        return 0x840040000500ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f) + 8ll * ((c) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=14) && (c<=1)))
-        return 0x840040000500ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf) + 8ll * ((c) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=14) && (c<=1)))
-        return 0x840040000500ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf) + 8ll * ((c) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=14) && (c<=1)))
-        return 0x840040000500ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf) + 8ll * ((c) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=14) && (c<=1)))
-        return 0x840040000500ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf) + 8ll * ((c) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_RX_LINKX_SLX_SPKT_CNT", 3, a, b, c, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_RX_LINKX_SLX_SPKT_CNT(a,b,c) cavm_nixx_af_rx_linkx_slx_spkt_cnt_t
-#define bustype_CAVM_NIXX_AF_RX_LINKX_SLX_SPKT_CNT(a,b,c) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_RX_LINKX_SLX_SPKT_CNT(a,b,c) "NIXX_AF_RX_LINKX_SLX_SPKT_CNT"
-#define device_bar_CAVM_NIXX_AF_RX_LINKX_SLX_SPKT_CNT(a,b,c) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_RX_LINKX_SLX_SPKT_CNT(a,b,c) (a)
-#define arguments_CAVM_NIXX_AF_RX_LINKX_SLX_SPKT_CNT(a,b,c) (a),(b),(c),-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_rx_link#_wrr_cfg
  *
  * NIX AF Receive Link Weighted Round Robin Configuration Registers
@@ -20509,19 +17099,13 @@ union cavm_nixx_af_rx_linkx_wrr_cfg
                                                                  units. Zero disables packet receive from the link.
                                                                  When the maximum aggregate data rate from all links exceeds the NIX
                                                                  data rate, software should program link weights proportional to the
-                                                                 links speeds or based on desired link priorities.
-
-                                                                 Internal:
-                                                                 Link's weight in the X2P grant arbiter. */
+                                                                 links speeds or based on desired link priorities. */
 #else /* Word 0 - Little Endian */
         uint64_t weight                : 8;  /**< [  7:  0](R/W) Link's round robin weight for receiving packet data in 16-byte transfer
                                                                  units. Zero disables packet receive from the link.
                                                                  When the maximum aggregate data rate from all links exceeds the NIX
                                                                  data rate, software should program link weights proportional to the
-                                                                 links speeds or based on desired link priorities.
-
-                                                                 Internal:
-                                                                 Link's weight in the X2P grant arbiter. */
+                                                                 links speeds or based on desired link priorities. */
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } s;
@@ -20581,10 +17165,6 @@ static inline uint64_t CAVM_NIXX_AF_RX_LINKX_WRR_CFG(uint64_t a, uint64_t b)
  *
  * If a mirrored flow is part of a multicast replication list, software should
  * include the two mirror entries in that list.
- *
- * Internal:
- * A multicast list may have multiple entries for the same LF (e.g. for future
- * RoCE/IB multicast).
  */
 union cavm_nixx_af_rx_mcast_base
 {
@@ -20731,10 +17311,7 @@ union cavm_nixx_af_rx_mcast_buf_cfg
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Total number of buffers of size NIX_AF_MC_MIRROR_CONST[BUF_SIZE]:
                                                                  0x0 = 8 buffers.
                                                                  0x1 = 16 buffers.
@@ -20759,10 +17336,7 @@ union cavm_nixx_af_rx_mcast_buf_cfg
                                                                  0x8 = 2048 buffers.
                                                                  0x9-0xF = Reserved. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 20: 20](R/W) Selects the style of write and read to the LLC.
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
@@ -20809,10 +17383,7 @@ union cavm_nixx_af_rx_mcast_buf_cfg
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Total number of buffers of size NIX_AF_MC_MIRROR_CONST[BUF_SIZE]:
                                                                  0x0 = 8 buffers.
                                                                  0x1 = 16 buffers.
@@ -20837,10 +17408,7 @@ union cavm_nixx_af_rx_mcast_buf_cfg
                                                                  0x8 = 2048 buffers.
                                                                  0x9-0xF = Reserved. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 20: 20](R/W) Selects the style of write and read to the LLC.
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
@@ -20897,10 +17465,7 @@ union cavm_nixx_af_rx_mcast_buf_cfg
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Total number of buffers of size NIX_AF_MC_MIRROR_CONST[BUF_SIZE]:
                                                                  0x0 = 8 buffers.
                                                                  0x1 = 16 buffers.
@@ -20925,10 +17490,7 @@ union cavm_nixx_af_rx_mcast_buf_cfg
                                                                  0x8 = 2048 buffers.
                                                                  0x9-0xF = Reserved. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 20: 20](R/W) Selects the style of write and read to the LLC.
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
@@ -20984,10 +17546,7 @@ union cavm_nixx_af_rx_mcast_buf_cfg
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Total number of buffers of size NIX_AF_MC_MIRROR_CONST[BUF_SIZE]:
                                                                  0x0 = 8 buffers.
                                                                  0x1 = 16 buffers.
@@ -21012,10 +17571,7 @@ union cavm_nixx_af_rx_mcast_buf_cfg
                                                                  0x8 = 2048 buffers.
                                                                  0x9-0xF = Reserved. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 20: 20](R/W) Selects the style of write and read to the LLC.
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
@@ -21090,10 +17646,7 @@ union cavm_nixx_af_rx_mcast_cfg
                                                                  NIX_RX_MCE_S writes that are not allocated in NDC will always allocate into
                                                                  LLC. */
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating NIX_RX_MCE_S structures in NDC (1
-                                                                 means do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 means do not use). All ones disables allocation in NDC. */
         uint64_t reserved_12_19        : 8;
         uint64_t max_list_lenm1        : 8;  /**< [ 11:  4](R/W) Maximum list length minus 1. If a multicast or mirror replication list exceeds this
                                                                  length (e.g. due to a loop in the NIX_RX_MCE_S link list), hardware
@@ -21126,10 +17679,7 @@ union cavm_nixx_af_rx_mcast_cfg
                                                                  terminates the list and sets NIX_AF_ERR_INT[RX_MCE_LIST_ERR]. */
         uint64_t reserved_12_19        : 8;
         uint64_t way_mask              : 16; /**< [ 35: 20](R/W) Way partitioning mask for allocating NIX_RX_MCE_S structures in NDC (1
-                                                                 means do not use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 means do not use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 36: 36](R/W) Selects the style of read for accessing NIX_RX_MCE_S structures in
                                                                  LLC/DRAM:
                                                                  0 = NIX_RX_MCE_S reads will not allocate into the LLC.
@@ -21267,10 +17817,7 @@ union cavm_nixx_af_rx_mirror_buf_cfg
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Total number of buffers of size NIX_AF_MC_MIRROR_CONST[BUF_SIZE]:
                                                                  0x0 = 8 buffers.
                                                                  0x1 = 16 buffers.
@@ -21295,10 +17842,7 @@ union cavm_nixx_af_rx_mirror_buf_cfg
                                                                  0x8 = 2048 buffers.
                                                                  0x9-0xF = Reserved. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 20: 20](R/W) Selects the style of write and read to the LLC.
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
@@ -21345,10 +17889,7 @@ union cavm_nixx_af_rx_mirror_buf_cfg
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Total number of buffers of size NIX_AF_MC_MIRROR_CONST[BUF_SIZE]:
                                                                  0x0 = 8 buffers.
                                                                  0x1 = 16 buffers.
@@ -21373,10 +17914,7 @@ union cavm_nixx_af_rx_mirror_buf_cfg
                                                                  0x8 = 2048 buffers.
                                                                  0x9-0xF = Reserved. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 20: 20](R/W) Selects the style of write and read to the LLC.
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
@@ -21433,10 +17971,7 @@ union cavm_nixx_af_rx_mirror_buf_cfg
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Total number of buffers of size NIX_AF_MC_MIRROR_CONST[BUF_SIZE]:
                                                                  0x0 = 8 buffers.
                                                                  0x1 = 16 buffers.
@@ -21461,10 +17996,7 @@ union cavm_nixx_af_rx_mirror_buf_cfg
                                                                  0x8 = 2048 buffers.
                                                                  0x9-0xF = Reserved. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 20: 20](R/W) Selects the style of write and read to the LLC.
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
@@ -21520,10 +18052,7 @@ union cavm_nixx_af_rx_mirror_buf_cfg
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t size                  : 4;  /**< [  3:  0](R/W) Total number of buffers of size NIX_AF_MC_MIRROR_CONST[BUF_SIZE]:
                                                                  0x0 = 8 buffers.
                                                                  0x1 = 16 buffers.
@@ -21548,10 +18077,7 @@ union cavm_nixx_af_rx_mirror_buf_cfg
                                                                  0x8 = 2048 buffers.
                                                                  0x9-0xF = Reserved. */
         uint64_t way_mask              : 16; /**< [ 19:  4](R/W) Way partitioning mask for allocating buffer data in NDC (1 means do not
-                                                                 use). All ones disables allocation in NDC.
-
-                                                                 Internal:
-                                                                 Bypass NDC when all ones. */
+                                                                 use). All ones disables allocation in NDC. */
         uint64_t caching               : 1;  /**< [ 20: 20](R/W) Selects the style of write and read to the LLC.
                                                                  0 = Writes and reads of buffer data will not allocate into the LLC.
                                                                  1 = Writes and reads of buffer data are allocated into the LLC. */
@@ -21933,11 +18459,7 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
 
                                                                  The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
-
-                                                                 Internal:
-                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_PACKET_CNT]. Must be less than 512. */
         uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit
                                                                  processing. Must be one when SDP is used. */
@@ -21950,11 +18472,7 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
 
                                                                  The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
-
-                                                                 Internal:
-                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate. */
         uint64_t reserved_32_62        : 31;
         uint64_t pse_pkt_id_lmt        : 1;  /**< [ 63: 63](R/W) If one, limit the pse_pkt_id to only 32 packet IDs, else normal (512). For diagnostic use only. */
 #endif /* Word 0 - End */
@@ -21968,11 +18486,7 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
 
                                                                  The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
-
-                                                                 Internal:
-                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_PACKET_CNT]. Must be less than 512. */
         uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit
                                                                  processing. Must be one when SDP is used. */
@@ -21985,11 +18499,7 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
 
                                                                  The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
-
-                                                                 Internal:
-                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate. */
         uint64_t reserved_32_62        : 31;
         uint64_t reserved_63           : 1;
 #endif /* Word 0 - End */
@@ -22002,11 +18512,7 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
 
                                                                  The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
-
-                                                                 Internal:
-                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_PACKET_CNT]. Must be less than 512. */
         uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit
                                                                  processing. Must be one when SDP is used. All the Link credit backpressure only applies at TL1. */
@@ -22019,11 +18525,7 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
 
                                                                  The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
-
-                                                                 Internal:
-                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate. */
         uint64_t reserved_32_62        : 31;
         uint64_t reserved_63           : 1;
 #endif /* Word 0 - End */
@@ -22038,11 +18540,7 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
 
                                                                  The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
-
-                                                                 Internal:
-                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_PACKET_CNT]. Must be less than 512. */
         uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit
                                                                  processing. Must be one when SDP is used. All the Link credit backpressure only applies at TL1. */
@@ -22055,11 +18553,7 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
 
                                                                  The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
-
-                                                                 Internal:
-                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate. */
         uint64_t reserved_32_62        : 31;
         uint64_t pse_pkt_id_lmt        : 1;  /**< [ 63: 63](R/W) If one, limit the pse_pkt_id to only 32 packet IDs, else normal (512). For diagnostic use only. */
 #endif /* Word 0 - End */
@@ -22100,11 +18594,7 @@ static inline uint64_t CAVM_NIXX_AF_SDP_LINK_CREDIT(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) nix#_af_sdp_sw_xoff#
  *
- * INTERNAL: NIX AF SDP Transmit Link Software Controlled XOFF Registers
- *
- * Internal:
- * Defeatured registers. Software should use NIX_AF_TL4()_SW_XOFF registers
- * instead.
+ * NIX AF SDP Transmit Link Software Controlled XOFF Registers
  */
 union cavm_nixx_af_sdp_sw_xoffx
 {
@@ -22134,17 +18624,7 @@ static inline uint64_t CAVM_NIXX_AF_SDP_SW_XOFFX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=3)))
         return 0x840040000a60ll + 0x10000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=3)))
-        return 0x840040000a60ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=3)))
-        return 0x840040000a60ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
-        return 0x840040000a60ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=3)))
-        return 0x840040000a60ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=3)))
-        return 0x840040000a60ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=3)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=1) && (b<=3)))
         return 0x840040000a60ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("NIXX_AF_SDP_SW_XOFFX", 2, a, b, 0, 0, 0, 0);
 }
@@ -22255,109 +18735,6 @@ static inline uint64_t CAVM_NIXX_AF_SEB_ACTIVE_CYCLES_PCX(uint64_t a, uint64_t b
 #define arguments_CAVM_NIXX_AF_SEB_ACTIVE_CYCLES_PCX(a,b) (a),(b),-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_seb_bp_test
- *
- * INTERNAL: NIX AF SEB Backpressure Test Register
- */
-union cavm_nixx_af_seb_bp_test
-{
-    uint64_t u;
-    struct cavm_nixx_af_seb_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_55_63        : 9;
-        uint64_t enable                : 7;  /**< [ 54: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<54\> = Randomly backpressure on SQM interface NIX_LF_SEND_ERR_DBG.
-                                                                 \<53\> = Randomly backpressure on SSO LWA interface.
-                                                                 \<52\> = Randomly backpressure on NPX interface.
-                                                                 \<51\> = Randomly backpressure on NPC interface.
-                                                                 \<50\> = Randomly backpressure on NDX data interface.
-                                                                 \<49\> = Randomly backpressure on NDX command interface.
-                                                                 \<48\> = Randomly backpressure on Interrupt/op interface.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the rqm pipelines. */
-        uint64_t reserved_30_47        : 18;
-        uint64_t bp_cfg                : 14; /**< [ 29: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 14; /**< [ 29: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_30_47        : 18;
-        uint64_t enable                : 7;  /**< [ 54: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<54\> = Randomly backpressure on SQM interface NIX_LF_SEND_ERR_DBG.
-                                                                 \<53\> = Randomly backpressure on SSO LWA interface.
-                                                                 \<52\> = Randomly backpressure on NPX interface.
-                                                                 \<51\> = Randomly backpressure on NPC interface.
-                                                                 \<50\> = Randomly backpressure on NDX data interface.
-                                                                 \<49\> = Randomly backpressure on NDX command interface.
-                                                                 \<48\> = Randomly backpressure on Interrupt/op interface.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the rqm pipelines. */
-        uint64_t reserved_55_63        : 9;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_seb_bp_test_s cn; */
-};
-typedef union cavm_nixx_af_seb_bp_test cavm_nixx_af_seb_bp_test_t;
-
-static inline uint64_t CAVM_NIXX_AF_SEB_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_SEB_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000630ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x840040000630ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840040000630ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840040000630ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000630ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840040000630ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x840040000630ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_SEB_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_SEB_BP_TEST(a) cavm_nixx_af_seb_bp_test_t
-#define bustype_CAVM_NIXX_AF_SEB_BP_TEST(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_SEB_BP_TEST(a) "NIXX_AF_SEB_BP_TEST"
-#define device_bar_CAVM_NIXX_AF_SEB_BP_TEST(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_SEB_BP_TEST(a) (a)
-#define arguments_CAVM_NIXX_AF_SEB_BP_TEST(a) (a),-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_seb_cfg
  *
  * NIX SEB Configuration Register
@@ -22434,342 +18811,6 @@ static inline uint64_t CAVM_NIXX_AF_SEB_CFG(uint64_t a)
 #define arguments_CAVM_NIXX_AF_SEB_CFG(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_seb_eco
- *
- * INTERNAL: AF SEB ECO Register
- */
-union cavm_nixx_af_seb_eco
-{
-    uint64_t u;
-    struct cavm_nixx_af_seb_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_seb_eco_s cn; */
-};
-typedef union cavm_nixx_af_seb_eco cavm_nixx_af_seb_eco_t;
-
-static inline uint64_t CAVM_NIXX_AF_SEB_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_SEB_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x8400400005c0ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x8400400005c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x8400400005c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x8400400005c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x8400400005c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x8400400005c0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x8400400005c0ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_SEB_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_SEB_ECO(a) cavm_nixx_af_seb_eco_t
-#define bustype_CAVM_NIXX_AF_SEB_ECO(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_SEB_ECO(a) "NIXX_AF_SEB_ECO"
-#define device_bar_CAVM_NIXX_AF_SEB_ECO(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_SEB_ECO(a) (a)
-#define arguments_CAVM_NIXX_AF_SEB_ECO(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_seb_pipe_bp_test#
- *
- * INTERNAL: NIX AF SEB Pipe Backpressure Test Registers
- */
-union cavm_nixx_af_seb_pipe_bp_testx
-{
-    uint64_t u;
-    struct cavm_nixx_af_seb_pipe_bp_testx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_60_63        : 4;
-        uint64_t enable                : 12; /**< [ 59: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<59\> = When set, enables Query block NPC header backpressure.
-                                                                 \<58\> = When set, enables Query block data-pipe backpressure.
-                                                                 \<57\> = When set, enables Query block control-pipe backpressure.
-                                                                 \<56\> = When set, enables Mod1 block data-pipe backpressure.
-                                                                 \<55\> = When set, enables Mod1 block control-pipe backpressure.
-                                                                 \<54\> = When set, enables SQE Send-Gather block NPX return backpressure.
-                                                                 \<53\> = When set, enables SQE Send-Gather block NDX request backpressure.
-                                                                 \<52\> = When set, enables SQE send-gather block data-pipe backpressure.
-                                                                 \<51\> = When set, enables SQE send-gather block control-pipe backpressure.
-                                                                 \<50\> = When set, enables SQE Jump block NPX return backpressure.
-                                                                 \<49\> = When set, enables SQE Jump block NDX request backpressure.
-                                                                 \<48\> = When set, enables SQE jump block backpressure. */
-        uint64_t reserved_40_47        : 8;
-        uint64_t bp_cfg                : 24; /**< [ 39: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<39:38\> = Config 11.
-                                                                   \<37:36\> = Config 10.
-                                                                   \<35:34\> = Config 9.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 24; /**< [ 39: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<39:38\> = Config 11.
-                                                                   \<37:36\> = Config 10.
-                                                                   \<35:34\> = Config 9.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_40_47        : 8;
-        uint64_t enable                : 12; /**< [ 59: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<59\> = When set, enables Query block NPC header backpressure.
-                                                                 \<58\> = When set, enables Query block data-pipe backpressure.
-                                                                 \<57\> = When set, enables Query block control-pipe backpressure.
-                                                                 \<56\> = When set, enables Mod1 block data-pipe backpressure.
-                                                                 \<55\> = When set, enables Mod1 block control-pipe backpressure.
-                                                                 \<54\> = When set, enables SQE Send-Gather block NPX return backpressure.
-                                                                 \<53\> = When set, enables SQE Send-Gather block NDX request backpressure.
-                                                                 \<52\> = When set, enables SQE send-gather block data-pipe backpressure.
-                                                                 \<51\> = When set, enables SQE send-gather block control-pipe backpressure.
-                                                                 \<50\> = When set, enables SQE Jump block NPX return backpressure.
-                                                                 \<49\> = When set, enables SQE Jump block NDX request backpressure.
-                                                                 \<48\> = When set, enables SQE jump block backpressure. */
-        uint64_t reserved_60_63        : 4;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_seb_pipe_bp_testx_s cn; */
-};
-typedef union cavm_nixx_af_seb_pipe_bp_testx cavm_nixx_af_seb_pipe_bp_testx_t;
-
-static inline uint64_t CAVM_NIXX_AF_SEB_PIPE_BP_TESTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_SEB_PIPE_BP_TESTX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=2)))
-        return 0x840040000600ll + 0x10000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=2)))
-        return 0x840040000600ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=2)))
-        return 0x840040000600ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=2)))
-        return 0x840040000600ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=2)))
-        return 0x840040000600ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=2)))
-        return 0x840040000600ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=2)))
-        return 0x840040000600ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    __cavm_csr_fatal("NIXX_AF_SEB_PIPE_BP_TESTX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_SEB_PIPE_BP_TESTX(a,b) cavm_nixx_af_seb_pipe_bp_testx_t
-#define bustype_CAVM_NIXX_AF_SEB_PIPE_BP_TESTX(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_SEB_PIPE_BP_TESTX(a,b) "NIXX_AF_SEB_PIPE_BP_TESTX"
-#define device_bar_CAVM_NIXX_AF_SEB_PIPE_BP_TESTX(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_SEB_PIPE_BP_TESTX(a,b) (a)
-#define arguments_CAVM_NIXX_AF_SEB_PIPE_BP_TESTX(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_seb_pipeb_bp_test#
- *
- * INTERNAL: NIX AF SEB Pipe Backpressure Test Registers
- */
-union cavm_nixx_af_seb_pipeb_bp_testx
-{
-    uint64_t u;
-    struct cavm_nixx_af_seb_pipeb_bp_testx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_57_63        : 7;
-        uint64_t enable                : 9;  /**< [ 56: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<56\> = When set, enables SSO interface backpressure.
-                                                                 \<55\> = When set, enables Tail block NDX write backpressure.
-                                                                 \<54\> = When set, enables Tail block Link Credit backpressure.
-                                                                 \<53\> = When set, enables Tail block lf_err_dbg backpressure.
-                                                                 \<52\> = When set, enables Tail block Interrrupt/Op backpressure.
-                                                                 \<51\> = When set, enables Check block data-pipe backpressure.
-                                                                 \<50\> = When set, enables Check block control-pipe backpressure.
-                                                                 \<49\> = When set, enables Mod2 block data-pipe backpressure.
-                                                                 \<48\> = When set, enables Mod2 block control-pipe backpressure. */
-        uint64_t reserved_34_47        : 14;
-        uint64_t bp_cfg                : 18; /**< [ 33: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 18; /**< [ 33: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<33:32\> = Config 8.
-                                                                   \<31:30\> = Config 7.
-                                                                   \<29:28\> = Config 6.
-                                                                   \<27:26\> = Config 5.
-                                                                   \<25:24\> = Config 4.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_34_47        : 14;
-        uint64_t enable                : 9;  /**< [ 56: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<56\> = When set, enables SSO interface backpressure.
-                                                                 \<55\> = When set, enables Tail block NDX write backpressure.
-                                                                 \<54\> = When set, enables Tail block Link Credit backpressure.
-                                                                 \<53\> = When set, enables Tail block lf_err_dbg backpressure.
-                                                                 \<52\> = When set, enables Tail block Interrrupt/Op backpressure.
-                                                                 \<51\> = When set, enables Check block data-pipe backpressure.
-                                                                 \<50\> = When set, enables Check block control-pipe backpressure.
-                                                                 \<49\> = When set, enables Mod2 block data-pipe backpressure.
-                                                                 \<48\> = When set, enables Mod2 block control-pipe backpressure. */
-        uint64_t reserved_57_63        : 7;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_seb_pipeb_bp_testx_s cn; */
-};
-typedef union cavm_nixx_af_seb_pipeb_bp_testx cavm_nixx_af_seb_pipeb_bp_testx_t;
-
-static inline uint64_t CAVM_NIXX_AF_SEB_PIPEB_BP_TESTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_SEB_PIPEB_BP_TESTX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=2)))
-        return 0x840040000608ll + 0x10000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=2)))
-        return 0x840040000608ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=2)))
-        return 0x840040000608ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=2)))
-        return 0x840040000608ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=2)))
-        return 0x840040000608ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=2)))
-        return 0x840040000608ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=2)))
-        return 0x840040000608ll + 0x10000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
-    __cavm_csr_fatal("NIXX_AF_SEB_PIPEB_BP_TESTX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_SEB_PIPEB_BP_TESTX(a,b) cavm_nixx_af_seb_pipeb_bp_testx_t
-#define bustype_CAVM_NIXX_AF_SEB_PIPEB_BP_TESTX(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_SEB_PIPEB_BP_TESTX(a,b) "NIXX_AF_SEB_PIPEB_BP_TESTX"
-#define device_bar_CAVM_NIXX_AF_SEB_PIPEB_BP_TESTX(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_SEB_PIPEB_BP_TESTX(a,b) (a)
-#define arguments_CAVM_NIXX_AF_SEB_PIPEB_BP_TESTX(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_seb_wd_tick_divider
- *
- * INTERNAL: NIX AF SEB TSTMP Watchdog Tick Divider Register
- */
-union cavm_nixx_af_seb_wd_tick_divider
-{
-    uint64_t u;
-    struct cavm_nixx_af_seb_wd_tick_divider_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_7_63         : 57;
-        uint64_t tick_div_cfg          : 7;  /**< [  6:  0](R/W) Used to speed up generation of a rate divider tick which is normally
-                                                                 triggered every 128 rst__gbl_100mhz_sclk_edge. A default of 0x7F
-                                                                 yields a divide ratio of 128. A value of 0x0, yields a divide
-                                                                 ratio of 1 and 0x1 a ratio of 2 etc. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 Refer to the NIX_AF_TX_TSTMP_CFG[TSTMP_WD_PERIOD] field for more information. The
-                                                                 register is provided to speed up testing. */
-#else /* Word 0 - Little Endian */
-        uint64_t tick_div_cfg          : 7;  /**< [  6:  0](R/W) Used to speed up generation of a rate divider tick which is normally
-                                                                 triggered every 128 rst__gbl_100mhz_sclk_edge. A default of 0x7F
-                                                                 yields a divide ratio of 128. A value of 0x0, yields a divide
-                                                                 ratio of 1 and 0x1 a ratio of 2 etc. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 Refer to the NIX_AF_TX_TSTMP_CFG[TSTMP_WD_PERIOD] field for more information. The
-                                                                 register is provided to speed up testing. */
-        uint64_t reserved_7_63         : 57;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_seb_wd_tick_divider_s cn; */
-};
-typedef union cavm_nixx_af_seb_wd_tick_divider cavm_nixx_af_seb_wd_tick_divider_t;
-
-static inline uint64_t CAVM_NIXX_AF_SEB_WD_TICK_DIVIDER(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_SEB_WD_TICK_DIVIDER(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x8400400006f0ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x8400400006f0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x8400400006f0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x8400400006f0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x8400400006f0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x8400400006f0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x8400400006f0ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_SEB_WD_TICK_DIVIDER", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_SEB_WD_TICK_DIVIDER(a) cavm_nixx_af_seb_wd_tick_divider_t
-#define bustype_CAVM_NIXX_AF_SEB_WD_TICK_DIVIDER(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_SEB_WD_TICK_DIVIDER(a) "NIXX_AF_SEB_WD_TICK_DIVIDER"
-#define device_bar_CAVM_NIXX_AF_SEB_WD_TICK_DIVIDER(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_SEB_WD_TICK_DIVIDER(a) (a)
-#define arguments_CAVM_NIXX_AF_SEB_WD_TICK_DIVIDER(a) (a),-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_smq#_cfg
  *
  * NIX AF SQM PSE Queue Configuration Registers
@@ -22798,33 +18839,7 @@ union cavm_nixx_af_smqx_cfg
                                                                  from SDP. If the backpressure does not go away, software may need to
                                                                  disable it at the destination link(s), e.g. by clearing
                                                                  CGX()_SMU()_RX_FRM_CTL[CTL_BCK] to disable physical backpressure from a
-                                                                 10G+ CGX LMAC.
-
-                                                                 Internal:
-                                                                 Software may use the following software-managed flush sequence as an
-                                                                 alternative to [FLUSH].
-
-                                                                 Pre-flush setup:
-                                                                 * Set up a "flush SQ" for the SMQ which is only used for sending "flush
-                                                                 packets" that are dropped.
-                                                                 * Configure NPC to drop all packets from the flush SQ (return
-                                                                 NIX_TX_ACTION_S[OP] = NIX_TX_ACTIONOP_E::DROP, e.g. based on matching
-                                                                 NIX_INST_HDR_S[PF_FUNC,SQ]).
-
-                                                                 Software-managed flush sequence:
-                                                                 * Set [ENQ_XOFF].
-                                                                 * For each SQ that feeds the SMQ other than the flush SQ, set
-                                                                 NIX_SQ_CTX_S[XOFF] by writing NIX_LF_SQ_OP_INT[SETOP] = 1 and
-                                                                 NIX_LF_SQ_OP_INT[XOFF] = 1.
-                                                                 * Enqueue a packet to the flush SQ with a unique completion
-                                                                 notification, e.g. a CQE with a unique NIX_SEND_COMP_S[SQE_ID] (from
-                                                                 NIX_SEND_HDR_S[SQE_ID]) or a unique WQE (from NIX_SEND_WORK_S[ADDR]).
-                                                                 * Clear [ENQ_XOFF].
-                                                                 * As in the case of a hardware-managed [FLUSH], the flush packet may stall
-                                                                 if the downstream TL3/TL2 or TL4 queue is backpressured from CGX/LBK or
-                                                                 SDP, respectively. If appropriate, software may need to disable
-                                                                 backpressure from the destination link(s).
-                                                                 * Wait for the flush completion notification. */
+                                                                 10G+ CGX LMAC. */
         uint64_t express               : 1;  /**< [ 48: 48](R/W) Express.
                                                                  0 = The SMQ transmits normal packets.
                                                                  1 = The SMQ transmits express packets.
@@ -22838,22 +18853,12 @@ union cavm_nixx_af_smqx_cfg
                                                                  [RR_MINLEN] as the length for round-robin arbitration only; this does not
                                                                  affect the actual packet length or the length used for DWRR arbitration at
                                                                  the MDQ and TL4-TL1 levels. Increasing [RR_MINLEN] reduces NDC/LLC/DRAM
-                                                                 bandwidth utilization when sending small packets.
-
-                                                                 Internal:
-                                                                 Reset value optimized for line rate @100MPPS:
-                                                                 _ 128 \> (100Gbps/8)*1000/100MPPS - 20(IFG+pre) = 108. */
+                                                                 bandwidth utilization when sending small packets. */
         uint64_t max_vtag_ins          : 3;  /**< [ 38: 36](R/W) Maximum Vtag insertion size as a as a multiple of four bytes. Must be less
                                                                  than or equal to four (16 bytes), and must be large enough to account for the
                                                                  maximum number of bytes inserted by NIX_TX_VTAG_ACTION_S for any packet
                                                                  sent through this SMQ.
-                                                                 Programmed values greater than 4 are treated as 4.
-
-                                                                 Internal:
-                                                                 SQM computes allowed maximum Vtag insertion bytes (ok_vtag_max) such that
-                                                                 the computed packet size does not exceed [MAXLEN], including VLAN bytes
-                                                                 inserted by NIX_SEND_EXT_S[VLAN*]. SEB enforces ok_vtag_max when inserting
-                                                                 Vtag bytes based on NIX_TX_VTAG_ACTION_S. */
+                                                                 Programmed values greater than 4 are treated as 4. */
         uint64_t reserved_31_35        : 5;
         uint64_t lf                    : 7;  /**< [ 30: 24](R/W) Local function with SQs that may feed this SMQ. Software must ensure NIX_SQ_CTX_S[SMQ]
                                                                  does not point to this SMQ for any SQ outside of this LF. */
@@ -22915,24 +18920,14 @@ union cavm_nixx_af_smqx_cfg
                                                                  than or equal to four (16 bytes), and must be large enough to account for the
                                                                  maximum number of bytes inserted by NIX_TX_VTAG_ACTION_S for any packet
                                                                  sent through this SMQ.
-                                                                 Programmed values greater than 4 are treated as 4.
-
-                                                                 Internal:
-                                                                 SQM computes allowed maximum Vtag insertion bytes (ok_vtag_max) such that
-                                                                 the computed packet size does not exceed [MAXLEN], including VLAN bytes
-                                                                 inserted by NIX_SEND_EXT_S[VLAN*]. SEB enforces ok_vtag_max when inserting
-                                                                 Vtag bytes based on NIX_TX_VTAG_ACTION_S. */
+                                                                 Programmed values greater than 4 are treated as 4. */
         uint64_t rr_minlen             : 9;  /**< [ 47: 39](R/W) Round-robin minimum packet length. When less than or equal to [MINLEN],
                                                                  NIX will always use the packet length for round-robin (DWRR) arbitration
                                                                  between SQs.  Otherwise, for packets shorter than this value, NIX will use
                                                                  [RR_MINLEN] as the length for round-robin arbitration only; this does not
                                                                  affect the actual packet length or the length used for DWRR arbitration at
                                                                  the MDQ and TL4-TL1 levels. Increasing [RR_MINLEN] reduces NDC/LLC/DRAM
-                                                                 bandwidth utilization when sending small packets.
-
-                                                                 Internal:
-                                                                 Reset value optimized for line rate @100MPPS:
-                                                                 _ 128 \> (100Gbps/8)*1000/100MPPS - 20(IFG+pre) = 108. */
+                                                                 bandwidth utilization when sending small packets. */
         uint64_t express               : 1;  /**< [ 48: 48](R/W) Express.
                                                                  0 = The SMQ transmits normal packets.
                                                                  1 = The SMQ transmits express packets.
@@ -22952,33 +18947,7 @@ union cavm_nixx_af_smqx_cfg
                                                                  from SDP. If the backpressure does not go away, software may need to
                                                                  disable it at the destination link(s), e.g. by clearing
                                                                  CGX()_SMU()_RX_FRM_CTL[CTL_BCK] to disable physical backpressure from a
-                                                                 10G+ CGX LMAC.
-
-                                                                 Internal:
-                                                                 Software may use the following software-managed flush sequence as an
-                                                                 alternative to [FLUSH].
-
-                                                                 Pre-flush setup:
-                                                                 * Set up a "flush SQ" for the SMQ which is only used for sending "flush
-                                                                 packets" that are dropped.
-                                                                 * Configure NPC to drop all packets from the flush SQ (return
-                                                                 NIX_TX_ACTION_S[OP] = NIX_TX_ACTIONOP_E::DROP, e.g. based on matching
-                                                                 NIX_INST_HDR_S[PF_FUNC,SQ]).
-
-                                                                 Software-managed flush sequence:
-                                                                 * Set [ENQ_XOFF].
-                                                                 * For each SQ that feeds the SMQ other than the flush SQ, set
-                                                                 NIX_SQ_CTX_S[XOFF] by writing NIX_LF_SQ_OP_INT[SETOP] = 1 and
-                                                                 NIX_LF_SQ_OP_INT[XOFF] = 1.
-                                                                 * Enqueue a packet to the flush SQ with a unique completion
-                                                                 notification, e.g. a CQE with a unique NIX_SEND_COMP_S[SQE_ID] (from
-                                                                 NIX_SEND_HDR_S[SQE_ID]) or a unique WQE (from NIX_SEND_WORK_S[ADDR]).
-                                                                 * Clear [ENQ_XOFF].
-                                                                 * As in the case of a hardware-managed [FLUSH], the flush packet may stall
-                                                                 if the downstream TL3/TL2 or TL4 queue is backpressured from CGX/LBK or
-                                                                 SDP, respectively. If appropriate, software may need to disable
-                                                                 backpressure from the destination link(s).
-                                                                 * Wait for the flush completion notification. */
+                                                                 10G+ CGX LMAC. */
         uint64_t enq_xoff              : 1;  /**< [ 50: 50](R/W) Enqueue transmit off. When set, hardware will not enqueue meta-descriptors
                                                                  to the SMQ. */
         uint64_t pri_thr               : 6;  /**< [ 56: 51](R/W) SMQ enqueue priority threshold. When NIX_AF_SMQ()_STATUS[LEVEL] is less
@@ -23011,40 +18980,19 @@ union cavm_nixx_af_smqx_cfg
                                                                  disable it at the destination link(s), e.g. by clearing
                                                                  CGX()_SMU()_RX_FRM_CTL[CTL_BCK] to disable physical backpressure from a
                                                                  10G+ CGX LMAC. */
-        uint64_t express               : 1;  /**< [ 48: 48](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 Express.
-                                                                 0 = The SMQ transmits normal packets.
-                                                                 1 = The SMQ transmits express packets.
-
-                                                                 Must have the same value as the corresponding
-                                                                 NIX_AF_TL3_TL2()_CFG[EXPRESS]. Hardware prioritizes enqueue to express SMQs
-                                                                 over normal SMQs. */
+        uint64_t express               : 1;  /**< [ 48: 48](R/W) Reserved. Must be zero. */
         uint64_t rr_minlen             : 9;  /**< [ 47: 39](R/W) Round-robin minimum packet length. When less than or equal to [MINLEN],
                                                                  NIX will always use the packet length for round-robin (DWRR) arbitration
                                                                  between SQs.  Otherwise, for packets shorter than this value, NIX will use
                                                                  [RR_MINLEN] as the length for round-robin arbitration only; this does not
                                                                  affect the actual packet length or the length used for DWRR arbitration at
                                                                  the MDQ and TL4-TL1 levels. Increasing [RR_MINLEN] reduces NDC/LLC/DRAM
-                                                                 bandwidth utilization when sending small packets.
-
-                                                                 Internal:
-                                                                 Reset value optimized for line rate @100MPPS:
-                                                                 _ 128 \> (100Gbps/8)*1000/100MPPS - 20(IFG+pre) = 108. */
+                                                                 bandwidth utilization when sending small packets. */
         uint64_t max_vtag_ins          : 3;  /**< [ 38: 36](R/W) Maximum Vtag insertion size as a as a multiple of four bytes. Must be less
                                                                  than or equal to four (16 bytes), and must be large enough to account for the
                                                                  maximum number of bytes inserted by NIX_TX_VTAG_ACTION_S for any packet
                                                                  sent through this SMQ.
-                                                                 Programmed values greater than 4 are treated as 4.
-
-                                                                 Internal:
-                                                                 SQM computes allowed maximum Vtag insertion bytes (ok_vtag_max) such that
-                                                                 the computed packet size does not exceed [MAXLEN], including VLAN bytes
-                                                                 inserted by NIX_SEND_EXT_S[VLAN*]. SEB enforces ok_vtag_max when inserting
-                                                                 Vtag bytes based on NIX_TX_VTAG_ACTION_S. */
+                                                                 Programmed values greater than 4 are treated as 4. */
         uint64_t reserved_31_35        : 5;
         uint64_t lf                    : 7;  /**< [ 30: 24](R/W) Local function with SQs that may feed this SMQ. Software must ensure NIX_SQ_CTX_S[SMQ]
                                                                  does not point to this SMQ for any SQ outside of this LF. */
@@ -23106,36 +19054,15 @@ union cavm_nixx_af_smqx_cfg
                                                                  than or equal to four (16 bytes), and must be large enough to account for the
                                                                  maximum number of bytes inserted by NIX_TX_VTAG_ACTION_S for any packet
                                                                  sent through this SMQ.
-                                                                 Programmed values greater than 4 are treated as 4.
-
-                                                                 Internal:
-                                                                 SQM computes allowed maximum Vtag insertion bytes (ok_vtag_max) such that
-                                                                 the computed packet size does not exceed [MAXLEN], including VLAN bytes
-                                                                 inserted by NIX_SEND_EXT_S[VLAN*]. SEB enforces ok_vtag_max when inserting
-                                                                 Vtag bytes based on NIX_TX_VTAG_ACTION_S. */
+                                                                 Programmed values greater than 4 are treated as 4. */
         uint64_t rr_minlen             : 9;  /**< [ 47: 39](R/W) Round-robin minimum packet length. When less than or equal to [MINLEN],
                                                                  NIX will always use the packet length for round-robin (DWRR) arbitration
                                                                  between SQs.  Otherwise, for packets shorter than this value, NIX will use
                                                                  [RR_MINLEN] as the length for round-robin arbitration only; this does not
                                                                  affect the actual packet length or the length used for DWRR arbitration at
                                                                  the MDQ and TL4-TL1 levels. Increasing [RR_MINLEN] reduces NDC/LLC/DRAM
-                                                                 bandwidth utilization when sending small packets.
-
-                                                                 Internal:
-                                                                 Reset value optimized for line rate @100MPPS:
-                                                                 _ 128 \> (100Gbps/8)*1000/100MPPS - 20(IFG+pre) = 108. */
-        uint64_t express               : 1;  /**< [ 48: 48](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 Express.
-                                                                 0 = The SMQ transmits normal packets.
-                                                                 1 = The SMQ transmits express packets.
-
-                                                                 Must have the same value as the corresponding
-                                                                 NIX_AF_TL3_TL2()_CFG[EXPRESS]. Hardware prioritizes enqueue to express SMQs
-                                                                 over normal SMQs. */
+                                                                 bandwidth utilization when sending small packets. */
+        uint64_t express               : 1;  /**< [ 48: 48](R/W) Reserved. Must be zero. */
         uint64_t flush                 : 1;  /**< [ 49: 49](R/W1S/H) Software can write a one to set this bit and initiate an SMQ flush.
                                                                  When set, hardware flushes all meta-descriptors/packets from this SMQ
                                                                  through PSE and the send data path. Hardware clears this bit and sets
@@ -23502,109 +19429,6 @@ static inline uint64_t CAVM_NIXX_AF_SQM_ACTIVE_CYCLES_PC(uint64_t a)
 #define arguments_CAVM_NIXX_AF_SQM_ACTIVE_CYCLES_PC(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_sqm_bp_test#
- *
- * INTERNAL: NIX AF SQM Backpressure Test Register
- */
-union cavm_nixx_af_sqm_bp_testx
-{
-    uint64_t u;
-    struct cavm_nixx_af_sqm_bp_testx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure at the below points.
-                                                                 (0)\<60\> = AQS NDC interface.
-                                                                 (0)\<62:61\> = Interrupt and OP interface.
-                                                                 (0)\<63\> = PSE Interface.
-                                                                 (1)\<60\> = NDC Port 0 CMD.
-                                                                 (1)\<61\> = NDC Port 0 DATA.
-                                                                 (1)\<62\> = NDC Port 1 CMD.
-                                                                 (1)\<63\> = NDC Port 1 DATA.
-                                                                 (2)\<60\> = NDC Port 2 CMD.
-                                                                 (2)\<61\> = NDC Port 2 DATA.
-                                                                 (2)\<62\> = NDC Port 3 CMD.
-                                                                 (2)\<63\> = NDC Port 3 DATA.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure at the below points.
-                                                                 (0)\<60\> = AQS NDC interface.
-                                                                 (0)\<62:61\> = Interrupt and OP interface.
-                                                                 (0)\<63\> = PSE Interface.
-                                                                 (1)\<60\> = NDC Port 0 CMD.
-                                                                 (1)\<61\> = NDC Port 0 DATA.
-                                                                 (1)\<62\> = NDC Port 1 CMD.
-                                                                 (1)\<63\> = NDC Port 1 DATA.
-                                                                 (2)\<60\> = NDC Port 2 CMD.
-                                                                 (2)\<61\> = NDC Port 2 DATA.
-                                                                 (2)\<62\> = NDC Port 3 CMD.
-                                                                 (2)\<63\> = NDC Port 3 DATA.
-
-                                                                 NOTE: Setting multiple [ENABLE]s could slow down the corresponding engine. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_sqm_bp_testx_s cn; */
-};
-typedef union cavm_nixx_af_sqm_bp_testx cavm_nixx_af_sqm_bp_testx_t;
-
-static inline uint64_t CAVM_NIXX_AF_SQM_BP_TESTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_SQM_BP_TESTX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=2)))
-        return 0x840040000760ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=2)))
-        return 0x840040000760ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=2)))
-        return 0x840040000760ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=2)))
-        return 0x840040000760ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=2)))
-        return 0x840040000760ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=2)))
-        return 0x840040000760ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=2)))
-        return 0x840040000760ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x3);
-    __cavm_csr_fatal("NIXX_AF_SQM_BP_TESTX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_SQM_BP_TESTX(a,b) cavm_nixx_af_sqm_bp_testx_t
-#define bustype_CAVM_NIXX_AF_SQM_BP_TESTX(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_SQM_BP_TESTX(a,b) "NIXX_AF_SQM_BP_TESTX"
-#define device_bar_CAVM_NIXX_AF_SQM_BP_TESTX(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_SQM_BP_TESTX(a,b) (a)
-#define arguments_CAVM_NIXX_AF_SQM_BP_TESTX(a,b) (a),(b),-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_sqm_dbg_ctl_status
  *
  * NIX AF SQM Debug Register
@@ -23618,61 +19442,55 @@ union cavm_nixx_af_sqm_dbg_ctl_status
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_28_63        : 36;
         uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Sets conservative limits to number of SQEs prefetched by the FE in sticky mode. This feature has no
-                                                                 effect on non-sticky mode behavior.
-
-                                                                 Internal:
-                                                                 This configuration bit defines the number of SQEs read in sticky mode.
-                                                                 0 = Initializes the allowable number of SQE reads to be equal to the SQE data
-                                                                 latency regardless of the MDQ FIFO level allowing theoretically up to 128 + current
-                                                                 MDQ level (when credits are returned) SQEs to be outstanding.
-                                                                 1 = Initializes the allowable number of SQE reads to be equal to the SQE data
-                                                                 latency minus the MDQ Level allowing up to 128 outstanding SQE reads.
-                                                                 This has no effect on non-sticky mode behavior. */
+                                                                 effect on non-sticky mode behavior. */
         uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enable sticky engine to improve NIXTX performance in one-SMQ configurations. */
         uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
-                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
-
-                                                                 Internal:
-                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
-                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate. */
         uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
-                                                                 sticky mode. This should be disabled.
-
-                                                                 Internal:
-                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
-                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details.
-                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+                                                                 sticky mode. This should be disabled. */
         uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
                                                                  0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
                                                                  RR Count prior to BP from MDQs.
                                                                  1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
-                                                                 transitions.
-
-                                                                 Internal:
-                                                                 See bug 36650 for more details. */
+                                                                 transitions. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
+                                                                 0 = NIXTX uses conditional clocking.
+                                                                 1 = NIXTX keeps clocks on always. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
+                                                                 0 = Disables flow engines 1-7 from using the sticky mode configuration.
+                                                                 1 = Enable flow engines 1-7 to be set into sticky mode.
+
+                                                                 For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
+                                                                 configuration is desired for one SMQ performance, refer to TM14.  TM14 is
+                                                                 independent of [TM6]. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
 #else /* Word 0 - Little Endian */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
+                                                                 0 = Disables flow engines 1-7 from using the sticky mode configuration.
+                                                                 1 = Enable flow engines 1-7 to be set into sticky mode.
+
+                                                                 For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
+                                                                 configuration is desired for one SMQ performance, refer to TM14.  TM14 is
+                                                                 independent of [TM6]. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
+                                                                 0 = NIXTX uses conditional clocking.
+                                                                 1 = NIXTX keeps clocks on always. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
         uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
                                                                  0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
@@ -23680,112 +19498,39 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
-                                                                 transitions.
-
-                                                                 Internal:
-                                                                 See bug 36650 for more details. */
+                                                                 transitions. */
         uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
-                                                                 sticky mode. This should be disabled.
-
-                                                                 Internal:
-                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
-                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details.
-                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+                                                                 sticky mode. This should be disabled. */
         uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
-                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
-
-                                                                 Internal:
-                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
-                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate. */
         uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enable sticky engine to improve NIXTX performance in one-SMQ configurations. */
         uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Sets conservative limits to number of SQEs prefetched by the FE in sticky mode. This feature has no
-                                                                 effect on non-sticky mode behavior.
-
-                                                                 Internal:
-                                                                 This configuration bit defines the number of SQEs read in sticky mode.
-                                                                 0 = Initializes the allowable number of SQE reads to be equal to the SQE data
-                                                                 latency regardless of the MDQ FIFO level allowing theoretically up to 128 + current
-                                                                 MDQ level (when credits are returned) SQEs to be outstanding.
-                                                                 1 = Initializes the allowable number of SQE reads to be equal to the SQE data
-                                                                 latency minus the MDQ Level allowing up to 128 outstanding SQE reads.
-                                                                 This has no effect on non-sticky mode behavior. */
+                                                                 effect on non-sticky mode behavior. */
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_nixx_af_sqm_dbg_ctl_status_s cn9; */
-    struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xxp1
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_22_63        : 42;
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
-#else /* Word 0 - Little Endian */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
-        uint64_t reserved_22_63        : 42;
-#endif /* Word 0 - End */
-    } cn96xxp1;
-    struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xxp3
+    struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_26_63        : 38;
         uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
-                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
-
-                                                                 Internal:
-                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
-                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate. */
         uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
-                                                                 sticky mode. This should be disabled.
-
-                                                                 Internal:
-                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
-                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details.
-                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+                                                                 sticky mode. This should be disabled. */
         uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
                                                                  0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
                                                                  RR Count prior to BP from MDQs.
                                                                  1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
-                                                                 transitions.
-
-                                                                 Internal:
-                                                                 See bug 36650 for more details. */
+                                                                 transitions. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
         uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
                                                                  0 = NIXTX uses conditional clocking.
-                                                                 1 = NIXTX keeps clocks on always.
-
-                                                                 Internal:
-                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
-                                                                 As of now, should be set to [1] to avoid bug 38423. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
-                                                                 Internal:
-                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
-                                                                 issued after writing the last meta-descriptor for the SQ.
-                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
-                                                                 Internal:
-                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
-                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
-                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+                                                                 1 = NIXTX keeps clocks on always. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
                                                                  0 = Disables flow engines 1-7 from using the sticky mode configuration.
                                                                  1 = Enable flow engines 1-7 to be set into sticky mode.
@@ -23793,47 +19538,17 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
                                                                  configuration is desired for one SMQ performance, refer to TM14.  TM14 is
                                                                  independent of [TM6]. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
-                                                                 Internal:
-                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
-                                                                 this enabled is undefined. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
-                                                                 Internal:
-                                                                 This feature seems to primarily have value for diagnostic use. The expected
-                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
-                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
-                                                                 single SQ would be limited to the lesser of its RR Count and available number
-                                                                 of SQEs. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
-                                                                 Internal:
-                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
-                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
-                                                                 which by default is 64 SQE fetches by the FE. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Bit does not exist in design. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved. */
         uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
 #else /* Word 0 - Little Endian */
         uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Bit does not exist in design. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
-                                                                 Internal:
-                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
-                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
-                                                                 which by default is 64 SQE fetches by the FE. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
-                                                                 Internal:
-                                                                 This feature seems to primarily have value for diagnostic use. The expected
-                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
-                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
-                                                                 single SQ would be limited to the lesser of its RR Count and available number
-                                                                 of SQEs. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
-                                                                 Internal:
-                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
-                                                                 this enabled is undefined. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
                                                                  0 = Disables flow engines 1-7 from using the sticky mode configuration.
                                                                  1 = Enable flow engines 1-7 to be set into sticky mode.
@@ -23841,23 +19556,11 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
                                                                  configuration is desired for one SMQ performance, refer to TM14.  TM14 is
                                                                  independent of [TM6]. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
-                                                                 Internal:
-                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
-                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
-                                                                 specifically in the multiple SQ Sticky Mode configuration. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
-                                                                 Internal:
-                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
-                                                                 issued after writing the last meta-descriptor for the SQ.
-                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior. */
         uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
                                                                  0 = NIXTX uses conditional clocking.
-                                                                 1 = NIXTX keeps clocks on always.
-
-                                                                 Internal:
-                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
-                                                                 As of now, should be set to [1] to avoid bug 38423. */
+                                                                 1 = NIXTX keeps clocks on always. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
         uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
                                                                  0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
@@ -23865,85 +19568,38 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
-                                                                 transitions.
-
-                                                                 Internal:
-                                                                 See bug 36650 for more details. */
+                                                                 transitions. */
         uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
-                                                                 sticky mode. This should be disabled.
-
-                                                                 Internal:
-                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
-                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details.
-                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+                                                                 sticky mode. This should be disabled. */
         uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
-                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
-
-                                                                 Internal:
-                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
-                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate. */
         uint64_t reserved_26_63        : 38;
 #endif /* Word 0 - End */
-    } cn96xxp3;
+    } cn96xx;
     struct cavm_nixx_af_sqm_dbg_ctl_status_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_28_63        : 36;
         uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Sets conservative limits to number of SQEs prefetched by the FE in sticky mode. This feature has no
-                                                                 effect on non-sticky mode behavior.
-
-                                                                 Internal:
-                                                                 This configuration bit defines the number of SQEs read in sticky mode.
-                                                                 0 = Initializes the allowable number of SQE reads to be equal to the SQE data
-                                                                 latency regardless of the MDQ FIFO level allowing theoretically up to 128 + current
-                                                                 MDQ level (when credits are returned) SQEs to be outstanding.
-                                                                 1 = Initializes the allowable number of SQE reads to be equal to the SQE data
-                                                                 latency minus the MDQ Level allowing up to 128 outstanding SQE reads.
-                                                                 This has no effect on non-sticky mode behavior. */
+                                                                 effect on non-sticky mode behavior. */
         uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enable sticky engine to improve NIXTX performance in one-SMQ configurations. */
         uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
-                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
-
-                                                                 Internal:
-                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
-                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate. */
         uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
-                                                                 sticky mode. This should be disabled.
-
-                                                                 Internal:
-                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
-                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details.
-                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+                                                                 sticky mode. This should be disabled. */
         uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
                                                                  0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
                                                                  RR Count prior to BP from MDQs.
                                                                  1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
-                                                                 transitions.
-
-                                                                 Internal:
-                                                                 See bug 36650 for more details. */
+                                                                 transitions. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
         uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
                                                                  0 = NIXTX uses conditional clocking.
-                                                                 1 = NIXTX keeps clocks on always.
-
-                                                                 Internal:
-                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
-                                                                 As of now, should be set to [1] to avoid bug 38423. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
-                                                                 Internal:
-                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
-                                                                 issued after writing the last meta-descriptor for the SQ.
-                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
-                                                                 Internal:
-                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
-                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
-                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+                                                                 1 = NIXTX keeps clocks on always. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
                                                                  0 = Disables flow engines 1-7 from using the sticky mode configuration.
                                                                  1 = Enable flow engines 1-7 to be set into sticky mode.
@@ -23951,47 +19607,17 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky
                                                                  mode configuration is desired for one SMQ performance, refer to TM14.
                                                                  TM14 is independent of [TM6]. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
-                                                                 Internal:
-                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
-                                                                 this enabled is undefined. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
-                                                                 Internal:
-                                                                 This feature seems to primarily have value for diagnostic use. The expected
-                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
-                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
-                                                                 single SQ would be limited to the lesser of its RR Count and available number
-                                                                 of SQEs. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
-                                                                 Internal:
-                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
-                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
-                                                                 which by default is 64 SQE fetches by the FE. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Bit does not exist in design. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved. */
         uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
 #else /* Word 0 - Little Endian */
         uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Bit does not exist in design. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
-                                                                 Internal:
-                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
-                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
-                                                                 which by default is 64 SQE fetches by the FE. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
-                                                                 Internal:
-                                                                 This feature seems to primarily have value for diagnostic use. The expected
-                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
-                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
-                                                                 single SQ would be limited to the lesser of its RR Count and available number
-                                                                 of SQEs. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
-                                                                 Internal:
-                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
-                                                                 this enabled is undefined. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
                                                                  0 = Disables flow engines 1-7 from using the sticky mode configuration.
                                                                  1 = Enable flow engines 1-7 to be set into sticky mode.
@@ -23999,23 +19625,11 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky
                                                                  mode configuration is desired for one SMQ performance, refer to TM14.
                                                                  TM14 is independent of [TM6]. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
-                                                                 Internal:
-                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
-                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
-                                                                 specifically in the multiple SQ Sticky Mode configuration. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
-                                                                 Internal:
-                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
-                                                                 issued after writing the last meta-descriptor for the SQ.
-                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior. */
         uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
                                                                  0 = NIXTX uses conditional clocking.
-                                                                 1 = NIXTX keeps clocks on always.
-
-                                                                 Internal:
-                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
-                                                                 As of now, should be set to [1] to avoid bug 38423. */
+                                                                 1 = NIXTX keeps clocks on always. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
         uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
                                                                  0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
@@ -24023,41 +19637,18 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
-                                                                 transitions.
-
-                                                                 Internal:
-                                                                 See bug 36650 for more details. */
+                                                                 transitions. */
         uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
-                                                                 sticky mode. This should be disabled.
-
-                                                                 Internal:
-                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
-                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details.
-                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+                                                                 sticky mode. This should be disabled. */
         uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
-                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
-
-                                                                 Internal:
-                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
-                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate. */
         uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enable sticky engine to improve NIXTX performance in one-SMQ configurations. */
         uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Sets conservative limits to number of SQEs prefetched by the FE in sticky mode. This feature has no
-                                                                 effect on non-sticky mode behavior.
-
-                                                                 Internal:
-                                                                 This configuration bit defines the number of SQEs read in sticky mode.
-                                                                 0 = Initializes the allowable number of SQE reads to be equal to the SQE data
-                                                                 latency regardless of the MDQ FIFO level allowing theoretically up to 128 + current
-                                                                 MDQ level (when credits are returned) SQEs to be outstanding.
-                                                                 1 = Initializes the allowable number of SQE reads to be equal to the SQE data
-                                                                 latency minus the MDQ Level allowing up to 128 outstanding SQE reads.
-                                                                 This has no effect on non-sticky mode behavior. */
+                                                                 effect on non-sticky mode behavior. */
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } cn98xx;
-    /* struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xxp1 cnf95xxp1; */
-    struct cavm_nixx_af_sqm_dbg_ctl_status_cnf95xxp2
+    struct cavm_nixx_af_sqm_dbg_ctl_status_cnf95xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_26_63        : 38;
@@ -24067,21 +19658,9 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t reserved_22           : 1;
         uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
                                                                  0 = NIXTX uses conditional clocking.
-                                                                 1 = NIXTX keeps clocks on always.
-
-                                                                 Internal:
-                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
-                                                                 As of now, should be set to [1] to avoid bug 38423. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
-                                                                 Internal:
-                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
-                                                                 issued after writing the last meta-descriptor for the SQ.
-                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
-                                                                 Internal:
-                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
-                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
-                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+                                                                 1 = NIXTX keeps clocks on always. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
                                                                  0 = Disables flow engines 1-7 from using the sticky mode configuration.
                                                                  1 = Enable flow engines 1-7 to be set into sticky mode.
@@ -24089,47 +19668,17 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
                                                                  configuration is desired for one SMQ performance, refer to TM14.  TM14 is
                                                                  independent of [TM6]. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
-                                                                 Internal:
-                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
-                                                                 this enabled is undefined. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
-                                                                 Internal:
-                                                                 This feature seems to primarily have value for diagnostic use. The expected
-                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
-                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
-                                                                 single SQ would be limited to the lesser of its RR Count and available number
-                                                                 of SQEs. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
-                                                                 Internal:
-                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
-                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
-                                                                 which by default is 64 SQE fetches by the FE. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Bit does not exist in design. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved. */
         uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
 #else /* Word 0 - Little Endian */
         uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Bit does not exist in design. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
-                                                                 Internal:
-                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
-                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
-                                                                 which by default is 64 SQE fetches by the FE. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
-                                                                 Internal:
-                                                                 This feature seems to primarily have value for diagnostic use. The expected
-                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
-                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
-                                                                 single SQ would be limited to the lesser of its RR Count and available number
-                                                                 of SQEs. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
-                                                                 Internal:
-                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
-                                                                 this enabled is undefined. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
                                                                  0 = Disables flow engines 1-7 from using the sticky mode configuration.
                                                                  1 = Enable flow engines 1-7 to be set into sticky mode.
@@ -24137,107 +19686,33 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
                                                                  configuration is desired for one SMQ performance, refer to TM14.  TM14 is
                                                                  independent of [TM6]. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
-                                                                 Internal:
-                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
-                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
-                                                                 specifically in the multiple SQ Sticky Mode configuration. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
-                                                                 Internal:
-                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
-                                                                 issued after writing the last meta-descriptor for the SQ.
-                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior. */
         uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
                                                                  0 = NIXTX uses conditional clocking.
-                                                                 1 = NIXTX keeps clocks on always.
-
-                                                                 Internal:
-                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
-                                                                 As of now, should be set to [1] to avoid bug 38423. */
+                                                                 1 = NIXTX keeps clocks on always. */
         uint64_t reserved_22           : 1;
         uint64_t reserved_23           : 1;
         uint64_t reserved_24           : 1;
         uint64_t reserved_25           : 1;
         uint64_t reserved_26_63        : 38;
 #endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_nixx_af_sqm_dbg_ctl_status_cnf95xxp2 f95mm; */
-    struct cavm_nixx_af_sqm_dbg_ctl_status_f95o
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_26_63        : 38;
-        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
-                                                                 Internal:
-                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
-        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
-                                                                 Internal:
-                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
-                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details. */
-        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
-                                                                 specified by the engine. This sacrifices DWRR fairness in certain cases, but
-                                                                 guarantees linked-list correctness for certain dynamic sticky to non-sticky
-                                                                 transitions.
-
-                                                                 Internal:
-                                                                 See bug 36650 for more details. */
-        uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
-#else /* Word 0 - Little Endian */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
-        uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
-        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
-                                                                 specified by the engine. This sacrifices DWRR fairness in certain cases, but
-                                                                 guarantees linked-list correctness for certain dynamic sticky to non-sticky
-                                                                 transitions.
-
-                                                                 Internal:
-                                                                 See bug 36650 for more details. */
-        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
-                                                                 Internal:
-                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
-                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details. */
-        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
-                                                                 Internal:
-                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
-        uint64_t reserved_26_63        : 38;
-#endif /* Word 0 - End */
-    } f95o;
-    /* struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xxp3 loki; */
+    } cnf95xx;
+    /* struct cavm_nixx_af_sqm_dbg_ctl_status_cnf95xx f95mm; */
+    /* struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xx loki; */
 };
 typedef union cavm_nixx_af_sqm_dbg_ctl_status cavm_nixx_af_sqm_dbg_ctl_status_t;
 
 static inline uint64_t CAVM_NIXX_AF_SQM_DBG_CTL_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_NIXX_AF_SQM_DBG_CTL_STATUS(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x840040000750ll + 0x10000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
         return 0x840040000750ll + 0x10000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840040000750ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && (a<=1))
         return 0x840040000750ll + 0x10000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840040000750ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x840040000750ll + 0x10000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x840040000750ll + 0x10000000ll * ((a) & 0x1);
@@ -24250,53 +19725,6 @@ static inline uint64_t CAVM_NIXX_AF_SQM_DBG_CTL_STATUS(uint64_t a)
 #define device_bar_CAVM_NIXX_AF_SQM_DBG_CTL_STATUS(a) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_SQM_DBG_CTL_STATUS(a) (a)
 #define arguments_CAVM_NIXX_AF_SQM_DBG_CTL_STATUS(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_sqm_eco
- *
- * INTERNAL: AF SQM ECO Register
- */
-union cavm_nixx_af_sqm_eco
-{
-    uint64_t u;
-    struct cavm_nixx_af_sqm_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_sqm_eco_s cn; */
-};
-typedef union cavm_nixx_af_sqm_eco cavm_nixx_af_sqm_eco_t;
-
-static inline uint64_t CAVM_NIXX_AF_SQM_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_SQM_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a==0))
-        return 0x8400400005b0ll + 0x10000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
-        return 0x8400400005b0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x8400400005b0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x8400400005b0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x8400400005b0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x8400400005b0ll + 0x10000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x8400400005b0ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("NIXX_AF_SQM_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_SQM_ECO(a) cavm_nixx_af_sqm_eco_t
-#define bustype_CAVM_NIXX_AF_SQM_ECO(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_SQM_ECO(a) "NIXX_AF_SQM_ECO"
-#define device_bar_CAVM_NIXX_AF_SQM_ECO(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_SQM_ECO(a) (a)
-#define arguments_CAVM_NIXX_AF_SQM_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_status
@@ -24314,55 +19742,19 @@ union cavm_nixx_af_status
                                                                  0 = Device inactive.
                                                                  1 = Device ready.
 
-                                                                 Bits are enumerated by NIX_INTF_E.
-
-                                                                 Internal:
-                                                                 A device inactive status means that the X2P agent did not respond to the calibration
-                                                                 cycle.
-                                                                 This is most likely caused because the X2P agents (CGX, LBK, etc) was in reset during the
-                                                                 calibration cycle. */
+                                                                 Bits are enumerated by NIX_INTF_E. */
         uint64_t reserved_11_15        : 5;
         uint64_t calibrate_done        : 1;  /**< [ 10: 10](RO/H) Calibrate cycle is complete. */
-        uint64_t blk_busy              : 10; /**< [  9:  0](RO/H) If nonzero, block is not ready for configuration.
-                                                                 Internal:
-                                                                 Each bit corresponds to a subblock:
-                                                                 \<9\> = Reserved.
-                                                                 \<8\> = Reserved.
-                                                                 \<7\> = Reserved.
-                                                                 \<6\> = Reserved.
-                                                                 \<5\> = Reserved.
-                                                                 \<4\> = RX.
-                                                                 \<3\> = CQM.
-                                                                 \<2\> = PSE.
-                                                                 \<1\> = SEB.
-                                                                 \<0\> = SQM. */
+        uint64_t blk_busy              : 10; /**< [  9:  0](RO/H) If nonzero, block is not ready for configuration. */
 #else /* Word 0 - Little Endian */
-        uint64_t blk_busy              : 10; /**< [  9:  0](RO/H) If nonzero, block is not ready for configuration.
-                                                                 Internal:
-                                                                 Each bit corresponds to a subblock:
-                                                                 \<9\> = Reserved.
-                                                                 \<8\> = Reserved.
-                                                                 \<7\> = Reserved.
-                                                                 \<6\> = Reserved.
-                                                                 \<5\> = Reserved.
-                                                                 \<4\> = RX.
-                                                                 \<3\> = CQM.
-                                                                 \<2\> = PSE.
-                                                                 \<1\> = SEB.
-                                                                 \<0\> = SQM. */
+        uint64_t blk_busy              : 10; /**< [  9:  0](RO/H) If nonzero, block is not ready for configuration. */
         uint64_t calibrate_done        : 1;  /**< [ 10: 10](RO/H) Calibrate cycle is complete. */
         uint64_t reserved_11_15        : 5;
         uint64_t calibrate_status      : 15; /**< [ 30: 16](RO/H) X2P device calibration state bit per NIX interface.
                                                                  0 = Device inactive.
                                                                  1 = Device ready.
 
-                                                                 Bits are enumerated by NIX_INTF_E.
-
-                                                                 Internal:
-                                                                 A device inactive status means that the X2P agent did not respond to the calibration
-                                                                 cycle.
-                                                                 This is most likely caused because the X2P agents (CGX, LBK, etc) was in reset during the
-                                                                 calibration cycle. */
+                                                                 Bits are enumerated by NIX_INTF_E. */
         uint64_t reserved_31_63        : 33;
 #endif /* Word 0 - End */
     } s;
@@ -24492,17 +19884,7 @@ union cavm_nixx_af_tl1x_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -24521,17 +19903,7 @@ union cavm_nixx_af_tl1x_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -24672,75 +20044,6 @@ static inline uint64_t CAVM_NIXX_AF_TL1X_DROPPED_PACKETS(uint64_t a, uint64_t b)
 #define device_bar_CAVM_NIXX_AF_TL1X_DROPPED_PACKETS(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_TL1X_DROPPED_PACKETS(a,b) (a)
 #define arguments_CAVM_NIXX_AF_TL1X_DROPPED_PACKETS(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl1#_green
- *
- * INTERNAL: NIX Transmit Level 1 Green State Debug Register
- */
-union cavm_nixx_af_tl1x_green
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl1x_green_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_41_63        : 23;
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Set when the RED_SEND/RED_DROP DWRR child list is not empty.
-                                                                 For internal use only. */
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 20-bit vector, two bits per each of the 10 supported priorities.
-                                                                 For the non-RR_PRIO priorities, the two bits encode whether the child is active
-                                                                 GREEN, active YELLOW, active RED_SEND/RED_DROP, or inactive. At RR_PRIO, one
-                                                                 bit is set if the GREEN DWRR child list is not empty, and the other is set if the
-                                                                 YELLOW DWRR child list is not empty. For internal use only. */
-        uint64_t reserved_18_19        : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_19        : 2;
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 20-bit vector, two bits per each of the 10 supported priorities.
-                                                                 For the non-RR_PRIO priorities, the two bits encode whether the child is active
-                                                                 GREEN, active YELLOW, active RED_SEND/RED_DROP, or inactive. At RR_PRIO, one
-                                                                 bit is set if the GREEN DWRR child list is not empty, and the other is set if the
-                                                                 YELLOW DWRR child list is not empty. For internal use only. */
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Set when the RED_SEND/RED_DROP DWRR child list is not empty.
-                                                                 For internal use only. */
-        uint64_t reserved_41_63        : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl1x_green_s cn; */
-};
-typedef union cavm_nixx_af_tl1x_green cavm_nixx_af_tl1x_green_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL1X_GREEN(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL1X_GREEN(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=27)))
-        return 0x840040000c90ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=27)))
-        return 0x840040000c90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=27)))
-        return 0x840040000c90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=27)))
-        return 0x840040000c90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=27)))
-        return 0x840040000c90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=27)))
-        return 0x840040000c90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=27)))
-        return 0x840040000c90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    __cavm_csr_fatal("NIXX_AF_TL1X_GREEN", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL1X_GREEN(a,b) cavm_nixx_af_tl1x_green_t
-#define bustype_CAVM_NIXX_AF_TL1X_GREEN(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL1X_GREEN(a,b) "NIXX_AF_TL1X_GREEN"
-#define device_bar_CAVM_NIXX_AF_TL1X_GREEN(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL1X_GREEN(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL1X_GREEN(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_tl1#_green_bytes
@@ -25653,61 +20956,6 @@ static inline uint64_t CAVM_NIXX_AF_TL1X_MD_DEBUG3(uint64_t a, uint64_t b)
 #define arguments_CAVM_NIXX_AF_TL1X_MD_DEBUG3(a,b) (a),(b),-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_tl1#_red
- *
- * INTERNAL: NIX Transmit Level 1 Red State Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL1()_YELLOW.
- */
-union cavm_nixx_af_tl1x_red
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl1x_red_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_18_63        : 46;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_63        : 46;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl1x_red_s cn; */
-};
-typedef union cavm_nixx_af_tl1x_red cavm_nixx_af_tl1x_red_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL1X_RED(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL1X_RED(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=27)))
-        return 0x840040000cb0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=27)))
-        return 0x840040000cb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=27)))
-        return 0x840040000cb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=27)))
-        return 0x840040000cb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=27)))
-        return 0x840040000cb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=27)))
-        return 0x840040000cb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=27)))
-        return 0x840040000cb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    __cavm_csr_fatal("NIXX_AF_TL1X_RED", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL1X_RED(a,b) cavm_nixx_af_tl1x_red_t
-#define bustype_CAVM_NIXX_AF_TL1X_RED(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL1X_RED(a,b) "NIXX_AF_TL1X_RED"
-#define device_bar_CAVM_NIXX_AF_TL1X_RED(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL1X_RED(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL1X_RED(a,b) (a),(b),-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_tl1#_red_bytes
  *
  * NIX AF Transmit Level 1 Red Sent Bytes Registers
@@ -26193,59 +21441,6 @@ static inline uint64_t CAVM_NIXX_AF_TL1X_TOPOLOGY(uint64_t a, uint64_t b)
 #define arguments_CAVM_NIXX_AF_TL1X_TOPOLOGY(a,b) (a),(b),-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_tl1#_yellow
- *
- * INTERNAL: NIX Transmit Level 1 Yellow State Debug Register
- */
-union cavm_nixx_af_tl1x_yellow
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl1x_yellow_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_18_63        : 46;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_63        : 46;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl1x_yellow_s cn; */
-};
-typedef union cavm_nixx_af_tl1x_yellow cavm_nixx_af_tl1x_yellow_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL1X_YELLOW(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL1X_YELLOW(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=27)))
-        return 0x840040000ca0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=27)))
-        return 0x840040000ca0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=27)))
-        return 0x840040000ca0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=27)))
-        return 0x840040000ca0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=27)))
-        return 0x840040000ca0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=27)))
-        return 0x840040000ca0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=27)))
-        return 0x840040000ca0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    __cavm_csr_fatal("NIXX_AF_TL1X_YELLOW", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL1X_YELLOW(a,b) cavm_nixx_af_tl1x_yellow_t
-#define bustype_CAVM_NIXX_AF_TL1X_YELLOW(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL1X_YELLOW(a,b) "NIXX_AF_TL1X_YELLOW"
-#define device_bar_CAVM_NIXX_AF_TL1X_YELLOW(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL1X_YELLOW(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL1X_YELLOW(a,b) (a),(b),-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_tl1#_yellow_bytes
  *
  * NIX AF Transmit Level 1 Yellow Sent Bytes Registers
@@ -26426,17 +21621,7 @@ union cavm_nixx_af_tl2x_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -26455,17 +21640,7 @@ union cavm_nixx_af_tl2x_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -26506,77 +21681,6 @@ static inline uint64_t CAVM_NIXX_AF_TL2X_CIR(uint64_t a, uint64_t b)
 #define device_bar_CAVM_NIXX_AF_TL2X_CIR(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_TL2X_CIR(a,b) (a)
 #define arguments_CAVM_NIXX_AF_TL2X_CIR(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl2#_green
- *
- * INTERNAL: NIX Transmit Level 2 Green State Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL1()_GREEN.
- */
-union cavm_nixx_af_tl2x_green
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl2x_green_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_41_63        : 23;
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Set when the RED_SEND/RED_DROP DWRR child list is not empty.
-                                                                 For internal use only. */
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 20-bit vector, two bits per each of the 10 supported priorities.
-                                                                 For the non-RR_PRIO priorities, the two bits encode whether the child is active
-                                                                 GREEN, active YELLOW, active RED_SEND/RED_DROP, or inactive. At RR_PRIO, one
-                                                                 bit is set if the GREEN DWRR child list is not empty, and the other is set if the
-                                                                 YELLOW DWRR child list is not empty. For internal use only. */
-        uint64_t reserved_18_19        : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_19        : 2;
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 20-bit vector, two bits per each of the 10 supported priorities.
-                                                                 For the non-RR_PRIO priorities, the two bits encode whether the child is active
-                                                                 GREEN, active YELLOW, active RED_SEND/RED_DROP, or inactive. At RR_PRIO, one
-                                                                 bit is set if the GREEN DWRR child list is not empty, and the other is set if the
-                                                                 YELLOW DWRR child list is not empty. For internal use only. */
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Set when the RED_SEND/RED_DROP DWRR child list is not empty.
-                                                                 For internal use only. */
-        uint64_t reserved_41_63        : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl2x_green_s cn; */
-};
-typedef union cavm_nixx_af_tl2x_green cavm_nixx_af_tl2x_green_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL2X_GREEN(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL2X_GREEN(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=255)))
-        return 0x840040000e90ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=255)))
-        return 0x840040000e90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=255)))
-        return 0x840040000e90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
-        return 0x840040000e90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=255)))
-        return 0x840040000e90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
-        return 0x840040000e90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
-        return 0x840040000e90ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    __cavm_csr_fatal("NIXX_AF_TL2X_GREEN", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL2X_GREEN(a,b) cavm_nixx_af_tl2x_green_t
-#define bustype_CAVM_NIXX_AF_TL2X_GREEN(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL2X_GREEN(a,b) "NIXX_AF_TL2X_GREEN"
-#define device_bar_CAVM_NIXX_AF_TL2X_GREEN(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL2X_GREEN(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL2X_GREEN(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_tl2#_md_debug0
@@ -27478,17 +22582,7 @@ union cavm_nixx_af_tl2x_pir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -27507,17 +22601,7 @@ union cavm_nixx_af_tl2x_pir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -27558,114 +22642,6 @@ static inline uint64_t CAVM_NIXX_AF_TL2X_PIR(uint64_t a, uint64_t b)
 #define device_bar_CAVM_NIXX_AF_TL2X_PIR(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_TL2X_PIR(a,b) (a)
 #define arguments_CAVM_NIXX_AF_TL2X_PIR(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl2#_pointers
- *
- * INTERNAL: NIX Transmit Level 2 Linked List Pointers Debug Register
- */
-union cavm_nixx_af_tl2x_pointers
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl2x_pointers_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_24_63        : 40;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-#else /* Word 0 - Little Endian */
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_24_63        : 40;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl2x_pointers_s cn; */
-};
-typedef union cavm_nixx_af_tl2x_pointers cavm_nixx_af_tl2x_pointers_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL2X_POINTERS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL2X_POINTERS(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=255)))
-        return 0x840040000e60ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=255)))
-        return 0x840040000e60ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=255)))
-        return 0x840040000e60ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
-        return 0x840040000e60ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=255)))
-        return 0x840040000e60ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
-        return 0x840040000e60ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
-        return 0x840040000e60ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    __cavm_csr_fatal("NIXX_AF_TL2X_POINTERS", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL2X_POINTERS(a,b) cavm_nixx_af_tl2x_pointers_t
-#define bustype_CAVM_NIXX_AF_TL2X_POINTERS(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL2X_POINTERS(a,b) "NIXX_AF_TL2X_POINTERS"
-#define device_bar_CAVM_NIXX_AF_TL2X_POINTERS(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL2X_POINTERS(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL2X_POINTERS(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl2#_red
- *
- * INTERNAL: NIX Transmit Level 2 Red State Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL1()_RED.
- */
-union cavm_nixx_af_tl2x_red
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl2x_red_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_18_63        : 46;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_63        : 46;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl2x_red_s cn; */
-};
-typedef union cavm_nixx_af_tl2x_red cavm_nixx_af_tl2x_red_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL2X_RED(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL2X_RED(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=255)))
-        return 0x840040000eb0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=255)))
-        return 0x840040000eb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=255)))
-        return 0x840040000eb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
-        return 0x840040000eb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=255)))
-        return 0x840040000eb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
-        return 0x840040000eb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
-        return 0x840040000eb0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    __cavm_csr_fatal("NIXX_AF_TL2X_RED", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL2X_RED(a,b) cavm_nixx_af_tl2x_red_t
-#define bustype_CAVM_NIXX_AF_TL2X_RED(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL2X_RED(a,b) "NIXX_AF_TL2X_RED"
-#define device_bar_CAVM_NIXX_AF_TL2X_RED(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL2X_RED(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL2X_RED(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_tl2#_sched_state
@@ -27921,10 +22897,7 @@ union cavm_nixx_af_tl2x_shape
                                                                    0x0 = Normal (selected for nearly all scheduling/shaping applications).
                                                                    0x1 = Green-only.
                                                                    0x2 = Yellow-only.
-                                                                   0x3 = Red-only.
-
-                                                                 Internal:
-                                                                 Deprecated feature. */
+                                                                   0x3 = Red-only. */
         uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
                                                                  and shaping calculations such that only the value of [ADJUST] is used. */
         uint64_t reserved_13_23        : 11;
@@ -28012,10 +22985,7 @@ union cavm_nixx_af_tl2x_shape
                                                                    0x0 = Normal (selected for nearly all scheduling/shaping applications).
                                                                    0x1 = Green-only.
                                                                    0x2 = Yellow-only.
-                                                                   0x3 = Red-only.
-
-                                                                 Internal:
-                                                                 Deprecated feature. */
+                                                                   0x3 = Red-only. */
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -28023,106 +22993,7 @@ union cavm_nixx_af_tl2x_shape
     /* struct cavm_nixx_af_tl2x_shape_s cnf95xxp1; */
     /* struct cavm_nixx_af_tl2x_shape_cn96xxp3 cnf95xxp2; */
     /* struct cavm_nixx_af_tl2x_shape_cn96xxp3 f95mm; */
-    struct cavm_nixx_af_tl2x_shape_f95o
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_27_63        : 37;
-        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
-                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
-                                                                   0x1 = Green-only.
-                                                                   0x2 = Yellow-only.
-                                                                   0x3 = Red-only. */
-        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
-                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
-        uint64_t reserved_13_23        : 11;
-        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) Disable yellow transitions. Disables green-to-yellow packet color marking
-                                                                 transitions when set. Not used by hardware when corresponding
-                                                                 NIX_AF_TL*()_CIR[ENABLE]/NIX_AF_MDQ()_CIR[ENABLE] is clear. */
-        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) Disable red transitions. Disables green-to-red and yellow-to-red packet
-                                                                 color marking transitions when set. Not used by hardware when
-                                                                 [RED_ALGO]/NIX_SEND_EXT_S[SHP_RA]=0x2/STALLi nor when corresponding
-                                                                 NIX_AF_TL*()_PIR[ENABLE]/NIX_AF_MDQ()_PIR[ENABLE] is clear. */
-        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) Shaper red state algorithm when not specified by the NIX SEND. Used by hardware
-                                                                 only when the shaper is in RED state. (A shaper is in RED state when
-                                                                 NIX_AF_TL*()_SHAPE_STATE[PIR_ACCUM] is negative.) When NIX_SEND_EXT_S[SHP_RA]!=STD (!=0) for a
-                                                                 packet, this [RED_ALGO] is not used, and NIX_SEND_EXT_S[SHP_RA] instead defines
-                                                                 the shaper red state algorithm used for the packet. The
-                                                                 encoding for the [RED_ALGO]/NIX_SEND_EXT_S[SHP_RA] that is used:
-                                                                 0x0 = STALL. See 0x2.
-                                                                 0x1 = SEND. Send packets while the shaper is in RED state. When the shaper is
-                                                                       in RED state, packets that traverse the shaper will be downgraded to
-                                                                       NIX_COLORRESULT_E::RED_SEND (if not already
-                                                                       NIX_COLORRESULT_E::RED_SEND or NIX_COLORRESULT_E::RED_DROP) unless
-                                                                       [RED_DISABLE] is set or NIX_SEND_EXT_S[SHP_DIS] for the packet is
-                                                                       set. See also NIX_REDALG_E::SEND.
-                                                                 0x2 = STALL. Stall packets while the shaper is in RED state until the shaper is
-                                                                       YELLOW or GREEN state. Packets that traverse the shaper are never
-                                                                       downgraded to the RED state in this mode.
-                                                                       See also NIX_REDALG_E::STALL.
-                                                                 0x3 = DISCARD. Continually discard packets while the shaper is in RED state.
-                                                                       When the shaper is in RED state, all packets that traverse the shaper
-                                                                       will be downgraded to NIX_COLORRESULT_E::RED_DROP (if not already
-                                                                       NIX_COLORRESULT_E::RED_DROP), unless [RED_DISABLE] is set or
-                                                                       NIX_SEND_EXT_S[SHP_DIS] for the packet is set.
-                                                                       NIX_COLORRESULT_E::RED_DROP packets traverse all subsequent
-                                                                       schedulers/shapers (all the way through L1), but do so as quickly as
-                                                                       possible without affecting any RR_COUNT, CIR_ACCUM, or PIR_ACCUM
-                                                                       state, and are then discarded by NIX. See also NIX_REDALG_E::DISCARD. */
-        uint64_t adjust                : 9;  /**< [  8:  0](R/W) Shaping and scheduling calculation adjustment. This nine-bit two's
-                                                                 complement signed value allows -255 .. 255 bytes to be added to the packet
-                                                                 length for rate limiting and scheduling calculations. Constraints:
-                                                                 * Must be positive when [LENGTH_DISABLE] is set
-                                                                 * May be negative when [LENGTH_DISABLE] is clear and (NIX_AF_SMQ()_CFG[MINLEN] + ADJUST) \> 0 */
-#else /* Word 0 - Little Endian */
-        uint64_t adjust                : 9;  /**< [  8:  0](R/W) Shaping and scheduling calculation adjustment. This nine-bit two's
-                                                                 complement signed value allows -255 .. 255 bytes to be added to the packet
-                                                                 length for rate limiting and scheduling calculations. Constraints:
-                                                                 * Must be positive when [LENGTH_DISABLE] is set
-                                                                 * May be negative when [LENGTH_DISABLE] is clear and (NIX_AF_SMQ()_CFG[MINLEN] + ADJUST) \> 0 */
-        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) Shaper red state algorithm when not specified by the NIX SEND. Used by hardware
-                                                                 only when the shaper is in RED state. (A shaper is in RED state when
-                                                                 NIX_AF_TL*()_SHAPE_STATE[PIR_ACCUM] is negative.) When NIX_SEND_EXT_S[SHP_RA]!=STD (!=0) for a
-                                                                 packet, this [RED_ALGO] is not used, and NIX_SEND_EXT_S[SHP_RA] instead defines
-                                                                 the shaper red state algorithm used for the packet. The
-                                                                 encoding for the [RED_ALGO]/NIX_SEND_EXT_S[SHP_RA] that is used:
-                                                                 0x0 = STALL. See 0x2.
-                                                                 0x1 = SEND. Send packets while the shaper is in RED state. When the shaper is
-                                                                       in RED state, packets that traverse the shaper will be downgraded to
-                                                                       NIX_COLORRESULT_E::RED_SEND (if not already
-                                                                       NIX_COLORRESULT_E::RED_SEND or NIX_COLORRESULT_E::RED_DROP) unless
-                                                                       [RED_DISABLE] is set or NIX_SEND_EXT_S[SHP_DIS] for the packet is
-                                                                       set. See also NIX_REDALG_E::SEND.
-                                                                 0x2 = STALL. Stall packets while the shaper is in RED state until the shaper is
-                                                                       YELLOW or GREEN state. Packets that traverse the shaper are never
-                                                                       downgraded to the RED state in this mode.
-                                                                       See also NIX_REDALG_E::STALL.
-                                                                 0x3 = DISCARD. Continually discard packets while the shaper is in RED state.
-                                                                       When the shaper is in RED state, all packets that traverse the shaper
-                                                                       will be downgraded to NIX_COLORRESULT_E::RED_DROP (if not already
-                                                                       NIX_COLORRESULT_E::RED_DROP), unless [RED_DISABLE] is set or
-                                                                       NIX_SEND_EXT_S[SHP_DIS] for the packet is set.
-                                                                       NIX_COLORRESULT_E::RED_DROP packets traverse all subsequent
-                                                                       schedulers/shapers (all the way through L1), but do so as quickly as
-                                                                       possible without affecting any RR_COUNT, CIR_ACCUM, or PIR_ACCUM
-                                                                       state, and are then discarded by NIX. See also NIX_REDALG_E::DISCARD. */
-        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) Disable red transitions. Disables green-to-red and yellow-to-red packet
-                                                                 color marking transitions when set. Not used by hardware when
-                                                                 [RED_ALGO]/NIX_SEND_EXT_S[SHP_RA]=0x2/STALLi nor when corresponding
-                                                                 NIX_AF_TL*()_PIR[ENABLE]/NIX_AF_MDQ()_PIR[ENABLE] is clear. */
-        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) Disable yellow transitions. Disables green-to-yellow packet color marking
-                                                                 transitions when set. Not used by hardware when corresponding
-                                                                 NIX_AF_TL*()_CIR[ENABLE]/NIX_AF_MDQ()_CIR[ENABLE] is clear. */
-        uint64_t reserved_13_23        : 11;
-        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
-                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
-        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
-                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
-                                                                   0x1 = Green-only.
-                                                                   0x2 = Yellow-only.
-                                                                   0x3 = Red-only. */
-        uint64_t reserved_27_63        : 37;
-#endif /* Word 0 - End */
-    } f95o;
+    /* struct cavm_nixx_af_tl2x_shape_cn96xxp3 f95o; */
     /* struct cavm_nixx_af_tl2x_shape_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_tl2x_shape cavm_nixx_af_tl2x_shape_t;
@@ -28332,61 +23203,6 @@ static inline uint64_t CAVM_NIXX_AF_TL2X_TOPOLOGY(uint64_t a, uint64_t b)
 #define arguments_CAVM_NIXX_AF_TL2X_TOPOLOGY(a,b) (a),(b),-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_tl2#_yellow
- *
- * INTERNAL: NIX Transmit Level 2 Yellow State Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL1()_YELLOW.
- */
-union cavm_nixx_af_tl2x_yellow
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl2x_yellow_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_18_63        : 46;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_63        : 46;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl2x_yellow_s cn; */
-};
-typedef union cavm_nixx_af_tl2x_yellow cavm_nixx_af_tl2x_yellow_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL2X_YELLOW(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL2X_YELLOW(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=255)))
-        return 0x840040000ea0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=255)))
-        return 0x840040000ea0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=255)))
-        return 0x840040000ea0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
-        return 0x840040000ea0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=255)))
-        return 0x840040000ea0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
-        return 0x840040000ea0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
-        return 0x840040000ea0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    __cavm_csr_fatal("NIXX_AF_TL2X_YELLOW", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL2X_YELLOW(a,b) cavm_nixx_af_tl2x_yellow_t
-#define bustype_CAVM_NIXX_AF_TL2X_YELLOW(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL2X_YELLOW(a,b) "NIXX_AF_TL2X_YELLOW"
-#define device_bar_CAVM_NIXX_AF_TL2X_YELLOW(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL2X_YELLOW(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL2X_YELLOW(a,b) (a),(b),-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_tl2_const
  *
  * NIX AF Transmit Level 2 Constants Register
@@ -28467,17 +23283,7 @@ union cavm_nixx_af_tl3x_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -28496,17 +23302,7 @@ union cavm_nixx_af_tl3x_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -28547,67 +23343,6 @@ static inline uint64_t CAVM_NIXX_AF_TL3X_CIR(uint64_t a, uint64_t b)
 #define device_bar_CAVM_NIXX_AF_TL3X_CIR(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_TL3X_CIR(a,b) (a)
 #define arguments_CAVM_NIXX_AF_TL3X_CIR(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl3#_green
- *
- * INTERNAL: NIX Transmit Level 3 Green State Debug Register
- */
-union cavm_nixx_af_tl3x_green
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl3x_green_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_41_63        : 23;
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Indicates that the round-robin input is mapped to RED. */
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 10-bit vector, ordered by priority, that indicate which inputs to this
-                                                                 scheduling queue are active. For internal use only. */
-        uint64_t reserved_19           : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19           : 1;
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 10-bit vector, ordered by priority, that indicate which inputs to this
-                                                                 scheduling queue are active. For internal use only. */
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Indicates that the round-robin input is mapped to RED. */
-        uint64_t reserved_41_63        : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl3x_green_s cn; */
-};
-typedef union cavm_nixx_af_tl3x_green cavm_nixx_af_tl3x_green_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL3X_GREEN(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL3X_GREEN(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=255)))
-        return 0x840040001090ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=255)))
-        return 0x840040001090ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=255)))
-        return 0x840040001090ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
-        return 0x840040001090ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=255)))
-        return 0x840040001090ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
-        return 0x840040001090ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
-        return 0x840040001090ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    __cavm_csr_fatal("NIXX_AF_TL3X_GREEN", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL3X_GREEN(a,b) cavm_nixx_af_tl3x_green_t
-#define bustype_CAVM_NIXX_AF_TL3X_GREEN(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL3X_GREEN(a,b) "NIXX_AF_TL3X_GREEN"
-#define device_bar_CAVM_NIXX_AF_TL3X_GREEN(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL3X_GREEN(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL3X_GREEN(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_tl3#_md_debug0
@@ -29497,17 +24232,7 @@ union cavm_nixx_af_tl3x_pir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -29526,17 +24251,7 @@ union cavm_nixx_af_tl3x_pir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -29577,116 +24292,6 @@ static inline uint64_t CAVM_NIXX_AF_TL3X_PIR(uint64_t a, uint64_t b)
 #define device_bar_CAVM_NIXX_AF_TL3X_PIR(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_TL3X_PIR(a,b) (a)
 #define arguments_CAVM_NIXX_AF_TL3X_PIR(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl3#_pointers
- *
- * INTERNAL: NIX Transmit Level 3 Linked List Pointers Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL2()_POINTERS.
- */
-union cavm_nixx_af_tl3x_pointers
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl3x_pointers_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_24_63        : 40;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-#else /* Word 0 - Little Endian */
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_24_63        : 40;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl3x_pointers_s cn; */
-};
-typedef union cavm_nixx_af_tl3x_pointers cavm_nixx_af_tl3x_pointers_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL3X_POINTERS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL3X_POINTERS(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=255)))
-        return 0x840040001060ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=255)))
-        return 0x840040001060ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=255)))
-        return 0x840040001060ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
-        return 0x840040001060ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=255)))
-        return 0x840040001060ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
-        return 0x840040001060ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
-        return 0x840040001060ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    __cavm_csr_fatal("NIXX_AF_TL3X_POINTERS", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL3X_POINTERS(a,b) cavm_nixx_af_tl3x_pointers_t
-#define bustype_CAVM_NIXX_AF_TL3X_POINTERS(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL3X_POINTERS(a,b) "NIXX_AF_TL3X_POINTERS"
-#define device_bar_CAVM_NIXX_AF_TL3X_POINTERS(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL3X_POINTERS(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL3X_POINTERS(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl3#_red
- *
- * INTERNAL: NIX Transmit Level 3 Red State Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL3()_YELLOW.
- */
-union cavm_nixx_af_tl3x_red
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl3x_red_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_19_63        : 45;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19_63        : 45;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl3x_red_s cn; */
-};
-typedef union cavm_nixx_af_tl3x_red cavm_nixx_af_tl3x_red_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL3X_RED(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL3X_RED(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=255)))
-        return 0x8400400010b0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=255)))
-        return 0x8400400010b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=255)))
-        return 0x8400400010b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
-        return 0x8400400010b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=255)))
-        return 0x8400400010b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
-        return 0x8400400010b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
-        return 0x8400400010b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    __cavm_csr_fatal("NIXX_AF_TL3X_RED", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL3X_RED(a,b) cavm_nixx_af_tl3x_red_t
-#define bustype_CAVM_NIXX_AF_TL3X_RED(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL3X_RED(a,b) "NIXX_AF_TL3X_RED"
-#define device_bar_CAVM_NIXX_AF_TL3X_RED(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL3X_RED(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL3X_RED(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_tl3#_sched_state
@@ -29862,52 +24467,7 @@ union cavm_nixx_af_tl3x_shape
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_tl3x_shape_s cn9; */
-    /* struct cavm_nixx_af_tl3x_shape_s cn96xxp1; */
-    struct cavm_nixx_af_tl3x_shape_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_27_63        : 37;
-        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
-                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
-                                                                   0x1 = Green-only.
-                                                                   0x2 = Yellow-only.
-                                                                   0x3 = Red-only.
-
-                                                                 Internal:
-                                                                 Deprecated feature. */
-        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
-                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
-        uint64_t reserved_13_23        : 11;
-        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
-        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
-        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
-        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
-#else /* Word 0 - Little Endian */
-        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
-        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
-        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
-        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
-        uint64_t reserved_13_23        : 11;
-        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
-                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
-        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
-                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
-                                                                   0x1 = Green-only.
-                                                                   0x2 = Yellow-only.
-                                                                   0x3 = Red-only.
-
-                                                                 Internal:
-                                                                 Deprecated feature. */
-        uint64_t reserved_27_63        : 37;
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_tl3x_shape_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_tl3x_shape_s cnf95xxp1; */
-    /* struct cavm_nixx_af_tl3x_shape_cn96xxp3 cnf95xxp2; */
-    /* struct cavm_nixx_af_tl3x_shape_cn96xxp3 f95mm; */
-    /* struct cavm_nixx_af_tl3x_shape_s f95o; */
-    /* struct cavm_nixx_af_tl3x_shape_cn96xxp3 loki; */
+    /* struct cavm_nixx_af_tl3x_shape_s cn; */
 };
 typedef union cavm_nixx_af_tl3x_shape cavm_nixx_af_tl3x_shape_t;
 
@@ -30117,59 +24677,6 @@ static inline uint64_t CAVM_NIXX_AF_TL3X_TOPOLOGY(uint64_t a, uint64_t b)
 #define arguments_CAVM_NIXX_AF_TL3X_TOPOLOGY(a,b) (a),(b),-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_tl3#_yellow
- *
- * INTERNAL: NIX Transmit Level 3 Yellow State Debug Register
- */
-union cavm_nixx_af_tl3x_yellow
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl3x_yellow_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_19_63        : 45;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19_63        : 45;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl3x_yellow_s cn; */
-};
-typedef union cavm_nixx_af_tl3x_yellow cavm_nixx_af_tl3x_yellow_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL3X_YELLOW(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL3X_YELLOW(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=255)))
-        return 0x8400400010a0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=255)))
-        return 0x8400400010a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=255)))
-        return 0x8400400010a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
-        return 0x8400400010a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=255)))
-        return 0x8400400010a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
-        return 0x8400400010a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
-        return 0x8400400010a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xff);
-    __cavm_csr_fatal("NIXX_AF_TL3X_YELLOW", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL3X_YELLOW(a,b) cavm_nixx_af_tl3x_yellow_t
-#define bustype_CAVM_NIXX_AF_TL3X_YELLOW(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL3X_YELLOW(a,b) "NIXX_AF_TL3X_YELLOW"
-#define device_bar_CAVM_NIXX_AF_TL3X_YELLOW(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL3X_YELLOW(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL3X_YELLOW(a,b) (a),(b),-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_tl3_const
  *
  * NIX AF Transmit Level 3 Constants Register
@@ -30327,27 +24834,9 @@ union cavm_nixx_af_tl3_tl2x_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t express               : 1;  /**< [  0:  0](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 Express.
-                                                                 0 = This level 3 or level 2 shaping queue transmits normal packets
-                                                                 only and uses NIX_AF_TX_LINK()_NORM_CREDIT registers for link credits.
-                                                                 1 = This level 3 or level 2 shaping queue transmits express packets
-                                                                 only and uses NIX_AF_TX_LINK()_EXPR_CREDIT registers for link credits. */
+        uint64_t express               : 1;  /**< [  0:  0](R/W) Reserved. Must be zero. */
 #else /* Word 0 - Little Endian */
-        uint64_t express               : 1;  /**< [  0:  0](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 Express.
-                                                                 0 = This level 3 or level 2 shaping queue transmits normal packets
-                                                                 only and uses NIX_AF_TX_LINK()_NORM_CREDIT registers for link credits.
-                                                                 1 = This level 3 or level 2 shaping queue transmits express packets
-                                                                 only and uses NIX_AF_TX_LINK()_EXPR_CREDIT registers for link credits. */
+        uint64_t express               : 1;  /**< [  0:  0](R/W) Reserved. Must be zero. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -30645,17 +25134,7 @@ union cavm_nixx_af_tl4x_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -30674,17 +25153,7 @@ union cavm_nixx_af_tl4x_cir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -30725,69 +25194,6 @@ static inline uint64_t CAVM_NIXX_AF_TL4X_CIR(uint64_t a, uint64_t b)
 #define device_bar_CAVM_NIXX_AF_TL4X_CIR(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_TL4X_CIR(a,b) (a)
 #define arguments_CAVM_NIXX_AF_TL4X_CIR(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl4#_green
- *
- * INTERNAL: NIX Transmit Level 4 Green State Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL3()_GREEN.
- */
-union cavm_nixx_af_tl4x_green
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl4x_green_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_41_63        : 23;
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Indicates that the round-robin input is mapped to RED. */
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 10-bit vector, ordered by priority, that indicate which inputs to this
-                                                                 scheduling queue are active. For internal use only. */
-        uint64_t reserved_19           : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19           : 1;
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 10-bit vector, ordered by priority, that indicate which inputs to this
-                                                                 scheduling queue are active. For internal use only. */
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Indicates that the round-robin input is mapped to RED. */
-        uint64_t reserved_41_63        : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl4x_green_s cn; */
-};
-typedef union cavm_nixx_af_tl4x_green cavm_nixx_af_tl4x_green_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL4X_GREEN(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL4X_GREEN(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=511)))
-        return 0x840040001290ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=511)))
-        return 0x840040001290ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=511)))
-        return 0x840040001290ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=511)))
-        return 0x840040001290ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=511)))
-        return 0x840040001290ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=511)))
-        return 0x840040001290ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=511)))
-        return 0x840040001290ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    __cavm_csr_fatal("NIXX_AF_TL4X_GREEN", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL4X_GREEN(a,b) cavm_nixx_af_tl4x_green_t
-#define bustype_CAVM_NIXX_AF_TL4X_GREEN(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL4X_GREEN(a,b) "NIXX_AF_TL4X_GREEN"
-#define device_bar_CAVM_NIXX_AF_TL4X_GREEN(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL4X_GREEN(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL4X_GREEN(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_tl4#_md_debug0
@@ -31677,17 +26083,7 @@ union cavm_nixx_af_tl4x_pir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t rate_exponent         : 4;  /**< [ 12:  9](R/W) Rate exponent. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t rate_mantissa         : 8;  /**< [  8:  1](R/W) Rate mantissa. See [RATE_DIVIDER_EXPONENT]. */
         uint64_t enable                : 1;  /**< [  0:  0](R/W) Enable. Enables CIR shaping. */
@@ -31706,17 +26102,7 @@ union cavm_nixx_af_tl4x_pir
                                                                  \<pre\>
                                                                  rate_div_exp = min(12, [RATE_DIVIDER_EXPONENT]);
                                                                  data_rate = 2 Mbps * (1.[RATE_MANTISSA] \<\< [RATE_EXPONENT]) / (1 \<\< rate_div_exp);
-                                                                 \</pre\>
-
-                                                                 Internal:
-                                                                 Hardware generates a rate divider tick every 400 rst__gbl_100mhz_sclk_edge
-                                                                 pulses, thus 100/400 = 0.25 MBytes/sec = 2 Mbps. This corresponds to a
-                                                                 minimum of 1200 SCLK cycles per tick with SCLK \>= 300 MHz. Each TL2/TL3/TL4/MDQ
-                                                                 samples its rate divider every 860 SCLK cycles and each TL1 samples every
-                                                                 240 SCLK cycles, so the sample rates are  fast enough to keep up with the
-                                                                 divider tick.
-
-                                                                 Max rate = 2 Mbps * ((1 + (255/256)) \<\< 15) = 130 Gbps. */
+                                                                 \</pre\> */
         uint64_t reserved_17_28        : 12;
         uint64_t burst_mantissa        : 8;  /**< [ 36: 29](R/W) Burst mantissa. The burst limit is 1.[BURST_MANTISSA] \<\< ([BURST_EXPONENT] + 1).
                                                                  With [BURST_EXPONENT]=0xF and [BURST_MANTISSA]=0xFF, the burst limit is the largest
@@ -31757,116 +26143,6 @@ static inline uint64_t CAVM_NIXX_AF_TL4X_PIR(uint64_t a, uint64_t b)
 #define device_bar_CAVM_NIXX_AF_TL4X_PIR(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NIXX_AF_TL4X_PIR(a,b) (a)
 #define arguments_CAVM_NIXX_AF_TL4X_PIR(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl4#_pointers
- *
- * INTERNAL: NIX Transmit Level 4 Linked List Pointers Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL2()_POINTERS.
- */
-union cavm_nixx_af_tl4x_pointers
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl4x_pointers_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_25_63        : 39;
-        uint64_t prev                  : 9;  /**< [ 24: 16](R/W/H) See NIX_AF_TL2()_POINTERS[PREV]. */
-        uint64_t reserved_9_15         : 7;
-        uint64_t next                  : 9;  /**< [  8:  0](R/W/H) See NIX_AF_TL2()_POINTERS[NEXT]. */
-#else /* Word 0 - Little Endian */
-        uint64_t next                  : 9;  /**< [  8:  0](R/W/H) See NIX_AF_TL2()_POINTERS[NEXT]. */
-        uint64_t reserved_9_15         : 7;
-        uint64_t prev                  : 9;  /**< [ 24: 16](R/W/H) See NIX_AF_TL2()_POINTERS[PREV]. */
-        uint64_t reserved_25_63        : 39;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl4x_pointers_s cn; */
-};
-typedef union cavm_nixx_af_tl4x_pointers cavm_nixx_af_tl4x_pointers_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL4X_POINTERS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL4X_POINTERS(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=511)))
-        return 0x840040001260ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=511)))
-        return 0x840040001260ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=511)))
-        return 0x840040001260ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=511)))
-        return 0x840040001260ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=511)))
-        return 0x840040001260ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=511)))
-        return 0x840040001260ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=511)))
-        return 0x840040001260ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    __cavm_csr_fatal("NIXX_AF_TL4X_POINTERS", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL4X_POINTERS(a,b) cavm_nixx_af_tl4x_pointers_t
-#define bustype_CAVM_NIXX_AF_TL4X_POINTERS(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL4X_POINTERS(a,b) "NIXX_AF_TL4X_POINTERS"
-#define device_bar_CAVM_NIXX_AF_TL4X_POINTERS(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL4X_POINTERS(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL4X_POINTERS(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) nix#_af_tl4#_red
- *
- * INTERNAL: NIX Transmit Level 4 Red State Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL3()_YELLOW.
- */
-union cavm_nixx_af_tl4x_red
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl4x_red_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_19_63        : 45;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19_63        : 45;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl4x_red_s cn; */
-};
-typedef union cavm_nixx_af_tl4x_red cavm_nixx_af_tl4x_red_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL4X_RED(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL4X_RED(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=511)))
-        return 0x8400400012b0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=511)))
-        return 0x8400400012b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=511)))
-        return 0x8400400012b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=511)))
-        return 0x8400400012b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=511)))
-        return 0x8400400012b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=511)))
-        return 0x8400400012b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=511)))
-        return 0x8400400012b0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    __cavm_csr_fatal("NIXX_AF_TL4X_RED", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL4X_RED(a,b) cavm_nixx_af_tl4x_red_t
-#define bustype_CAVM_NIXX_AF_TL4X_RED(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL4X_RED(a,b) "NIXX_AF_TL4X_RED"
-#define device_bar_CAVM_NIXX_AF_TL4X_RED(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL4X_RED(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL4X_RED(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) nix#_af_tl4#_sched_state
@@ -32165,52 +26441,7 @@ union cavm_nixx_af_tl4x_shape
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_tl4x_shape_s cn9; */
-    /* struct cavm_nixx_af_tl4x_shape_s cn96xxp1; */
-    struct cavm_nixx_af_tl4x_shape_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_27_63        : 37;
-        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
-                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
-                                                                   0x1 = Green-only.
-                                                                   0x2 = Yellow-only.
-                                                                   0x3 = Red-only.
-
-                                                                 Internal:
-                                                                 Deprecated feature. */
-        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
-                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
-        uint64_t reserved_13_23        : 11;
-        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
-        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
-        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
-        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
-#else /* Word 0 - Little Endian */
-        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
-        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
-        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
-        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
-        uint64_t reserved_13_23        : 11;
-        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
-                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
-        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
-                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
-                                                                   0x1 = Green-only.
-                                                                   0x2 = Yellow-only.
-                                                                   0x3 = Red-only.
-
-                                                                 Internal:
-                                                                 Deprecated feature. */
-        uint64_t reserved_27_63        : 37;
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_tl4x_shape_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_tl4x_shape_s cnf95xxp1; */
-    /* struct cavm_nixx_af_tl4x_shape_cn96xxp3 cnf95xxp2; */
-    /* struct cavm_nixx_af_tl4x_shape_cn96xxp3 f95mm; */
-    /* struct cavm_nixx_af_tl4x_shape_s f95o; */
-    /* struct cavm_nixx_af_tl4x_shape_cn96xxp3 loki; */
+    /* struct cavm_nixx_af_tl4x_shape_s cn; */
 };
 typedef union cavm_nixx_af_tl4x_shape cavm_nixx_af_tl4x_shape_t;
 
@@ -32420,61 +26651,6 @@ static inline uint64_t CAVM_NIXX_AF_TL4X_TOPOLOGY(uint64_t a, uint64_t b)
 #define arguments_CAVM_NIXX_AF_TL4X_TOPOLOGY(a,b) (a),(b),-1,-1
 
 /**
- * Register (RVU_PF_BAR0) nix#_af_tl4#_yellow
- *
- * INTERNAL: NIX Transmit Level 4 Yellow State Debug Register
- *
- * This register has the same bit fields as NIX_AF_TL3()_YELLOW
- */
-union cavm_nixx_af_tl4x_yellow
-{
-    uint64_t u;
-    struct cavm_nixx_af_tl4x_yellow_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_19_63        : 45;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19_63        : 45;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_af_tl4x_yellow_s cn; */
-};
-typedef union cavm_nixx_af_tl4x_yellow cavm_nixx_af_tl4x_yellow_t;
-
-static inline uint64_t CAVM_NIXX_AF_TL4X_YELLOW(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_AF_TL4X_YELLOW(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=511)))
-        return 0x8400400012a0ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=511)))
-        return 0x8400400012a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=511)))
-        return 0x8400400012a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=511)))
-        return 0x8400400012a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=511)))
-        return 0x8400400012a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=511)))
-        return 0x8400400012a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=511)))
-        return 0x8400400012a0ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1ff);
-    __cavm_csr_fatal("NIXX_AF_TL4X_YELLOW", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_AF_TL4X_YELLOW(a,b) cavm_nixx_af_tl4x_yellow_t
-#define bustype_CAVM_NIXX_AF_TL4X_YELLOW(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_NIXX_AF_TL4X_YELLOW(a,b) "NIXX_AF_TL4X_YELLOW"
-#define device_bar_CAVM_NIXX_AF_TL4X_YELLOW(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_NIXX_AF_TL4X_YELLOW(a,b) (a)
-#define arguments_CAVM_NIXX_AF_TL4X_YELLOW(a,b) (a),(b),-1,-1
-
-/**
  * Register (RVU_PF_BAR0) nix#_af_tl4_const
  *
  * NIX AF Transmit Level 4 Constants Register
@@ -32527,12 +26703,7 @@ static inline uint64_t CAVM_NIXX_AF_TL4_CONST(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) nix#_af_tx_link#_expr_credit
  *
- * INTERNAL: NIX AF Transmit Link Express Credit Registers
- *
- * Internal:
- * 802.3br frame preemption/express path is defeatured.
- * Old definition:
- *
+ * NIX AF Transmit Link Express Credit Registers
  * These registers track credits per link for express packets that may potentially
  * preempt normal packets. Link index enumerated by NIX_LINK_E.
  */
@@ -32563,15 +26734,7 @@ union cavm_nixx_af_tx_linkx_expr_credit
 
                                                                  The recommended configuration for LBK is [CC_ENABLE] = 1 and
                                                                  [CC_UNIT_CNT] = (16 * Max_LBK_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate.
-
-                                                                 Internal:
-                                                                 LBK value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 e.g. for 100 Gbps:
-
-                                                                 _ Minimum LBK in-flight data = 100*2000/128b = 1563 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = initial_value + MTU. */
+                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) Link-credit packet count. This value, plus 1, represents the maximum outstanding
                                                                  packet count for this link. Note that this 10-bit field represents a two's
                                                                  complement signed value that decrements towards zero as credits are used.
@@ -32609,57 +26772,11 @@ union cavm_nixx_af_tx_linkx_expr_credit
 
                                                                  The recommended configuration for LBK is [CC_ENABLE] = 1 and
                                                                  [CC_UNIT_CNT] = (16 * Max_LBK_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate.
-
-                                                                 Internal:
-                                                                 LBK value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 e.g. for 100 Gbps:
-
-                                                                 _ Minimum LBK in-flight data = 100*2000/128b = 1563 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = initial_value + MTU. */
+                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_tx_linkx_expr_credit_s cn9; */
-    /* struct cavm_nixx_af_tx_linkx_expr_credit_s cn96xxp1; */
-    struct cavm_nixx_af_tx_linkx_expr_credit_cn96xxp3
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](RAZ) Reserved. */
-        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](RAZ) Reserved. */
-        uint64_t cc_enable             : 1;  /**< [  1:  1](RAZ) Reserved. */
-        uint64_t reserved_0            : 1;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0            : 1;
-        uint64_t cc_enable             : 1;  /**< [  1:  1](RAZ) Reserved. */
-        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](RAZ) Reserved. */
-        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](RAZ) Reserved. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_tx_linkx_expr_credit_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_tx_linkx_expr_credit_s cnf95xxp1; */
-    struct cavm_nixx_af_tx_linkx_expr_credit_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) see NIX_AF_TX_LINK(0..12)_NORM_CREDIT[CC_UNIT_CNT] */
-        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) see NIX_AF_TX_LINK(0..12)_NORM_CREDIT[CC_PACKET_CNT] */
-        uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) see NIX_AF_TX_LINK(0..12)_NORM_CREDIT[CC_ENABLE] */
-        uint64_t reserved_0            : 1;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0            : 1;
-        uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) see NIX_AF_TX_LINK(0..12)_NORM_CREDIT[CC_ENABLE] */
-        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) see NIX_AF_TX_LINK(0..12)_NORM_CREDIT[CC_PACKET_CNT] */
-        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) see NIX_AF_TX_LINK(0..12)_NORM_CREDIT[CC_UNIT_CNT] */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_nixx_af_tx_linkx_expr_credit_cnf95xxp2 f95mm; */
-    /* struct cavm_nixx_af_tx_linkx_expr_credit_cn96xxp3 f95o; */
-    /* struct cavm_nixx_af_tx_linkx_expr_credit_cn96xxp3 loki; */
+    /* struct cavm_nixx_af_tx_linkx_expr_credit_s cn; */
 };
 typedef union cavm_nixx_af_tx_linkx_expr_credit cavm_nixx_af_tx_linkx_expr_credit_t;
 
@@ -32668,17 +26785,7 @@ static inline uint64_t CAVM_NIXX_AF_TX_LINKX_EXPR_CREDIT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=12)))
         return 0x840040000a10ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=12)))
-        return 0x840040000a10ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=21)))
-        return 0x840040000a10ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=12)))
-        return 0x840040000a10ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=12)))
-        return 0x840040000a10ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=12)))
-        return 0x840040000a10ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=12)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=1) && (b<=12)))
         return 0x840040000a10ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
     __cavm_csr_fatal("NIXX_AF_TX_LINKX_EXPR_CREDIT", 2, a, b, 0, 0, 0, 0);
 }
@@ -32774,15 +26881,7 @@ union cavm_nixx_af_tx_linkx_norm_credit
 
                                                                  The recommended configuration for LBK is [CC_ENABLE] = 1 and
                                                                  [CC_UNIT_CNT] = (16 * Max_LBK_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate.
-
-                                                                 Internal:
-                                                                 LBK value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 e.g. for 100 Gbps:
-
-                                                                 _ Minimum LBK in-flight data = 100*2000/128b = 1563 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = initial_value + MTU. */
+                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) Link-credit packet count. This value, plus 1, represents the maximum outstanding
                                                                  packet count for this link. Note that this 10-bit field represents a two's
                                                                  complement signed value that decrements towards zero as credits are used.
@@ -32820,15 +26919,7 @@ union cavm_nixx_af_tx_linkx_norm_credit
 
                                                                  The recommended configuration for LBK is [CC_ENABLE] = 1 and
                                                                  [CC_UNIT_CNT] = (16 * Max_LBK_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate.
-
-                                                                 Internal:
-                                                                 LBK value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 e.g. for 100 Gbps:
-
-                                                                 _ Minimum LBK in-flight data = 100*2000/128b = 1563 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = initial_value + MTU. */
+                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } s;
@@ -32858,15 +26949,7 @@ union cavm_nixx_af_tx_linkx_norm_credit
 
                                                                  The recommended configuration for LBK is [CC_ENABLE] = 1 and
                                                                  [CC_UNIT_CNT] = (16 * Max_LBK_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate.
-
-                                                                 Internal:
-                                                                 LBK value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 e.g. for 100 Gbps:
-
-                                                                 _ Minimum LBK in-flight data = 100*2000/128b = 1563 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = initial_value + MTU. */
+                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate. */
         uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) Link-credit packet count. This value, plus 1, represents the maximum outstanding
                                                                  packet count for this link. Note that this 10-bit field represents a two's
                                                                  complement signed value that decrements towards zero as credits are used.
@@ -32906,15 +26989,7 @@ union cavm_nixx_af_tx_linkx_norm_credit
 
                                                                  The recommended configuration for LBK is [CC_ENABLE] = 1 and
                                                                  [CC_UNIT_CNT] = (16 * Max_LBK_Data_Rate),
-                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate.
-
-                                                                 Internal:
-                                                                 LBK value is sized for specified data rate with 2000 ns round trip latency,
-                                                                 e.g. for 100 Gbps:
-
-                                                                 _ Minimum LBK in-flight data = 100*2000/128b = 1563 credit units.
-
-                                                                 Note: maximum LBK in-fligh data = initial_value + MTU. */
+                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -32957,14 +27032,8 @@ static inline uint64_t CAVM_NIXX_AF_TX_LINKX_NORM_CREDIT(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_tx_link#_sw_xoff
  *
- * INTERNAL: NIX AF Transmit Link Software Controlled XOFF Registers
- *
+ * NIX AF Transmit Link Software Controlled XOFF Registers
  * Link index enumerated by NIX_LINK_E.
- * Internal:
- * Defeatured registers. Software should instead use NIX_AF_TL3()_SW_XOFF
- * registers when NIX_AF_PSE_CHANNEL_LEVEL[BP_LEVEL] is set and
- * NIX_AF_TL2()_SW_XOFF registers when NIX_AF_PSE_CHANNEL_LEVEL[BP_LEVEL] is
- * clear.
  */
 union cavm_nixx_af_tx_linkx_sw_xoff
 {
@@ -32998,17 +27067,7 @@ static inline uint64_t CAVM_NIXX_AF_TX_LINKX_SW_XOFF(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=12)))
         return 0x840040000a20ll + 0x10000000ll * ((a) & 0x0) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=12)))
-        return 0x840040000a20ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=21)))
-        return 0x840040000a20ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=12)))
-        return 0x840040000a20ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=12)))
-        return 0x840040000a20ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=12)))
-        return 0x840040000a20ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=12)))
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=1) && (b<=12)))
         return 0x840040000a20ll + 0x10000000ll * ((a) & 0x1) + 0x10000ll * ((b) & 0xf);
     __cavm_csr_fatal("NIXX_AF_TX_LINKX_SW_XOFF", 2, a, b, 0, 0, 0, 0);
 }
@@ -33327,15 +27386,7 @@ union cavm_nixx_af_tx_tstmp_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_24_63        : 40;
-        uint64_t express               : 16; /**< [ 23:  8](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 One bit per CGX LMAC, enumerated by NIX_LINK_E::CGX()_LMAC(). When a bit is
-                                                                 set, only express packets to the LMAC are allowed to request PTP
-                                                                 timestamps. When a bit is clear, only normal packets to the LMAC are
-                                                                 allowed to request PTP timestamps. See NIX_SENDMEMALG_E::SETTSTMP. */
+        uint64_t express               : 16; /**< [ 23:  8](R/W) Reserved. Must be zero. */
         uint64_t reserved_4_7          : 4;
         uint64_t tstmp_wd_period       : 4;  /**< [  3:  0](R/W) Watchdog timeout count for send timestamp capture. See
                                                                  NIX_SEND_EXT_S[TSTMP] and NIX_SENDMEMALG_E::SETTSTMP.
@@ -33351,15 +27402,7 @@ union cavm_nixx_af_tx_tstmp_cfg
                                                                  is 128 cycles of the 100 MHz reference clock: 0 = 4 ticks, 1 = 8 ticks, ...
                                                                  15 = 131072 ticks. */
         uint64_t reserved_4_7          : 4;
-        uint64_t express               : 16; /**< [ 23:  8](R/W) Reserved. Must be zero.
-                                                                 Internal:
-                                                                 802.3br frame preemption/express path is defeatured.
-                                                                 Old definition:
-
-                                                                 One bit per CGX LMAC, enumerated by NIX_LINK_E::CGX()_LMAC(). When a bit is
-                                                                 set, only express packets to the LMAC are allowed to request PTP
-                                                                 timestamps. When a bit is clear, only normal packets to the LMAC are
-                                                                 allowed to request PTP timestamps. See NIX_SENDMEMALG_E::SETTSTMP. */
+        uint64_t express               : 16; /**< [ 23:  8](R/W) Reserved. Must be zero. */
         uint64_t reserved_24_63        : 40;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -34242,9 +28285,7 @@ union cavm_nixx_lf_err_int
         uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1C/H) CQ disabled. NIX_CQ_CTX_S[ENA] was clear for the CQ of a send/receive CQE
                                                                  write or NIX_LF_CQ_OP_* access. */
         uint64_t reserved_21_23        : 3;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved. */
         uint64_t reserved_15_19        : 5;
         uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1C/H) RSSE Table entry was disabled or the rsse_offset was larger than the programmed size. */
         uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1C/H) Memory fault on receive packet WQE write to LLC/DRAM. */
@@ -34265,9 +28306,7 @@ union cavm_nixx_lf_err_int
                                                                  greater than NIX_AF_LF()_SQS_CFG[MAX_QUEUESM1]. */
         uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to a disabled SQ. NIX_SQ_CTX_S[ENA]
                                                                  was clear for the selected SQ. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved. */
         uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1C/H) Memory fault on NIX_RSSE_S read. */
         uint64_t reserved_4            : 1;
         uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1C/H) Memory fault on NIX_CQ_CTX_S read or write. */
@@ -34281,9 +28320,7 @@ union cavm_nixx_lf_err_int
         uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1C/H) Memory fault on NIX_CQ_CTX_S read or write. */
         uint64_t reserved_4            : 1;
         uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1C/H) Memory fault on NIX_RSSE_S read. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved. */
         uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to a disabled SQ. NIX_SQ_CTX_S[ENA]
                                                                  was clear for the selected SQ. */
         uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to out-of-range SQ. The SQ index was
@@ -34304,9 +28341,7 @@ union cavm_nixx_lf_err_int
         uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1C/H) Memory fault on receive packet WQE write to LLC/DRAM. */
         uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1C/H) RSSE Table entry was disabled or the rsse_offset was larger than the programmed size. */
         uint64_t reserved_15_19        : 5;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved. */
         uint64_t reserved_21_23        : 3;
         uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1C/H) CQ disabled. NIX_CQ_CTX_S[ENA] was clear for the CQ of a send/receive CQE
                                                                  write or NIX_LF_CQ_OP_* access. */
@@ -34332,9 +28367,7 @@ union cavm_nixx_lf_err_int
         uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1C/H) CQ disabled. NIX_CQ_CTX_S[ENA] was clear for the CQ of a send/receive CQE
                                                                  write or NIX_LF_CQ_OP_* access. */
         uint64_t reserved_21_23        : 3;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved in CNXXXX.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved in CNXXXX. */
         uint64_t reserved_15_19        : 5;
         uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1C/H) RSSE Table entry was disabled or the rsse_offset was larger than the programmed size. */
         uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1C/H) Memory fault on receive packet WQE write to LLC/DRAM. */
@@ -34355,9 +28388,7 @@ union cavm_nixx_lf_err_int
                                                                  greater than NIX_AF_LF()_SQS_CFG[MAX_QUEUESM1]. */
         uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to a disabled SQ. NIX_SQ_CTX_S[ENA]
                                                                  was clear for the selected SQ. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX. */
         uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1C/H) Memory fault on NIX_RSSE_S read. */
         uint64_t reserved_4            : 1;
         uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1C/H) Memory fault on NIX_CQ_CTX_S read or write. */
@@ -34371,9 +28402,7 @@ union cavm_nixx_lf_err_int
         uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1C/H) Memory fault on NIX_CQ_CTX_S read or write. */
         uint64_t reserved_4            : 1;
         uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1C/H) Memory fault on NIX_RSSE_S read. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX. */
         uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to a disabled SQ. NIX_SQ_CTX_S[ENA]
                                                                  was clear for the selected SQ. */
         uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to out-of-range SQ. The SQ index was
@@ -34394,9 +28423,7 @@ union cavm_nixx_lf_err_int
         uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1C/H) Memory fault on receive packet WQE write to LLC/DRAM. */
         uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1C/H) RSSE Table entry was disabled or the rsse_offset was larger than the programmed size. */
         uint64_t reserved_15_19        : 5;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved in CNXXXX.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved in CNXXXX. */
         uint64_t reserved_21_23        : 3;
         uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1C/H) CQ disabled. NIX_CQ_CTX_S[ENA] was clear for the CQ of a send/receive CQE
                                                                  write or NIX_LF_CQ_OP_* access. */
@@ -34505,74 +28532,7 @@ union cavm_nixx_lf_err_int_ena_w1c
         uint64_t reserved_30_63        : 34;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_lf_err_int_ena_w1c_s cn9; */
-    /* struct cavm_nixx_lf_err_int_ena_w1c_s cn96xx; */
-    /* struct cavm_nixx_lf_err_int_ena_w1c_s cn98xx; */
-    struct cavm_nixx_lf_err_int_ena_w1c_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_30_63        : 34;
-        uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[CINT_FAULT]. */
-        uint64_t qint_fault            : 1;  /**< [ 28: 28](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[QINT_FAULT]. */
-        uint64_t reserved_26_27        : 2;
-        uint64_t cq_oor                : 1;  /**< [ 25: 25](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[CQ_OOR]. */
-        uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[CQ_DISABLED]. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[DYNO_ERR].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t reserved_15_19        : 5;
-        uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RSS_ERR]. */
-        uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RX_WQE_FAULT]. */
-        uint64_t rq_oor                : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RQ_OOR]. */
-        uint64_t rq_disabled           : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RQ_DISABLED]. */
-        uint64_t send_sg_fault         : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SEND_SG_FAULT]. */
-        uint64_t send_jump_fault       : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SEND_JUMP_FAULT]. */
-        uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SQ_OOR]. */
-        uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SQ_DISABLED]. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[IPSEC_DYNO_FAULT].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RSSE_FAULT]. */
-        uint64_t reserved_4            : 1;
-        uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[CQ_CTX_FAULT]. */
-        uint64_t rq_ctx_fault          : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RQ_CTX_FAULT]. */
-        uint64_t sq_ctx_fault          : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SQ_CTX_FAULT]. */
-        uint64_t sqb_fault             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SQB_FAULT]. */
-#else /* Word 0 - Little Endian */
-        uint64_t sqb_fault             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SQB_FAULT]. */
-        uint64_t sq_ctx_fault          : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SQ_CTX_FAULT]. */
-        uint64_t rq_ctx_fault          : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RQ_CTX_FAULT]. */
-        uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[CQ_CTX_FAULT]. */
-        uint64_t reserved_4            : 1;
-        uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RSSE_FAULT]. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[IPSEC_DYNO_FAULT].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SQ_DISABLED]. */
-        uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SQ_OOR]. */
-        uint64_t send_jump_fault       : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SEND_JUMP_FAULT]. */
-        uint64_t send_sg_fault         : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[SEND_SG_FAULT]. */
-        uint64_t rq_disabled           : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RQ_DISABLED]. */
-        uint64_t rq_oor                : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RQ_OOR]. */
-        uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RX_WQE_FAULT]. */
-        uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[RSS_ERR]. */
-        uint64_t reserved_15_19        : 5;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[DYNO_ERR].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[CQ_DISABLED]. */
-        uint64_t cq_oor                : 1;  /**< [ 25: 25](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[CQ_OOR]. */
-        uint64_t reserved_26_27        : 2;
-        uint64_t qint_fault            : 1;  /**< [ 28: 28](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[QINT_FAULT]. */
-        uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1C/H) Reads or clears enable for NIX_LF_ERR_INT[CINT_FAULT]. */
-        uint64_t reserved_30_63        : 34;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_err_int_ena_w1c_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_err_int_ena_w1c_cnf95xx f95o; */
-    /* struct cavm_nixx_lf_err_int_ena_w1c_cnf95xx loki; */
+    /* struct cavm_nixx_lf_err_int_ena_w1c_s cn; */
 };
 typedef union cavm_nixx_lf_err_int_ena_w1c cavm_nixx_lf_err_int_ena_w1c_t;
 
@@ -34666,74 +28626,7 @@ union cavm_nixx_lf_err_int_ena_w1s
         uint64_t reserved_30_63        : 34;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_lf_err_int_ena_w1s_s cn9; */
-    /* struct cavm_nixx_lf_err_int_ena_w1s_s cn96xx; */
-    /* struct cavm_nixx_lf_err_int_ena_w1s_s cn98xx; */
-    struct cavm_nixx_lf_err_int_ena_w1s_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_30_63        : 34;
-        uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[CINT_FAULT]. */
-        uint64_t qint_fault            : 1;  /**< [ 28: 28](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[QINT_FAULT]. */
-        uint64_t reserved_26_27        : 2;
-        uint64_t cq_oor                : 1;  /**< [ 25: 25](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[CQ_OOR]. */
-        uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[CQ_DISABLED]. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[DYNO_ERR].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t reserved_15_19        : 5;
-        uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RSS_ERR]. */
-        uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RX_WQE_FAULT]. */
-        uint64_t rq_oor                : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RQ_OOR]. */
-        uint64_t rq_disabled           : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RQ_DISABLED]. */
-        uint64_t send_sg_fault         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SEND_SG_FAULT]. */
-        uint64_t send_jump_fault       : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SEND_JUMP_FAULT]. */
-        uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SQ_OOR]. */
-        uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SQ_DISABLED]. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[IPSEC_DYNO_FAULT].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RSSE_FAULT]. */
-        uint64_t reserved_4            : 1;
-        uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[CQ_CTX_FAULT]. */
-        uint64_t rq_ctx_fault          : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RQ_CTX_FAULT]. */
-        uint64_t sq_ctx_fault          : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SQ_CTX_FAULT]. */
-        uint64_t sqb_fault             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SQB_FAULT]. */
-#else /* Word 0 - Little Endian */
-        uint64_t sqb_fault             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SQB_FAULT]. */
-        uint64_t sq_ctx_fault          : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SQ_CTX_FAULT]. */
-        uint64_t rq_ctx_fault          : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RQ_CTX_FAULT]. */
-        uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[CQ_CTX_FAULT]. */
-        uint64_t reserved_4            : 1;
-        uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RSSE_FAULT]. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[IPSEC_DYNO_FAULT].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SQ_DISABLED]. */
-        uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SQ_OOR]. */
-        uint64_t send_jump_fault       : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SEND_JUMP_FAULT]. */
-        uint64_t send_sg_fault         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[SEND_SG_FAULT]. */
-        uint64_t rq_disabled           : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RQ_DISABLED]. */
-        uint64_t rq_oor                : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RQ_OOR]. */
-        uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RX_WQE_FAULT]. */
-        uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[RSS_ERR]. */
-        uint64_t reserved_15_19        : 5;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[DYNO_ERR].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[CQ_DISABLED]. */
-        uint64_t cq_oor                : 1;  /**< [ 25: 25](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[CQ_OOR]. */
-        uint64_t reserved_26_27        : 2;
-        uint64_t qint_fault            : 1;  /**< [ 28: 28](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[QINT_FAULT]. */
-        uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1S/H) Reads or sets enable for NIX_LF_ERR_INT[CINT_FAULT]. */
-        uint64_t reserved_30_63        : 34;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_err_int_ena_w1s_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_err_int_ena_w1s_cnf95xx f95o; */
-    /* struct cavm_nixx_lf_err_int_ena_w1s_cnf95xx loki; */
+    /* struct cavm_nixx_lf_err_int_ena_w1s_s cn; */
 };
 typedef union cavm_nixx_lf_err_int_ena_w1s cavm_nixx_lf_err_int_ena_w1s_t;
 
@@ -34827,74 +28720,7 @@ union cavm_nixx_lf_err_int_w1s
         uint64_t reserved_30_63        : 34;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_lf_err_int_w1s_s cn9; */
-    /* struct cavm_nixx_lf_err_int_w1s_s cn96xx; */
-    /* struct cavm_nixx_lf_err_int_w1s_s cn98xx; */
-    struct cavm_nixx_lf_err_int_w1s_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_30_63        : 34;
-        uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1S/H) Reads or sets NIX_LF_ERR_INT[CINT_FAULT]. */
-        uint64_t qint_fault            : 1;  /**< [ 28: 28](R/W1S/H) Reads or sets NIX_LF_ERR_INT[QINT_FAULT]. */
-        uint64_t reserved_26_27        : 2;
-        uint64_t cq_oor                : 1;  /**< [ 25: 25](R/W1S/H) Reads or sets NIX_LF_ERR_INT[CQ_OOR]. */
-        uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1S/H) Reads or sets NIX_LF_ERR_INT[CQ_DISABLED]. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets NIX_LF_ERR_INT[DYNO_ERR].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t reserved_15_19        : 5;
-        uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RSS_ERR]. */
-        uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RX_WQE_FAULT]. */
-        uint64_t rq_oor                : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RQ_OOR]. */
-        uint64_t rq_disabled           : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RQ_DISABLED]. */
-        uint64_t send_sg_fault         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SEND_SG_FAULT]. */
-        uint64_t send_jump_fault       : 1;  /**< [  9:  9](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SEND_JUMP_FAULT]. */
-        uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SQ_OOR]. */
-        uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SQ_DISABLED]. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1S/H) Reads or sets NIX_LF_ERR_INT[IPSEC_DYNO_FAULT].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RSSE_FAULT]. */
-        uint64_t reserved_4            : 1;
-        uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1S/H) Reads or sets NIX_LF_ERR_INT[CQ_CTX_FAULT]. */
-        uint64_t rq_ctx_fault          : 1;  /**< [  2:  2](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RQ_CTX_FAULT]. */
-        uint64_t sq_ctx_fault          : 1;  /**< [  1:  1](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SQ_CTX_FAULT]. */
-        uint64_t sqb_fault             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SQB_FAULT]. */
-#else /* Word 0 - Little Endian */
-        uint64_t sqb_fault             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SQB_FAULT]. */
-        uint64_t sq_ctx_fault          : 1;  /**< [  1:  1](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SQ_CTX_FAULT]. */
-        uint64_t rq_ctx_fault          : 1;  /**< [  2:  2](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RQ_CTX_FAULT]. */
-        uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1S/H) Reads or sets NIX_LF_ERR_INT[CQ_CTX_FAULT]. */
-        uint64_t reserved_4            : 1;
-        uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RSSE_FAULT]. */
-        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1S/H) Reads or sets NIX_LF_ERR_INT[IPSEC_DYNO_FAULT].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SQ_DISABLED]. */
-        uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SQ_OOR]. */
-        uint64_t send_jump_fault       : 1;  /**< [  9:  9](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SEND_JUMP_FAULT]. */
-        uint64_t send_sg_fault         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets NIX_LF_ERR_INT[SEND_SG_FAULT]. */
-        uint64_t rq_disabled           : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RQ_DISABLED]. */
-        uint64_t rq_oor                : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RQ_OOR]. */
-        uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RX_WQE_FAULT]. */
-        uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets NIX_LF_ERR_INT[RSS_ERR]. */
-        uint64_t reserved_15_19        : 5;
-        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1S/H) Reads or sets NIX_LF_ERR_INT[DYNO_ERR].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1S/H) Reads or sets NIX_LF_ERR_INT[CQ_DISABLED]. */
-        uint64_t cq_oor                : 1;  /**< [ 25: 25](R/W1S/H) Reads or sets NIX_LF_ERR_INT[CQ_OOR]. */
-        uint64_t reserved_26_27        : 2;
-        uint64_t qint_fault            : 1;  /**< [ 28: 28](R/W1S/H) Reads or sets NIX_LF_ERR_INT[QINT_FAULT]. */
-        uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1S/H) Reads or sets NIX_LF_ERR_INT[CINT_FAULT]. */
-        uint64_t reserved_30_63        : 34;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_err_int_w1s_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_err_int_w1s_cnf95xx f95o; */
-    /* struct cavm_nixx_lf_err_int_w1s_cnf95xx loki; */
+    /* struct cavm_nixx_lf_err_int_w1s_s cn; */
 };
 typedef union cavm_nixx_lf_err_int_w1s cavm_nixx_lf_err_int_w1s_t;
 
@@ -35229,10 +29055,12 @@ static inline uint64_t CAVM_NIXX_LF_MNQ_ERR_DBG(uint64_t a)
 /**
  * Register (RVU_PFVF_BAR2) nix#_lf_op_ipsec_dyno_cnt
  *
- * INTERNAL: NIX LF IPSEC Dynamic Ordering Counter Operation Register
+ * NIX LF IPSEC Dynamic Ordering Counter Operation Register
+ * A 64-bit atomic load-and-add to this register reads an IPSEC dynamic ordering
+ * counter (NIX_IPSEC_DYNO_S). A write decrements NIX_IPSEC_DYNO_S[COUNT]. A read
+ * is RAZ. See NIX_AF_LF()_RX_IPSEC_DYNO_CFG[DYNO_ENA].
  *
- * Internal:
- * Not used; no IPSEC fast-path. All accesses are RAZ/WI.
+ * RSL accesses to this register are RAZ/WI.
  */
 union cavm_nixx_lf_op_ipsec_dyno_cnt
 {
@@ -35311,28 +29139,7 @@ union cavm_nixx_lf_op_ipsec_dyno_cnt
                                                                  NIX_LF_RAS[IPSEC_DYNO_POISON]. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_lf_op_ipsec_dyno_cnt_s cn9; */
-    /* struct cavm_nixx_lf_op_ipsec_dyno_cnt_s cn96xx; */
-    /* struct cavm_nixx_lf_op_ipsec_dyno_cnt_s cn98xx; */
-    struct cavm_nixx_lf_op_ipsec_dyno_cnt_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t op_err                : 1;  /**< [ 63: 63](RO/H) Reserved. */
-        uint64_t dyno_sel              : 15; /**< [ 62: 48](WO) Reserved. */
-        uint64_t storeop               : 1;  /**< [ 47: 47](WO) Reserved. */
-        uint64_t reserved_32_46        : 15;
-        uint64_t count                 : 32; /**< [ 31:  0](R/W/H) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t count                 : 32; /**< [ 31:  0](R/W/H) Reserved. */
-        uint64_t reserved_32_46        : 15;
-        uint64_t storeop               : 1;  /**< [ 47: 47](WO) Reserved. */
-        uint64_t dyno_sel              : 15; /**< [ 62: 48](WO) Reserved. */
-        uint64_t op_err                : 1;  /**< [ 63: 63](RO/H) Reserved. */
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_op_ipsec_dyno_cnt_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_op_ipsec_dyno_cnt_cnf95xx f95o; */
-    /* struct cavm_nixx_lf_op_ipsec_dyno_cnt_cnf95xx loki; */
+    /* struct cavm_nixx_lf_op_ipsec_dyno_cnt_s cn; */
 };
 typedef union cavm_nixx_lf_op_ipsec_dyno_cnt cavm_nixx_lf_op_ipsec_dyno_cnt_t;
 
@@ -35344,14 +29151,6 @@ static inline uint64_t CAVM_NIXX_LF_OP_IPSEC_DYNO_CNT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=1))
         return 0x840200400980ll + 0x100000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840200400980ll + 0x100000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x840200400980ll + 0x100000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x840200400980ll + 0x100000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
-        return 0x840200400980ll + 0x100000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x840200400980ll + 0x100000ll * ((a) & 0x1);
     __cavm_csr_fatal("NIXX_LF_OP_IPSEC_DYNO_CNT", 1, a, 0, 0, 0, 0, 0);
 }
@@ -35644,55 +29443,6 @@ static inline uint64_t CAVM_NIXX_LF_QINTX_INT(uint64_t a, uint64_t b)
 #define arguments_CAVM_NIXX_LF_QINTX_INT(a,b) (a),(b),-1,-1
 
 /**
- * Register (RVU_PFVF_BAR2) nix#_lf_qint#_int_w1s
- *
- * INTERNAL: NIX LF Queue Interrupt Set Registers
- */
-union cavm_nixx_lf_qintx_int_w1s
-{
-    uint64_t u;
-    struct cavm_nixx_lf_qintx_int_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t intr                  : 1;  /**< [  0:  0](RO/H) Interrupt pending. Set when NIX_LF_QINT()_CNT[COUNT] is non-zero. */
-#else /* Word 0 - Little Endian */
-        uint64_t intr                  : 1;  /**< [  0:  0](RO/H) Interrupt pending. Set when NIX_LF_QINT()_CNT[COUNT] is non-zero. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_nixx_lf_qintx_int_w1s_s cn; */
-};
-typedef union cavm_nixx_lf_qintx_int_w1s cavm_nixx_lf_qintx_int_w1s_t;
-
-static inline uint64_t CAVM_NIXX_LF_QINTX_INT_W1S(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NIXX_LF_QINTX_INT_W1S(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a==0) && (b<=63)))
-        return 0x840200400c18ll + 0x100000ll * ((a) & 0x0) + 0x1000ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=1) && (b<=63)))
-        return 0x840200400c18ll + 0x100000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=63)))
-        return 0x840200400c18ll + 0x100000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=63)))
-        return 0x840200400c18ll + 0x100000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=63)))
-        return 0x840200400c18ll + 0x100000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=63)))
-        return 0x840200400c18ll + 0x100000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=63)))
-        return 0x840200400c18ll + 0x100000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x3f);
-    __cavm_csr_fatal("NIXX_LF_QINTX_INT_W1S", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_NIXX_LF_QINTX_INT_W1S(a,b) cavm_nixx_lf_qintx_int_w1s_t
-#define bustype_CAVM_NIXX_LF_QINTX_INT_W1S(a,b) CSR_TYPE_RVU_PFVF_BAR2
-#define basename_CAVM_NIXX_LF_QINTX_INT_W1S(a,b) "NIXX_LF_QINTX_INT_W1S"
-#define device_bar_CAVM_NIXX_LF_QINTX_INT_W1S(a,b) 0x2 /* RVU_BAR2 */
-#define busnum_CAVM_NIXX_LF_QINTX_INT_W1S(a,b) (a)
-#define arguments_CAVM_NIXX_LF_QINTX_INT_W1S(a,b) (a),(b),-1,-1
-
-/**
  * Register (RVU_PFVF_BAR2) nix#_lf_ras
  *
  * NIX LF RAS Interrupt Register
@@ -35746,9 +29496,7 @@ union cavm_nixx_lf_ras
         uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1C/H) Poisoned data returned on packet data read for NIX_SEND_SG_S. */
         uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1C/H) Poisoned data returned on send descriptor read at or beyond
                                                                  NIX_SEND_JUMP_S[ADDR]. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved. */
         uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1C/H) Poisoned data returned on NIX_RSSE_S read. */
         uint64_t reserved_4            : 1;
         uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1C/H) Poisoned data returned on NIX_CQ_CTX_S read. */
@@ -35762,9 +29510,7 @@ union cavm_nixx_lf_ras
         uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1C/H) Poisoned data returned on NIX_CQ_CTX_S read. */
         uint64_t reserved_4            : 1;
         uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1C/H) Poisoned data returned on NIX_RSSE_S read. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved. */
         uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1C/H) Poisoned data returned on send descriptor read at or beyond
                                                                  NIX_SEND_JUMP_S[ADDR]. */
         uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1C/H) Poisoned data returned on packet data read for NIX_SEND_SG_S. */
@@ -35782,9 +29528,7 @@ union cavm_nixx_lf_ras
         uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1C/H) Poisoned data returned on packet data read for NIX_SEND_SG_S. */
         uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1C/H) Poisoned data returned on send descriptor read at or beyond
                                                                  NIX_SEND_JUMP_S[ADDR]. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX. */
         uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1C/H) Poisoned data returned on NIX_RSSE_S read. */
         uint64_t reserved_4            : 1;
         uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1C/H) Poisoned data returned on NIX_CQ_CTX_S read. */
@@ -35798,9 +29542,7 @@ union cavm_nixx_lf_ras
         uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1C/H) Poisoned data returned on NIX_CQ_CTX_S read. */
         uint64_t reserved_4            : 1;
         uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1C/H) Poisoned data returned on NIX_RSSE_S read. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX.
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
+        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX. */
         uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1C/H) Poisoned data returned on send descriptor read at or beyond
                                                                  NIX_SEND_JUMP_S[ADDR]. */
         uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1C/H) Poisoned data returned on packet data read for NIX_SEND_SG_S. */
@@ -35881,46 +29623,7 @@ union cavm_nixx_lf_ras_ena_w1c
         uint64_t reserved_11_63        : 53;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_lf_ras_ena_w1c_s cn9; */
-    /* struct cavm_nixx_lf_ras_ena_w1c_s cn96xx; */
-    /* struct cavm_nixx_lf_ras_ena_w1c_s cn98xx; */
-    struct cavm_nixx_lf_ras_ena_w1c_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_11_63        : 53;
-        uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for NIX_LF_RAS[CINT_POISON]. */
-        uint64_t qint_poison           : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for NIX_LF_RAS[QINT_POISON]. */
-        uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for NIX_LF_RAS[SEND_SG_POISON]. */
-        uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for NIX_LF_RAS[SEND_JUMP_POISON]. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for NIX_LF_RAS[IPSEC_DYNO_POISON].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for NIX_LF_RAS[RSSE_POISON]. */
-        uint64_t reserved_4            : 1;
-        uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for NIX_LF_RAS[CQ_CTX_POISON]. */
-        uint64_t rq_ctx_poison         : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for NIX_LF_RAS[RQ_CTX_POISON]. */
-        uint64_t sq_ctx_poison         : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for NIX_LF_RAS[SQ_CTX_POISON]. */
-        uint64_t sqb_poison            : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for NIX_LF_RAS[SQB_POISON]. */
-#else /* Word 0 - Little Endian */
-        uint64_t sqb_poison            : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for NIX_LF_RAS[SQB_POISON]. */
-        uint64_t sq_ctx_poison         : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for NIX_LF_RAS[SQ_CTX_POISON]. */
-        uint64_t rq_ctx_poison         : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for NIX_LF_RAS[RQ_CTX_POISON]. */
-        uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for NIX_LF_RAS[CQ_CTX_POISON]. */
-        uint64_t reserved_4            : 1;
-        uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for NIX_LF_RAS[RSSE_POISON]. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for NIX_LF_RAS[IPSEC_DYNO_POISON].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for NIX_LF_RAS[SEND_JUMP_POISON]. */
-        uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for NIX_LF_RAS[SEND_SG_POISON]. */
-        uint64_t qint_poison           : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for NIX_LF_RAS[QINT_POISON]. */
-        uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for NIX_LF_RAS[CINT_POISON]. */
-        uint64_t reserved_11_63        : 53;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_ras_ena_w1c_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_ras_ena_w1c_cnf95xx f95o; */
-    /* struct cavm_nixx_lf_ras_ena_w1c_cnf95xx loki; */
+    /* struct cavm_nixx_lf_ras_ena_w1c_s cn; */
 };
 typedef union cavm_nixx_lf_ras_ena_w1c cavm_nixx_lf_ras_ena_w1c_t;
 
@@ -35990,46 +29693,7 @@ union cavm_nixx_lf_ras_ena_w1s
         uint64_t reserved_11_63        : 53;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_lf_ras_ena_w1s_s cn9; */
-    /* struct cavm_nixx_lf_ras_ena_w1s_s cn96xx; */
-    /* struct cavm_nixx_lf_ras_ena_w1s_s cn98xx; */
-    struct cavm_nixx_lf_ras_ena_w1s_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_11_63        : 53;
-        uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for NIX_LF_RAS[CINT_POISON]. */
-        uint64_t qint_poison           : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for NIX_LF_RAS[QINT_POISON]. */
-        uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for NIX_LF_RAS[SEND_SG_POISON]. */
-        uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for NIX_LF_RAS[SEND_JUMP_POISON]. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for NIX_LF_RAS[IPSEC_DYNO_POISON].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for NIX_LF_RAS[RSSE_POISON]. */
-        uint64_t reserved_4            : 1;
-        uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for NIX_LF_RAS[CQ_CTX_POISON]. */
-        uint64_t rq_ctx_poison         : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for NIX_LF_RAS[RQ_CTX_POISON]. */
-        uint64_t sq_ctx_poison         : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for NIX_LF_RAS[SQ_CTX_POISON]. */
-        uint64_t sqb_poison            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for NIX_LF_RAS[SQB_POISON]. */
-#else /* Word 0 - Little Endian */
-        uint64_t sqb_poison            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for NIX_LF_RAS[SQB_POISON]. */
-        uint64_t sq_ctx_poison         : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for NIX_LF_RAS[SQ_CTX_POISON]. */
-        uint64_t rq_ctx_poison         : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for NIX_LF_RAS[RQ_CTX_POISON]. */
-        uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for NIX_LF_RAS[CQ_CTX_POISON]. */
-        uint64_t reserved_4            : 1;
-        uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for NIX_LF_RAS[RSSE_POISON]. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for NIX_LF_RAS[IPSEC_DYNO_POISON].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for NIX_LF_RAS[SEND_JUMP_POISON]. */
-        uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for NIX_LF_RAS[SEND_SG_POISON]. */
-        uint64_t qint_poison           : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for NIX_LF_RAS[QINT_POISON]. */
-        uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for NIX_LF_RAS[CINT_POISON]. */
-        uint64_t reserved_11_63        : 53;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_ras_ena_w1s_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_ras_ena_w1s_cnf95xx f95o; */
-    /* struct cavm_nixx_lf_ras_ena_w1s_cnf95xx loki; */
+    /* struct cavm_nixx_lf_ras_ena_w1s_s cn; */
 };
 typedef union cavm_nixx_lf_ras_ena_w1s cavm_nixx_lf_ras_ena_w1s_t;
 
@@ -36099,46 +29763,7 @@ union cavm_nixx_lf_ras_w1s
         uint64_t reserved_11_63        : 53;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_lf_ras_w1s_s cn9; */
-    /* struct cavm_nixx_lf_ras_w1s_s cn96xx; */
-    /* struct cavm_nixx_lf_ras_w1s_s cn98xx; */
-    struct cavm_nixx_lf_ras_w1s_cnf95xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_11_63        : 53;
-        uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets NIX_LF_RAS[CINT_POISON]. */
-        uint64_t qint_poison           : 1;  /**< [  9:  9](R/W1S/H) Reads or sets NIX_LF_RAS[QINT_POISON]. */
-        uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1S/H) Reads or sets NIX_LF_RAS[SEND_SG_POISON]. */
-        uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1S/H) Reads or sets NIX_LF_RAS[SEND_JUMP_POISON]. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1S/H) Reads or sets NIX_LF_RAS[IPSEC_DYNO_POISON].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1S/H) Reads or sets NIX_LF_RAS[RSSE_POISON]. */
-        uint64_t reserved_4            : 1;
-        uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1S/H) Reads or sets NIX_LF_RAS[CQ_CTX_POISON]. */
-        uint64_t rq_ctx_poison         : 1;  /**< [  2:  2](R/W1S/H) Reads or sets NIX_LF_RAS[RQ_CTX_POISON]. */
-        uint64_t sq_ctx_poison         : 1;  /**< [  1:  1](R/W1S/H) Reads or sets NIX_LF_RAS[SQ_CTX_POISON]. */
-        uint64_t sqb_poison            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets NIX_LF_RAS[SQB_POISON]. */
-#else /* Word 0 - Little Endian */
-        uint64_t sqb_poison            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets NIX_LF_RAS[SQB_POISON]. */
-        uint64_t sq_ctx_poison         : 1;  /**< [  1:  1](R/W1S/H) Reads or sets NIX_LF_RAS[SQ_CTX_POISON]. */
-        uint64_t rq_ctx_poison         : 1;  /**< [  2:  2](R/W1S/H) Reads or sets NIX_LF_RAS[RQ_CTX_POISON]. */
-        uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1S/H) Reads or sets NIX_LF_RAS[CQ_CTX_POISON]. */
-        uint64_t reserved_4            : 1;
-        uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1S/H) Reads or sets NIX_LF_RAS[RSSE_POISON]. */
-        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1S/H) Reads or sets NIX_LF_RAS[IPSEC_DYNO_POISON].
-                                                                 Internal:
-                                                                 Not used; no IPSEC fast-path. */
-        uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1S/H) Reads or sets NIX_LF_RAS[SEND_JUMP_POISON]. */
-        uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1S/H) Reads or sets NIX_LF_RAS[SEND_SG_POISON]. */
-        uint64_t qint_poison           : 1;  /**< [  9:  9](R/W1S/H) Reads or sets NIX_LF_RAS[QINT_POISON]. */
-        uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets NIX_LF_RAS[CINT_POISON]. */
-        uint64_t reserved_11_63        : 53;
-#endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_ras_w1s_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_ras_w1s_cnf95xx f95o; */
-    /* struct cavm_nixx_lf_ras_w1s_cnf95xx loki; */
+    /* struct cavm_nixx_lf_ras_w1s_s cn; */
 };
 typedef union cavm_nixx_lf_ras_w1s cavm_nixx_lf_ras_w1s_t;
 
@@ -37393,9 +31018,6 @@ static inline uint64_t CAVM_NIXX_PRIV_AF_INT_CFG(uint64_t a)
  * [PF_FUNC] before issuing transactions to the mapped PF and function.
  *
  * [SLOT] must be zero.
- *
- * Internal:
- * Hardware ignores [SLOT] and always assumes 0x0.
  */
 union cavm_nixx_priv_lfx_cfg
 {

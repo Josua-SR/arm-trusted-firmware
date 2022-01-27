@@ -102,51 +102,6 @@ static inline uint64_t CAVM_MDN_BISR_REPAIR_FUNC(void)
 #define arguments_CAVM_MDN_BISR_REPAIR -1,-1,-1,-1
 
 /**
- * Register (MDSB) mdn_bist_active
- *
- * INTERNAL: MDN BIST Active Status Register
- *
- * This register is a duplicate of MDN_BIST_STATUS that only responds to broadcast
- * reads when [ACTIVE] is asserted. This register should only be accessed by the MDC
- * root state machine.
- */
-union cavm_mdn_bist_active
-{
-    uint32_t u;
-    struct cavm_mdn_bist_active_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t hub_id                : 7;  /**< [ 31: 25](RO/H) Hub identifier. */
-        uint32_t node_id               : 10; /**< [ 24: 15](RO/H) MDN identifier. */
-        uint32_t repair                : 12; /**< [ 14:  3](RO/H) Asserted when BIST state machine detects a defective column. */
-        uint32_t status                : 3;  /**< [  2:  0](RO/H) Reports the state of the BIST state machine. Enumerated by MDN_BIST_STATUS_E. */
-#else /* Word 0 - Little Endian */
-        uint32_t status                : 3;  /**< [  2:  0](RO/H) Reports the state of the BIST state machine. Enumerated by MDN_BIST_STATUS_E. */
-        uint32_t repair                : 12; /**< [ 14:  3](RO/H) Asserted when BIST state machine detects a defective column. */
-        uint32_t node_id               : 10; /**< [ 24: 15](RO/H) MDN identifier. */
-        uint32_t hub_id                : 7;  /**< [ 31: 25](RO/H) Hub identifier. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdn_bist_active_s cn; */
-};
-typedef union cavm_mdn_bist_active cavm_mdn_bist_active_t;
-
-#define CAVM_MDN_BIST_ACTIVE CAVM_MDN_BIST_ACTIVE_FUNC()
-static inline uint64_t CAVM_MDN_BIST_ACTIVE_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDN_BIST_ACTIVE_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0xc;
-    __cavm_csr_fatal("MDN_BIST_ACTIVE", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDN_BIST_ACTIVE cavm_mdn_bist_active_t
-#define bustype_CAVM_MDN_BIST_ACTIVE CSR_TYPE_MDSB
-#define basename_CAVM_MDN_BIST_ACTIVE "MDN_BIST_ACTIVE"
-#define busnum_CAVM_MDN_BIST_ACTIVE 0
-#define arguments_CAVM_MDN_BIST_ACTIVE -1,-1,-1,-1
-
-/**
  * Register (MDSB) mdn_bist_addr_mask
  *
  * MDN BIST Start Mask Register
@@ -499,96 +454,6 @@ static inline uint64_t CAVM_MDN_BIST_CONTROL_FUNC(void)
 #define basename_CAVM_MDN_BIST_CONTROL "MDN_BIST_CONTROL"
 #define busnum_CAVM_MDN_BIST_CONTROL 0
 #define arguments_CAVM_MDN_BIST_CONTROL -1,-1,-1,-1
-
-/**
- * Register (MDSB) mdn_bist_fail
- *
- * INTERNAL: MDN BIST Fail Status Register
- *
- * This register is a duplicate of MDN_BIST_STATUS that only responds to broadcast
- * reads when [FAIL] is asserted. This register should only be accessed by the MDC root
- * state machine.
- */
-union cavm_mdn_bist_fail
-{
-    uint32_t u;
-    struct cavm_mdn_bist_fail_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t hub_id                : 7;  /**< [ 31: 25](RO/H) Hub identifier. */
-        uint32_t node_id               : 10; /**< [ 24: 15](RO/H) MDN identifier. */
-        uint32_t repair                : 12; /**< [ 14:  3](RO/H) Asserted when BIST state machine detects a defective column. */
-        uint32_t status                : 3;  /**< [  2:  0](RO/H) Reports the state of the BIST state machine. Enumerated by MDN_BIST_STATUS_E. */
-#else /* Word 0 - Little Endian */
-        uint32_t status                : 3;  /**< [  2:  0](RO/H) Reports the state of the BIST state machine. Enumerated by MDN_BIST_STATUS_E. */
-        uint32_t repair                : 12; /**< [ 14:  3](RO/H) Asserted when BIST state machine detects a defective column. */
-        uint32_t node_id               : 10; /**< [ 24: 15](RO/H) MDN identifier. */
-        uint32_t hub_id                : 7;  /**< [ 31: 25](RO/H) Hub identifier. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdn_bist_fail_s cn; */
-};
-typedef union cavm_mdn_bist_fail cavm_mdn_bist_fail_t;
-
-#define CAVM_MDN_BIST_FAIL CAVM_MDN_BIST_FAIL_FUNC()
-static inline uint64_t CAVM_MDN_BIST_FAIL_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDN_BIST_FAIL_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x10;
-    __cavm_csr_fatal("MDN_BIST_FAIL", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDN_BIST_FAIL cavm_mdn_bist_fail_t
-#define bustype_CAVM_MDN_BIST_FAIL CSR_TYPE_MDSB
-#define basename_CAVM_MDN_BIST_FAIL "MDN_BIST_FAIL"
-#define busnum_CAVM_MDN_BIST_FAIL 0
-#define arguments_CAVM_MDN_BIST_FAIL -1,-1,-1,-1
-
-/**
- * Register (MDSB) mdn_bist_repairable
- *
- * INTERNAL: MDN BIST Repairable Status Register
- *
- * This register is a duplicate of MDN_BIST_STATUS that only responds to broadcast
- * reads when [REPAIRABLE] is asserted. This register should only be accessed by the
- * MDC root state machine.
- */
-union cavm_mdn_bist_repairable
-{
-    uint32_t u;
-    struct cavm_mdn_bist_repairable_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t hub_id                : 7;  /**< [ 31: 25](RO/H) Hub identifier. */
-        uint32_t node_id               : 10; /**< [ 24: 15](RO/H) MDN identifier. */
-        uint32_t repair                : 12; /**< [ 14:  3](RO/H) Asserted when BIST state machine detects a defective column. */
-        uint32_t status                : 3;  /**< [  2:  0](RO/H) Reports the state of the BIST state machine. Enumerated by MDN_BIST_STATUS_E. */
-#else /* Word 0 - Little Endian */
-        uint32_t status                : 3;  /**< [  2:  0](RO/H) Reports the state of the BIST state machine. Enumerated by MDN_BIST_STATUS_E. */
-        uint32_t repair                : 12; /**< [ 14:  3](RO/H) Asserted when BIST state machine detects a defective column. */
-        uint32_t node_id               : 10; /**< [ 24: 15](RO/H) MDN identifier. */
-        uint32_t hub_id                : 7;  /**< [ 31: 25](RO/H) Hub identifier. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdn_bist_repairable_s cn; */
-};
-typedef union cavm_mdn_bist_repairable cavm_mdn_bist_repairable_t;
-
-#define CAVM_MDN_BIST_REPAIRABLE CAVM_MDN_BIST_REPAIRABLE_FUNC()
-static inline uint64_t CAVM_MDN_BIST_REPAIRABLE_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDN_BIST_REPAIRABLE_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x14;
-    __cavm_csr_fatal("MDN_BIST_REPAIRABLE", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDN_BIST_REPAIRABLE cavm_mdn_bist_repairable_t
-#define bustype_CAVM_MDN_BIST_REPAIRABLE CSR_TYPE_MDSB
-#define basename_CAVM_MDN_BIST_REPAIRABLE "MDN_BIST_REPAIRABLE"
-#define busnum_CAVM_MDN_BIST_REPAIRABLE 0
-#define arguments_CAVM_MDN_BIST_REPAIRABLE -1,-1,-1,-1
 
 /**
  * Register (MDSB) mdn_bist_status
@@ -956,25 +821,16 @@ union cavm_mdn_ecc_config
                                                                  both bits causes a double-bit ECC error.
                                                                  In this manner ECC errors are injected, triggering upstream events
                                                                  like ECC error interrupts and status capture, without corrupting the
-                                                                 data.
-
-                                                                 Internal:
-                                                                 Prior to mg2 this was implemented via the csr_flip_synd port. */
+                                                                 data. */
         uint32_t correction_disable    : 1;  /**< [  0:  0](R/W) This field disables ECC error correction by ignoring the ECC code
                                                                  associated with the data.  This also disables the reporting
                                                                  of single and double-bit ECC errors and overrides the [DISABLE_SBE] and
-                                                                 [DISABLE_DBE] controls.
-
-                                                                 Internal:
-                                                                 Prior to mg2 this was implemented via the csr_cor_dis port. */
+                                                                 [DISABLE_DBE] controls. */
 #else /* Word 0 - Little Endian */
         uint32_t correction_disable    : 1;  /**< [  0:  0](R/W) This field disables ECC error correction by ignoring the ECC code
                                                                  associated with the data.  This also disables the reporting
                                                                  of single and double-bit ECC errors and overrides the [DISABLE_SBE] and
-                                                                 [DISABLE_DBE] controls.
-
-                                                                 Internal:
-                                                                 Prior to mg2 this was implemented via the csr_cor_dis port. */
+                                                                 [DISABLE_DBE] controls. */
         uint32_t error_inject          : 2;  /**< [  2:  1](R/W) This 2-bit field provides diagnostic ECC error injection by flipping
                                                                  the least significant two bits of the write path's ECC code.  This bit
                                                                  flipping is done for all writes while the field is asserted.
@@ -982,10 +838,7 @@ union cavm_mdn_ecc_config
                                                                  both bits causes a double-bit ECC error.
                                                                  In this manner ECC errors are injected, triggering upstream events
                                                                  like ECC error interrupts and status capture, without corrupting the
-                                                                 data.
-
-                                                                 Internal:
-                                                                 Prior to mg2 this was implemented via the csr_flip_synd port. */
+                                                                 data. */
         uint32_t disable_sbe           : 1;  /**< [  3:  3](R/W) Disables this node from responding to broadcast reads of
                                                                  MDN_ECC_STATUS due to single-bit/correctable error reporting.
                                                                  Overridden when [CORRECTION_DISABLE] is asserted. */
@@ -1132,168 +985,5 @@ static inline uint64_t CAVM_MDN_ECC_STATUS_FUNC(void)
 #define basename_CAVM_MDN_ECC_STATUS "MDN_ECC_STATUS"
 #define busnum_CAVM_MDN_ECC_STATUS 0
 #define arguments_CAVM_MDN_ECC_STATUS -1,-1,-1,-1
-
-/**
- * Register (MDSB) mdn_ecc_status_rc
- *
- * INTERNAL: MDN ECC Error Status with Read Clear Register
- *
- * This register is a duplicate of MDC_NODE_ECC_STATUS that clears status
- * when read.  It is intended to only be read by the mdc_root_sm state
- * machine.
- */
-union cavm_mdn_ecc_status_rc
-{
-    uint32_t u;
-    struct cavm_mdn_ecc_status_rc_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_30_31        : 2;
-        uint32_t row                   : 14; /**< [ 29: 16](RO/H) SRAM row address of the most recent double-bit/uncorrectable error (DBE) if
-                                                                 [DBE] is asserted or the SRAM row address of the most recent
-                                                                 single-bit/correctable error (SBE) is [DBE] is deasserted and [SBE] is
-                                                                 asserted. */
-        uint32_t reserved_4_15         : 12;
-        uint32_t dbe_plus              : 1;  /**< [  3:  3](RO/H) Asserted when ECC detects another double-bit or single-bit error before the
-                                                                 first error was processed by the interrupt handler. Note that the error
-                                                                 reporting prioritizes DBEs over SBEs. Thus prior to being read, a DBE will
-                                                                 overwrite MDN_ECC_IRQ[HUB_ID] and MDN_ECC_IRQ[NODE_ID] of a previous SBE. If
-                                                                 [SBE] is set then PLUS indicates that additional SBEs have occurred beyond that
-                                                                 first captures. If [DBE] is set then [DBE_PLUS] indicates that there was either
-                                                                 a previous SBE or subsequent SBE or subsequent DBE. */
-        uint32_t sbe_plus              : 1;  /**< [  2:  2](RO/H) Asserted when ECC detects another double-bit or single-bit error before the
-                                                                 first error was processed by the interrupt handler. Note that the error
-                                                                 reporting prioritizes DBEs over SBEs. Thus prior to being read, a DBE will
-                                                                 overwrite MDN_ECC_IRQ[HUB_ID] and MDN_ECC_IRQ[NODE_ID] of a previous SBE. If
-                                                                 [SBE] is set then PLUS indicates that additional SBEs have occurred beyond that
-                                                                 first captures. If [DBE] is set then [SBE_PLUS] indicates that there was either
-                                                                 a previous SBE or subsequent SBE or subsequent DBE. */
-        uint32_t dbe                   : 1;  /**< [  1:  1](RO/H) Asserted when a double-bit/uncorrectable error is detected. */
-        uint32_t sbe                   : 1;  /**< [  0:  0](RO/H) Asserted when a single-bit/correctable error is detected. */
-#else /* Word 0 - Little Endian */
-        uint32_t sbe                   : 1;  /**< [  0:  0](RO/H) Asserted when a single-bit/correctable error is detected. */
-        uint32_t dbe                   : 1;  /**< [  1:  1](RO/H) Asserted when a double-bit/uncorrectable error is detected. */
-        uint32_t sbe_plus              : 1;  /**< [  2:  2](RO/H) Asserted when ECC detects another double-bit or single-bit error before the
-                                                                 first error was processed by the interrupt handler. Note that the error
-                                                                 reporting prioritizes DBEs over SBEs. Thus prior to being read, a DBE will
-                                                                 overwrite MDN_ECC_IRQ[HUB_ID] and MDN_ECC_IRQ[NODE_ID] of a previous SBE. If
-                                                                 [SBE] is set then PLUS indicates that additional SBEs have occurred beyond that
-                                                                 first captures. If [DBE] is set then [SBE_PLUS] indicates that there was either
-                                                                 a previous SBE or subsequent SBE or subsequent DBE. */
-        uint32_t dbe_plus              : 1;  /**< [  3:  3](RO/H) Asserted when ECC detects another double-bit or single-bit error before the
-                                                                 first error was processed by the interrupt handler. Note that the error
-                                                                 reporting prioritizes DBEs over SBEs. Thus prior to being read, a DBE will
-                                                                 overwrite MDN_ECC_IRQ[HUB_ID] and MDN_ECC_IRQ[NODE_ID] of a previous SBE. If
-                                                                 [SBE] is set then PLUS indicates that additional SBEs have occurred beyond that
-                                                                 first captures. If [DBE] is set then [DBE_PLUS] indicates that there was either
-                                                                 a previous SBE or subsequent SBE or subsequent DBE. */
-        uint32_t reserved_4_15         : 12;
-        uint32_t row                   : 14; /**< [ 29: 16](RO/H) SRAM row address of the most recent double-bit/uncorrectable error (DBE) if
-                                                                 [DBE] is asserted or the SRAM row address of the most recent
-                                                                 single-bit/correctable error (SBE) is [DBE] is deasserted and [SBE] is
-                                                                 asserted. */
-        uint32_t reserved_30_31        : 2;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdn_ecc_status_rc_s cn; */
-};
-typedef union cavm_mdn_ecc_status_rc cavm_mdn_ecc_status_rc_t;
-
-#define CAVM_MDN_ECC_STATUS_RC CAVM_MDN_ECC_STATUS_RC_FUNC()
-static inline uint64_t CAVM_MDN_ECC_STATUS_RC_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDN_ECC_STATUS_RC_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x38;
-    __cavm_csr_fatal("MDN_ECC_STATUS_RC", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDN_ECC_STATUS_RC cavm_mdn_ecc_status_rc_t
-#define bustype_CAVM_MDN_ECC_STATUS_RC CSR_TYPE_MDSB
-#define basename_CAVM_MDN_ECC_STATUS_RC "MDN_ECC_STATUS_RC"
-#define busnum_CAVM_MDN_ECC_STATUS_RC 0
-#define arguments_CAVM_MDN_ECC_STATUS_RC -1,-1,-1,-1
-
-/**
- * Register (MDSB) mdn_enum
- *
- * INTERNAL: MDN Enumeration Register
- *
- * This is used to enumerate a serial chain using broadcast writes.
- */
-union cavm_mdn_enum
-{
-    uint32_t u;
-    struct cavm_mdn_enum_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_31           : 1;
-        uint32_t hub_id                : 7;  /**< [ 30: 24](RO/H) Hub identifier. */
-        uint32_t node_id               : 10; /**< [ 23: 14](RO/H) Node identifier. */
-        uint32_t reserved_3_13         : 11;
-        uint32_t chain_id              : 3;  /**< [  2:  0](RO/H) Chain identifier. */
-#else /* Word 0 - Little Endian */
-        uint32_t chain_id              : 3;  /**< [  2:  0](RO/H) Chain identifier. */
-        uint32_t reserved_3_13         : 11;
-        uint32_t node_id               : 10; /**< [ 23: 14](RO/H) Node identifier. */
-        uint32_t hub_id                : 7;  /**< [ 30: 24](RO/H) Hub identifier. */
-        uint32_t reserved_31           : 1;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdn_enum_s cn; */
-};
-typedef union cavm_mdn_enum cavm_mdn_enum_t;
-
-#define CAVM_MDN_ENUM CAVM_MDN_ENUM_FUNC()
-static inline uint64_t CAVM_MDN_ENUM_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDN_ENUM_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x44;
-    __cavm_csr_fatal("MDN_ENUM", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDN_ENUM cavm_mdn_enum_t
-#define bustype_CAVM_MDN_ENUM CSR_TYPE_MDSB
-#define basename_CAVM_MDN_ENUM "MDN_ENUM"
-#define busnum_CAVM_MDN_ENUM 0
-#define arguments_CAVM_MDN_ENUM -1,-1,-1,-1
-
-/**
- * Register (MDSB) mdn_scratch
- *
- * INTERNAL: MDN Scratch Register
- *
- * Not implemented in hardware.
- */
-union cavm_mdn_scratch
-{
-    uint32_t u;
-    struct cavm_mdn_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t scratch               : 32; /**< [ 31:  0](R/W) Scratch register. */
-#else /* Word 0 - Little Endian */
-        uint32_t scratch               : 32; /**< [ 31:  0](R/W) Scratch register. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdn_scratch_s cn; */
-};
-typedef union cavm_mdn_scratch cavm_mdn_scratch_t;
-
-#define CAVM_MDN_SCRATCH CAVM_MDN_SCRATCH_FUNC()
-static inline uint64_t CAVM_MDN_SCRATCH_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDN_SCRATCH_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX))
-        return 0x3c;
-    __cavm_csr_fatal("MDN_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDN_SCRATCH cavm_mdn_scratch_t
-#define bustype_CAVM_MDN_SCRATCH CSR_TYPE_MDSB
-#define basename_CAVM_MDN_SCRATCH "MDN_SCRATCH"
-#define busnum_CAVM_MDN_SCRATCH 0
-#define arguments_CAVM_MDN_SCRATCH -1,-1,-1,-1
 
 #endif /* __CAVM_CSRS_MDN_H__ */

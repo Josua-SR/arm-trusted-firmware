@@ -38,74 +38,50 @@ union cavm_etrx_authstatus
                                                                    0x0 = Not implemented. EL3 is not implemented and the processor is nonsecure.
                                                                    0x2 = Implemented and disabled. ExternalSecureNoninvasiveDebugEnabled() == FALSE.
                                                                    0x3 = Implemented and enabled. ExternalSecureNoninvasiveDebugEnabled() == TRUE.
-                                                                   _ Other values are reserved.
-
-                                                                 Internal:
-                                                                 RTL: SNID[1]=1, SNID[0]=(SPIDEN || SPNIDEN) && (NIDEN || DBGEN). */
+                                                                   _ Other values are reserved. */
         uint32_t sid                   : 2;  /**< [  5:  4](RO) Secure invasive debug.
                                                                  Possible values of this field are:
                                                                    0x0 = Not implemented. EL3 is not implemented and the processor is nonsecure.
                                                                    0x2 = Implemented and disabled. ExternalSecureInvasiveDebugEnabled() == FALSE.
                                                                    0x3 = Implemented and enabled. ExternalSecureInvasiveDebugEnabled() == TRUE.
-                                                                   _ Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SID[1]=1, SID[0]=(SPIDEN || DBGEN). */
+                                                                   _ Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t nsnid                 : 2;  /**< [  3:  2](RAZ) Nonsecure non-invasive debug.
                                                                  Possible values of this field are:
                                                                    0x0 = Not implemented. EL3 is not implemented and the processor is secure.
                                                                    0x2 = Implemented and disabled. ExternalNoninvasiveDebugEnabled() == FALSE.
                                                                    0x3 = Implemented and enabled. ExternalNoninvasiveDebugEnabled() == TRUE.
-                                                                   _ Other values are reserved.
-
-                                                                 Internal:
-                                                                 RTL: NSNID[1]=1, NSNID[0]=(NIDEN || DBGEN). */
+                                                                   _ Other values are reserved. */
         uint32_t nsid                  : 2;  /**< [  1:  0](RAZ) Nonsecure invasive debug.
                                                                  Possible values of this field are:
                                                                    0x0 = Not implemented. EL3 is not implemented and the processor is secure.
                                                                    0x2 = Implemented and disabled. ExternalInvasiveDebugEnabled() == FALSE.
                                                                    0x3 = Implemented and enabled. ExternalInvasiveDebugEnabled() == TRUE.
-                                                                   _ Other values are reserved.
-
-                                                                 Internal:
-                                                                 RTL: NSID[1]=1, NSID[0]= DBGEN. */
+                                                                   _ Other values are reserved. */
 #else /* Word 0 - Little Endian */
         uint32_t nsid                  : 2;  /**< [  1:  0](RAZ) Nonsecure invasive debug.
                                                                  Possible values of this field are:
                                                                    0x0 = Not implemented. EL3 is not implemented and the processor is secure.
                                                                    0x2 = Implemented and disabled. ExternalInvasiveDebugEnabled() == FALSE.
                                                                    0x3 = Implemented and enabled. ExternalInvasiveDebugEnabled() == TRUE.
-                                                                   _ Other values are reserved.
-
-                                                                 Internal:
-                                                                 RTL: NSID[1]=1, NSID[0]= DBGEN. */
+                                                                   _ Other values are reserved. */
         uint32_t nsnid                 : 2;  /**< [  3:  2](RAZ) Nonsecure non-invasive debug.
                                                                  Possible values of this field are:
                                                                    0x0 = Not implemented. EL3 is not implemented and the processor is secure.
                                                                    0x2 = Implemented and disabled. ExternalNoninvasiveDebugEnabled() == FALSE.
                                                                    0x3 = Implemented and enabled. ExternalNoninvasiveDebugEnabled() == TRUE.
-                                                                   _ Other values are reserved.
-
-                                                                 Internal:
-                                                                 RTL: NSNID[1]=1, NSNID[0]=(NIDEN || DBGEN). */
+                                                                   _ Other values are reserved. */
         uint32_t sid                   : 2;  /**< [  5:  4](RO) Secure invasive debug.
                                                                  Possible values of this field are:
                                                                    0x0 = Not implemented. EL3 is not implemented and the processor is nonsecure.
                                                                    0x2 = Implemented and disabled. ExternalSecureInvasiveDebugEnabled() == FALSE.
                                                                    0x3 = Implemented and enabled. ExternalSecureInvasiveDebugEnabled() == TRUE.
-                                                                   _ Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3.
-
-                                                                 Internal:
-                                                                 RTL: SID[1]=1, SID[0]=(SPIDEN || DBGEN). */
+                                                                   _ Other values are reserved.  For CNXXXX allowed values are 0x2 and 0x3. */
         uint32_t snid                  : 2;  /**< [  7:  6](RAZ) Secure non-invasive debug.
                                                                  Possible values of this field are:
                                                                    0x0 = Not implemented. EL3 is not implemented and the processor is nonsecure.
                                                                    0x2 = Implemented and disabled. ExternalSecureNoninvasiveDebugEnabled() == FALSE.
                                                                    0x3 = Implemented and enabled. ExternalSecureNoninvasiveDebugEnabled() == TRUE.
-                                                                   _ Other values are reserved.
-
-                                                                 Internal:
-                                                                 RTL: SNID[1]=1, SNID[0]=(SPIDEN || SPNIDEN) && (NIDEN || DBGEN). */
+                                                                   _ Other values are reserved. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;

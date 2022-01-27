@@ -40,27 +40,11 @@ union cavm_lenc_cb_cfg_s
                                                                  and includes filler bits. K = 22*Z for BG1,  K = 10*Z for BG2.
                                                                  The valid range is [40, 8448], where the minimum size is the minimum
                                                                  LENC_TASK_CFG_S[TB_SIZE] of 24 bits plus the 16-bit TB CRC. */
-        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS.
-                                                                 0x3: UL traffic, Long (Z=360).
-                                                                 0x4: UL traffic, Medium (Z=180).
-                                                                 0x5: UL traffic, Short (Z=56).
-                                                                 0x6: Initial ranging.
-                                                                 0x7: Fine ranging.
-                                                                 0x0-0x2 : Reserved. */
+        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved. */
         uint64_t num_cb                : 9;  /**< [  8:  0] The number of consecutive code blocks with this CB configuration. Valid range is [1,152]. */
 #else /* Word 0 - Little Endian */
         uint64_t num_cb                : 9;  /**< [  8:  0] The number of consecutive code blocks with this CB configuration. Valid range is [1,152]. */
-        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS.
-                                                                 0x3: UL traffic, Long (Z=360).
-                                                                 0x4: UL traffic, Medium (Z=180).
-                                                                 0x5: UL traffic, Short (Z=56).
-                                                                 0x6: Initial ranging.
-                                                                 0x7: Fine ranging.
-                                                                 0x0-0x2 : Reserved. */
+        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved. */
         uint64_t cb_size               : 14; /**< [ 25: 12] The code block size including CB CRC. It corresponds to 'K' in 38.212
                                                                  and includes filler bits. K = 22*Z for BG1,  K = 10*Z for BG2.
                                                                  The valid range is [40, 8448], where the minimum size is the minimum
@@ -195,27 +179,11 @@ union cavm_lenc_cb_cfg_s
                                                                  and includes filler bits. K = 22*Z for BG1,  K = 10*Z for BG2.
                                                                  The valid range is [0x28, 0x2100], where the minimum size is the
                                                                  minimum LENC_TASK_CFG_S[TB_SIZE] of 24 bits plus the 16-bit TB CRC. */
-        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS.
-                                                                 0x3: UL traffic, Long (Z=360).
-                                                                 0x4: UL traffic, Medium (Z=180).
-                                                                 0x5: UL traffic, Short (Z=56).
-                                                                 0x6: Initial ranging.
-                                                                 0x7: Fine ranging.
-                                                                 0x0-0x2 : Reserved. */
+        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved. */
         uint64_t num_cb                : 9;  /**< [  8:  0] The number of consecutive code blocks with this CB configuration. Valid range is [0x1, 0x98]. */
 #else /* Word 0 - Little Endian */
         uint64_t num_cb                : 9;  /**< [  8:  0] The number of consecutive code blocks with this CB configuration. Valid range is [0x1, 0x98]. */
-        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS.
-                                                                 0x3: UL traffic, Long (Z=360).
-                                                                 0x4: UL traffic, Medium (Z=180).
-                                                                 0x5: UL traffic, Short (Z=56).
-                                                                 0x6: Initial ranging.
-                                                                 0x7: Fine ranging.
-                                                                 0x0-0x2 : Reserved. */
+        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved. */
         uint64_t cb_size               : 14; /**< [ 25: 12] The code block size including CB CRC. It corresponds to 'K' in 38.212
                                                                  and includes filler bits. K = 22*Z for BG1,  K = 10*Z for BG2.
                                                                  The valid range is [0x28, 0x2100], where the minimum size is the
@@ -284,27 +252,11 @@ union cavm_lenc_cb_cfg_s
                                                                  and includes filler bits. K = 22*Z for BG1,  K = 10*Z for BG2.
                                                                  The valid range is [0x28, 0x2100], where the minimum size is the
                                                                  minimum LENC_TASK_CFG_S[TB_SIZE] of 24 bits plus the 16-bit TB CRC. */
-        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS.
-                                                                 0x3: UL traffic, Long (Z=360).
-                                                                 0x4: UL traffic, Medium (Z=180).
-                                                                 0x5: UL traffic, Short (Z=56).
-                                                                 0x6: Initial ranging.
-                                                                 0x7: Fine ranging.
-                                                                 0x0-0x2 : Reserved. */
+        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved. */
         uint64_t num_cb                : 9;  /**< [  8:  0] The number of consecutive code blocks with this CB configuration. Valid range is [0x1, 0x98]. */
 #else /* Word 0 - Little Endian */
         uint64_t num_cb                : 9;  /**< [  8:  0] The number of consecutive code blocks with this CB configuration. Valid range is [0x1, 0x98]. */
-        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS.
-                                                                 0x3: UL traffic, Long (Z=360).
-                                                                 0x4: UL traffic, Medium (Z=180).
-                                                                 0x5: UL traffic, Short (Z=56).
-                                                                 0x6: Initial ranging.
-                                                                 0x7: Fine ranging.
-                                                                 0x0-0x2 : Reserved. */
+        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved. */
         uint64_t cb_size               : 14; /**< [ 25: 12] The code block size including CB CRC. It corresponds to 'K' in 38.212
                                                                  and includes filler bits. K = 22*Z for BG1,  K = 10*Z for BG2.
                                                                  The valid range is [0x28, 0x2100], where the minimum size is the
@@ -398,19 +350,13 @@ union cavm_lenc_common_cfg_s
         uint64_t reserved_6_63         : 58;
         uint64_t phy_mode              : 1;  /**< [  5:  5] The job type.
                                                                  0 = 3GPP NR.
-                                                                 1 = Reserved.
-
-                                                                 Internal:
-                                                                 1 = DOCSIS. */
+                                                                 1 = Reserved. */
         uint64_t num_tasks             : 5;  /**< [  4:  0] Number of tasks in the job.  Valid range is [0x1, 0x10]. */
 #else /* Word 0 - Little Endian */
         uint64_t num_tasks             : 5;  /**< [  4:  0] Number of tasks in the job.  Valid range is [0x1, 0x10]. */
         uint64_t phy_mode              : 1;  /**< [  5:  5] The job type.
                                                                  0 = 3GPP NR.
-                                                                 1 = Reserved.
-
-                                                                 Internal:
-                                                                 1 = DOCSIS. */
+                                                                 1 = Reserved. */
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cnf95xxp2;
@@ -473,13 +419,7 @@ union cavm_lenc_task_cfg_s
         uint64_t basegraph             : 1;  /**< [ 25: 25] LDPC basegraph
                                                                  0x0 = BG1.
                                                                  0x1 = BG2. */
-        uint64_t mixed_mod             : 1;  /**< [ 24: 24] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS mode.
-
-                                                                 0: Do not use mixed modulation.
-                                                                 1: Use mixed modulation.
-                                                                 Ignored if shortening is applied or when LENC_CB_CFG_S[CODE_ID] \> 0x0. */
+        uint64_t mixed_mod             : 1;  /**< [ 24: 24] Reserved. */
         uint64_t num_cb_cfg            : 8;  /**< [ 23: 16] The number of CB configuration entries. Valid range is [1,8]. */
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job must have a unique ID. The task ID will be
                                                                  included in the output to correctly identify the output for each task. */
@@ -487,13 +427,7 @@ union cavm_lenc_task_cfg_s
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job must have a unique ID. The task ID will be
                                                                  included in the output to correctly identify the output for each task. */
         uint64_t num_cb_cfg            : 8;  /**< [ 23: 16] The number of CB configuration entries. Valid range is [1,8]. */
-        uint64_t mixed_mod             : 1;  /**< [ 24: 24] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS mode.
-
-                                                                 0: Do not use mixed modulation.
-                                                                 1: Use mixed modulation.
-                                                                 Ignored if shortening is applied or when LENC_CB_CFG_S[CODE_ID] \> 0x0. */
+        uint64_t mixed_mod             : 1;  /**< [ 24: 24] Reserved. */
         uint64_t basegraph             : 1;  /**< [ 25: 25] LDPC basegraph
                                                                  0x0 = BG1.
                                                                  0x1 = BG2. */
@@ -1088,13 +1022,7 @@ union cavm_lenc_task_cfg_s
         uint64_t basegraph             : 1;  /**< [ 25: 25] LDPC basegraph
                                                                  0 = BG1.
                                                                  1 = BG2. */
-        uint64_t mixed_mod             : 1;  /**< [ 24: 24] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS mode.
-
-                                                                 0: Do not use mixed modulation.
-                                                                 1: Use mixed modulation.
-                                                                 Ignored if shortening is applied or when LENC_CB_CFG_S[CODE_ID] \> 0x0. */
+        uint64_t mixed_mod             : 1;  /**< [ 24: 24] Reserved. */
         uint64_t num_cb_cfg            : 8;  /**< [ 23: 16] The number of CB configuration entries. Valid range is [0x1, 0x8]. */
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job must have a unique ID. The task ID will be
                                                                  included in the output to correctly identify the output for each task. */
@@ -1102,13 +1030,7 @@ union cavm_lenc_task_cfg_s
         uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job must have a unique ID. The task ID will be
                                                                  included in the output to correctly identify the output for each task. */
         uint64_t num_cb_cfg            : 8;  /**< [ 23: 16] The number of CB configuration entries. Valid range is [0x1, 0x8]. */
-        uint64_t mixed_mod             : 1;  /**< [ 24: 24] Reserved.
-                                                                 Internal:
-                                                                 Used only in DOCSIS mode.
-
-                                                                 0: Do not use mixed modulation.
-                                                                 1: Use mixed modulation.
-                                                                 Ignored if shortening is applied or when LENC_CB_CFG_S[CODE_ID] \> 0x0. */
+        uint64_t mixed_mod             : 1;  /**< [ 24: 24] Reserved. */
         uint64_t basegraph             : 1;  /**< [ 25: 25] LDPC basegraph
                                                                  0 = BG1.
                                                                  1 = BG2. */
@@ -1414,48 +1336,6 @@ static inline uint64_t CAVM_LENCX_ABX_CONTROL(uint64_t a, uint64_t b)
 #define arguments_CAVM_LENCX_ABX_CONTROL(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) lenc#_ab#_eco
- *
- * INTERNAL: LENC ECO Register
- */
-union cavm_lencx_abx_eco
-{
-    uint64_t u;
-    struct cavm_lencx_abx_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_lencx_abx_eco_s cn; */
-};
-typedef union cavm_lencx_abx_eco cavm_lencx_abx_eco_t;
-
-static inline uint64_t CAVM_LENCX_ABX_ECO(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LENCX_ABX_ECO(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043300008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x87e043300008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e043300008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    __cavm_csr_fatal("LENCX_ABX_ECO", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_LENCX_ABX_ECO(a,b) cavm_lencx_abx_eco_t
-#define bustype_CAVM_LENCX_ABX_ECO(a,b) CSR_TYPE_RSL
-#define basename_CAVM_LENCX_ABX_ECO(a,b) "LENCX_ABX_ECO"
-#define busnum_CAVM_LENCX_ABX_ECO(a,b) (a)
-#define arguments_CAVM_LENCX_ABX_ECO(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) lenc#_ab#_error_enable0
  *
  * LENC Error Enable 0 Register
@@ -1702,46 +1582,6 @@ static inline uint64_t CAVM_LENCX_ABX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b
 #define arguments_CAVM_LENCX_ABX_HAB_JCFG2_RAMX_DATA(a,b,c) (a),(b),(c),-1
 
 /**
- * Register (RSL) lenc#_ab#_scratch
- *
- * INTERNAL: Scratch Register
- *
- * Scratch register.
- */
-union cavm_lencx_abx_scratch
-{
-    uint64_t u;
-    struct cavm_lencx_abx_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_lencx_abx_scratch_s cn; */
-};
-typedef union cavm_lencx_abx_scratch cavm_lencx_abx_scratch_t;
-
-static inline uint64_t CAVM_LENCX_ABX_SCRATCH(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LENCX_ABX_SCRATCH(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043300080ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x87e043300080ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e043300080ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    __cavm_csr_fatal("LENCX_ABX_SCRATCH", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_LENCX_ABX_SCRATCH(a,b) cavm_lencx_abx_scratch_t
-#define bustype_CAVM_LENCX_ABX_SCRATCH(a,b) CSR_TYPE_RSL
-#define basename_CAVM_LENCX_ABX_SCRATCH(a,b) "LENCX_ABX_SCRATCH"
-#define busnum_CAVM_LENCX_ABX_SCRATCH(a,b) (a)
-#define arguments_CAVM_LENCX_ABX_SCRATCH(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) lenc#_ab#_status
  *
  * LENC Status Register
@@ -1790,57 +1630,6 @@ static inline uint64_t CAVM_LENCX_ABX_STATUS(uint64_t a, uint64_t b)
 #define arguments_CAVM_LENCX_ABX_STATUS(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) lenc#_ab#_tc_config#
- *
- * INTERNAL: TC Task Config Registers
- *
- * TC task config registers.
- */
-union cavm_lencx_abx_tc_configx
-{
-    uint64_t u;
-    struct cavm_lencx_abx_tc_configx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W) Config bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W) Config bits. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_lencx_abx_tc_configx_s cn9; */
-    /* struct cavm_lencx_abx_tc_configx_s cnf95xxp1; */
-    struct cavm_lencx_abx_tc_configx_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
-#else /* Word 0 - Little Endian */
-        uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_lencx_abx_tc_configx_cnf95xxp2 f95o; */
-    /* struct cavm_lencx_abx_tc_configx_cnf95xxp2 loki; */
-};
-typedef union cavm_lencx_abx_tc_configx cavm_lencx_abx_tc_configx_t;
-
-static inline uint64_t CAVM_LENCX_ABX_TC_CONFIGX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LENCX_ABX_TC_CONFIGX(uint64_t a, uint64_t b, uint64_t c)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1) && (c<=7)))
-        return 0x87e043301400ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x7);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1) && (c<=7)))
-        return 0x87e043301400ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x7);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1) && (c<=7)))
-        return 0x87e043301400ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x7);
-    __cavm_csr_fatal("LENCX_ABX_TC_CONFIGX", 3, a, b, c, 0, 0, 0);
-}
-
-#define typedef_CAVM_LENCX_ABX_TC_CONFIGX(a,b,c) cavm_lencx_abx_tc_configx_t
-#define bustype_CAVM_LENCX_ABX_TC_CONFIGX(a,b,c) CSR_TYPE_RSL
-#define basename_CAVM_LENCX_ABX_TC_CONFIGX(a,b,c) "LENCX_ABX_TC_CONFIGX"
-#define busnum_CAVM_LENCX_ABX_TC_CONFIGX(a,b,c) (a)
-#define arguments_CAVM_LENCX_ABX_TC_CONFIGX(a,b,c) (a),(b),(c),-1
-
-/**
  * Register (RSL) lenc#_ab#_tc_config_err_flags
  *
  * LENC Task Configuration Error Flags Register
@@ -1856,9 +1645,7 @@ union cavm_lencx_abx_tc_config_err_flags
         uint64_t reserved_14_63        : 50;
         uint64_t error13               : 1;  /**< [ 13: 13](R/W) Reserved. */
         uint64_t reserved_4_12         : 9;
-        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for mixed_mod. */
+        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved. */
         uint64_t reserved_2            : 1;
         uint64_t error1                : 1;  /**< [  1:  1](R/W) Reserved. */
         uint64_t reserved_0            : 1;
@@ -1866,9 +1653,7 @@ union cavm_lencx_abx_tc_config_err_flags
         uint64_t reserved_0            : 1;
         uint64_t error1                : 1;  /**< [  1:  1](R/W) Reserved. */
         uint64_t reserved_2            : 1;
-        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for mixed_mod. */
+        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved. */
         uint64_t reserved_4_12         : 9;
         uint64_t error13               : 1;  /**< [ 13: 13](R/W) Reserved. */
         uint64_t reserved_14_63        : 50;
@@ -1879,113 +1664,45 @@ union cavm_lencx_abx_tc_config_err_flags
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_19_63        : 45;
-        uint64_t error18               : 1;  /**< [ 18: 18](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for scrambling_init. */
-        uint64_t error17               : 1;  /**< [ 17: 17](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for symb_byte_aligned. */
-        uint64_t error16               : 1;  /**< [ 16: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_intlv. */
-        uint64_t error15               : 1;  /**< [ 15: 15](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for k0. */
-        uint64_t error14               : 1;  /**< [ 14: 14](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for ncb_size. */
+        uint64_t error18               : 1;  /**< [ 18: 18](R/W) Reserved. */
+        uint64_t error17               : 1;  /**< [ 17: 17](R/W) Reserved. */
+        uint64_t error16               : 1;  /**< [ 16: 16](R/W) Reserved. */
+        uint64_t error15               : 1;  /**< [ 15: 15](R/W) Reserved. */
+        uint64_t error14               : 1;  /**< [ 14: 14](R/W) Reserved. */
         uint64_t error13               : 1;  /**< [ 13: 13](R/W) Reserved. */
-        uint64_t error12               : 1;  /**< [ 12: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for mod_order. */
-        uint64_t error11               : 1;  /**< [ 11: 11](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_scrambling. */
-        uint64_t error10               : 1;  /**< [ 10: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for input_data_order. */
-        uint64_t error9                : 1;  /**< [  9:  9](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for tb_crc. */
-        uint64_t error8                : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for tb_crc_from_cfg_flag. */
-        uint64_t error7                : 1;  /**< [  7:  7](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for tb_crc_output_flag. */
-        uint64_t error6                : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for tb_crc_select. */
-        uint64_t error5                : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for cb_crc_select. */
-        uint64_t error4                : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for basegraph. */
-        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for mixed_mod. */
-        uint64_t error2                : 1;  /**< [  2:  2](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for num_cb_cfg. */
+        uint64_t error12               : 1;  /**< [ 12: 12](R/W) Reserved. */
+        uint64_t error11               : 1;  /**< [ 11: 11](R/W) Reserved. */
+        uint64_t error10               : 1;  /**< [ 10: 10](R/W) Reserved. */
+        uint64_t error9                : 1;  /**< [  9:  9](R/W) Reserved. */
+        uint64_t error8                : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t error7                : 1;  /**< [  7:  7](R/W) Reserved. */
+        uint64_t error6                : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t error5                : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t error4                : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved. */
+        uint64_t error2                : 1;  /**< [  2:  2](R/W) Reserved. */
         uint64_t error1                : 1;  /**< [  1:  1](R/W) Reserved. */
-        uint64_t error0                : 1;  /**< [  0:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for phy_mode. */
+        uint64_t error0                : 1;  /**< [  0:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t error0                : 1;  /**< [  0:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for phy_mode. */
+        uint64_t error0                : 1;  /**< [  0:  0](R/W) Reserved. */
         uint64_t error1                : 1;  /**< [  1:  1](R/W) Reserved. */
-        uint64_t error2                : 1;  /**< [  2:  2](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for num_cb_cfg. */
-        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for mixed_mod. */
-        uint64_t error4                : 1;  /**< [  4:  4](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for basegraph. */
-        uint64_t error5                : 1;  /**< [  5:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for cb_crc_select. */
-        uint64_t error6                : 1;  /**< [  6:  6](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for tb_crc_select. */
-        uint64_t error7                : 1;  /**< [  7:  7](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for tb_crc_output_flag. */
-        uint64_t error8                : 1;  /**< [  8:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for tb_crc_from_cfg_flag. */
-        uint64_t error9                : 1;  /**< [  9:  9](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for tb_crc. */
-        uint64_t error10               : 1;  /**< [ 10: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for input_data_order. */
-        uint64_t error11               : 1;  /**< [ 11: 11](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_scrambling. */
-        uint64_t error12               : 1;  /**< [ 12: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for mod_order. */
+        uint64_t error2                : 1;  /**< [  2:  2](R/W) Reserved. */
+        uint64_t error3                : 1;  /**< [  3:  3](R/W) Reserved. */
+        uint64_t error4                : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t error5                : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t error6                : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t error7                : 1;  /**< [  7:  7](R/W) Reserved. */
+        uint64_t error8                : 1;  /**< [  8:  8](R/W) Reserved. */
+        uint64_t error9                : 1;  /**< [  9:  9](R/W) Reserved. */
+        uint64_t error10               : 1;  /**< [ 10: 10](R/W) Reserved. */
+        uint64_t error11               : 1;  /**< [ 11: 11](R/W) Reserved. */
+        uint64_t error12               : 1;  /**< [ 12: 12](R/W) Reserved. */
         uint64_t error13               : 1;  /**< [ 13: 13](R/W) Reserved. */
-        uint64_t error14               : 1;  /**< [ 14: 14](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for ncb_size. */
-        uint64_t error15               : 1;  /**< [ 15: 15](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for k0. */
-        uint64_t error16               : 1;  /**< [ 16: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for bypass_intlv. */
-        uint64_t error17               : 1;  /**< [ 17: 17](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for symb_byte_aligned. */
-        uint64_t error18               : 1;  /**< [ 18: 18](R/W) Reserved.
-                                                                 Internal:
-                                                                 Invalid range for scrambling_init. */
+        uint64_t error14               : 1;  /**< [ 14: 14](R/W) Reserved. */
+        uint64_t error15               : 1;  /**< [ 15: 15](R/W) Reserved. */
+        uint64_t error16               : 1;  /**< [ 16: 16](R/W) Reserved. */
+        uint64_t error17               : 1;  /**< [ 17: 17](R/W) Reserved. */
+        uint64_t error18               : 1;  /**< [ 18: 18](R/W) Reserved. */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } cnf95xxp1;
@@ -2318,116 +2035,6 @@ static inline uint64_t CAVM_LENCX_ABX_TC_MAIN_RESET(uint64_t a, uint64_t b)
 #define basename_CAVM_LENCX_ABX_TC_MAIN_RESET(a,b) "LENCX_ABX_TC_MAIN_RESET"
 #define busnum_CAVM_LENCX_ABX_TC_MAIN_RESET(a,b) (a)
 #define arguments_CAVM_LENCX_ABX_TC_MAIN_RESET(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) lenc#_ab#_tc_main_start
- *
- * INTERNAL: TC Start Register
- *
- * TC start register.
- */
-union cavm_lencx_abx_tc_main_start
-{
-    uint64_t u;
-    struct cavm_lencx_abx_tc_main_start_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t start                 : 1;  /**< [  0:  0](R/W) Start bit. */
-#else /* Word 0 - Little Endian */
-        uint64_t start                 : 1;  /**< [  0:  0](R/W) Start bit. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_lencx_abx_tc_main_start_s cn9; */
-    /* struct cavm_lencx_abx_tc_main_start_s cnf95xxp1; */
-    struct cavm_lencx_abx_tc_main_start_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t start                 : 1;  /**< [  0:  0](R/W/H) Start bit. */
-#else /* Word 0 - Little Endian */
-        uint64_t start                 : 1;  /**< [  0:  0](R/W/H) Start bit. */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_lencx_abx_tc_main_start_cnf95xxp2 f95o; */
-    /* struct cavm_lencx_abx_tc_main_start_cnf95xxp2 loki; */
-};
-typedef union cavm_lencx_abx_tc_main_start cavm_lencx_abx_tc_main_start_t;
-
-static inline uint64_t CAVM_LENCX_ABX_TC_MAIN_START(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LENCX_ABX_TC_MAIN_START(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043301008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x87e043301008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e043301008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    __cavm_csr_fatal("LENCX_ABX_TC_MAIN_START", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_LENCX_ABX_TC_MAIN_START(a,b) cavm_lencx_abx_tc_main_start_t
-#define bustype_CAVM_LENCX_ABX_TC_MAIN_START(a,b) CSR_TYPE_RSL
-#define basename_CAVM_LENCX_ABX_TC_MAIN_START(a,b) "LENCX_ABX_TC_MAIN_START"
-#define busnum_CAVM_LENCX_ABX_TC_MAIN_START(a,b) (a)
-#define arguments_CAVM_LENCX_ABX_TC_MAIN_START(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) lenc#_ab#_tc_mon
- *
- * INTERNAL: TC Monitoring 0 Registers
- *
- * TC task output monitoring registers.
- */
-union cavm_lencx_abx_tc_mon
-{
-    uint64_t u;
-    struct cavm_lencx_abx_tc_mon_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO) tc1840 task output monitoring values. */
-#else /* Word 0 - Little Endian */
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO) tc1840 task output monitoring values. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_lencx_abx_tc_mon_s cn9; */
-    /* struct cavm_lencx_abx_tc_mon_s cnf95xxp1; */
-    struct cavm_lencx_abx_tc_mon_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO/H) Encoder core task output monitoring values. */
-#else /* Word 0 - Little Endian */
-        uint64_t bus_val               : 16; /**< [ 15:  0](RO/H) Encoder core task output monitoring values. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_lencx_abx_tc_mon_cnf95xxp2 f95o; */
-    /* struct cavm_lencx_abx_tc_mon_cnf95xxp2 loki; */
-};
-typedef union cavm_lencx_abx_tc_mon cavm_lencx_abx_tc_mon_t;
-
-static inline uint64_t CAVM_LENCX_ABX_TC_MON(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LENCX_ABX_TC_MON(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043301300ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x87e043301300ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e043301300ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    __cavm_csr_fatal("LENCX_ABX_TC_MON", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_LENCX_ABX_TC_MON(a,b) cavm_lencx_abx_tc_mon_t
-#define bustype_CAVM_LENCX_ABX_TC_MON(a,b) CSR_TYPE_RSL
-#define basename_CAVM_LENCX_ABX_TC_MON(a,b) "LENCX_ABX_TC_MON"
-#define busnum_CAVM_LENCX_ABX_TC_MON(a,b) (a)
-#define arguments_CAVM_LENCX_ABX_TC_MON(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) lenc#_ab#_tc_status

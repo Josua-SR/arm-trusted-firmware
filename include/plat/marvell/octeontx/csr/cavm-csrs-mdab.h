@@ -505,49 +505,6 @@ static inline uint64_t CAVM_MDABX_CFG_STATUS(uint64_t a)
 #define arguments_CAVM_MDABX_CFG_STATUS(a) (a),-1,-1,-1
 
 /**
- * Register (RSL32b) mdab#_dac_eco
- *
- * INTERNAL: DAC ECO Register
- *
- * Internal:
- * Reserved for ECO usage
- */
-union cavm_mdabx_dac_eco
-{
-    uint32_t u;
-    struct cavm_mdabx_dac_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage */
-#else /* Word 0 - Little Endian */
-        uint32_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdabx_dac_eco_s cn; */
-};
-typedef union cavm_mdabx_dac_eco cavm_mdabx_dac_eco_t;
-
-static inline uint64_t CAVM_MDABX_DAC_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDABX_DAC_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
-        return 0x87e044100300ll + 0x4000ll * ((a) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
-        return 0x87e044100300ll + 0x4000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
-        return 0x87e044100300ll + 0x4000ll * ((a) & 0x3f);
-    __cavm_csr_fatal("MDABX_DAC_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDABX_DAC_ECO(a) cavm_mdabx_dac_eco_t
-#define bustype_CAVM_MDABX_DAC_ECO(a) CSR_TYPE_RSL32b
-#define basename_CAVM_MDABX_DAC_ECO(a) "MDABX_DAC_ECO"
-#define busnum_CAVM_MDABX_DAC_ECO(a) (a)
-#define arguments_CAVM_MDABX_DAC_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL32b) mdab#_dac_membase_hi
  *
  * DAC Address Offset Upper Bits Register
@@ -687,173 +644,6 @@ static inline uint64_t CAVM_MDABX_DAC_TIMER(uint64_t a)
 #define basename_CAVM_MDABX_DAC_TIMER(a) "MDABX_DAC_TIMER"
 #define busnum_CAVM_MDABX_DAC_TIMER(a) (a)
 #define arguments_CAVM_MDABX_DAC_TIMER(a) (a),-1,-1,-1
-
-/**
- * Register (RSL32b) mdab#_error_address
- *
- * INTERNAL: MDAB Error Address Register
- *
- * This register contains the address of the transaction that caused an error signal to be
- * asserted
- *
- * Internal:
- * This register is broken in o75p1
- */
-union cavm_mdabx_error_address
-{
-    uint32_t u;
-    struct cavm_mdabx_error_address_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t addr                  : 32; /**< [ 31:  0](RO/H) When an RSL access causes the ID_MEM_NXM error bit to be set, this field captures the
-                                                                 failing address. */
-#else /* Word 0 - Little Endian */
-        uint32_t addr                  : 32; /**< [ 31:  0](RO/H) When an RSL access causes the ID_MEM_NXM error bit to be set, this field captures the
-                                                                 failing address. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdabx_error_address_s cn; */
-};
-typedef union cavm_mdabx_error_address cavm_mdabx_error_address_t;
-
-static inline uint64_t CAVM_MDABX_ERROR_ADDRESS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDABX_ERROR_ADDRESS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
-        return 0x87e044100270ll + 0x4000ll * ((a) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
-        return 0x87e044100270ll + 0x4000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
-        return 0x87e044100270ll + 0x4000ll * ((a) & 0x3f);
-    __cavm_csr_fatal("MDABX_ERROR_ADDRESS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDABX_ERROR_ADDRESS(a) cavm_mdabx_error_address_t
-#define bustype_CAVM_MDABX_ERROR_ADDRESS(a) CSR_TYPE_RSL32b
-#define basename_CAVM_MDABX_ERROR_ADDRESS(a) "MDABX_ERROR_ADDRESS"
-#define busnum_CAVM_MDABX_ERROR_ADDRESS(a) (a)
-#define arguments_CAVM_MDABX_ERROR_ADDRESS(a) (a),-1,-1,-1
-
-/**
- * Register (RSL32b) mdab#_error_status
- *
- * INTERNAL: MDAB Error Status Register
- *
- * This register contains error status signals.
- * Internal:
- * This register is broken in o75p1
- */
-union cavm_mdabx_error_status
-{
-    uint32_t u;
-    struct cavm_mdabx_error_status_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_9_31         : 23;
-        uint32_t error_hilo            : 1;  /**< [  8:  8](RO/H) This field indicates the state of addr[3] of a CSR transaction that caused the error whose
-                                                                 state is recorded in
-                                                                 this register.  (CSR-WR: WBEs/CSR-RD:8B-aligned) */
-        uint32_t error_flitsize        : 1;  /**< [  7:  7](RO/H) This field indicates the type of transaction that caused the recorded error. 0=16B, 1=32B */
-        uint32_t error_type            : 1;  /**< [  6:  6](RO/H) This field indicates the type of transaction that caused the recorded error. 0=non-csr, 1=csr. */
-        uint32_t error_cmd             : 1;  /**< [  5:  5](RO/H) This field indicates the command type of the transaction that caused the recorded error.
-                                                                 0=RD, 1=WR. */
-        uint32_t error_src             : 3;  /**< [  4:  2](RO/H) This field indicates the source of the transaction that caused the recorded error.
-                                                                 000: WDM
-                                                                 001: RDM
-                                                                 010: CDM
-                                                                 011: CSR
-                                                                 100: PFO Write Request Error */
-        uint32_t mem_dataerr           : 1;  /**< [  1:  1](R/W1C/H) This bit will be set when a data error has occurred during a csr or DMA engine operation.. */
-        uint32_t mem_addrerr           : 1;  /**< [  0:  0](R/W1C/H) This bit will be set when a csr or DMA engine access is performed to a non existent
-                                                                 instruction
-                                                                 or data memory address. */
-#else /* Word 0 - Little Endian */
-        uint32_t mem_addrerr           : 1;  /**< [  0:  0](R/W1C/H) This bit will be set when a csr or DMA engine access is performed to a non existent
-                                                                 instruction
-                                                                 or data memory address. */
-        uint32_t mem_dataerr           : 1;  /**< [  1:  1](R/W1C/H) This bit will be set when a data error has occurred during a csr or DMA engine operation.. */
-        uint32_t error_src             : 3;  /**< [  4:  2](RO/H) This field indicates the source of the transaction that caused the recorded error.
-                                                                 000: WDM
-                                                                 001: RDM
-                                                                 010: CDM
-                                                                 011: CSR
-                                                                 100: PFO Write Request Error */
-        uint32_t error_cmd             : 1;  /**< [  5:  5](RO/H) This field indicates the command type of the transaction that caused the recorded error.
-                                                                 0=RD, 1=WR. */
-        uint32_t error_type            : 1;  /**< [  6:  6](RO/H) This field indicates the type of transaction that caused the recorded error. 0=non-csr, 1=csr. */
-        uint32_t error_flitsize        : 1;  /**< [  7:  7](RO/H) This field indicates the type of transaction that caused the recorded error. 0=16B, 1=32B */
-        uint32_t error_hilo            : 1;  /**< [  8:  8](RO/H) This field indicates the state of addr[3] of a CSR transaction that caused the error whose
-                                                                 state is recorded in
-                                                                 this register.  (CSR-WR: WBEs/CSR-RD:8B-aligned) */
-        uint32_t reserved_9_31         : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_mdabx_error_status_s cn9; */
-    /* struct cavm_mdabx_error_status_s cnf95xxp1; */
-    struct cavm_mdabx_error_status_cnf95xxp2
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t reserved_9_31         : 23;
-        uint32_t error_hilo            : 1;  /**< [  8:  8](RO/H) This field indicates the state of addr[3] of a CSR transaction that caused the error whose
-                                                                 state is recorded in
-                                                                 this register.  (CSR-WR: WBEs/CSR-RD:8B-aligned) */
-        uint32_t error_flitsize        : 1;  /**< [  7:  7](RO/H) This field indicates the type of transaction that caused the recorded error. 0=16B, 1=32B */
-        uint32_t error_type            : 1;  /**< [  6:  6](RO/H) This field indicates the type of transaction that caused the recorded error. 0=non-csr, 1=csr. */
-        uint32_t error_cmd             : 1;  /**< [  5:  5](RO/H) This field indicates the command type of the transaction that caused the recorded error.
-                                                                 0=RD, 1=WR. */
-        uint32_t error_src             : 3;  /**< [  4:  2](RO/H) This field indicates the source of the transaction that caused the recorded error.
-                                                                 0x0 = WDM.
-                                                                 0x1 = RDM.
-                                                                 0x2 = CDM.
-                                                                 0x3 = CSR.
-                                                                 0x4 = PFO write request error. */
-        uint32_t mem_dataerr           : 1;  /**< [  1:  1](R/W1C/H) This bit will be set when a data error has occurred during a csr or DMA engine operation.. */
-        uint32_t mem_addrerr           : 1;  /**< [  0:  0](R/W1C/H) This bit will be set when a csr or DMA engine access is performed to a non existent
-                                                                 instruction
-                                                                 or data memory address. */
-#else /* Word 0 - Little Endian */
-        uint32_t mem_addrerr           : 1;  /**< [  0:  0](R/W1C/H) This bit will be set when a csr or DMA engine access is performed to a non existent
-                                                                 instruction
-                                                                 or data memory address. */
-        uint32_t mem_dataerr           : 1;  /**< [  1:  1](R/W1C/H) This bit will be set when a data error has occurred during a csr or DMA engine operation.. */
-        uint32_t error_src             : 3;  /**< [  4:  2](RO/H) This field indicates the source of the transaction that caused the recorded error.
-                                                                 0x0 = WDM.
-                                                                 0x1 = RDM.
-                                                                 0x2 = CDM.
-                                                                 0x3 = CSR.
-                                                                 0x4 = PFO write request error. */
-        uint32_t error_cmd             : 1;  /**< [  5:  5](RO/H) This field indicates the command type of the transaction that caused the recorded error.
-                                                                 0=RD, 1=WR. */
-        uint32_t error_type            : 1;  /**< [  6:  6](RO/H) This field indicates the type of transaction that caused the recorded error. 0=non-csr, 1=csr. */
-        uint32_t error_flitsize        : 1;  /**< [  7:  7](RO/H) This field indicates the type of transaction that caused the recorded error. 0=16B, 1=32B */
-        uint32_t error_hilo            : 1;  /**< [  8:  8](RO/H) This field indicates the state of addr[3] of a CSR transaction that caused the error whose
-                                                                 state is recorded in
-                                                                 this register.  (CSR-WR: WBEs/CSR-RD:8B-aligned) */
-        uint32_t reserved_9_31         : 23;
-#endif /* Word 0 - End */
-    } cnf95xxp2;
-    /* struct cavm_mdabx_error_status_cnf95xxp2 f95mm; */
-    /* struct cavm_mdabx_error_status_cnf95xxp2 f95o; */
-};
-typedef union cavm_mdabx_error_status cavm_mdabx_error_status_t;
-
-static inline uint64_t CAVM_MDABX_ERROR_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDABX_ERROR_STATUS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
-        return 0x87e044100260ll + 0x4000ll * ((a) & 0x3f);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
-        return 0x87e044100260ll + 0x4000ll * ((a) & 0xf);
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
-        return 0x87e044100260ll + 0x4000ll * ((a) & 0x3f);
-    __cavm_csr_fatal("MDABX_ERROR_STATUS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_MDABX_ERROR_STATUS(a) cavm_mdabx_error_status_t
-#define bustype_CAVM_MDABX_ERROR_STATUS(a) CSR_TYPE_RSL32b
-#define basename_CAVM_MDABX_ERROR_STATUS(a) "MDABX_ERROR_STATUS"
-#define busnum_CAVM_MDABX_ERROR_STATUS(a) (a)
-#define arguments_CAVM_MDABX_ERROR_STATUS(a) (a),-1,-1,-1
 
 /**
  * Register (RSL32b) mdab#_gp0
@@ -3029,12 +2819,7 @@ union cavm_mdabx_proc_ctl
                                                                  this value +1 clocks. The minimum valid value is 15, which provides a count of
                                                                  16 clocks. This register provides
                                                                  a maximum count of 1024. */
-        uint32_t cya_ld_lcl_rst_rs_clr : 1;  /**< [  7:  7](R/W) This register contains backdoor cleanup state.
-                                                                 Internal:
-                                                                 When performing a load local with reset operation, If this bit is set
-                                                                 it will override the logic that holds reset and run_stall active until the slice with
-                                                                 last == 1 is completed.  This will result in reset and run_stall being deasserted after
-                                                                 each slice of a multislice ld_lcl_wrst operation. */
+        uint32_t cya_ld_lcl_rst_rs_clr : 1;  /**< [  7:  7](R/W) This register contains backdoor cleanup state. */
         uint32_t stlcl_stall           : 1;  /**< [  6:  6](R/W) Local stall bit.  During a ST_LCL transaction, if this
                                                                  bit is SET, the DAC hardware will assert the DSP RunStall input. If the bit
                                                                  is CLEAR, the DAC hardware will NOT assert the DSP RunStall input. */
@@ -3078,12 +2863,7 @@ union cavm_mdabx_proc_ctl
         uint32_t stlcl_stall           : 1;  /**< [  6:  6](R/W) Local stall bit.  During a ST_LCL transaction, if this
                                                                  bit is SET, the DAC hardware will assert the DSP RunStall input. If the bit
                                                                  is CLEAR, the DAC hardware will NOT assert the DSP RunStall input. */
-        uint32_t cya_ld_lcl_rst_rs_clr : 1;  /**< [  7:  7](R/W) This register contains backdoor cleanup state.
-                                                                 Internal:
-                                                                 When performing a load local with reset operation, If this bit is set
-                                                                 it will override the logic that holds reset and run_stall active until the slice with
-                                                                 last == 1 is completed.  This will result in reset and run_stall being deasserted after
-                                                                 each slice of a multislice ld_lcl_wrst operation. */
+        uint32_t cya_ld_lcl_rst_rs_clr : 1;  /**< [  7:  7](R/W) This register contains backdoor cleanup state. */
         uint32_t powersave_on_cnt      : 10; /**< [ 17:  8](R/W) This register provides the on (high) count for RUNSTALL powersaving mode. The
                                                                  RUNSTALL signal will be driven high for
                                                                  this value +1 clocks. The minimum valid value is 15, which provides a count of
@@ -3123,12 +2903,7 @@ union cavm_mdabx_proc_ctl
                                                                  this value +1 clocks. The minimum valid value is 15, which provides a count of
                                                                  16 clocks. This register provides
                                                                  a maximum count of 1024. */
-        uint32_t cya_ld_lcl_rst_rs_clr : 1;  /**< [  7:  7](R/W) This register contains backdoor cleanup state.
-                                                                 Internal:
-                                                                 When performing a load local with reset operation, If this bit is set
-                                                                 it will override the logic that holds reset and run_stall active until the slice with
-                                                                 last == 1 is completed.  This will result in reset and run_stall being deasserted after
-                                                                 each slice of a multislice ld_lcl_wrst operation. */
+        uint32_t cya_ld_lcl_rst_rs_clr : 1;  /**< [  7:  7](R/W) This register contains backdoor cleanup state. */
         uint32_t stlcl_stall           : 1;  /**< [  6:  6](R/W) Local stall bit.  During a ST_LCL transaction, if this
                                                                  bit is set, the DAC hardware will assert the DSP RunStall input. If the bit
                                                                  is clear, the DAC hardware will NOT assert the DSP RunStall input. */
@@ -3172,12 +2947,7 @@ union cavm_mdabx_proc_ctl
         uint32_t stlcl_stall           : 1;  /**< [  6:  6](R/W) Local stall bit.  During a ST_LCL transaction, if this
                                                                  bit is set, the DAC hardware will assert the DSP RunStall input. If the bit
                                                                  is clear, the DAC hardware will NOT assert the DSP RunStall input. */
-        uint32_t cya_ld_lcl_rst_rs_clr : 1;  /**< [  7:  7](R/W) This register contains backdoor cleanup state.
-                                                                 Internal:
-                                                                 When performing a load local with reset operation, If this bit is set
-                                                                 it will override the logic that holds reset and run_stall active until the slice with
-                                                                 last == 1 is completed.  This will result in reset and run_stall being deasserted after
-                                                                 each slice of a multislice ld_lcl_wrst operation. */
+        uint32_t cya_ld_lcl_rst_rs_clr : 1;  /**< [  7:  7](R/W) This register contains backdoor cleanup state. */
         uint32_t powersave_on_cnt      : 10; /**< [ 17:  8](R/W) This register provides the on (high) count for RUN_STALL powersaving mode. The
                                                                  RUN_STALL signal will be driven high for
                                                                  this value +1 clocks. The minimum valid value is 15, which provides a count of

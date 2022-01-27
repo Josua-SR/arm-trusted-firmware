@@ -170,15 +170,9 @@ union cavm_gsernx_common_const1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_4_63         : 60;
-        uint64_t number_lanes          : 4;  /**< [  3:  0](RO/H) The number of lanes in this module, e.g., 4 for a QLM or 2 for a DLM.
-                                                                 Internal:
-                                                                 FIXME reset value 4 (done). Add reset_matches_size (not done). Note: for dlm
-                                                                 tieoffs will set reset value to 2. */
+        uint64_t number_lanes          : 4;  /**< [  3:  0](RO/H) The number of lanes in this module, e.g., 4 for a QLM or 2 for a DLM. */
 #else /* Word 0 - Little Endian */
-        uint64_t number_lanes          : 4;  /**< [  3:  0](RO/H) The number of lanes in this module, e.g., 4 for a QLM or 2 for a DLM.
-                                                                 Internal:
-                                                                 FIXME reset value 4 (done). Add reset_matches_size (not done). Note: for dlm
-                                                                 tieoffs will set reset value to 2. */
+        uint64_t number_lanes          : 4;  /**< [  3:  0](RO/H) The number of lanes in this module, e.g., 4 for a QLM or 2 for a DLM. */
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
@@ -202,45 +196,6 @@ static inline uint64_t CAVM_GSERNX_COMMON_CONST1(uint64_t a)
 #define device_bar_CAVM_GSERNX_COMMON_CONST1(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_GSERNX_COMMON_CONST1(a) (a)
 #define arguments_CAVM_GSERNX_COMMON_CONST1(a) (a),-1,-1,-1
-
-/**
- * Register (RSL) gsern#_common_eco
- *
- * INTERNAL: GSER Common ECO Register
- */
-union cavm_gsernx_common_eco
-{
-    uint64_t u;
-    struct cavm_gsernx_common_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 62; /**< [ 63:  2](R/W) Reserved for ECO use. */
-        uint64_t eco_rw_pll            : 2;  /**< [  1:  0](R/W) Reserved for ECO use. Pre-connected to the PLL. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw_pll            : 2;  /**< [  1:  0](R/W) Reserved for ECO use. Pre-connected to the PLL. */
-        uint64_t eco_rw                : 62; /**< [ 63:  2](R/W) Reserved for ECO use. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsernx_common_eco_s cn; */
-};
-typedef union cavm_gsernx_common_eco cavm_gsernx_common_eco_t;
-
-static inline uint64_t CAVM_GSERNX_COMMON_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
-        return 0x87e0900f07b0ll + 0x1000000ll * ((a) & 0x7);
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && (a<=3))
-        return 0x87e0900f07b0ll + 0x1000000ll * ((a) & 0x3);
-    __cavm_csr_fatal("GSERNX_COMMON_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GSERNX_COMMON_ECO(a) cavm_gsernx_common_eco_t
-#define bustype_CAVM_GSERNX_COMMON_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_GSERNX_COMMON_ECO(a) "GSERNX_COMMON_ECO"
-#define device_bar_CAVM_GSERNX_COMMON_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GSERNX_COMMON_ECO(a) (a)
-#define arguments_CAVM_GSERNX_COMMON_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) gsern#_common_init_bsts
@@ -410,9 +365,7 @@ union cavm_gsernx_common_pll_2_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_57_63        : 7;
-        uint64_t mio_refclk_en         : 1;  /**< [ 56: 56](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable sending the common PLL reference clock to the counter in MIO. */
+        uint64_t mio_refclk_en         : 1;  /**< [ 56: 56](R/W) Reserved. */
         uint64_t lock_check_cnt_ovrd_en : 1; /**< [ 55: 55](R/W) Enable use of [LOCK_CHECK_CNT_OVRD]. */
         uint64_t lock_check_cnt_ovrd   : 15; /**< [ 54: 40](R/W) Lock check counter override value. This counter is used to wait for PLL lock to
                                                                  be valid. It counts every reference clock cycle and once its done asserts
@@ -421,12 +374,8 @@ union cavm_gsernx_common_pll_2_bcfg
                                                                  common PLL. To use value assert GSERN()_LANE()_RST1_BCFG[LOCK_CHECK] or trigger
                                                                  a PLL reset sequence. */
         uint64_t reserved_34_39        : 6;
-        uint64_t vcm_sel               : 1;  /**< [ 33: 33](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 See PLL designer for how to set these. */
-        uint64_t cp_boost              : 1;  /**< [ 32: 32](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 See PLL designer for how to set these. */
+        uint64_t vcm_sel               : 1;  /**< [ 33: 33](R/W) For diagnostic use only. */
+        uint64_t cp_boost              : 1;  /**< [ 32: 32](R/W) For diagnostic use only. */
         uint64_t ssc_sata_mode         : 2;  /**< [ 31: 30](R/W) PLL SATA spread spectrum control.
                                                                   0x0 = Down spreading. PPM triangle wave total peak-to-peak spread subtracted from
                                                                  nominal frequency.
@@ -476,12 +425,8 @@ union cavm_gsernx_common_pll_2_bcfg
                                                                   0x2 = Center spreading. PPM triangle wave total peak-to-peak spread centered at nominal
                                                                  frequency.
                                                                   0x3 = Square wave subtracted from nominal frequency. */
-        uint64_t cp_boost              : 1;  /**< [ 32: 32](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 See PLL designer for how to set these. */
-        uint64_t vcm_sel               : 1;  /**< [ 33: 33](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 See PLL designer for how to set these. */
+        uint64_t cp_boost              : 1;  /**< [ 32: 32](R/W) For diagnostic use only. */
+        uint64_t vcm_sel               : 1;  /**< [ 33: 33](R/W) For diagnostic use only. */
         uint64_t reserved_34_39        : 6;
         uint64_t lock_check_cnt_ovrd   : 15; /**< [ 54: 40](R/W) Lock check counter override value. This counter is used to wait for PLL lock to
                                                                  be valid. It counts every reference clock cycle and once its done asserts
@@ -490,9 +435,7 @@ union cavm_gsernx_common_pll_2_bcfg
                                                                  common PLL. To use value assert GSERN()_LANE()_RST1_BCFG[LOCK_CHECK] or trigger
                                                                  a PLL reset sequence. */
         uint64_t lock_check_cnt_ovrd_en : 1; /**< [ 55: 55](R/W) Enable use of [LOCK_CHECK_CNT_OVRD]. */
-        uint64_t mio_refclk_en         : 1;  /**< [ 56: 56](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable sending the common PLL reference clock to the counter in MIO. */
+        uint64_t mio_refclk_en         : 1;  /**< [ 56: 56](R/W) Reserved. */
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
     } s;
@@ -675,13 +618,9 @@ union cavm_gsernx_common_rev
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_8_63         : 56;
-        uint64_t rev                   : 8;  /**< [  7:  0](RO/H) Revision number for GSERN common subblock.
-                                                                 Internal:
-                                                                 Used primarily for E5. */
+        uint64_t rev                   : 8;  /**< [  7:  0](RO/H) Revision number for GSERN common subblock. */
 #else /* Word 0 - Little Endian */
-        uint64_t rev                   : 8;  /**< [  7:  0](RO/H) Revision number for GSERN common subblock.
-                                                                 Internal:
-                                                                 Used primarily for E5. */
+        uint64_t rev                   : 8;  /**< [  7:  0](RO/H) Revision number for GSERN common subblock. */
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } s;
@@ -746,9 +685,7 @@ union cavm_gsernx_common_rst_bcfg
         uint64_t vco_cal_reset         : 1;  /**< [  6:  6](R/W) PLL VCO calibration state machine reset. */
         uint64_t fracn_reset           : 1;  /**< [  5:  5](R/W) PLL fractional-N state machine reset. */
         uint64_t ssc_reset             : 1;  /**< [  4:  4](R/W) PLL SSC state machine reset. */
-        uint64_t post_div_reset        : 1;  /**< [  3:  3](RO) Reserved.
-                                                                 Internal:
-                                                                 Was common PLL post divider reset.  No longer used. */
+        uint64_t post_div_reset        : 1;  /**< [  3:  3](RO) Reserved. */
         uint64_t reset                 : 1;  /**< [  2:  2](R/W) PLL primary reset; must assert [POST_DIV_RESET] if [RESET] is asserted. */
         uint64_t cal_en                : 1;  /**< [  1:  1](R/W) Enable PLL calibration procedure. */
         uint64_t pwdn                  : 1;  /**< [  0:  0](R/W) PLL power down control. */
@@ -756,9 +693,7 @@ union cavm_gsernx_common_rst_bcfg
         uint64_t pwdn                  : 1;  /**< [  0:  0](R/W) PLL power down control. */
         uint64_t cal_en                : 1;  /**< [  1:  1](R/W) Enable PLL calibration procedure. */
         uint64_t reset                 : 1;  /**< [  2:  2](R/W) PLL primary reset; must assert [POST_DIV_RESET] if [RESET] is asserted. */
-        uint64_t post_div_reset        : 1;  /**< [  3:  3](RO) Reserved.
-                                                                 Internal:
-                                                                 Was common PLL post divider reset.  No longer used. */
+        uint64_t post_div_reset        : 1;  /**< [  3:  3](RO) Reserved. */
         uint64_t ssc_reset             : 1;  /**< [  4:  4](R/W) PLL SSC state machine reset. */
         uint64_t fracn_reset           : 1;  /**< [  5:  5](R/W) PLL fractional-N state machine reset. */
         uint64_t vco_cal_reset         : 1;  /**< [  6:  6](R/W) PLL VCO calibration state machine reset. */
@@ -943,9 +878,7 @@ union cavm_gsernx_common_rst_cnt2_bcfg
                                                                  machines. Set this field to one less than the desired number of
                                                                  cycles of delay. */
         uint64_t reserved_29_31        : 3;
-        uint64_t pre_pdiv_reset_wait   : 13; /**< [ 28: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 The PLL no longer has a postdivider reset. */
+        uint64_t pre_pdiv_reset_wait   : 13; /**< [ 28: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
         uint64_t pre_pll_reset_wait    : 12; /**< [ 11:  0](R/W) Wait count in service clock cycles after calibration enable deasserts
                                                                  before deasserting reset to the PLL. Set this field to one less
@@ -955,9 +888,7 @@ union cavm_gsernx_common_rst_cnt2_bcfg
                                                                  before deasserting reset to the PLL. Set this field to one less
                                                                  than the desired number of cycles of delay. */
         uint64_t reserved_12_15        : 4;
-        uint64_t pre_pdiv_reset_wait   : 13; /**< [ 28: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 The PLL no longer has a postdivider reset. */
+        uint64_t pre_pdiv_reset_wait   : 13; /**< [ 28: 16](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
         uint64_t pre_pll_sm_reset_wait : 9;  /**< [ 40: 32](R/W) Wait count in service clock cycles after deasserting pwdn before
                                                                  deasserting resets to the PLL fracn, ssc, and cal_en state
@@ -1161,14 +1092,7 @@ union cavm_gsernx_lanex_cdrfsm_bcfg
                                                                  with a divided copy of the transmit clock.  This field should be set
                                                                  as desired before sequencing the transmitter and/or receiver reset
                                                                  state machine(s). */
-        uint64_t trunc                 : 2;  /**< [ 29: 28](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 state2[16:0] is CDR state machine 2nd order loop state variable.
-
-                                                                 0x0 = state2[16:0] is truncated to 13 bits (plus sign bit).
-                                                                 0x1 = state2[16:0] is truncated to 14 bits (plus sign bit).
-                                                                 0x2 = state2[16:0] is truncated to 15 bits (plus sign bit).
-                                                                 0x3 = state2[16:0] is truncated to 16 bits (plus sign bit, no truncation). */
+        uint64_t trunc                 : 2;  /**< [ 29: 28](R/W/H) Reserved. */
         uint64_t limit                 : 2;  /**< [ 27: 26](R/W/H) 0x0 = Pass-through next state at boundaries.
                                                                  0x1 = Limit next state at boundaries.
                                                                  0x2-3 = Limit & pause next state at boundaries. */
@@ -1184,14 +1108,7 @@ union cavm_gsernx_lanex_cdrfsm_bcfg
         uint64_t limit                 : 2;  /**< [ 27: 26](R/W/H) 0x0 = Pass-through next state at boundaries.
                                                                  0x1 = Limit next state at boundaries.
                                                                  0x2-3 = Limit & pause next state at boundaries. */
-        uint64_t trunc                 : 2;  /**< [ 29: 28](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 state2[16:0] is CDR state machine 2nd order loop state variable.
-
-                                                                 0x0 = state2[16:0] is truncated to 13 bits (plus sign bit).
-                                                                 0x1 = state2[16:0] is truncated to 14 bits (plus sign bit).
-                                                                 0x2 = state2[16:0] is truncated to 15 bits (plus sign bit).
-                                                                 0x3 = state2[16:0] is truncated to 16 bits (plus sign bit, no truncation). */
+        uint64_t trunc                 : 2;  /**< [ 29: 28](R/W/H) Reserved. */
         uint64_t clk_sel               : 2;  /**< [ 31: 30](R/W/H) 0x0 = Run off div5clk from TX.
                                                                  0x1 = Run off div3clk from TX.
                                                                  0x2 = Run off div5clk from RX.
@@ -1256,30 +1173,10 @@ union cavm_gsernx_lanex_cgx_txeq_bcfg
                                                                  then write [TX_COEFF_UPDATE] to 1. */
         uint64_t tx_enable             : 1;  /**< [ 26: 26](R/W) Transmitter enable.
                                                                  0 = Disable the SerDes transmitter.
-                                                                 1 = Enable the SerDes transmitter.
-
-                                                                 Internal:
-                                                                 Drives the cgx_tx_enable input to the GSERN src_mux. */
-        uint64_t tx_stuff              : 1;  /**< [ 25: 25](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter bit stuffing.
-                                                                 Programs the transmitter PCS lite layer for bit stuffing.
-                                                                 Not used for Ethernet connections.
-                                                                 Leave programmed to 0x0.
-                                                                 Drives the cgx_tx_stuff input to the GSERN src_mux. */
-        uint64_t tx_oob                : 1;  /**< [ 24: 24](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter OOB signaling.
-                                                                 Not typically used for Ethernet connnections.
-                                                                 Leave programmed to 0x0.
-                                                                 Drives the cgx_tx_oob input to the GSERN src_mux. */
-        uint64_t tx_idle               : 1;  /**< [ 23: 23](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter electrical idle.
-                                                                 Used to force the transmitter to electrical idle.
-                                                                 Not typically used for Ethernet connections.
-                                                                 Leave progreammed to 0x0.
-                                                                 Drives the cgx_tx_idle input to the GSERN src_mux. */
+                                                                 1 = Enable the SerDes transmitter. */
+        uint64_t tx_stuff              : 1;  /**< [ 25: 25](R/W) Reserved. For Diagnostic Use Only. */
+        uint64_t tx_oob                : 1;  /**< [ 24: 24](R/W) Reserved. For Diagnostic Use Only. */
+        uint64_t tx_idle               : 1;  /**< [ 23: 23](R/W) Reserved. For Diagnostic Use Only. */
         uint64_t tx_cspd               : 1;  /**< [ 22: 22](R/W) Power-down control for a second TX bias/swing leg with the same
                                                                  weight as TX_BS[3]. Normally this field is left deasserted to
                                                                  provide a minimum transmit amplitude. Asserting [TX_CSPD] will turn
@@ -1383,32 +1280,12 @@ union cavm_gsernx_lanex_cgx_txeq_bcfg
                                                                  weight as TX_BS[3]. Normally this field is left deasserted to
                                                                  provide a minimum transmit amplitude. Asserting [TX_CSPD] will turn
                                                                  off all legs of the bias/swing generator for lower standby power. */
-        uint64_t tx_idle               : 1;  /**< [ 23: 23](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter electrical idle.
-                                                                 Used to force the transmitter to electrical idle.
-                                                                 Not typically used for Ethernet connections.
-                                                                 Leave progreammed to 0x0.
-                                                                 Drives the cgx_tx_idle input to the GSERN src_mux. */
-        uint64_t tx_oob                : 1;  /**< [ 24: 24](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter OOB signaling.
-                                                                 Not typically used for Ethernet connnections.
-                                                                 Leave programmed to 0x0.
-                                                                 Drives the cgx_tx_oob input to the GSERN src_mux. */
-        uint64_t tx_stuff              : 1;  /**< [ 25: 25](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter bit stuffing.
-                                                                 Programs the transmitter PCS lite layer for bit stuffing.
-                                                                 Not used for Ethernet connections.
-                                                                 Leave programmed to 0x0.
-                                                                 Drives the cgx_tx_stuff input to the GSERN src_mux. */
+        uint64_t tx_idle               : 1;  /**< [ 23: 23](R/W) Reserved. For Diagnostic Use Only. */
+        uint64_t tx_oob                : 1;  /**< [ 24: 24](R/W) Reserved. For Diagnostic Use Only. */
+        uint64_t tx_stuff              : 1;  /**< [ 25: 25](R/W) Reserved. For Diagnostic Use Only. */
         uint64_t tx_enable             : 1;  /**< [ 26: 26](R/W) Transmitter enable.
                                                                  0 = Disable the SerDes transmitter.
-                                                                 1 = Enable the SerDes transmitter.
-
-                                                                 Internal:
-                                                                 Drives the cgx_tx_enable input to the GSERN src_mux. */
+                                                                 1 = Enable the SerDes transmitter. */
         uint64_t tx_coeff_update       : 1;  /**< [ 27: 27](R/W/H) Transmitter coefficient update.
                                                                  An asserting edge will start the transmitter coefficient update
                                                                  sequencer. This field self-clears when the sequence has completed.
@@ -1483,577 +1360,6 @@ static inline uint64_t CAVM_GSERNX_LANEX_CONST(uint64_t a, uint64_t b)
 #define device_bar_CAVM_GSERNX_LANEX_CONST(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_GSERNX_LANEX_CONST(a,b) (a)
 #define arguments_CAVM_GSERNX_LANEX_CONST(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) gsern#_lane#_eco
- *
- * INTERNAL: GSER Lane ECO Register
- */
-union cavm_gsernx_lanex_eco
-{
-    uint64_t u;
-    struct cavm_gsernx_lanex_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 52; /**< [ 63: 12](R/W) Reserved for ECO use. */
-        uint64_t eco_rw_pll            : 2;  /**< [ 11: 10](R/W) Reserved for ECO use. Pre-connected to the PLL. */
-        uint64_t eco_rw_tx             : 2;  /**< [  9:  8](R/W) Reserved for ECO use. Pre-connected to Tx custom. */
-        uint64_t eco_rw_rx_top         : 4;  /**< [  7:  4](R/W) Reserved for ECO use. Pre-connected to the north side of Rx custom. */
-        uint64_t eco_rw_rx_bot         : 4;  /**< [  3:  0](R/W) Reserved for ECO use. Pre-connected to the south side of Rx custom. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw_rx_bot         : 4;  /**< [  3:  0](R/W) Reserved for ECO use. Pre-connected to the south side of Rx custom. */
-        uint64_t eco_rw_rx_top         : 4;  /**< [  7:  4](R/W) Reserved for ECO use. Pre-connected to the north side of Rx custom. */
-        uint64_t eco_rw_tx             : 2;  /**< [  9:  8](R/W) Reserved for ECO use. Pre-connected to Tx custom. */
-        uint64_t eco_rw_pll            : 2;  /**< [ 11: 10](R/W) Reserved for ECO use. Pre-connected to the PLL. */
-        uint64_t eco_rw                : 52; /**< [ 63: 12](R/W) Reserved for ECO use. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsernx_lanex_eco_s cn; */
-};
-typedef union cavm_gsernx_lanex_eco cavm_gsernx_lanex_eco_t;
-
-static inline uint64_t CAVM_GSERNX_LANEX_ECO(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_ECO(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
-        return 0x87e090003ac0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
-        return 0x87e090003ac0ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
-    __cavm_csr_fatal("GSERNX_LANEX_ECO", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GSERNX_LANEX_ECO(a,b) cavm_gsernx_lanex_eco_t
-#define bustype_CAVM_GSERNX_LANEX_ECO(a,b) CSR_TYPE_RSL
-#define basename_CAVM_GSERNX_LANEX_ECO(a,b) "GSERNX_LANEX_ECO"
-#define device_bar_CAVM_GSERNX_LANEX_ECO(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GSERNX_LANEX_ECO(a,b) (a)
-#define arguments_CAVM_GSERNX_LANEX_ECO(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) gsern#_lane#_eee_bcfg
- *
- * INTERNAL: GSER Lane EEE Base Configuration Register
- *
- * Reserved.
- * Internal:
- * Register controls settings for GSER behavior when Energy Efficient Ethernet (EEE) is
- * in use on the link.
- */
-union cavm_gsernx_lanex_eee_bcfg
-{
-    uint64_t u;
-    struct cavm_gsernx_lanex_eee_bcfg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_58_63        : 6;
-        uint64_t rx_qa_sqlch_cnt       : 12; /**< [ 57: 46](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiever QUIET to DATA squelch count.
-                                                                 Used to implement a delay or filter function for the receive data to the
-                                                                 CGX MAC when the receiver transitions from the EEE QUIET state to the
-                                                                 EEE ACTIVE state.  [RX_QA_SQLCH_CNT] counter is in units of 10ns.
-                                                                 Used in conjuncton with GSERN()_LANE()_EEE_BCFG[RX_QA_SQLCH_EN]. */
-        uint64_t rx_qa_sqlch_en        : 1;  /**< [ 45: 45](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiever QUIET to DATA squelch enable.
-                                                                 When [RX_QA_SQLCH_EN] is enabled the receive data to the CGX MAC will be
-                                                                 suppressed following the transition from receiver EEE QUIET state to
-                                                                 receiver EEE ACTIVE state for the time defined by the
-                                                                 GSERN()_LANE()_EEE_BCFG[RX_QA_SQLCH_CNT] squelch count in units of 10ns.
-                                                                 This is a optional filtering function to prevent garbage data to the CGX MAC
-                                                                 as the receiver is transitioning from the EEE QUIET to EEE ACTIVE states. */
-        uint64_t tx_quiet_drv_en       : 1;  /**< [ 44: 44](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmitter QUIET drive enable.
-                                                                 When [TX_QUIET_DRV_EN] is set to one the transmitter Tx+/Tx- driver outputs
-                                                                 will drive to electrical idle when either the CGX MAC moves the
-                                                                 SerDes transmitter block from the EEE ACTIVE state to the EEE QUIET state or
-                                                                 the GSERN()_LANE()_EEE_BCFG[EEE_TX_OVRRD] is set to one.  This ensures that
-                                                                 the link partner receiver energy detector sees the local device transmitter
-                                                                 transition from the EEE ACTIVE state to the EEE QUIET state.
-                                                                 When [TX_QUIET_DRV_EN] is set to one the transmitter Tx+/Tx- driver outputs
-                                                                 will drive to electrical idle even if the GSERN()_LANE()_EEE_BCFG[TX_PWRDN_EN]
-                                                                 is cleared to zero to inhibit the transmitter from powering down during EEE
-                                                                 deep sleep TX QUIET state. When [TX_QUIET_DRV_EN] is cleared to zero the
-                                                                 Transmitter Tx+/Tx- outputs will only drive to electrical idle when the
-                                                                 transmitter is powered down by CGX or GSERN()_LANE()_EEE_BCFG[EEE_TX_OVRRD]
-                                                                 is set to one and GSERN()_LANE()_EEE_BCFG[TX_PWRDN_EN] is also
-                                                                 set to one to enable transmitter power down. */
-        uint64_t eee_edet              : 1;  /**< [ 43: 43](RO/H) Reserved.
-                                                                 Internal:
-                                                                 EEE energy detected.
-                                                                 For diagnostic use only. Reflects the state of
-                                                                 the EEE energy detector.  Used to test signals for the wake from
-                                                                 EEE deep sleep power down modes of the SerDes. */
-        uint64_t eee_ovrrd             : 1;  /**< [ 42: 42](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE override.
-                                                                 For diagnostic use only. When [EEE_OVRRD] is set to one the SerDes EEE rx and
-                                                                 tx modes are controlled by GSERN()_LANE()_EEE_BCFG[EEE_RX_OVRRD] and
-                                                                 GSERN()_LANE()_EEE_BCFG[EEE_TX_OVRRD]. Used to test the EEE deep sleep
-                                                                 power down modes of the SerDes. */
-        uint64_t eee_tx_ovrrd          : 2;  /**< [ 41: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE Tx override.
-                                                                 For diagnostic use only. When GSERN()_LANE()_EEE_BCFG[EEE_OVRRD] is set to one
-                                                                 the SerDes transmitter modes are controlled by [EEE_TX_OVRRD]. Used to
-                                                                 test the EEE deep sleep power down modes of the SerDes transmitter.
-                                                                   0x0 = ACTIVE/DATA mode.
-                                                                   0x1 = QUIET.
-                                                                   0x2 = ALERT.
-                                                                   0x3 = Reserved. */
-        uint64_t eee_rx_ovrrd          : 1;  /**< [ 39: 39](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE Rx override.
-                                                                 For diagnostic use only. When GSERN()_LANE()_EEE_BCFG[EEE_OVRRD] is set to one
-                                                                 the SerDes receiver modes are controlled by [EEE_RX_OVRRD].  Used to
-                                                                 test the EEE deep sleep power down modes of the SerDes receiver.
-                                                                   0x0 = ACTIVE/DATA mode.
-                                                                   0x1 = QUIET. */
-        uint64_t bypass_edet           : 1;  /**< [ 38: 38](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE energy detect bypass.
-                                                                 0 = The Energy Detect EDET signal to CGX will behave normally.  EDET will be set
-                                                                 to one when energy is detected at the lane receiver and EDET will be cleared to zero
-                                                                 when there is no energy detected at the lane receiver.
-                                                                 1 = The Energy Detect EDET signal to CGX will always be set to 1 bypassing
-                                                                 the energy detect function. */
-        uint64_t pwrdn_mode            : 2;  /**< [ 37: 36](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the PHY power mode down during EEE.
-                                                                 Used to select the P1, P2, or Shutdown powe states when entering deep sleep mode.
-                                                                 0x0 = Reserved.
-                                                                 0x1 = The PHY will power down to the P1 power state and the power state cntrols
-                                                                 will be configured from the GSERN()_LANE()_EEE_RSTP1_BCFG register.
-                                                                 0x2 = The PHY will power down to the P2 power state and the power state controls
-                                                                 will be configured from the GSERN()_LANE()_EEE_RSTP2_BCFG register.
-                                                                 0x3 = The PHY will power down to the shutdown (SHDN) power state and the power
-                                                                 state controls will be configured from the GSERN()_LANE()_EEE_RSTSHDN_BCFG register. */
-        uint64_t eyemon_pwrdn_en       : 1;  /**< [ 35: 35](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the behavior of the eye monitor power down during EEE.
-                                                                 0 = The eye monitor will not power down during EEE quiet mode.
-                                                                 1 = The eye monitor will power down during the EEE quiet mode. */
-        uint64_t lpll_pwrdn_en         : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the behavior of the lane PLL power down during EEE.
-                                                                 0 = The lane PLL will not power down during EEE quiet mode.
-                                                                 1 = The lane PLL will power down during the EEE quiet mode. */
-        uint64_t tx_pwrdn_en           : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the behavior of the transmitter power down during EEE.
-                                                                 0 = The transmitter will not power down during EEE quiet mode.
-                                                                 1 = The transmitter will power down during the EEE quiet mode. */
-        uint64_t rx_pwrdn_en           : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the behavior of the receiver power down during EEE.
-                                                                 0 = The receiver will not power down during EEE quiet mode.
-                                                                 1 = The receiver will power down during the EEE Quiet mode. */
-        uint64_t tx_dly_cnt            : 16; /**< [ 31: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the delay of the TX PCS layer when the Tx side is transitione from the EEE QUIET
-                                                                 phase to the ALERT or ACTIVE phase.  This programmable delay adds delau to ensure that
-                                                                 txdivclk is running and stable before Tx data resumes.
-                                                                 The delay units are in units of service-clock cycles. For diagnostic use only. */
-        uint64_t rx_dly_cnt            : 16; /**< [ 15:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the delay of the RX PCS layer when the receiver is transitioned froom the EEE
-                                                                 QUIET to ACTIVE phase.  The programmable delay adds delay to ensure that the rxdivclk
-                                                                 is running and stable before Rx data resumes.
-                                                                 The delay units are in units of service-clock cycles. For diagnostic use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t rx_dly_cnt            : 16; /**< [ 15:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the delay of the RX PCS layer when the receiver is transitioned froom the EEE
-                                                                 QUIET to ACTIVE phase.  The programmable delay adds delay to ensure that the rxdivclk
-                                                                 is running and stable before Rx data resumes.
-                                                                 The delay units are in units of service-clock cycles. For diagnostic use only. */
-        uint64_t tx_dly_cnt            : 16; /**< [ 31: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the delay of the TX PCS layer when the Tx side is transitione from the EEE QUIET
-                                                                 phase to the ALERT or ACTIVE phase.  This programmable delay adds delau to ensure that
-                                                                 txdivclk is running and stable before Tx data resumes.
-                                                                 The delay units are in units of service-clock cycles. For diagnostic use only. */
-        uint64_t rx_pwrdn_en           : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the behavior of the receiver power down during EEE.
-                                                                 0 = The receiver will not power down during EEE quiet mode.
-                                                                 1 = The receiver will power down during the EEE Quiet mode. */
-        uint64_t tx_pwrdn_en           : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the behavior of the transmitter power down during EEE.
-                                                                 0 = The transmitter will not power down during EEE quiet mode.
-                                                                 1 = The transmitter will power down during the EEE quiet mode. */
-        uint64_t lpll_pwrdn_en         : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the behavior of the lane PLL power down during EEE.
-                                                                 0 = The lane PLL will not power down during EEE quiet mode.
-                                                                 1 = The lane PLL will power down during the EEE quiet mode. */
-        uint64_t eyemon_pwrdn_en       : 1;  /**< [ 35: 35](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the behavior of the eye monitor power down during EEE.
-                                                                 0 = The eye monitor will not power down during EEE quiet mode.
-                                                                 1 = The eye monitor will power down during the EEE quiet mode. */
-        uint64_t pwrdn_mode            : 2;  /**< [ 37: 36](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programs the PHY power mode down during EEE.
-                                                                 Used to select the P1, P2, or Shutdown powe states when entering deep sleep mode.
-                                                                 0x0 = Reserved.
-                                                                 0x1 = The PHY will power down to the P1 power state and the power state cntrols
-                                                                 will be configured from the GSERN()_LANE()_EEE_RSTP1_BCFG register.
-                                                                 0x2 = The PHY will power down to the P2 power state and the power state controls
-                                                                 will be configured from the GSERN()_LANE()_EEE_RSTP2_BCFG register.
-                                                                 0x3 = The PHY will power down to the shutdown (SHDN) power state and the power
-                                                                 state controls will be configured from the GSERN()_LANE()_EEE_RSTSHDN_BCFG register. */
-        uint64_t bypass_edet           : 1;  /**< [ 38: 38](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE energy detect bypass.
-                                                                 0 = The Energy Detect EDET signal to CGX will behave normally.  EDET will be set
-                                                                 to one when energy is detected at the lane receiver and EDET will be cleared to zero
-                                                                 when there is no energy detected at the lane receiver.
-                                                                 1 = The Energy Detect EDET signal to CGX will always be set to 1 bypassing
-                                                                 the energy detect function. */
-        uint64_t eee_rx_ovrrd          : 1;  /**< [ 39: 39](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE Rx override.
-                                                                 For diagnostic use only. When GSERN()_LANE()_EEE_BCFG[EEE_OVRRD] is set to one
-                                                                 the SerDes receiver modes are controlled by [EEE_RX_OVRRD].  Used to
-                                                                 test the EEE deep sleep power down modes of the SerDes receiver.
-                                                                   0x0 = ACTIVE/DATA mode.
-                                                                   0x1 = QUIET. */
-        uint64_t eee_tx_ovrrd          : 2;  /**< [ 41: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE Tx override.
-                                                                 For diagnostic use only. When GSERN()_LANE()_EEE_BCFG[EEE_OVRRD] is set to one
-                                                                 the SerDes transmitter modes are controlled by [EEE_TX_OVRRD]. Used to
-                                                                 test the EEE deep sleep power down modes of the SerDes transmitter.
-                                                                   0x0 = ACTIVE/DATA mode.
-                                                                   0x1 = QUIET.
-                                                                   0x2 = ALERT.
-                                                                   0x3 = Reserved. */
-        uint64_t eee_ovrrd             : 1;  /**< [ 42: 42](R/W) Reserved.
-                                                                 Internal:
-                                                                 EEE override.
-                                                                 For diagnostic use only. When [EEE_OVRRD] is set to one the SerDes EEE rx and
-                                                                 tx modes are controlled by GSERN()_LANE()_EEE_BCFG[EEE_RX_OVRRD] and
-                                                                 GSERN()_LANE()_EEE_BCFG[EEE_TX_OVRRD]. Used to test the EEE deep sleep
-                                                                 power down modes of the SerDes. */
-        uint64_t eee_edet              : 1;  /**< [ 43: 43](RO/H) Reserved.
-                                                                 Internal:
-                                                                 EEE energy detected.
-                                                                 For diagnostic use only. Reflects the state of
-                                                                 the EEE energy detector.  Used to test signals for the wake from
-                                                                 EEE deep sleep power down modes of the SerDes. */
-        uint64_t tx_quiet_drv_en       : 1;  /**< [ 44: 44](R/W) Reserved.
-                                                                 Internal:
-                                                                 Transmitter QUIET drive enable.
-                                                                 When [TX_QUIET_DRV_EN] is set to one the transmitter Tx+/Tx- driver outputs
-                                                                 will drive to electrical idle when either the CGX MAC moves the
-                                                                 SerDes transmitter block from the EEE ACTIVE state to the EEE QUIET state or
-                                                                 the GSERN()_LANE()_EEE_BCFG[EEE_TX_OVRRD] is set to one.  This ensures that
-                                                                 the link partner receiver energy detector sees the local device transmitter
-                                                                 transition from the EEE ACTIVE state to the EEE QUIET state.
-                                                                 When [TX_QUIET_DRV_EN] is set to one the transmitter Tx+/Tx- driver outputs
-                                                                 will drive to electrical idle even if the GSERN()_LANE()_EEE_BCFG[TX_PWRDN_EN]
-                                                                 is cleared to zero to inhibit the transmitter from powering down during EEE
-                                                                 deep sleep TX QUIET state. When [TX_QUIET_DRV_EN] is cleared to zero the
-                                                                 Transmitter Tx+/Tx- outputs will only drive to electrical idle when the
-                                                                 transmitter is powered down by CGX or GSERN()_LANE()_EEE_BCFG[EEE_TX_OVRRD]
-                                                                 is set to one and GSERN()_LANE()_EEE_BCFG[TX_PWRDN_EN] is also
-                                                                 set to one to enable transmitter power down. */
-        uint64_t rx_qa_sqlch_en        : 1;  /**< [ 45: 45](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiever QUIET to DATA squelch enable.
-                                                                 When [RX_QA_SQLCH_EN] is enabled the receive data to the CGX MAC will be
-                                                                 suppressed following the transition from receiver EEE QUIET state to
-                                                                 receiver EEE ACTIVE state for the time defined by the
-                                                                 GSERN()_LANE()_EEE_BCFG[RX_QA_SQLCH_CNT] squelch count in units of 10ns.
-                                                                 This is a optional filtering function to prevent garbage data to the CGX MAC
-                                                                 as the receiver is transitioning from the EEE QUIET to EEE ACTIVE states. */
-        uint64_t rx_qa_sqlch_cnt       : 12; /**< [ 57: 46](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiever QUIET to DATA squelch count.
-                                                                 Used to implement a delay or filter function for the receive data to the
-                                                                 CGX MAC when the receiver transitions from the EEE QUIET state to the
-                                                                 EEE ACTIVE state.  [RX_QA_SQLCH_CNT] counter is in units of 10ns.
-                                                                 Used in conjuncton with GSERN()_LANE()_EEE_BCFG[RX_QA_SQLCH_EN]. */
-        uint64_t reserved_58_63        : 6;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsernx_lanex_eee_bcfg_s cn; */
-};
-typedef union cavm_gsernx_lanex_eee_bcfg cavm_gsernx_lanex_eee_bcfg_t;
-
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_BCFG(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
-        return 0x87e0900037a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
-        return 0x87e0900037a0ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
-    __cavm_csr_fatal("GSERNX_LANEX_EEE_BCFG", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GSERNX_LANEX_EEE_BCFG(a,b) cavm_gsernx_lanex_eee_bcfg_t
-#define bustype_CAVM_GSERNX_LANEX_EEE_BCFG(a,b) CSR_TYPE_RSL
-#define basename_CAVM_GSERNX_LANEX_EEE_BCFG(a,b) "GSERNX_LANEX_EEE_BCFG"
-#define device_bar_CAVM_GSERNX_LANEX_EEE_BCFG(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GSERNX_LANEX_EEE_BCFG(a,b) (a)
-#define arguments_CAVM_GSERNX_LANEX_EEE_BCFG(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) gsern#_lane#_eee_rstp1_bcfg
- *
- * INTERNAL: GSER Lane EEE PowerDown P1 Reset States Control Register
- *
- * Reserved.
- * Internal:
- * Controls the power down and reset states of the SerDes lane PLL, transmitter, receiver,
- * receiver adaptation, and eye monitor blocks during the EEE deep sleep power down P1 state.
- */
-union cavm_gsernx_lanex_eee_rstp1_bcfg
-{
-    uint64_t u;
-    struct cavm_gsernx_lanex_eee_rstp1_bcfg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_33_63        : 31;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during EEE deep sleep P1 PowerDown change.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Eye monitor reset state during EEE deep sleep P1 PowerDown state. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 RX reset state during EEE deep sleep P1 PowerDown state. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 TX reset state during EEE deep sleep P1 PowerDown state. */
-        uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Lane PLL reset state during EEE deep sleep P1 PowerDown state.
-                                                                 Note: this value is never likely to be changed from the normal run state (0x8). */
-#else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Lane PLL reset state during EEE deep sleep P1 PowerDown state.
-                                                                 Note: this value is never likely to be changed from the normal run state (0x8). */
-        uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 TX reset state during EEE deep sleep P1 PowerDown state. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 RX reset state during EEE deep sleep P1 PowerDown state. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Eye monitor reset state during EEE deep sleep P1 PowerDown state. */
-        uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during EEE deep sleep P1 PowerDown change.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t reserved_33_63        : 31;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsernx_lanex_eee_rstp1_bcfg_s cn; */
-};
-typedef union cavm_gsernx_lanex_eee_rstp1_bcfg cavm_gsernx_lanex_eee_rstp1_bcfg_t;
-
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
-        return 0x87e0900038a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
-        return 0x87e0900038a0ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
-    __cavm_csr_fatal("GSERNX_LANEX_EEE_RSTP1_BCFG", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(a,b) cavm_gsernx_lanex_eee_rstp1_bcfg_t
-#define bustype_CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(a,b) CSR_TYPE_RSL
-#define basename_CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(a,b) "GSERNX_LANEX_EEE_RSTP1_BCFG"
-#define device_bar_CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(a,b) (a)
-#define arguments_CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) gsern#_lane#_eee_rstp2_bcfg
- *
- * INTERNAL: GSER Lane EEE PowerDown P2 Reset States Control Register
- *
- * Reserved.
- * Internal:
- * Controls the power down and reset states of the SerDes lane PLL, transmitter, receiver,
- * receiver adaptation, and eye monitor blocks during the EEE deep sleep power down P2 state.
- */
-union cavm_gsernx_lanex_eee_rstp2_bcfg
-{
-    uint64_t u;
-    struct cavm_gsernx_lanex_eee_rstp2_bcfg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_33_63        : 31;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during EEE deep sleep P2 PowerDown change.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Eye monitor reset state during EEE deep sleep P2 PowerDown state. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 RX reset state during EEE deep sleep P2 PowerDown state. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 TX reset state during EEE deep sleep P2 PowerDown state. */
-        uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Lane PLL reset state during EEE deep sleep P2 PowerDown state. */
-#else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Lane PLL reset state during EEE deep sleep P2 PowerDown state. */
-        uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 TX reset state during EEE deep sleep P2 PowerDown state. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 RX reset state during EEE deep sleep P2 PowerDown state. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Eye monitor reset state during EEE deep sleep P2 PowerDown state. */
-        uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during EEE deep sleep P2 PowerDown change.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t reserved_33_63        : 31;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsernx_lanex_eee_rstp2_bcfg_s cn; */
-};
-typedef union cavm_gsernx_lanex_eee_rstp2_bcfg cavm_gsernx_lanex_eee_rstp2_bcfg_t;
-
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
-        return 0x87e0900038b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
-        return 0x87e0900038b0ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
-    __cavm_csr_fatal("GSERNX_LANEX_EEE_RSTP2_BCFG", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(a,b) cavm_gsernx_lanex_eee_rstp2_bcfg_t
-#define bustype_CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(a,b) CSR_TYPE_RSL
-#define basename_CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(a,b) "GSERNX_LANEX_EEE_RSTP2_BCFG"
-#define device_bar_CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(a,b) (a)
-#define arguments_CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) gsern#_lane#_eee_rstshdn_bcfg
- *
- * INTERNAL: GSER Lane EEE PowerDown P2 Reset States Control Register
- *
- * Reserved.
- * Internal:
- * Controls the power down and reset states of the SerDes lane PLL, transmitter, receiver,
- * receiver adaptation, and eye monitor blocks during the EEE deep sleep power shut down state.
- */
-union cavm_gsernx_lanex_eee_rstshdn_bcfg
-{
-    uint64_t u;
-    struct cavm_gsernx_lanex_eee_rstshdn_bcfg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_33_63        : 31;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during EEE deep sleep shutdown PowerDown change.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Eye monitor reset state during EEE deep sleep shutdown PowerDown state. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 RX reset state during EEE deep sleep shutdown PowerDown state. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 TX reset state during EEE deep sleep shutdown PowerDown state. */
-        uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Lane PLL reset state during EEE deep sleep shutdown PowerDown state. */
-#else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Lane PLL reset state during EEE deep sleep shutdown PowerDown state. */
-        uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 TX reset state during EEE deep sleep shutdown PowerDown state. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 RX reset state during EEE deep sleep shutdown PowerDown state. */
-        uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Eye monitor reset state during EEE deep sleep shutdown PowerDown state. */
-        uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during EEE deep sleep shutdown PowerDown change.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t reserved_33_63        : 31;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsernx_lanex_eee_rstshdn_bcfg_s cn; */
-};
-typedef union cavm_gsernx_lanex_eee_rstshdn_bcfg cavm_gsernx_lanex_eee_rstshdn_bcfg_t;
-
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
-        return 0x87e0900038c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
-    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
-        return 0x87e0900038c0ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
-    __cavm_csr_fatal("GSERNX_LANEX_EEE_RSTSHDN_BCFG", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(a,b) cavm_gsernx_lanex_eee_rstshdn_bcfg_t
-#define bustype_CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(a,b) CSR_TYPE_RSL
-#define basename_CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(a,b) "GSERNX_LANEX_EEE_RSTSHDN_BCFG"
-#define device_bar_CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(a,b) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(a,b) (a)
-#define arguments_CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) gsern#_lane#_eye_ctl
@@ -2729,12 +2035,7 @@ union cavm_gsernx_lanex_lt_bcfg
         uint64_t core_loopback_mode    : 1;  /**< [ 25: 25](R/W/H) Enable the core-side loopback mode; controller transmit data are
                                                                  looped back to the controller as receive data in the PCS lite layer.
                                                                  This value must only be changed while lite layer is in reset. */
-        uint64_t sloop_mode            : 1;  /**< [ 24: 24](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 Enable shallow loopback mode (SerDes receive data looped back to SerDes transmit
-                                                                 in the PCS lite layer). This value must only be changed while lite layer is in
-                                                                 reset. [TX_FIFO_POP_START_ADDR] will need to be adjusted when [SLOOP_MODE] is
-                                                                 set. For diagnostic use only. */
+        uint64_t sloop_mode            : 1;  /**< [ 24: 24](R/W/H) Reserved. */
         uint64_t reserved_23           : 1;
         uint64_t bitstuff_rx_drop_even : 1;  /**< [ 22: 22](R/W/H) Tells the PCS lite receive datapath to drop even bits
                                                                  in the vector of received data from the PMA when [BITSTUFF_RX_EN] is
@@ -2760,49 +2061,10 @@ union cavm_gsernx_lanex_lt_bcfg
                                                                  last. This control needs to be asserted for PRBS testing using the
                                                                  PRBS checker in the GSER macro and for PCIe Gen-1 and Gen-2. */
         uint64_t reserved_18           : 1;
-        uint64_t fifo_algn_qlm_mask_rsvd : 4;/**< [ 17: 14](R/W) Reserved.
-                                                                 Internal:
-                                                                 No longer used. Was selection control for which QLMs in this QLM's link group to
-                                                                 align in timing the deassertion of reset to this lane's transmitter's clock
-                                                                 alignment FIFO.
-                                                                 \<0\> = Wait for QLM 0.
-                                                                 \<1\> = Wait for QLM 1.
-                                                                 \<2\> = Wait for QLM 2.
-                                                                 \<3\> = Wait for QLM 3.
-
-                                                                 If a link is made up of lanes in multiple QLMs, the mask in each lane must
-                                                                 include all active QLMs (including the QLM containing the current lane). */
-        uint64_t fifo_algn_lane_mask_rsvd : 4;/**< [ 13: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 No longer used. Was selection control for which lanes in the current QLM to
-                                                                 align in timing the deassertion of reset to this lane's transmitter's clock
-                                                                 alignment FIFO.
-                                                                 \<0\> = Wait for Lane 0.
-                                                                 \<1\> = Wait for Lane 1.
-                                                                 \<2\> = Wait for Lane 2.
-                                                                 \<3\> = Wait for Lane 3.
-
-                                                                 The bit corresponding to the current Lane is ignored. */
-        uint64_t fifo_bypass_en        : 1;  /**< [  9:  9](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This control is currently inactive and is left as a placeholder for
-                                                                 possible re-inclusion in 7nm.
-
-                                                                 Set to bypass the PCS lite layer transmit asynchronous FIFO
-                                                                 with a single flop. This saves 1-2 cycles of latency in the transmit
-                                                                 path, but imposes additional constraints on static timing
-                                                                 closure. Note that shallow loopback data cannot bypass the FIFO. */
-        uint64_t tx_fifo_pop_start_addr : 4; /**< [  8:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Starting address for lite transmit FIFO pops (reads). Changing this allows
-                                                                 shifting the latency through the FIFO in steps of 1 txdivclk cycle (8, 10, 16,
-                                                                 20, 32, or 40 UI, depending on data path width setting). When [SLOOP_MODE] is
-                                                                 set, [TX_FIFO_POP_START_ADDR] should typically be set to 0. For diagnostic use
-                                                                 only.
-
-                                                                 Due to round trip latency requirements for SATA, this should be set to 0x9 to
-                                                                 minimize the FIFO delay while still ensuring sufficient distance between the
-                                                                 read and write pointers. */
+        uint64_t fifo_algn_qlm_mask_rsvd : 4;/**< [ 17: 14](R/W) Reserved. */
+        uint64_t fifo_algn_lane_mask_rsvd : 4;/**< [ 13: 10](R/W) Reserved. */
+        uint64_t fifo_bypass_en        : 1;  /**< [  9:  9](R/W) For diagnostic use only. */
+        uint64_t tx_fifo_pop_start_addr : 4; /**< [  8:  5](R/W) Reserved. */
         uint64_t reserved_4            : 1;
         uint64_t fifo_rst_n            : 1;  /**< [  3:  3](R/W/H) Clear to hold the PCS lite layer transmit asynchronous FIFO in
                                                                  reset. */
@@ -2840,49 +2102,10 @@ union cavm_gsernx_lanex_lt_bcfg
         uint64_t fifo_rst_n            : 1;  /**< [  3:  3](R/W/H) Clear to hold the PCS lite layer transmit asynchronous FIFO in
                                                                  reset. */
         uint64_t reserved_4            : 1;
-        uint64_t tx_fifo_pop_start_addr : 4; /**< [  8:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Starting address for lite transmit FIFO pops (reads). Changing this allows
-                                                                 shifting the latency through the FIFO in steps of 1 txdivclk cycle (8, 10, 16,
-                                                                 20, 32, or 40 UI, depending on data path width setting). When [SLOOP_MODE] is
-                                                                 set, [TX_FIFO_POP_START_ADDR] should typically be set to 0. For diagnostic use
-                                                                 only.
-
-                                                                 Due to round trip latency requirements for SATA, this should be set to 0x9 to
-                                                                 minimize the FIFO delay while still ensuring sufficient distance between the
-                                                                 read and write pointers. */
-        uint64_t fifo_bypass_en        : 1;  /**< [  9:  9](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This control is currently inactive and is left as a placeholder for
-                                                                 possible re-inclusion in 7nm.
-
-                                                                 Set to bypass the PCS lite layer transmit asynchronous FIFO
-                                                                 with a single flop. This saves 1-2 cycles of latency in the transmit
-                                                                 path, but imposes additional constraints on static timing
-                                                                 closure. Note that shallow loopback data cannot bypass the FIFO. */
-        uint64_t fifo_algn_lane_mask_rsvd : 4;/**< [ 13: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 No longer used. Was selection control for which lanes in the current QLM to
-                                                                 align in timing the deassertion of reset to this lane's transmitter's clock
-                                                                 alignment FIFO.
-                                                                 \<0\> = Wait for Lane 0.
-                                                                 \<1\> = Wait for Lane 1.
-                                                                 \<2\> = Wait for Lane 2.
-                                                                 \<3\> = Wait for Lane 3.
-
-                                                                 The bit corresponding to the current Lane is ignored. */
-        uint64_t fifo_algn_qlm_mask_rsvd : 4;/**< [ 17: 14](R/W) Reserved.
-                                                                 Internal:
-                                                                 No longer used. Was selection control for which QLMs in this QLM's link group to
-                                                                 align in timing the deassertion of reset to this lane's transmitter's clock
-                                                                 alignment FIFO.
-                                                                 \<0\> = Wait for QLM 0.
-                                                                 \<1\> = Wait for QLM 1.
-                                                                 \<2\> = Wait for QLM 2.
-                                                                 \<3\> = Wait for QLM 3.
-
-                                                                 If a link is made up of lanes in multiple QLMs, the mask in each lane must
-                                                                 include all active QLMs (including the QLM containing the current lane). */
+        uint64_t tx_fifo_pop_start_addr : 4; /**< [  8:  5](R/W) Reserved. */
+        uint64_t fifo_bypass_en        : 1;  /**< [  9:  9](R/W) For diagnostic use only. */
+        uint64_t fifo_algn_lane_mask_rsvd : 4;/**< [ 13: 10](R/W) Reserved. */
+        uint64_t fifo_algn_qlm_mask_rsvd : 4;/**< [ 17: 14](R/W) Reserved. */
         uint64_t reserved_18           : 1;
         uint64_t reverse_rx_bit_order  : 1;  /**< [ 19: 19](R/W/H) While asserted, the normal receive order (lowest valid bit index
                                                                  received first, highest valid index last) is reversed so the highest
@@ -2908,12 +2131,7 @@ union cavm_gsernx_lanex_lt_bcfg
                                                                  bits when counting mismatches.
                                                                  This value must only be changed while lite layer is in reset. */
         uint64_t reserved_23           : 1;
-        uint64_t sloop_mode            : 1;  /**< [ 24: 24](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 Enable shallow loopback mode (SerDes receive data looped back to SerDes transmit
-                                                                 in the PCS lite layer). This value must only be changed while lite layer is in
-                                                                 reset. [TX_FIFO_POP_START_ADDR] will need to be adjusted when [SLOOP_MODE] is
-                                                                 set. For diagnostic use only. */
+        uint64_t sloop_mode            : 1;  /**< [ 24: 24](R/W/H) Reserved. */
         uint64_t core_loopback_mode    : 1;  /**< [ 25: 25](R/W/H) Enable the core-side loopback mode; controller transmit data are
                                                                  looped back to the controller as receive data in the PCS lite layer.
                                                                  This value must only be changed while lite layer is in reset. */
@@ -3075,13 +2293,7 @@ union cavm_gsernx_lanex_lt_bcfg
                                                                  This value must only be changed while lite layer is in reset. */
         uint64_t sloop_mode            : 1;  /**< [ 24: 24](R/W/H) Enable shallow loopback mode (SerDes receive data looped back to SerDes transmit
                                                                  in the PCS lite layer). This value must only be changed while lite layer is in
-                                                                 reset. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 Enable shallow loopback mode (SerDes receive data looped back to SerDes transmit
-                                                                 in the PCS lite layer). This value must only be changed while lite layer is in
-                                                                 reset. [TX_FIFO_POP_START_ADDR] will need to be adjusted when [SLOOP_MODE] is
-                                                                 set. For diagnostic use only. */
+                                                                 reset. For diagnostic use only. */
         uint64_t reserved_23           : 1;
         uint64_t bitstuff_rx_drop_even : 1;  /**< [ 22: 22](R/W/H) Tells the PCS lite receive datapath to drop even bits
                                                                  in the vector of received data from the PMA when [BITSTUFF_RX_EN] is
@@ -3107,49 +2319,10 @@ union cavm_gsernx_lanex_lt_bcfg
                                                                  last. This control needs to be asserted for PRBS testing using the
                                                                  PRBS checker in the GSER macro and for PCIe Gen-1 and Gen-2. */
         uint64_t reserved_18           : 1;
-        uint64_t fifo_algn_qlm_mask_rsvd : 4;/**< [ 17: 14](R/W) Reserved.
-                                                                 Internal:
-                                                                 No longer used. Was selection control for which QLMs in this QLM's link group to
-                                                                 align in timing the deassertion of reset to this lane's transmitter's clock
-                                                                 alignment FIFO.
-                                                                 \<0\> = Wait for QLM 0.
-                                                                 \<1\> = Wait for QLM 1.
-                                                                 \<2\> = Wait for QLM 2.
-                                                                 \<3\> = Wait for QLM 3.
-
-                                                                 If a link is made up of lanes in multiple QLMs, the mask in each lane must
-                                                                 include all active QLMs (including the QLM containing the current lane). */
-        uint64_t fifo_algn_lane_mask_rsvd : 4;/**< [ 13: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 No longer used. Was selection control for which lanes in the current QLM to
-                                                                 align in timing the deassertion of reset to this lane's transmitter's clock
-                                                                 alignment FIFO.
-                                                                 \<0\> = Wait for Lane 0.
-                                                                 \<1\> = Wait for Lane 1.
-                                                                 \<2\> = Wait for Lane 2.
-                                                                 \<3\> = Wait for Lane 3.
-
-                                                                 The bit corresponding to the current Lane is ignored. */
-        uint64_t fifo_bypass_en        : 1;  /**< [  9:  9](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This control is currently inactive and is left as a placeholder for
-                                                                 possible re-inclusion in 7nm.
-
-                                                                 Set to bypass the PCS lite layer transmit asynchronous FIFO
-                                                                 with a single flop. This saves 1-2 cycles of latency in the transmit
-                                                                 path, but imposes additional constraints on static timing
-                                                                 closure. Note that shallow loopback data cannot bypass the FIFO. */
-        uint64_t tx_fifo_pop_start_addr : 4; /**< [  8:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Starting address for lite transmit FIFO pops (reads). Changing this allows
-                                                                 shifting the latency through the FIFO in steps of 1 txdivclk cycle (8, 10, 16,
-                                                                 20, 32, or 40 UI, depending on data path width setting). When [SLOOP_MODE] is
-                                                                 set, [TX_FIFO_POP_START_ADDR] should typically be set to 0. For diagnostic use
-                                                                 only.
-
-                                                                 Due to round trip latency requirements for SATA, this should be set to 0x9 to
-                                                                 minimize the FIFO delay while still ensuring sufficient distance between the
-                                                                 read and write pointers. */
+        uint64_t fifo_algn_qlm_mask_rsvd : 4;/**< [ 17: 14](R/W) Reserved. */
+        uint64_t fifo_algn_lane_mask_rsvd : 4;/**< [ 13: 10](R/W) Reserved. */
+        uint64_t fifo_bypass_en        : 1;  /**< [  9:  9](R/W) For diagnostic use only. */
+        uint64_t tx_fifo_pop_start_addr : 4; /**< [  8:  5](R/W) Reserved. */
         uint64_t reserved_4            : 1;
         uint64_t fifo_rst_n            : 1;  /**< [  3:  3](R/W/H) Clear to hold the PCS lite layer transmit asynchronous FIFO in
                                                                  reset. */
@@ -3187,49 +2360,10 @@ union cavm_gsernx_lanex_lt_bcfg
         uint64_t fifo_rst_n            : 1;  /**< [  3:  3](R/W/H) Clear to hold the PCS lite layer transmit asynchronous FIFO in
                                                                  reset. */
         uint64_t reserved_4            : 1;
-        uint64_t tx_fifo_pop_start_addr : 4; /**< [  8:  5](R/W) Reserved.
-                                                                 Internal:
-                                                                 Starting address for lite transmit FIFO pops (reads). Changing this allows
-                                                                 shifting the latency through the FIFO in steps of 1 txdivclk cycle (8, 10, 16,
-                                                                 20, 32, or 40 UI, depending on data path width setting). When [SLOOP_MODE] is
-                                                                 set, [TX_FIFO_POP_START_ADDR] should typically be set to 0. For diagnostic use
-                                                                 only.
-
-                                                                 Due to round trip latency requirements for SATA, this should be set to 0x9 to
-                                                                 minimize the FIFO delay while still ensuring sufficient distance between the
-                                                                 read and write pointers. */
-        uint64_t fifo_bypass_en        : 1;  /**< [  9:  9](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This control is currently inactive and is left as a placeholder for
-                                                                 possible re-inclusion in 7nm.
-
-                                                                 Set to bypass the PCS lite layer transmit asynchronous FIFO
-                                                                 with a single flop. This saves 1-2 cycles of latency in the transmit
-                                                                 path, but imposes additional constraints on static timing
-                                                                 closure. Note that shallow loopback data cannot bypass the FIFO. */
-        uint64_t fifo_algn_lane_mask_rsvd : 4;/**< [ 13: 10](R/W) Reserved.
-                                                                 Internal:
-                                                                 No longer used. Was selection control for which lanes in the current QLM to
-                                                                 align in timing the deassertion of reset to this lane's transmitter's clock
-                                                                 alignment FIFO.
-                                                                 \<0\> = Wait for Lane 0.
-                                                                 \<1\> = Wait for Lane 1.
-                                                                 \<2\> = Wait for Lane 2.
-                                                                 \<3\> = Wait for Lane 3.
-
-                                                                 The bit corresponding to the current Lane is ignored. */
-        uint64_t fifo_algn_qlm_mask_rsvd : 4;/**< [ 17: 14](R/W) Reserved.
-                                                                 Internal:
-                                                                 No longer used. Was selection control for which QLMs in this QLM's link group to
-                                                                 align in timing the deassertion of reset to this lane's transmitter's clock
-                                                                 alignment FIFO.
-                                                                 \<0\> = Wait for QLM 0.
-                                                                 \<1\> = Wait for QLM 1.
-                                                                 \<2\> = Wait for QLM 2.
-                                                                 \<3\> = Wait for QLM 3.
-
-                                                                 If a link is made up of lanes in multiple QLMs, the mask in each lane must
-                                                                 include all active QLMs (including the QLM containing the current lane). */
+        uint64_t tx_fifo_pop_start_addr : 4; /**< [  8:  5](R/W) Reserved. */
+        uint64_t fifo_bypass_en        : 1;  /**< [  9:  9](R/W) For diagnostic use only. */
+        uint64_t fifo_algn_lane_mask_rsvd : 4;/**< [ 13: 10](R/W) Reserved. */
+        uint64_t fifo_algn_qlm_mask_rsvd : 4;/**< [ 17: 14](R/W) Reserved. */
         uint64_t reserved_18           : 1;
         uint64_t reverse_rx_bit_order  : 1;  /**< [ 19: 19](R/W/H) While asserted, the normal receive order (lowest valid bit index
                                                                  received first, highest valid index last) is reversed so the highest
@@ -3257,13 +2391,7 @@ union cavm_gsernx_lanex_lt_bcfg
         uint64_t reserved_23           : 1;
         uint64_t sloop_mode            : 1;  /**< [ 24: 24](R/W/H) Enable shallow loopback mode (SerDes receive data looped back to SerDes transmit
                                                                  in the PCS lite layer). This value must only be changed while lite layer is in
-                                                                 reset. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 Enable shallow loopback mode (SerDes receive data looped back to SerDes transmit
-                                                                 in the PCS lite layer). This value must only be changed while lite layer is in
-                                                                 reset. [TX_FIFO_POP_START_ADDR] will need to be adjusted when [SLOOP_MODE] is
-                                                                 set. For diagnostic use only. */
+                                                                 reset. For diagnostic use only. */
         uint64_t core_loopback_mode    : 1;  /**< [ 25: 25](R/W/H) Enable the core-side loopback mode; controller transmit data are
                                                                  looped back to the controller as receive data in the PCS lite layer.
                                                                  This value must only be changed while lite layer is in reset. */
@@ -3838,30 +2966,10 @@ union cavm_gsernx_lanex_ocx_txeq_bcfg
                                                                  then write [TX_COEFF_UPDATE] to 1. */
         uint64_t tx_enable             : 1;  /**< [ 26: 26](R/W) Transmitter enable.
                                                                  0 = Disable the SerDes transmitter.
-                                                                 1 = Enable the SerDes transmitter.
-
-                                                                 Internal:
-                                                                 Drives the ocx_tx_enable input to the GSERN src_mux. */
-        uint64_t tx_stuff              : 1;  /**< [ 25: 25](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter bit stuffing.
-                                                                 Programs the transmitter PCS lite layer for bit stuffing.
-                                                                 Not used for OCX connections.
-                                                                 Leave programmed to 0x0.
-                                                                 Drives the ocx_tx_stuff input to the GSERN src_mux. */
-        uint64_t tx_oob                : 1;  /**< [ 24: 24](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter OOB signaling.
-                                                                 Not typically used for OCX connnections.
-                                                                 Leave programmed to 0x0.
-                                                                 Drives the ocx_tx_oob input to the GSERN src_mux. */
-        uint64_t tx_idle               : 1;  /**< [ 23: 23](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter electrical idle.
-                                                                 Used to force the transmitter to electrical idle.
-                                                                 Not typically used for OCX connections.
-                                                                 Leave progreammed to 0x0.
-                                                                 Drives the ocx_tx_idle input to the GSERN src_mux. */
+                                                                 1 = Enable the SerDes transmitter. */
+        uint64_t tx_stuff              : 1;  /**< [ 25: 25](R/W) Reserved. For Diagnostic Use Only. */
+        uint64_t tx_oob                : 1;  /**< [ 24: 24](R/W) Reserved. For Diagnostic Use Only. */
+        uint64_t tx_idle               : 1;  /**< [ 23: 23](R/W) Reserved. For Diagnostic Use Only. */
         uint64_t tx_cspd               : 1;  /**< [ 22: 22](R/W) Power-down control for a second TX bias/swing leg with the same
                                                                  weight as TX_BS[3]. Normally this field is left deasserted to
                                                                  provide a minimum transmit amplitude. Asserting [TX_CSPD] will turn
@@ -3967,32 +3075,12 @@ union cavm_gsernx_lanex_ocx_txeq_bcfg
                                                                  weight as TX_BS[3]. Normally this field is left deasserted to
                                                                  provide a minimum transmit amplitude. Asserting [TX_CSPD] will turn
                                                                  off all legs of the bias/swing generator for lower standby power. */
-        uint64_t tx_idle               : 1;  /**< [ 23: 23](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter electrical idle.
-                                                                 Used to force the transmitter to electrical idle.
-                                                                 Not typically used for OCX connections.
-                                                                 Leave progreammed to 0x0.
-                                                                 Drives the ocx_tx_idle input to the GSERN src_mux. */
-        uint64_t tx_oob                : 1;  /**< [ 24: 24](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter OOB signaling.
-                                                                 Not typically used for OCX connnections.
-                                                                 Leave programmed to 0x0.
-                                                                 Drives the ocx_tx_oob input to the GSERN src_mux. */
-        uint64_t tx_stuff              : 1;  /**< [ 25: 25](R/W) Reserved. For Diagnostic Use Only.
-                                                                 Internal:
-                                                                 Transmitter bit stuffing.
-                                                                 Programs the transmitter PCS lite layer for bit stuffing.
-                                                                 Not used for OCX connections.
-                                                                 Leave programmed to 0x0.
-                                                                 Drives the ocx_tx_stuff input to the GSERN src_mux. */
+        uint64_t tx_idle               : 1;  /**< [ 23: 23](R/W) Reserved. For Diagnostic Use Only. */
+        uint64_t tx_oob                : 1;  /**< [ 24: 24](R/W) Reserved. For Diagnostic Use Only. */
+        uint64_t tx_stuff              : 1;  /**< [ 25: 25](R/W) Reserved. For Diagnostic Use Only. */
         uint64_t tx_enable             : 1;  /**< [ 26: 26](R/W) Transmitter enable.
                                                                  0 = Disable the SerDes transmitter.
-                                                                 1 = Enable the SerDes transmitter.
-
-                                                                 Internal:
-                                                                 Drives the ocx_tx_enable input to the GSERN src_mux. */
+                                                                 1 = Enable the SerDes transmitter. */
         uint64_t tx_coeff_update       : 1;  /**< [ 27: 27](R/W/H) Transmitter coefficient update.
                                                                  An asserting edge will start the transmitter coefficient update
                                                                  sequencer. This field self-clears when the sequence has completed.
@@ -4047,11 +3135,7 @@ union cavm_gsernx_lanex_patx
 
                                                                  The bit pattern in bits [N-1:0] of PAT[0], where N is the clock
                                                                  ratio, must be unique within the overall pattern to allow the
-                                                                 pattern checker to correctly lock before checking for errors.
-
-                                                                 Internal:
-                                                                 If the pattern data in this register is written while pattern transmission
-                                                                 testing is in progress, the transmitted data may be briefly unpredictable. */
+                                                                 pattern checker to correctly lock before checking for errors. */
 #else /* Word 0 - Little Endian */
         uint64_t dat                   : 40; /**< [ 39:  0](R/W) Pattern Memory Registers. All 40b of both registers are used under
                                                                  al clock ratios except 32:1. In 32b (32:1) mode bits [31:0] of each
@@ -4060,11 +3144,7 @@ union cavm_gsernx_lanex_patx
 
                                                                  The bit pattern in bits [N-1:0] of PAT[0], where N is the clock
                                                                  ratio, must be unique within the overall pattern to allow the
-                                                                 pattern checker to correctly lock before checking for errors.
-
-                                                                 Internal:
-                                                                 If the pattern data in this register is written while pattern transmission
-                                                                 testing is in progress, the transmitted data may be briefly unpredictable. */
+                                                                 pattern checker to correctly lock before checking for errors. */
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
@@ -4742,9 +3822,7 @@ union cavm_gsernx_lanex_pcie_pcs_bsts
         uint64_t reserved_28_63        : 36;
         uint64_t pcs_rx_eq_raw_fom     : 12; /**< [ 27: 16](RO/H) Raw 12-bit figure of merit for last receiver equalization evaluation. */
         uint64_t reserved_14_15        : 2;
-        uint64_t pem_ltssm_state       : 6;  /**< [ 13:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 PEM LTSSM state. */
+        uint64_t pem_ltssm_state       : 6;  /**< [ 13:  8](RO/H) Reserved. */
         uint64_t reserved_5_7          : 3;
         uint64_t pcs_8b10b_disp_error  : 1;  /**< [  4:  4](R/W1C/H) 8B10B disparity error (PCIe Gen1/2 only).
                                                                  A valid 8B10B code word was received with invalid disparity. */
@@ -4794,9 +3872,7 @@ union cavm_gsernx_lanex_pcie_pcs_bsts
         uint64_t pcs_8b10b_disp_error  : 1;  /**< [  4:  4](R/W1C/H) 8B10B disparity error (PCIe Gen1/2 only).
                                                                  A valid 8B10B code word was received with invalid disparity. */
         uint64_t reserved_5_7          : 3;
-        uint64_t pem_ltssm_state       : 6;  /**< [ 13:  8](RO/H) Reserved.
-                                                                 Internal:
-                                                                 PEM LTSSM state. */
+        uint64_t pem_ltssm_state       : 6;  /**< [ 13:  8](RO/H) Reserved. */
         uint64_t reserved_14_15        : 2;
         uint64_t pcs_rx_eq_raw_fom     : 12; /**< [ 27: 16](RO/H) Raw 12-bit figure of merit for last receiver equalization evaluation. */
         uint64_t reserved_28_63        : 36;
@@ -4896,91 +3972,29 @@ union cavm_gsernx_lanex_pcie_rstp1_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_35_63        : 29;
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P1 PowerDown state. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P1 PowerDown state. */
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P1 PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P1 PowerDown state, but is only used when P1 is entered for lanes
-                                                                 that were active in a link and that link has now returned to LTSSM.DETECT
-                                                                 state with other lanes rejoining the link after having been turned off.
-                                                                 The value configured should be the hex value defined for the state by the
-                                                                 state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P1 PowerDown state, but is only used when P1 is entered for lanes that
-                                                                 were active in a link and that link has now returned to LTSSM.DETECT state
-                                                                 and there are other lanes rejoining the link after having been turned off.
-                                                                 The value configured should be the hex value defined for the state by the
-                                                                 state machine enum before gray coding.
-                                                                 Note: this value is never likely to be changed from the normal run state (0x8). */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P1 PowerDown state, but is only used when P1 is entered for lanes that
-                                                                 were active in a link and that link has now returned to LTSSM.DETECT state
-                                                                 and there are other lanes rejoining the link after having been turned off.
-                                                                 The value configured should be the hex value defined for the state by the
-                                                                 state machine enum before gray coding.
-                                                                 Note: this value is never likely to be changed from the normal run state (0x8). */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P1 PowerDown state, but is only used when P1 is entered for lanes
-                                                                 that were active in a link and that link has now returned to LTSSM.DETECT
-                                                                 state with other lanes rejoining the link after having been turned off.
-                                                                 The value configured should be the hex value defined for the state by the
-                                                                 state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P1 PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P1 PowerDown state. */
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P1 PowerDown state. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } s;
@@ -5019,77 +4033,29 @@ union cavm_gsernx_lanex_pcie_rstp1s0_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_35_63        : 29;
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P1 CPM PowerDown state. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P1 CPM PowerDown state. */
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P1 CPM PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P1 CPM PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P1 CPM PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P1 CPM PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P1 CPM PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P1 CPM PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P1 CPM PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P1 CPM PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P1 CPM PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P1 CPM PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P1 CPM PowerDown state. */
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P1 CPM PowerDown state. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } s;
@@ -5128,77 +4094,29 @@ union cavm_gsernx_lanex_pcie_rstp1s1_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_35_63        : 29;
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P1.1 PowerDown state. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P1.1 PowerDown state. */
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P1.1 PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P1.1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P1.1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P1.1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P1.1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P1.1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P1.1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P1.1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P1.1 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P1.1 PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P1.1 PowerDown state. */
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P1.1 PowerDown state. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } s;
@@ -5237,77 +4155,29 @@ union cavm_gsernx_lanex_pcie_rstp1s2_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_35_63        : 29;
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P1.2 PowerDown state. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P1.2 PowerDown state. */
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P1.2 PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P1.2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P1.2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P1.2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P1.2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P1.2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P1.2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P1.2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P1.2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P1.2 PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P1.2 PowerDown state. */
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P1.2 PowerDown state. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } s;
@@ -5346,77 +4216,29 @@ union cavm_gsernx_lanex_pcie_rstp2_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_35_63        : 29;
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P2 PowerDown state. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P2 PowerDown state. */
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P2 PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during P2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during P2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during P2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during P2 PowerDown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during P2 PowerDown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during P2 PowerDown state. */
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during P2 PowerDown state. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } s;
@@ -5455,77 +4277,29 @@ union cavm_gsernx_lanex_pcie_rstrate_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_35_63        : 29;
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during lane rate change. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during lane rate change. */
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during lane rate change.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during lane rate change. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during lane rate change. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during lane rate change. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during lane rate change. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during lane rate change. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during lane rate change. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during lane rate change. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during lane rate change. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during lane rate change.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx Electric Idle detection during lane rate change. */
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Tx Common Mode voltage during lane rate change. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } s;
@@ -5565,77 +4339,29 @@ union cavm_gsernx_lanex_pcie_rstshdn_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_35_63        : 29;
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable TX common mode voltage during lane shutdown state. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx electric idle detection during lane shutdown state. */
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during lane shutdown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during lane shutdown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during lane shutdown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during lane shutdown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during lane shutdown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the lane PLL reset state machine transitions back to
-                                                                 during lane shutdown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t lnpll_rst             : 4;  /**< [  3:  0](R/W) Reserved. */
         uint64_t reserved_4_7          : 4;
-        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the TX reset state machine transitions back to
-                                                                 during lane shutdown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t tx_rst                : 4;  /**< [ 11:  8](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
-        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the RX reset state machine transitions back to
-                                                                 during lane shutdown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t rx_rst                : 5;  /**< [ 20: 16](R/W) Reserved. */
         uint64_t reserved_21_23        : 3;
-        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved.
-                                                                 Internal:
-                                                                 Controls the state that the Eye monitor reset state machine transitions back to
-                                                                 during lane shutdown state. The value configured should be the hex value defined
-                                                                 for the state by the state machine enum before gray coding. */
+        uint64_t eye_rst               : 5;  /**< [ 28: 24](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
-        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved.
-                                                                 Internal:
-                                                                 Receiver adaptation functions during lane shutdown state.
-                                                                 0 = Pause.
-                                                                 1 = Hard reset. */
-        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable Rx electric idle detection during lane shutdown state. */
-        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set to disable TX common mode voltage during lane shutdown state. */
+        uint64_t adapt_rst             : 1;  /**< [ 32: 32](R/W) Reserved. */
+        uint64_t rxidledet_disable     : 1;  /**< [ 33: 33](R/W) Reserved. */
+        uint64_t txcmnmode_disable     : 1;  /**< [ 34: 34](R/W) Reserved. */
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } s;
@@ -9153,12 +7879,8 @@ union cavm_gsernx_lanex_pll_2_bcfg
                                                                  pad. For Lane PLL, REFCLK is the output of the common PLL. To use value assert
                                                                  GSERN()_LANE()_RST1_BCFG[LOCK_CHECK] or trigger a PLL reset sequence. */
         uint64_t reserved_34_39        : 6;
-        uint64_t vcm_sel               : 1;  /**< [ 33: 33](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 See PLL designer for how to set these. */
-        uint64_t cp_boost              : 1;  /**< [ 32: 32](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 See PLL designer for how to set these. */
+        uint64_t vcm_sel               : 1;  /**< [ 33: 33](R/W) For diagnostic use only. */
+        uint64_t cp_boost              : 1;  /**< [ 32: 32](R/W) For diagnostic use only. */
         uint64_t ssc_sata_mode         : 2;  /**< [ 31: 30](R/W) PLL SATA spread spectrum control.
                                                                   0x0 = Down spreading. PPM triangle wave total peak-to-peak spread subtracted from
                                                                  nominal frequency.
@@ -9212,12 +7934,8 @@ union cavm_gsernx_lanex_pll_2_bcfg
                                                                   0x2 = Center spreading. PPM triangle wave total peak-to-peak spread centered at nominal
                                                                  frequency.
                                                                   0x3 = Square wave subtracted from nominal frequency. */
-        uint64_t cp_boost              : 1;  /**< [ 32: 32](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 See PLL designer for how to set these. */
-        uint64_t vcm_sel               : 1;  /**< [ 33: 33](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 See PLL designer for how to set these. */
+        uint64_t cp_boost              : 1;  /**< [ 32: 32](R/W) For diagnostic use only. */
+        uint64_t vcm_sel               : 1;  /**< [ 33: 33](R/W) For diagnostic use only. */
         uint64_t reserved_34_39        : 6;
         uint64_t lock_check_cnt_ovrd   : 15; /**< [ 54: 40](R/W) Lock check counter value override. This counter is used to wait for PLL lock to
                                                                  be valid. It counts every REFCLK cycle and once its done asserts
@@ -9262,13 +7980,9 @@ union cavm_gsernx_lanex_rev
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_8_63         : 56;
-        uint64_t rev                   : 8;  /**< [  7:  0](RO/H) Revision number for GSERN lane subblock.
-                                                                 Internal:
-                                                                 Used primarily for E5. */
+        uint64_t rev                   : 8;  /**< [  7:  0](RO/H) Revision number for GSERN lane subblock. */
 #else /* Word 0 - Little Endian */
-        uint64_t rev                   : 8;  /**< [  7:  0](RO/H) Revision number for GSERN lane subblock.
-                                                                 Internal:
-                                                                 Used primarily for E5. */
+        uint64_t rev                   : 8;  /**< [  7:  0](RO/H) Revision number for GSERN lane subblock. */
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } s;
@@ -9410,9 +8124,7 @@ union cavm_gsernx_lanex_rst1_bcfg
         uint64_t vco_cal_reset         : 1;  /**< [  6:  6](R/W) PLL VCO calibration state machine reset. */
         uint64_t fracn_reset           : 1;  /**< [  5:  5](R/W) PLL fractional-N state machine reset. */
         uint64_t ssc_reset             : 1;  /**< [  4:  4](R/W) PLL SSC state machine reset. */
-        uint64_t post_div_reset        : 1;  /**< [  3:  3](RO) Reserved.
-                                                                 Internal:
-                                                                 Was common PLL post divider reset.  No longer used. */
+        uint64_t post_div_reset        : 1;  /**< [  3:  3](RO) Reserved. */
         uint64_t reset                 : 1;  /**< [  2:  2](R/W) PLL primary reset; must assert [POST_DIV_RESET] if [RESET] is asserted. */
         uint64_t cal_en                : 1;  /**< [  1:  1](R/W) Enable PLL calibration procedure. */
         uint64_t pwdn                  : 1;  /**< [  0:  0](R/W) PLL power down control. */
@@ -9420,9 +8132,7 @@ union cavm_gsernx_lanex_rst1_bcfg
         uint64_t pwdn                  : 1;  /**< [  0:  0](R/W) PLL power down control. */
         uint64_t cal_en                : 1;  /**< [  1:  1](R/W) Enable PLL calibration procedure. */
         uint64_t reset                 : 1;  /**< [  2:  2](R/W) PLL primary reset; must assert [POST_DIV_RESET] if [RESET] is asserted. */
-        uint64_t post_div_reset        : 1;  /**< [  3:  3](RO) Reserved.
-                                                                 Internal:
-                                                                 Was common PLL post divider reset.  No longer used. */
+        uint64_t post_div_reset        : 1;  /**< [  3:  3](RO) Reserved. */
         uint64_t ssc_reset             : 1;  /**< [  4:  4](R/W) PLL SSC state machine reset. */
         uint64_t fracn_reset           : 1;  /**< [  5:  5](R/W) PLL fractional-N state machine reset. */
         uint64_t vco_cal_reset         : 1;  /**< [  6:  6](R/W) PLL VCO calibration state machine reset. */
@@ -9887,13 +8597,7 @@ union cavm_gsernx_lanex_rst_cnt2_bcfg
                                                                  deasserting power down signals to the transmitter and receiver. Set this field
                                                                  to three less than the desired number of cycles of delay. */
         uint64_t reserved_29_31        : 3;
-        uint64_t pre_pdiv_reset_wait   : 13; /**< [ 28: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 The lane PLL no longer has a postdivider
-                                                                 reset. (This was the wait count in service clock cycles after
-                                                                 deasserting reset before deasserting reset to the PLL
-                                                                 postdivider. Set this field to one less than the desired number of
-                                                                 cycles of delay.) */
+        uint64_t pre_pdiv_reset_wait   : 13; /**< [ 28: 16](R/W) Reserved. */
         uint64_t reserved_12_15        : 4;
         uint64_t pre_pll_reset_wait    : 12; /**< [ 11:  0](R/W) Wait count in service clock cycles after calibration enable deasserts
                                                                  before deasserting reset to the PLL. Set this field to one less
@@ -9903,13 +8607,7 @@ union cavm_gsernx_lanex_rst_cnt2_bcfg
                                                                  before deasserting reset to the PLL. Set this field to one less
                                                                  than the desired number of cycles of delay. */
         uint64_t reserved_12_15        : 4;
-        uint64_t pre_pdiv_reset_wait   : 13; /**< [ 28: 16](R/W) Reserved.
-                                                                 Internal:
-                                                                 The lane PLL no longer has a postdivider
-                                                                 reset. (This was the wait count in service clock cycles after
-                                                                 deasserting reset before deasserting reset to the PLL
-                                                                 postdivider. Set this field to one less than the desired number of
-                                                                 cycles of delay.) */
+        uint64_t pre_pdiv_reset_wait   : 13; /**< [ 28: 16](R/W) Reserved. */
         uint64_t reserved_29_31        : 3;
         uint64_t txrx_pre_pwup_wait    : 14; /**< [ 45: 32](R/W) Wait count in service clock cycles after the lane PLL exits reset before
                                                                  deasserting power down signals to the transmitter and receiver. Set this field
@@ -10032,11 +8730,7 @@ union cavm_gsernx_lanex_rst_cnt4_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_57_63        : 7;
-        uint64_t svc_clk_freq          : 1;  /**< [ 56: 56](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This bit reserved for future enhancements.  The RTL to use it is not coded. Freq selection
-                                                                 for service clock as used in the reset state machine. 0 = 100 MHz. 1 = 156.25 MHz. This
-                                                                 scales only the wait counts not set via CSR registers. */
+        uint64_t svc_clk_freq          : 1;  /**< [ 56: 56](R/W) For diagnostic use only. */
         uint64_t reserved_50_55        : 6;
         uint64_t blwc_reset_wait       : 18; /**< [ 49: 32](R/W) Wait count in service clock cycles after deasserting reset to the
                                                                  CDR FSM before deasserting reset to the baseline wander correction
@@ -10074,11 +8768,7 @@ union cavm_gsernx_lanex_rst_cnt4_bcfg
                                                                  allows for the full range of the counter in the receiver reset state
                                                                  machine. */
         uint64_t reserved_50_55        : 6;
-        uint64_t svc_clk_freq          : 1;  /**< [ 56: 56](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 This bit reserved for future enhancements.  The RTL to use it is not coded. Freq selection
-                                                                 for service clock as used in the reset state machine. 0 = 100 MHz. 1 = 156.25 MHz. This
-                                                                 scales only the wait counts not set via CSR registers. */
+        uint64_t svc_clk_freq          : 1;  /**< [ 56: 56](R/W) For diagnostic use only. */
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
     } s;
@@ -13319,10 +12009,7 @@ union cavm_gsernx_lanex_rx_idle_cal_cfg
                                                                  the counter to resume counting.  The count is in terms of the number of
                                                                  RECALIBRATION_OOB_COUNT_ADDER increments.
                                                                    0 = Allow [OOB_DELAY_ADDER_COUNT] to increment.
-                                                                   1 = Forces [OOB_DELAY_ADDER_COUNT] to 0x0.
-
-                                                                 Internal:
-                                                                 FIXME no such field RECALIBRATION_OOB_COUNT_ADDER then remove above exempt attribute. */
+                                                                   1 = Forces [OOB_DELAY_ADDER_COUNT] to 0x0. */
         uint64_t reserved_40_60        : 21;
         uint64_t max_oob_adder_count   : 8;  /**< [ 39: 32](R/W) Maximum number of OOB forced pushouts of the idle recalibrations allowed.  If the
                                                                  number of pushouts matches this number, the idle offset is forced to recalibrate
@@ -13341,10 +12028,7 @@ union cavm_gsernx_lanex_rx_idle_cal_cfg
                                                                  the counter to resume counting.  The count is in terms of the number of
                                                                  RECALIBRATION_OOB_COUNT_ADDER increments.
                                                                    0 = Allow [OOB_DELAY_ADDER_COUNT] to increment.
-                                                                   1 = Forces [OOB_DELAY_ADDER_COUNT] to 0x0.
-
-                                                                 Internal:
-                                                                 FIXME no such field RECALIBRATION_OOB_COUNT_ADDER then remove above exempt attribute. */
+                                                                   1 = Forces [OOB_DELAY_ADDER_COUNT] to 0x0. */
         uint64_t idle_recal_oob_mode_disable : 1;/**< [ 62: 62](R/W) Single bit for enabling or disability the dynamic recalibration OOB delay feature.
                                                                  This feature allows us to push out any idle offset recalibration when any OOB
                                                                  activity has been detected on the idle signal.
@@ -15400,9 +14084,7 @@ union cavm_gsernx_lanex_rx_os_5_bsts
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_25_63        : 39;
-        uint64_t idle                  : 1;  /**< [ 24: 24](RO/H) For diagnostic use only.
-                                                                 Internal:
-                                                                 A copy of GSERN()_LANE()_RX_IDLEDET_BSTS[IDLE] for verification convenience. */
+        uint64_t idle                  : 1;  /**< [ 24: 24](RO/H) For diagnostic use only. */
         uint64_t reserved_18_23        : 6;
         uint64_t idle_offset_valid     : 1;  /**< [ 17: 17](R/W1C/H) Valid indicator for the idle offset calibration values. This bit gets set when
                                                                  idle offset calibration
@@ -15452,9 +14134,7 @@ union cavm_gsernx_lanex_rx_os_5_bsts
                                                                  idle offset calibration
                                                                  completes, and may be cleared by software write to 1. */
         uint64_t reserved_18_23        : 6;
-        uint64_t idle                  : 1;  /**< [ 24: 24](RO/H) For diagnostic use only.
-                                                                 Internal:
-                                                                 A copy of GSERN()_LANE()_RX_IDLEDET_BSTS[IDLE] for verification convenience. */
+        uint64_t idle                  : 1;  /**< [ 24: 24](RO/H) For diagnostic use only. */
         uint64_t reserved_25_63        : 39;
 #endif /* Word 0 - End */
     } s;
@@ -15673,13 +14353,7 @@ union cavm_gsernx_lanex_rx_st_bcfg
                                                                  clock (rxcdrldi). deassert (low) to provide the interpolator with
                                                                  the RX CDR load Q clock (rxcdrldq). This bit is ignored when
                                                                  txcdrdfsm is asserted (high), which set the RX interpolator
-                                                                 and CDR FSM to use the TX clock (txcdrld).
-
-                                                                 Internal:
-                                                                 (For initial testing, assert rxcdrfsmi, but if we have trouble
-                                                                 meeting timing, we can deassert this signal to provide some
-                                                                 additional timing margin from the last flops in the RX CDR FSM to
-                                                                 the flops interpolator.) */
+                                                                 and CDR FSM to use the TX clock (txcdrld). */
         uint64_t reserved_42_47        : 6;
         uint64_t rx_dcc_iboost         : 1;  /**< [ 41: 41](R/W) Set to assert the iboost control bit of the
                                                                  receiver duty cycle correcter. Should be programmed as desired before
@@ -15752,10 +14426,7 @@ union cavm_gsernx_lanex_rx_st_bcfg
                                                                  electrical idle. The CDR FSM state is preserved, provided [RXELECIDLE] is not
                                                                  asserted, so the CDR FSM resumes operation with the same settings in effect
                                                                  prior to entering the hold state. deassert (low) to allow the CDR FSM to run. */
-        uint64_t rxcdrramp             : 1;  /**< [ 14: 14](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 For lab characterization use only. Set to 1 to cause the CDR FSM to ramp the 1st
-                                                                 order state by [INC1], independent of voter, & hold the 2nd order state. */
+        uint64_t rxcdrramp             : 1;  /**< [ 14: 14](R/W) For diagnostic use only. */
         uint64_t reserved_13           : 1;
         uint64_t en_sh_lb              : 1;  /**< [ 12: 12](R/W) Enable for shallow loopback mode within RX. Used when in shallow loopback
                                                                  mode to mux the CDR receive clock onto the transmit data path clock
@@ -15829,10 +14500,7 @@ union cavm_gsernx_lanex_rx_st_bcfg
                                                                  This signal should be enabled along with GSERN()_LANE()_PLL_2_BCFG[SHLB_EN] for
                                                                  the PLL. */
         uint64_t reserved_13           : 1;
-        uint64_t rxcdrramp             : 1;  /**< [ 14: 14](R/W) For diagnostic use only.
-                                                                 Internal:
-                                                                 For lab characterization use only. Set to 1 to cause the CDR FSM to ramp the 1st
-                                                                 order state by [INC1], independent of voter, & hold the 2nd order state. */
+        uint64_t rxcdrramp             : 1;  /**< [ 14: 14](R/W) For diagnostic use only. */
         uint64_t rxcdrhold             : 1;  /**< [ 15: 15](R/W) Set to place the CDR finite state machine (FSM) into a hold state so it does not
                                                                  try to track clock or data, which would not normally be present during
                                                                  electrical idle. The CDR FSM state is preserved, provided [RXELECIDLE] is not
@@ -15909,13 +14577,7 @@ union cavm_gsernx_lanex_rx_st_bcfg
                                                                  clock (rxcdrldi). deassert (low) to provide the interpolator with
                                                                  the RX CDR load Q clock (rxcdrldq). This bit is ignored when
                                                                  txcdrdfsm is asserted (high), which set the RX interpolator
-                                                                 and CDR FSM to use the TX clock (txcdrld).
-
-                                                                 Internal:
-                                                                 (For initial testing, assert rxcdrfsmi, but if we have trouble
-                                                                 meeting timing, we can deassert this signal to provide some
-                                                                 additional timing margin from the last flops in the RX CDR FSM to
-                                                                 the flops interpolator.) */
+                                                                 and CDR FSM to use the TX clock (txcdrld). */
         uint64_t reserved_49_63        : 15;
 #endif /* Word 0 - End */
     } s;
@@ -18538,49 +17200,12 @@ union cavm_gsernx_lanex_train_0_bcfg
                                                                  written to the PHY.  This field has no meaning if TX BASE-R link training was
                                                                  not performed.
                                                                  For diagnostic use only. */
-        uint64_t txt_swm               : 1;  /**< [ 47: 47](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set when TX BASE-R link training is to be performed under software control. For diagnostic
-                                                                 use only. */
-        uint64_t txt_cur_post          : 5;  /**< [ 46: 42](R/W) Reserved.
-                                                                 Internal:
-                                                                 When TX BASE-R link training is being performed under software control,
-                                                                 e.g. GSERN()_LANE()_TRAIN_0_BCFG[TXT_SWM] is set, this is the (C+1) coefficient
-                                                                 update to be written to the SerDes TX Equalizer.
-                                                                 The coefficients are written to the TX equalizer when
-                                                                 GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_PRG] is set to a one.
-                                                                 For diagnostic use only. */
-        uint64_t txt_cur_main          : 6;  /**< [ 41: 36](R/W) Reserved.
-                                                                 Internal:
-                                                                 When TX BASE-R link training is being performed under software control,
-                                                                 e.g. GSERN()_LANE()_TRAIN_0_BCFG[TXT_SWM] is set, this is the (C0) coefficient
-                                                                 update to be written to the SerDes TX Equalizer.
-                                                                 The coefficients are written to the TX equalizer when
-                                                                 GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_PRG] is set to a one.
-                                                                 For diagnostic use only. */
-        uint64_t txt_cur_pre           : 5;  /**< [ 35: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 When TX BASE-R link training is being performed under software control,
-                                                                 e.g. GSERN()_LANE()_TRAIN_0_BCFG[TXT_SWM] is set, this is the (C-1) coefficient
-                                                                 update to be written to the SerDes TX Equalizer.
-                                                                 The coefficients are written to the TX equalizer when
-                                                                 GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_PRG] is set to a one.
-                                                                 For diagnostic use only. */
-        uint64_t txt_cur_prg           : 1;  /**< [ 30: 30](R/W) Reserved.
-                                                                 Internal:
-                                                                 When TX BASE-R link training is being performed under software control,
-                                                                 e.g. GSERN()_LANE()_TRAIN_0_BCFG[TXT_SWM] is set, setting [TXT_CUR_PRG] writes the TX
-                                                                 equalizer
-                                                                 coefficients in GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_PRE],
-                                                                 GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_MAIN],
-                                                                 and GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_POST] registers into the GSER TX equalizer.
-                                                                 For diagnostic use only. */
-        uint64_t rxt_adtmout_fast      : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 For simulation use only. When set accelerates the link training time-out timer during
-                                                                 BASE-R link training.  When set shortens the link training time-out timer to time-out
-                                                                 after 164 microseconds to facilitate shorter BASE-R training simulations runs.
-                                                                 For diagnostic use only. */
+        uint64_t txt_swm               : 1;  /**< [ 47: 47](R/W) Reserved. */
+        uint64_t txt_cur_post          : 5;  /**< [ 46: 42](R/W) Reserved. */
+        uint64_t txt_cur_main          : 6;  /**< [ 41: 36](R/W) Reserved. */
+        uint64_t txt_cur_pre           : 5;  /**< [ 35: 31](R/W) Reserved. */
+        uint64_t txt_cur_prg           : 1;  /**< [ 30: 30](R/W) Reserved. */
+        uint64_t rxt_adtmout_fast      : 1;  /**< [ 29: 29](R/W) Reserved. */
         uint64_t rxt_adtmout_sel       : 2;  /**< [ 28: 27](R/W) Selects the timeout value for the BASE-R link training time-out timer.
                                                                  This time-out timer value is only valid if
                                                                  GSERN()_LANE()_TRAIN_0_BCFG[RXT_ADTMOUT_DISABLE]
@@ -18653,15 +17278,7 @@ union cavm_gsernx_lanex_train_0_bcfg
                                                                  before [TRN_OVRD_EN] is set to 1.
                                                                  For diagnostic use only. */
         uint64_t reserved_8_13         : 6;
-        uint64_t cfg_ocx               : 1;  /**< [  7:  7](R/W) Reserved.
-                                                                 Internal:
-                                                                 Configure BASE-R training logic for OCX mode.   When [CFG_OCX] is set the
-                                                                 Coefficient Update (CU) and Status Report (SR) messaging is reconfigured for
-                                                                 the OCX controller.  The CU and SR messages must be sent and received in the
-                                                                 txdivclk and rxdivclk domains for the OCX controller.
-
-                                                                 When [CFG_OCX] is set, the GSERN()_LANE()_TRAIN_0_BCFG[CFG_CGX] field must be
-                                                                 cleared to zero. */
+        uint64_t cfg_ocx               : 1;  /**< [  7:  7](R/W) Reserved. */
         uint64_t rxt_adjmain           : 1;  /**< [  6:  6](R/W) For all link training, this bit determines how the main tap is adjusted at the start
                                                                  of link training.  When set the main tap of link partner transmitter peak-to-peak level
                                                                  is adjusted to optimize the AGC of the local device receiver.  This is intended to prevent
@@ -18747,15 +17364,7 @@ union cavm_gsernx_lanex_train_0_bcfg
 
                                                                  To perform main tap optimization of the link partner transmitter set this bit prior to
                                                                  enabling link training. */
-        uint64_t cfg_ocx               : 1;  /**< [  7:  7](R/W) Reserved.
-                                                                 Internal:
-                                                                 Configure BASE-R training logic for OCX mode.   When [CFG_OCX] is set the
-                                                                 Coefficient Update (CU) and Status Report (SR) messaging is reconfigured for
-                                                                 the OCX controller.  The CU and SR messages must be sent and received in the
-                                                                 txdivclk and rxdivclk domains for the OCX controller.
-
-                                                                 When [CFG_OCX] is set, the GSERN()_LANE()_TRAIN_0_BCFG[CFG_CGX] field must be
-                                                                 cleared to zero. */
+        uint64_t cfg_ocx               : 1;  /**< [  7:  7](R/W) Reserved. */
         uint64_t reserved_8_13         : 6;
         uint64_t trn_ovrd_en           : 1;  /**< [ 14: 14](R/W) BASE-R Training Override Enable.  Setting [TRN_OVRD_EN] will enable BASE-R training logic
                                                                  for both CGX and OCX.  This is a CSR override for the BASE-R training enable signals from
@@ -18828,49 +17437,12 @@ union cavm_gsernx_lanex_train_0_bcfg
                                                                  0x1 = 163.84 microseconds.
                                                                  0x2 = 327.68 microseconds.
                                                                  0x3 = 655.36 microseconds. */
-        uint64_t rxt_adtmout_fast      : 1;  /**< [ 29: 29](R/W) Reserved.
-                                                                 Internal:
-                                                                 For simulation use only. When set accelerates the link training time-out timer during
-                                                                 BASE-R link training.  When set shortens the link training time-out timer to time-out
-                                                                 after 164 microseconds to facilitate shorter BASE-R training simulations runs.
-                                                                 For diagnostic use only. */
-        uint64_t txt_cur_prg           : 1;  /**< [ 30: 30](R/W) Reserved.
-                                                                 Internal:
-                                                                 When TX BASE-R link training is being performed under software control,
-                                                                 e.g. GSERN()_LANE()_TRAIN_0_BCFG[TXT_SWM] is set, setting [TXT_CUR_PRG] writes the TX
-                                                                 equalizer
-                                                                 coefficients in GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_PRE],
-                                                                 GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_MAIN],
-                                                                 and GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_POST] registers into the GSER TX equalizer.
-                                                                 For diagnostic use only. */
-        uint64_t txt_cur_pre           : 5;  /**< [ 35: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 When TX BASE-R link training is being performed under software control,
-                                                                 e.g. GSERN()_LANE()_TRAIN_0_BCFG[TXT_SWM] is set, this is the (C-1) coefficient
-                                                                 update to be written to the SerDes TX Equalizer.
-                                                                 The coefficients are written to the TX equalizer when
-                                                                 GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_PRG] is set to a one.
-                                                                 For diagnostic use only. */
-        uint64_t txt_cur_main          : 6;  /**< [ 41: 36](R/W) Reserved.
-                                                                 Internal:
-                                                                 When TX BASE-R link training is being performed under software control,
-                                                                 e.g. GSERN()_LANE()_TRAIN_0_BCFG[TXT_SWM] is set, this is the (C0) coefficient
-                                                                 update to be written to the SerDes TX Equalizer.
-                                                                 The coefficients are written to the TX equalizer when
-                                                                 GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_PRG] is set to a one.
-                                                                 For diagnostic use only. */
-        uint64_t txt_cur_post          : 5;  /**< [ 46: 42](R/W) Reserved.
-                                                                 Internal:
-                                                                 When TX BASE-R link training is being performed under software control,
-                                                                 e.g. GSERN()_LANE()_TRAIN_0_BCFG[TXT_SWM] is set, this is the (C+1) coefficient
-                                                                 update to be written to the SerDes TX Equalizer.
-                                                                 The coefficients are written to the TX equalizer when
-                                                                 GSERN()_LANE()_TRAIN_0_BCFG[TXT_CUR_PRG] is set to a one.
-                                                                 For diagnostic use only. */
-        uint64_t txt_swm               : 1;  /**< [ 47: 47](R/W) Reserved.
-                                                                 Internal:
-                                                                 Set when TX BASE-R link training is to be performed under software control. For diagnostic
-                                                                 use only. */
+        uint64_t rxt_adtmout_fast      : 1;  /**< [ 29: 29](R/W) Reserved. */
+        uint64_t txt_cur_prg           : 1;  /**< [ 30: 30](R/W) Reserved. */
+        uint64_t txt_cur_pre           : 5;  /**< [ 35: 31](R/W) Reserved. */
+        uint64_t txt_cur_main          : 6;  /**< [ 41: 36](R/W) Reserved. */
+        uint64_t txt_cur_post          : 5;  /**< [ 46: 42](R/W) Reserved. */
+        uint64_t txt_swm               : 1;  /**< [ 47: 47](R/W) Reserved. */
         uint64_t txt_pre               : 5;  /**< [ 52: 48](RO/H) After TX BASE-R link training, this is the resultant POST Tap value that was
                                                                  written to the PHY.  This field has no meaning if TX BASE-R link training was
                                                                  not performed.
@@ -18969,14 +17541,7 @@ union cavm_gsernx_lanex_train_10_bcfg
                                                                  1 = The raw FOM calculation follows the steps above however the
                                                                  eye monitor error measurements is a two step process with the error slicer
                                                                  first set both below the nominal data slicer level and then on the second
-                                                                 measurement pass set above the data slicer nominal level.
-
-                                                                 Internal:
-                                                                 The first FOM method can detect a saturated receiver and stop training
-                                                                 if the eye is sufficiently open.
-                                                                 The second FOM method returns a lower value for overequalized eyes and
-                                                                 is useful for driving the training to a more optimal equalization
-                                                                 setting on longer links. */
+                                                                 measurement pass set above the data slicer nominal level. */
         uint64_t trn_fom_thrs_en       : 1;  /**< [ 45: 45](R/W) BASE-R training when set to 1 enables the FOM threshold value in
                                                                  GSERN()_LANE()_TRAIN_10_BCFG[EXIT_FOM_THRS_VAL] for training convergence
                                                                  detection.  When the measured FOM exceeds the value in
@@ -19010,14 +17575,7 @@ union cavm_gsernx_lanex_train_10_bcfg
                                                                  For diagnostic use only. */
         uint64_t ttrk_array_addr       : 7;  /**< [ 30: 24](R/W) KR training Local Device Tx Equalizer tracking array index. Used to
                                                                  readback tap values from the tracking array after KR training has completed.
-                                                                 For diagnostic use only.
-
-                                                                 Internal:
-                                                                 During KR training the local device transmitter tap values (C0,C+1,C-1)
-                                                                 are stored in the tap tracking array.  The array holds up to 128 locations.
-                                                                 After KR training completes the array can be read back to determine the
-                                                                 training progression of the transmitter taps.  This is helpful in debugging
-                                                                 KR training convergence problems of the local device transmitter. */
+                                                                 For diagnostic use only. */
         uint64_t ttrk_moves            : 8;  /**< [ 23: 16](RO/H) KR training Local Device Tx Equalizer number of tap adjustments during KR training.
                                                                  For diagnostic use only. */
         uint64_t ttrk_pre              : 5;  /**< [ 15: 11](RO/H) KR training Local Device Tx Equalizer Pre (C-1) value from the tap tracking array.
@@ -19037,14 +17595,7 @@ union cavm_gsernx_lanex_train_10_bcfg
                                                                  For diagnostic use only. */
         uint64_t ttrk_array_addr       : 7;  /**< [ 30: 24](R/W) KR training Local Device Tx Equalizer tracking array index. Used to
                                                                  readback tap values from the tracking array after KR training has completed.
-                                                                 For diagnostic use only.
-
-                                                                 Internal:
-                                                                 During KR training the local device transmitter tap values (C0,C+1,C-1)
-                                                                 are stored in the tap tracking array.  The array holds up to 128 locations.
-                                                                 After KR training completes the array can be read back to determine the
-                                                                 training progression of the transmitter taps.  This is helpful in debugging
-                                                                 KR training convergence problems of the local device transmitter. */
+                                                                 For diagnostic use only. */
         uint64_t ttrk_array_rd         : 1;  /**< [ 31: 31](R/W) KR training Local Device Tx Equalizer tracking array index Read signal. Used to
                                                                  readback tap values from the tracking array after KR training has completed.
                                                                  For diagnostic use only. */
@@ -19086,14 +17637,7 @@ union cavm_gsernx_lanex_train_10_bcfg
                                                                  1 = The raw FOM calculation follows the steps above however the
                                                                  eye monitor error measurements is a two step process with the error slicer
                                                                  first set both below the nominal data slicer level and then on the second
-                                                                 measurement pass set above the data slicer nominal level.
-
-                                                                 Internal:
-                                                                 The first FOM method can detect a saturated receiver and stop training
-                                                                 if the eye is sufficiently open.
-                                                                 The second FOM method returns a lower value for overequalized eyes and
-                                                                 is useful for driving the training to a more optimal equalization
-                                                                 setting on longer links. */
+                                                                 measurement pass set above the data slicer nominal level. */
         uint64_t l_c1_e_adj_step       : 5;  /**< [ 51: 47](R/W) Sets the C1 E sampler voltage level during eye monitor sampling when
                                                                  GSERN()_LANE()_TRAIN_10_BCFG[FOM_TYPE] is set to one for BASE-R training.
                                                                  Typically [L_C1_E_ADJ_STEP] is set to 0x3 to position the eye monitor
@@ -19171,89 +17715,13 @@ union cavm_gsernx_lanex_train_11_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_63           : 1;
-        uint64_t fom_eye_cnt_ovrrd_en  : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor error count override enable.  Used by verification
-                                                                 to check the FOM calculations in CGX, OCX, and PCIe modes. Overrides the eye
-                                                                 monitor error count value during the FOM measurement using the eye monitor
-                                                                 logic.  Allows verfication to more quickly check the FOM calculation logic.  The
-                                                                 value in GSERN()_LANE()_TRAIN_11_BCFG[FOM_UEYE_CNT_OVRRD_VAL] is used to override
-                                                                 the eye upper error count value returned from the eye monitor when this bit is
-                                                                 set to one. The value in GSERN()_LANE()_TRAIN_11_BCFG[FOM_LEYE_CNT_OVRRD_VAL] is
-                                                                 used to override the eye lower error count value returned from the eye monitor
-                                                                 when this bit is set to one.
-                                                                 The value in this CSR is used for the eye error count value for all four eye
-                                                                 measurement cases, e.g., transition ones, non-transiton ones, transition zeros,
-                                                                 non-transition zeros. These error counts are summed and used to compute the FOM
-                                                                 value via FOM1 and FOM2 algorightms. For diagnostic use only. */
-        uint64_t fom_ueye_cnt_ovrrd_val : 31;/**< [ 61: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor Upper Sampler error count override value.  Used by
-                                                                 verification to check the FOM calculations in CGX, OCX, and PCIe modes.
-                                                                 Overrides the eye monitor error count value during the FOM measurement using the
-                                                                 eye monitor logic.  Allows verfication to more quickly check the FOM calculation
-                                                                 logic.  Valid when GSERN()_LANE()_TRAIN_11_BCFG[FOM_EYE_CNT_OVRRD_EN] is set to
-                                                                 one.
-                                                                 The value in this CSR is used for the eye error count value for all four eye
-                                                                 measurement cases, e.g., transition ones, non-transiton ones, transition zeros,
-                                                                 non-transition zeros. These error counts are summed and used to compute the FOM
-                                                                 value via FOM1 and FOM2 algorightms.  The value in this field controls the upper
-                                                                 eye measurement above the q-sampler. For diagnostic use only. */
-        uint64_t fom_leye_cnt_ovrrd_val : 31;/**< [ 30:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor Lower Sampler error count override value.  Used by
-                                                                 verification to check the FOM calculations in CGX, OCX, and PCIe modes.
-                                                                 Overrides the eye monitor error count value during the FOM measurement using the
-                                                                 eye monitor logic.  Allows verfication to more quickly check the FOM calculation
-                                                                 logic.  Valid when GSERN()_LANE()_TRAIN_11_BCFG[FOM_EYE_CNT_OVRRD_EN] is set to
-                                                                 one.
-                                                                 The value in this CSR is used for the eye error count value for all four eye
-                                                                 measurement cases, e.g., transition ones, non-transiton ones, transition zeros,
-                                                                 non-transition zeros. These error counts are summed and used to compute the FOM
-                                                                 value via FOM1 and FOM2 algorightms.  The value in this field controls the lower
-                                                                 eye measurement below the q-sampler. For diagnostic use only. */
+        uint64_t fom_eye_cnt_ovrrd_en  : 1;  /**< [ 62: 62](R/W) Reserved. */
+        uint64_t fom_ueye_cnt_ovrrd_val : 31;/**< [ 61: 31](R/W) Reserved. */
+        uint64_t fom_leye_cnt_ovrrd_val : 31;/**< [ 30:  0](R/W) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t fom_leye_cnt_ovrrd_val : 31;/**< [ 30:  0](R/W) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor Lower Sampler error count override value.  Used by
-                                                                 verification to check the FOM calculations in CGX, OCX, and PCIe modes.
-                                                                 Overrides the eye monitor error count value during the FOM measurement using the
-                                                                 eye monitor logic.  Allows verfication to more quickly check the FOM calculation
-                                                                 logic.  Valid when GSERN()_LANE()_TRAIN_11_BCFG[FOM_EYE_CNT_OVRRD_EN] is set to
-                                                                 one.
-                                                                 The value in this CSR is used for the eye error count value for all four eye
-                                                                 measurement cases, e.g., transition ones, non-transiton ones, transition zeros,
-                                                                 non-transition zeros. These error counts are summed and used to compute the FOM
-                                                                 value via FOM1 and FOM2 algorightms.  The value in this field controls the lower
-                                                                 eye measurement below the q-sampler. For diagnostic use only. */
-        uint64_t fom_ueye_cnt_ovrrd_val : 31;/**< [ 61: 31](R/W) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor Upper Sampler error count override value.  Used by
-                                                                 verification to check the FOM calculations in CGX, OCX, and PCIe modes.
-                                                                 Overrides the eye monitor error count value during the FOM measurement using the
-                                                                 eye monitor logic.  Allows verfication to more quickly check the FOM calculation
-                                                                 logic.  Valid when GSERN()_LANE()_TRAIN_11_BCFG[FOM_EYE_CNT_OVRRD_EN] is set to
-                                                                 one.
-                                                                 The value in this CSR is used for the eye error count value for all four eye
-                                                                 measurement cases, e.g., transition ones, non-transiton ones, transition zeros,
-                                                                 non-transition zeros. These error counts are summed and used to compute the FOM
-                                                                 value via FOM1 and FOM2 algorightms.  The value in this field controls the upper
-                                                                 eye measurement above the q-sampler. For diagnostic use only. */
-        uint64_t fom_eye_cnt_ovrrd_en  : 1;  /**< [ 62: 62](R/W) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor error count override enable.  Used by verification
-                                                                 to check the FOM calculations in CGX, OCX, and PCIe modes. Overrides the eye
-                                                                 monitor error count value during the FOM measurement using the eye monitor
-                                                                 logic.  Allows verfication to more quickly check the FOM calculation logic.  The
-                                                                 value in GSERN()_LANE()_TRAIN_11_BCFG[FOM_UEYE_CNT_OVRRD_VAL] is used to override
-                                                                 the eye upper error count value returned from the eye monitor when this bit is
-                                                                 set to one. The value in GSERN()_LANE()_TRAIN_11_BCFG[FOM_LEYE_CNT_OVRRD_VAL] is
-                                                                 used to override the eye lower error count value returned from the eye monitor
-                                                                 when this bit is set to one.
-                                                                 The value in this CSR is used for the eye error count value for all four eye
-                                                                 measurement cases, e.g., transition ones, non-transiton ones, transition zeros,
-                                                                 non-transition zeros. These error counts are summed and used to compute the FOM
-                                                                 value via FOM1 and FOM2 algorightms. For diagnostic use only. */
+        uint64_t fom_leye_cnt_ovrrd_val : 31;/**< [ 30:  0](R/W) Reserved. */
+        uint64_t fom_ueye_cnt_ovrrd_val : 31;/**< [ 61: 31](R/W) Reserved. */
+        uint64_t fom_eye_cnt_ovrrd_en  : 1;  /**< [ 62: 62](R/W) Reserved. */
         uint64_t reserved_63           : 1;
 #endif /* Word 0 - End */
     } s;
@@ -19291,191 +17759,19 @@ union cavm_gsernx_lanex_train_12_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_59_63        : 5;
-        uint64_t dbg_pat_ptr           : 1;  /**< [ 58: 58](R/W) Reserved.
-                                                                 Internal:
-                                                                 KR Training receiver exit pattern array index pointer during array debug readback.
-                                                                 For diagnostic and verification use only. Refer to
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] description for more information. */
-        uint64_t dbg_post_ptr          : 2;  /**< [ 57: 56](R/W) Reserved.
-                                                                 Internal:
-                                                                 KR Training receiver cost array POST index to the cost array during debug readback.
-                                                                 For diagnostic and verification use only. Refer to
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] description for more information. */
-        uint64_t dbg_pre_ptr           : 2;  /**< [ 55: 54](R/W) Reserved.
-                                                                 Internal:
-                                                                 KR Training receiver cost array PRE index to the cost array during debug readback.
-                                                                 For diagnostic and verification use only. Refer to
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] description for more information. */
-        uint64_t fom_array_clr         : 1;  /**< [ 53: 53](R/W) Reserved.
-                                                                 Internal:
-                                                                 FOM Array Clear. When set to 1 clears the PCIe Test FOM array.  For diagnostic and verification
-                                                                 use only. Refer to GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_VAL] description for more
-                                                                 information. */
-        uint64_t fom_err_cnt_sel       : 4;  /**< [ 52: 49](R/W) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor Error Count Statistics Selector. Used by
-                                                                 verification to check the FOM calculations eye monitor error counts in CGX, OCX,
-                                                                 and PCIe modes. GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL]\<3:0\> is used to
-                                                                 select the eye monitor error counts and intermediate FOM calculation variables
-                                                                 to read out of the GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS]
-                                                                 following a FOM measurement.
-
-                                                                 \<page\>
-                                                                 The [FOM_ERR_CNT_SEL] encoding and resulting FOM and internal state machine
-                                                                 information read back in GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS]\<48:0\> is
-                                                                 0x0 = 3'h0,FOM1 non-transition ones error count overflow flag, FOM1 non-transition ones
-                                                                 error count[44:0].
-                                                                 0x1 = 3'h0,FOM1 non-transition zeros error count overflow flag, FOM1 non-
-                                                                 transition zeros error count[44:0].
-                                                                 0x2 = 3'h0,FOM1 transition ones error count
-                                                                 overflow flag, FOM1 1ransition ones error count[44:0].
-                                                                 0x3 = 3'h0,FOM1 transition zeros
-                                                                 error count overflow flag, FOM1 transition zeros error count[44:0].
-                                                                 0x4 = 3'h0,FOM2 non-transition ones error count overflow flag, FOM2 non-transition ones
-                                                                 error count[44:0].
-                                                                 0x5 = 3'h0,FOM2 non-transition zeros error count overflow flag, FOM2 non-
-                                                                 transition zeros error count[44:0].
-                                                                 0x6 = 3'h0,FOM2 transition ones error count
-                                                                 overflow flag, FOM2 1ransition ones error count[44:0].
-                                                                 0x7 = 3'h0,FOM2 transition zeros
-                                                                 error count overflow flag, FOM2 transition zeros error count[44:0].
-                                                                 0x8 = 2'h0,fom1_sum_err_cnt[46:0].
-                                                                 0x9 = 2'h0,fom2_sum_err_cnt[46:0].
-                                                                 0xa = 35'h0,fom_type,raw_fom[11:0].
-                                                                 0xb = 5'h0,exit_pat_array[7:0],avg_cost_array[11:0],nhits_array[7:0],addr_valid_array[15:0]
-                                                                       index into the 4x4 arrays controlled by
-                                                                       GSERN()_LANE()_TRAIN_12_BCFG[DBG_PRE_PTR] and
-                                                                       GSERN()_LANE()_TRAIN_12_BCFG[DBG_POST_PTR].
-                                                                       GSERN()_LANE()_TRAIN_12_BCFG[DBG_PAT_PTR] is used at as column pointer
-                                                                       and GSERN()_LANE()_TRAIN_12_BCFG[DBG_POST_PTR] amd
-                                                                       GSERN()_LANE()_TRAIN_12_BCFG[DBG_PRE_PTR] are used as row pointer into
-                                                                       the exit pattern 2x16 array.
-                                                                       Only valid when the RXTRAIN state machine is in the IDLE state
-                                                                       and GSERN()_LANE()_TRAIN_6_BCFG[SAV_COST_CACHE] is set to 1 and
-                                                                       KR Training has terminated.
-                                                                 0xc - 0xf Reserved.
-
-                                                                 \<page\>
-                                                                 This register is used in conjunction with the
-                                                                 GSERN()_LANE()_TRAIN_11_BCFG[FOM_EYE_CNT_OVRRD_EN],
-                                                                 GSERN()_LANE()_TRAIN_11_BCFG[FOM_UEYE_CNT_OVRRD_VAL], and
-                                                                 GSERN()_LANE()_TRAIN_11_BCFG[FOM_LEYE_CNT_OVRRD_VAL] to test and
-                                                                 validate the FOM1 and FOM2 math logic.
-                                                                 Also used in conjunction with GSERN()_LANE()_TRAIN_10_BCFG[FOM_TYPE]
-                                                                 GSERN()_LANE()_TRAIN_4_BCFG[EQ_EVAL_OVRRD_EN],
-                                                                 GSERN()_LANE()_TRAIN_4_BCFG[EQ_EVAL_OVRRD_REQ], and
-                                                                 GSERN()_LANE()_TRAIN_5_BCFG[EQ_EVAL_ACK] to generate a software initiated FOM1 or
-                                                                 FOM2 measurement request.
-
-                                                                 \<page\>
-                                                                 Software must wait a minimum of 10 microseconds
-                                                                 after writing GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] before reading the
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS] to allow the debug mux to
-                                                                 switch and the error count statistic signals to settle.
-                                                                 For diagnostic use only. */
-        uint64_t fom_err_cnt_stats     : 49; /**< [ 48:  0](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor Error Count Statistics. Used by verification to
-                                                                 check the FOM calculations eye monitor error counts in CGX, OCX, and PCIe modes.
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL]\<3:0\> is used to select the eye
-                                                                 monitor error counts and intermediate FOM calculation variables to read out of
-                                                                 the GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS] following a FOM
-                                                                 measurement.
-                                                                 Refer to the description in GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL].
-                                                                 For diagnostic use only. */
+        uint64_t dbg_pat_ptr           : 1;  /**< [ 58: 58](R/W) Reserved. */
+        uint64_t dbg_post_ptr          : 2;  /**< [ 57: 56](R/W) Reserved. */
+        uint64_t dbg_pre_ptr           : 2;  /**< [ 55: 54](R/W) Reserved. */
+        uint64_t fom_array_clr         : 1;  /**< [ 53: 53](R/W) Reserved. */
+        uint64_t fom_err_cnt_sel       : 4;  /**< [ 52: 49](R/W) Reserved. */
+        uint64_t fom_err_cnt_stats     : 49; /**< [ 48:  0](RO/H) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t fom_err_cnt_stats     : 49; /**< [ 48:  0](RO/H) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor Error Count Statistics. Used by verification to
-                                                                 check the FOM calculations eye monitor error counts in CGX, OCX, and PCIe modes.
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL]\<3:0\> is used to select the eye
-                                                                 monitor error counts and intermediate FOM calculation variables to read out of
-                                                                 the GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS] following a FOM
-                                                                 measurement.
-                                                                 Refer to the description in GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL].
-                                                                 For diagnostic use only. */
-        uint64_t fom_err_cnt_sel       : 4;  /**< [ 52: 49](R/W) Reserved.
-                                                                 Internal:
-                                                                 Figure of Merit Eye Monitor Error Count Statistics Selector. Used by
-                                                                 verification to check the FOM calculations eye monitor error counts in CGX, OCX,
-                                                                 and PCIe modes. GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL]\<3:0\> is used to
-                                                                 select the eye monitor error counts and intermediate FOM calculation variables
-                                                                 to read out of the GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS]
-                                                                 following a FOM measurement.
-
-                                                                 \<page\>
-                                                                 The [FOM_ERR_CNT_SEL] encoding and resulting FOM and internal state machine
-                                                                 information read back in GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS]\<48:0\> is
-                                                                 0x0 = 3'h0,FOM1 non-transition ones error count overflow flag, FOM1 non-transition ones
-                                                                 error count[44:0].
-                                                                 0x1 = 3'h0,FOM1 non-transition zeros error count overflow flag, FOM1 non-
-                                                                 transition zeros error count[44:0].
-                                                                 0x2 = 3'h0,FOM1 transition ones error count
-                                                                 overflow flag, FOM1 1ransition ones error count[44:0].
-                                                                 0x3 = 3'h0,FOM1 transition zeros
-                                                                 error count overflow flag, FOM1 transition zeros error count[44:0].
-                                                                 0x4 = 3'h0,FOM2 non-transition ones error count overflow flag, FOM2 non-transition ones
-                                                                 error count[44:0].
-                                                                 0x5 = 3'h0,FOM2 non-transition zeros error count overflow flag, FOM2 non-
-                                                                 transition zeros error count[44:0].
-                                                                 0x6 = 3'h0,FOM2 transition ones error count
-                                                                 overflow flag, FOM2 1ransition ones error count[44:0].
-                                                                 0x7 = 3'h0,FOM2 transition zeros
-                                                                 error count overflow flag, FOM2 transition zeros error count[44:0].
-                                                                 0x8 = 2'h0,fom1_sum_err_cnt[46:0].
-                                                                 0x9 = 2'h0,fom2_sum_err_cnt[46:0].
-                                                                 0xa = 35'h0,fom_type,raw_fom[11:0].
-                                                                 0xb = 5'h0,exit_pat_array[7:0],avg_cost_array[11:0],nhits_array[7:0],addr_valid_array[15:0]
-                                                                       index into the 4x4 arrays controlled by
-                                                                       GSERN()_LANE()_TRAIN_12_BCFG[DBG_PRE_PTR] and
-                                                                       GSERN()_LANE()_TRAIN_12_BCFG[DBG_POST_PTR].
-                                                                       GSERN()_LANE()_TRAIN_12_BCFG[DBG_PAT_PTR] is used at as column pointer
-                                                                       and GSERN()_LANE()_TRAIN_12_BCFG[DBG_POST_PTR] amd
-                                                                       GSERN()_LANE()_TRAIN_12_BCFG[DBG_PRE_PTR] are used as row pointer into
-                                                                       the exit pattern 2x16 array.
-                                                                       Only valid when the RXTRAIN state machine is in the IDLE state
-                                                                       and GSERN()_LANE()_TRAIN_6_BCFG[SAV_COST_CACHE] is set to 1 and
-                                                                       KR Training has terminated.
-                                                                 0xc - 0xf Reserved.
-
-                                                                 \<page\>
-                                                                 This register is used in conjunction with the
-                                                                 GSERN()_LANE()_TRAIN_11_BCFG[FOM_EYE_CNT_OVRRD_EN],
-                                                                 GSERN()_LANE()_TRAIN_11_BCFG[FOM_UEYE_CNT_OVRRD_VAL], and
-                                                                 GSERN()_LANE()_TRAIN_11_BCFG[FOM_LEYE_CNT_OVRRD_VAL] to test and
-                                                                 validate the FOM1 and FOM2 math logic.
-                                                                 Also used in conjunction with GSERN()_LANE()_TRAIN_10_BCFG[FOM_TYPE]
-                                                                 GSERN()_LANE()_TRAIN_4_BCFG[EQ_EVAL_OVRRD_EN],
-                                                                 GSERN()_LANE()_TRAIN_4_BCFG[EQ_EVAL_OVRRD_REQ], and
-                                                                 GSERN()_LANE()_TRAIN_5_BCFG[EQ_EVAL_ACK] to generate a software initiated FOM1 or
-                                                                 FOM2 measurement request.
-
-                                                                 \<page\>
-                                                                 Software must wait a minimum of 10 microseconds
-                                                                 after writing GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] before reading the
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS] to allow the debug mux to
-                                                                 switch and the error count statistic signals to settle.
-                                                                 For diagnostic use only. */
-        uint64_t fom_array_clr         : 1;  /**< [ 53: 53](R/W) Reserved.
-                                                                 Internal:
-                                                                 FOM Array Clear. When set to 1 clears the PCIe Test FOM array.  For diagnostic and verification
-                                                                 use only. Refer to GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_VAL] description for more
-                                                                 information. */
-        uint64_t dbg_pre_ptr           : 2;  /**< [ 55: 54](R/W) Reserved.
-                                                                 Internal:
-                                                                 KR Training receiver cost array PRE index to the cost array during debug readback.
-                                                                 For diagnostic and verification use only. Refer to
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] description for more information. */
-        uint64_t dbg_post_ptr          : 2;  /**< [ 57: 56](R/W) Reserved.
-                                                                 Internal:
-                                                                 KR Training receiver cost array POST index to the cost array during debug readback.
-                                                                 For diagnostic and verification use only. Refer to
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] description for more information. */
-        uint64_t dbg_pat_ptr           : 1;  /**< [ 58: 58](R/W) Reserved.
-                                                                 Internal:
-                                                                 KR Training receiver exit pattern array index pointer during array debug readback.
-                                                                 For diagnostic and verification use only. Refer to
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] description for more information. */
+        uint64_t fom_err_cnt_stats     : 49; /**< [ 48:  0](RO/H) Reserved. */
+        uint64_t fom_err_cnt_sel       : 4;  /**< [ 52: 49](R/W) Reserved. */
+        uint64_t fom_array_clr         : 1;  /**< [ 53: 53](R/W) Reserved. */
+        uint64_t dbg_pre_ptr           : 2;  /**< [ 55: 54](R/W) Reserved. */
+        uint64_t dbg_post_ptr          : 2;  /**< [ 57: 56](R/W) Reserved. */
+        uint64_t dbg_pat_ptr           : 1;  /**< [ 58: 58](R/W) Reserved. */
         uint64_t reserved_59_63        : 5;
 #endif /* Word 0 - End */
     } s;
@@ -20796,11 +19092,7 @@ union cavm_gsernx_lanex_train_4_bcfg
                                                                  Set to 0x3 to enable axis 1 and axis 2 but disable axis 3.
                                                                  Set to 0x7 to enable axis 1, 2 and 3. (default.)
                                                                  For diagnostic use only. */
-        uint64_t trn_dbg_en            : 1;  /**< [ 52: 52](R/W) Reserved.
-                                                                 Internal:
-                                                                 Training debug enable.  When set to 1 loops back the CU and SR messages so that
-                                                                 a lane can self-train to itself.  Used for lab debug and characterization.
-                                                                 For diagnostic use only. */
+        uint64_t trn_dbg_en            : 1;  /**< [ 52: 52](R/W) Reserved. */
         uint64_t reserved_48_51        : 4;
         uint64_t eq_eval_ovrrd_req     : 1;  /**< [ 47: 47](R/W) When set issues a receiver equalization evaluation request when
                                                                  GSERN()_LANE()_TRAIN_4_BCFG[EQ_EVAL_OVRRD_EN] is set.
@@ -20878,11 +19170,7 @@ union cavm_gsernx_lanex_train_4_bcfg
                                                                  GSERN()_LANE()_TRAIN_4_BCFG[EQ_EVAL_OVRRD_EN] is set.
                                                                  For diagnostic use only. */
         uint64_t reserved_48_51        : 4;
-        uint64_t trn_dbg_en            : 1;  /**< [ 52: 52](R/W) Reserved.
-                                                                 Internal:
-                                                                 Training debug enable.  When set to 1 loops back the CU and SR messages so that
-                                                                 a lane can self-train to itself.  Used for lab debug and characterization.
-                                                                 For diagnostic use only. */
+        uint64_t trn_dbg_en            : 1;  /**< [ 52: 52](R/W) Reserved. */
         uint64_t adapt_axis            : 3;  /**< [ 55: 53](R/W) Sets the number or adaptation axes to use during receiver adaptation.
                                                                  Typically set to 0x7 to enable all three adaptation axes.  One-hot encoded.
 
@@ -21256,27 +19544,8 @@ union cavm_gsernx_lanex_train_6_bcfg
                                                                  to the link partner TX equalizer tap adjustments (BASE-R training and PCIe
                                                                  training) during link training.
                                                                  For diagnostic use only. */
-        uint64_t en_teoffs             : 1;  /**< [ 58: 58](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable E-path QAC time offset adjustment.  This is a diagnostic control used
-                                                                 to adjust the QAC E-path time offset.  Typically the E-path QAC time offset is
-                                                                 set to 0.5UI.  Setting [EN_TEOFFS] to a one enables the training state machine
-                                                                 to adjust the E-path QAC time offset by the value specified in
-                                                                 GSERN()_LANE()_TRAIN_6_BCFG[PRG_TEOFFS].
-                                                                 For diagnostic use only. */
-        uint64_t prg_teoffs            : 6;  /**< [ 57: 52](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programmable E-path QAC time offset. This is a diagnostic control used to set the
-                                                                 eye monitor Epath QAC offset.  Use to trim the qac_eoffs offset during eye
-                                                                 monitor usage when used in BASE-R and PCIE training to measure the RX eye figure of
-                                                                 merit (FOM).  Typically set to the middle of the eye, e.g. 0.5UI.
-
-                                                                 _ Target_eoffs = [PRG_TEOFFS] + (GSERN()_LANE()_RX_QAC_BSTS[QAC_EOFFS]
-                                                                                - GSERN()_LANE()_CDRFSM_BCFG[QOFFS]).
-                                                                 _ [PRG_TEOFFS] = round(0.5UI/(1/63UI) = 6'h20.
-
-                                                                 typically but other values can be set for testing purposes.
-                                                                 For diagnostic use only. */
+        uint64_t en_teoffs             : 1;  /**< [ 58: 58](R/W) Reserved. */
+        uint64_t prg_teoffs            : 6;  /**< [ 57: 52](R/W) Reserved. */
         uint64_t trn_tst_pat           : 2;  /**< [ 51: 50](R/W) Training test pattern. This is a diagnostic control used to send a sequence
                                                                  of predetermined cost values to the BASE-R training logic to mimic training of a
                                                                  predetermined channel between the local device and link partner.  This is to
@@ -21305,11 +19574,7 @@ union cavm_gsernx_lanex_train_6_bcfg
                                                                  cached is cleared when training is complete so that the BASE-R training logic can
                                                                  process a new request for BASE-R training in cases where training is restarted.
                                                                  Used when GSERN()_LANE()_TRAIN_6_BCFG[COST_CACHE_EN] is set to one.
-                                                                 For diagnostic use only.
-
-                                                                 Internal:
-                                                                 Refer to description for GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] and
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS]. */
+                                                                 For diagnostic use only. */
         uint64_t ccache_hits_min       : 5;  /**< [ 47: 43](R/W) Cost cache hits minimum.  When BASE-R training is using the cost average cache to
                                                                  improve the gradient estimation process to get more accurate tap moves during the
                                                                  final stages of training convergence [CCACHE_HITS_MIN] sets the minimum number of
@@ -21398,11 +19663,7 @@ union cavm_gsernx_lanex_train_6_bcfg
                                                                  cached is cleared when training is complete so that the BASE-R training logic can
                                                                  process a new request for BASE-R training in cases where training is restarted.
                                                                  Used when GSERN()_LANE()_TRAIN_6_BCFG[COST_CACHE_EN] is set to one.
-                                                                 For diagnostic use only.
-
-                                                                 Internal:
-                                                                 Refer to description for GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_SEL] and
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ERR_CNT_STATS]. */
+                                                                 For diagnostic use only. */
         uint64_t trn_tst_paten         : 1;  /**< [ 49: 49](R/W) Training test pattern enable. This is a diagnostic control used to send a sequence
                                                                  of predetermined cost values to the BASE-R training logic to mimic training of a
                                                                  predetermined channel between the local device and link partner.  This is to
@@ -21424,27 +19685,8 @@ union cavm_gsernx_lanex_train_6_bcfg
                                                                     0x1 = Test training pattern with cost cache enabled 32 dB channel.
                                                                     0x2 = Test training pattern with cost cache disabled 32 dB channel.
                                                                     0x3 = Test training pattern with cost cache enabled 8 dB channel. */
-        uint64_t prg_teoffs            : 6;  /**< [ 57: 52](R/W) Reserved.
-                                                                 Internal:
-                                                                 Programmable E-path QAC time offset. This is a diagnostic control used to set the
-                                                                 eye monitor Epath QAC offset.  Use to trim the qac_eoffs offset during eye
-                                                                 monitor usage when used in BASE-R and PCIE training to measure the RX eye figure of
-                                                                 merit (FOM).  Typically set to the middle of the eye, e.g. 0.5UI.
-
-                                                                 _ Target_eoffs = [PRG_TEOFFS] + (GSERN()_LANE()_RX_QAC_BSTS[QAC_EOFFS]
-                                                                                - GSERN()_LANE()_CDRFSM_BCFG[QOFFS]).
-                                                                 _ [PRG_TEOFFS] = round(0.5UI/(1/63UI) = 6'h20.
-
-                                                                 typically but other values can be set for testing purposes.
-                                                                 For diagnostic use only. */
-        uint64_t en_teoffs             : 1;  /**< [ 58: 58](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable E-path QAC time offset adjustment.  This is a diagnostic control used
-                                                                 to adjust the QAC E-path time offset.  Typically the E-path QAC time offset is
-                                                                 set to 0.5UI.  Setting [EN_TEOFFS] to a one enables the training state machine
-                                                                 to adjust the E-path QAC time offset by the value specified in
-                                                                 GSERN()_LANE()_TRAIN_6_BCFG[PRG_TEOFFS].
-                                                                 For diagnostic use only. */
+        uint64_t prg_teoffs            : 6;  /**< [ 57: 52](R/W) Reserved. */
+        uint64_t en_teoffs             : 1;  /**< [ 58: 58](R/W) Reserved. */
         uint64_t en_rxwt_ctr           : 1;  /**< [ 59: 59](R/W) Enable receiver adaptation wait timer. When [EN_RXWT_CTR] is set to a one the
                                                                  training state machine eye monitor measurement to measure the figure of merit
                                                                  (FOM) is delayed by 10 microseconds to allow the receiver equalizer to adjust
@@ -21512,26 +19754,8 @@ union cavm_gsernx_lanex_train_7_bcfg
     struct cavm_gsernx_lanex_train_7_bcfg_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t pcie_fasteq_val       : 5;  /**< [ 63: 59](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe fast equalization delay value for simulation.
-                                                                 Used in conjunction with GSERN()_LANE()_TRAIN_7_BCFG[PCIE_FASTEQ]
-                                                                 When testing PCIe Gen3/Gen4 equalization in simulation.
-                                                                 The default value of 0x6 programs the PCIe equalization FOM and
-                                                                 link evaluation direction change request acknowledgement handshake
-                                                                 to 1.6 microseconds to accelerate simulation modeling of the PCIe
-                                                                 Gen3/Gen4 equalization phases 2 and 3. .
-                                                                 For simulation use only. */
-        uint64_t pcie_fasteq           : 1;  /**< [ 58: 58](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe fast equalization mode for simulation.
-                                                                 When testing PCIe Gen3/Gen4 equalization in simulation setting [PCIE_FASTEQ]
-                                                                 to 1 will reduce the PCIe equalization response to 1.6 microseconds.
-                                                                 Can be used in conjunction with GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_EN].
-                                                                 If the GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_EN] is not used the raw FOM
-                                                                 value returned will be zero.  Further the [PCIE_FASTEQ] is set the link evaluation
-                                                                 feedback direction change for C(-1), C(0), and C(+1) will indicate no change.
-                                                                 For simulation use only. */
+        uint64_t pcie_fasteq_val       : 5;  /**< [ 63: 59](R/W) Reserved. */
+        uint64_t pcie_fasteq           : 1;  /**< [ 58: 58](R/W) Reserved. */
         uint64_t pcie_dir_eq_done      : 1;  /**< [ 57: 57](RO/H) PCIe direction change equalization done flag. During PCIe Gen3/Gen4
                                                                  direction change equalization reflects the state of the direction
                                                                  equalization done flag.  When set to 1 indicates that the current
@@ -21552,14 +19776,7 @@ union cavm_gsernx_lanex_train_7_bcfg
                                                                  C(-1) TAP direction change set to No Change and C(+1) TAP direction change
                                                                  also set to No Change.  This will signal the termination of
                                                                  PCIe Gen3/Gen4 equalization direction change feedback mode. */
-        uint64_t pcie_adtmout_fast     : 1;  /**< [ 55: 55](R/W) Reserved.
-                                                                 Internal:
-                                                                 For simulation use only. When set accelerates the PCIe Gen3/Gen4 direction change
-                                                                 feedback equalization timeout timer period.  When set shortens the direction change
-                                                                 equalization time-out timer.
-                                                                 See the description for
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_ADTMOUT_SEL].
-                                                                 For diagnostic use only. */
+        uint64_t pcie_adtmout_fast     : 1;  /**< [ 55: 55](R/W) Reserved. */
         uint64_t pcie_adtmout_disable  : 1;  /**< [ 54: 54](R/W) PCIe Gen3/Gen4 direction change feedback equalization timeout timer disable.
                                                                  When [PCIE_ADTMOUT_DISABLE] is set to 1 the timeout timer that runs during
                                                                  PCIe Gen3/Gen4 direction change feecback equalization is disabled.  When
@@ -21656,297 +19873,21 @@ union cavm_gsernx_lanex_train_7_bcfg
                                                                      0x1 = Increment feedback for each coefficient.
                                                                      0x2 = Decrement feedback for each coefficient.
                                                                      0x3 = Reserved. */
-        uint64_t pcie_tst_array_rdy    : 1;  /**< [ 23: 23](RO/H) Reserved.
-                                                                 Internal:
-                                                                 PCIe test FOM array ready flag.  For verification diagnostic use only.
-                                                                 All entries of the PCIe test FOM array are cleared following the release
-                                                                 of reset.  When [PCIE_TST_ARRAY_RDY] is set to 1 the PCIe test FOM
-                                                                 array is ready and can be used for PCIe training EQ testing.  Do not
-                                                                 read or write the PCIe test FOM array while [PCIE_TST_ARRAY_RDY] is
-                                                                 cleared to 0.  When the GSER QLM is released from reset the
-                                                                 [PCIE_TST_ARRAY_RDY] will transition from 0 to 1 after 128 service
-                                                                 clock cycles.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_mode     : 1;  /**< [ 22: 22](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test FOM array mode. For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL].
-                                                                 PCIe test FOM array mode.  For verification diagnostic use only.
-                                                                     0x0 = Test FOM array is used to load and play back test FOMs for PCIe link
-                                                                           training.
-                                                                     0x1 = Test FOM array is used to capture raw FOMs during link training for
-                                                                           diagnostic verification.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_en       : 1;  /**< [ 21: 21](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit array enable. For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_rd       : 1;  /**< [ 20: 20](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit array read signal. For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_ld       : 1;  /**< [ 19: 19](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit array load signal. For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_addr     : 7;  /**< [ 18: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit array address.  Allows addressing one of the 128 locations
-                                                                 in the PCIe FOM array. Valid array locations are 0x0 to 0x7F.
-                                                                 For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_val      : 12; /**< [ 11:  0](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit (FOM) value. For verification diagnostic use only.
-                                                                 Used to load (write and read back) the test raw figure of merit (raw FOM)
-                                                                 array with test FOM values to play back during PCIe Gen3/Gen4 training to
-                                                                 check the training preset selection logic and PCIe link training EQ logic.
-                                                                 A 12 bit by 128 word array is used to hold the test raw FOM values.
-                                                                 The array FOM values are initialized by writing the
-                                                                 [PCIE_TST_FOM_ADDR] field with a value
-                                                                 from 0x0 to 0x7F to index a location in the array, then writing the
-                                                                 [PCIE_TST_FOM_VAL] with a 12-bit quantity representing the raw
-                                                                 FOM value to be written to the array location, then writing the
-                                                                 [PCIE_TST_FOM_LD] bit to 1 to write
-                                                                 the raw FOM 12-bit value to the array, and then writing the
-                                                                 [PCIE_TST_FOM_LD] bit to 0 to complete the array write operation.
-                                                                 Before writing the array software/verification code should poll the
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_ARRAY_RDY] flag and wait for
-                                                                 [PCIE_TST_ARRAY_RDY] flag to be set to 1 before reading or writing
-                                                                 the test FOM array.  Also write
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_MODE] to 0.
-
-                                                                 \<page\>
-
-                                                                 \<page\>
-
-                                                                 Each array location is written with the desired raw FOM value following
-                                                                 the thse steps.
-
-                                                                 After all array locations are written, the array locations can be read
-                                                                 back.  Write the [PCIE_TST_FOM_ADDR] to point
-                                                                 to the desired array location, next write
-                                                                 [PCIE_TST_FOM_RD] to 1 to enable read back mode.
-                                                                 Read the [PCIE_TST_FOM_VAL] field to readback the 12-bit test raw FOM
-                                                                 value from the array. Finally write
-                                                                 [PCIE_TST_FOM_RD] to 0 to disable read back mode.
-
-                                                                 To enable the PCI Express Test FOM array during PCIe Gen3/Gen4 link training
-                                                                 write [PCIE_TST_FOM_EN] to 1. Note prior to
-                                                                 writing [PCIE_TST_FOM_EN] to 1, ensure that
-                                                                 [PCIE_TST_FOM_RD] is cleared to 0 and
-                                                                 [PCIE_TST_FOM_LD] is cleared to 0 and
-                                                                 [PCIE_TST_FOM_MODE] is cleared to 0.
-
-                                                                 \<page\>
-
-                                                                 \<page\>
-
-                                                                 During PCIe Gen3/Gen4 link training each time a Preset receiver evaluation
-                                                                 request is received the training logic will return the 12-bit raw FOM
-                                                                 from the current test FOM array location to the PIPE PCS logic and then
-                                                                 move to the next test FOM array location.  The test FOM array always
-                                                                 starts at location 0x0 and increments to the next location in the FOM
-                                                                 array after each preset evaluation.
-
-                                                                 To enable FOM capture mode, write
-                                                                 [PCIE_TST_FOM_MODE] set to 1 and
-                                                                 [PCIE_TST_FOM_LD] cleared to 0 and
-                                                                 [PCIE_TST_FOM_RD] cleared to 0 and
-                                                                 [PCIE_TST_FOM_EN] cleared to 0.
-                                                                 This must be done prior to PCIe Link training Equalization.
-                                                                 During PCIe Gen3/Gen4 Equalization each time a FOM is requested the
-                                                                 12-bit raw FOM value will be written to the FOM capture array. Up to
-                                                                 128 FOMs can be captured. After PCIe equalization completes and
-                                                                 link is in the L0 state the FOMs can be read-back from the FOM capture
-                                                                 array.
-
-                                                                 \<page\>
-
-                                                                 \<page\>
-
-                                                                 To read back from the FOM capture array follow these steps
-                                                                 1. Write [PCIE_TST_FOM_EN] cleared to 0 and [PCIE_TST_FOM_LD] to 0.
-                                                                 2. Write [PCIE_TST_FOM_RD] cleared to 0.
-                                                                 3. Write [PCIE_TST_FOM_MODE] cleared to 0.
-                                                                 4. Write [PCIE_TST_FOM_ADDR] with address to read from the array (0 to 0x7f)
-                                                                 5. Write [PCIE_TST_FOM_RD] set to 1.
-                                                                 6. Read [PCIE_TST_FOM_VAL] to get the 12-bit FOM value from the array.
-                                                                 7. Write [PCIE_TST_FOM_RD] cleared to 0.
-                                                                 8. Increment and write [PCIE_TST_FOM_ADDR] then go back to Step 5 to read the
-                                                                 next location from the FOM capture array,.
-                                                                 Note the FOM capture array can also be used to capture the 12-bit
-                                                                 raw FOM during CGX KR-Training. The procedure is the same as described
-                                                                 above.
-
-                                                                 \<page\>
-
-                                                                 The FOM array can be cleared and reset to prepare for a subsequent capture
-                                                                 of FOMs by writing GSERN()_LANE()_TRAIN_12_BCFG[FOM_ARRAY_CLR] set to 1
-                                                                 then writing GSERN()_LANE()_TRAIN_12_BCFG[FOM_ARRAY_CLR] cleared to 0 then
-                                                                 poll GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_ARRAY_RDY] set to 1 to indicate that
-                                                                 the FOM array has been cleared and reset.  Prior to resetting the FOM array
-                                                                 write:
-                                                                 * Write [PCIE_TST_FOM_EN] cleared to 0
-                                                                 * Write [PCIE_TST_FOM_LD] cleared to 0.
-                                                                 * Write [PCIE_TST_FOM_RD] cleared to 0.
-                                                                 * Write [PCIE_TST_FOM_MODE] cleared to 0.
-                                                                 * Write [PCIE_TST_FOM_ADDR] cleared to 0x0.
-
-                                                                 Related Registers:
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_ADDR],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_LD],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_RD],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_EN],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_MODE],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_ARRAY_RDY],
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ARRAY_CLR]. */
+        uint64_t pcie_tst_array_rdy    : 1;  /**< [ 23: 23](RO/H) Reserved. */
+        uint64_t pcie_tst_fom_mode     : 1;  /**< [ 22: 22](R/W) Reserved. */
+        uint64_t pcie_tst_fom_en       : 1;  /**< [ 21: 21](R/W) Reserved. */
+        uint64_t pcie_tst_fom_rd       : 1;  /**< [ 20: 20](R/W) Reserved. */
+        uint64_t pcie_tst_fom_ld       : 1;  /**< [ 19: 19](R/W) Reserved. */
+        uint64_t pcie_tst_fom_addr     : 7;  /**< [ 18: 12](R/W) Reserved. */
+        uint64_t pcie_tst_fom_val      : 12; /**< [ 11:  0](R/W/H) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t pcie_tst_fom_val      : 12; /**< [ 11:  0](R/W/H) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit (FOM) value. For verification diagnostic use only.
-                                                                 Used to load (write and read back) the test raw figure of merit (raw FOM)
-                                                                 array with test FOM values to play back during PCIe Gen3/Gen4 training to
-                                                                 check the training preset selection logic and PCIe link training EQ logic.
-                                                                 A 12 bit by 128 word array is used to hold the test raw FOM values.
-                                                                 The array FOM values are initialized by writing the
-                                                                 [PCIE_TST_FOM_ADDR] field with a value
-                                                                 from 0x0 to 0x7F to index a location in the array, then writing the
-                                                                 [PCIE_TST_FOM_VAL] with a 12-bit quantity representing the raw
-                                                                 FOM value to be written to the array location, then writing the
-                                                                 [PCIE_TST_FOM_LD] bit to 1 to write
-                                                                 the raw FOM 12-bit value to the array, and then writing the
-                                                                 [PCIE_TST_FOM_LD] bit to 0 to complete the array write operation.
-                                                                 Before writing the array software/verification code should poll the
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_ARRAY_RDY] flag and wait for
-                                                                 [PCIE_TST_ARRAY_RDY] flag to be set to 1 before reading or writing
-                                                                 the test FOM array.  Also write
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_MODE] to 0.
-
-                                                                 \<page\>
-
-                                                                 \<page\>
-
-                                                                 Each array location is written with the desired raw FOM value following
-                                                                 the thse steps.
-
-                                                                 After all array locations are written, the array locations can be read
-                                                                 back.  Write the [PCIE_TST_FOM_ADDR] to point
-                                                                 to the desired array location, next write
-                                                                 [PCIE_TST_FOM_RD] to 1 to enable read back mode.
-                                                                 Read the [PCIE_TST_FOM_VAL] field to readback the 12-bit test raw FOM
-                                                                 value from the array. Finally write
-                                                                 [PCIE_TST_FOM_RD] to 0 to disable read back mode.
-
-                                                                 To enable the PCI Express Test FOM array during PCIe Gen3/Gen4 link training
-                                                                 write [PCIE_TST_FOM_EN] to 1. Note prior to
-                                                                 writing [PCIE_TST_FOM_EN] to 1, ensure that
-                                                                 [PCIE_TST_FOM_RD] is cleared to 0 and
-                                                                 [PCIE_TST_FOM_LD] is cleared to 0 and
-                                                                 [PCIE_TST_FOM_MODE] is cleared to 0.
-
-                                                                 \<page\>
-
-                                                                 \<page\>
-
-                                                                 During PCIe Gen3/Gen4 link training each time a Preset receiver evaluation
-                                                                 request is received the training logic will return the 12-bit raw FOM
-                                                                 from the current test FOM array location to the PIPE PCS logic and then
-                                                                 move to the next test FOM array location.  The test FOM array always
-                                                                 starts at location 0x0 and increments to the next location in the FOM
-                                                                 array after each preset evaluation.
-
-                                                                 To enable FOM capture mode, write
-                                                                 [PCIE_TST_FOM_MODE] set to 1 and
-                                                                 [PCIE_TST_FOM_LD] cleared to 0 and
-                                                                 [PCIE_TST_FOM_RD] cleared to 0 and
-                                                                 [PCIE_TST_FOM_EN] cleared to 0.
-                                                                 This must be done prior to PCIe Link training Equalization.
-                                                                 During PCIe Gen3/Gen4 Equalization each time a FOM is requested the
-                                                                 12-bit raw FOM value will be written to the FOM capture array. Up to
-                                                                 128 FOMs can be captured. After PCIe equalization completes and
-                                                                 link is in the L0 state the FOMs can be read-back from the FOM capture
-                                                                 array.
-
-                                                                 \<page\>
-
-                                                                 \<page\>
-
-                                                                 To read back from the FOM capture array follow these steps
-                                                                 1. Write [PCIE_TST_FOM_EN] cleared to 0 and [PCIE_TST_FOM_LD] to 0.
-                                                                 2. Write [PCIE_TST_FOM_RD] cleared to 0.
-                                                                 3. Write [PCIE_TST_FOM_MODE] cleared to 0.
-                                                                 4. Write [PCIE_TST_FOM_ADDR] with address to read from the array (0 to 0x7f)
-                                                                 5. Write [PCIE_TST_FOM_RD] set to 1.
-                                                                 6. Read [PCIE_TST_FOM_VAL] to get the 12-bit FOM value from the array.
-                                                                 7. Write [PCIE_TST_FOM_RD] cleared to 0.
-                                                                 8. Increment and write [PCIE_TST_FOM_ADDR] then go back to Step 5 to read the
-                                                                 next location from the FOM capture array,.
-                                                                 Note the FOM capture array can also be used to capture the 12-bit
-                                                                 raw FOM during CGX KR-Training. The procedure is the same as described
-                                                                 above.
-
-                                                                 \<page\>
-
-                                                                 The FOM array can be cleared and reset to prepare for a subsequent capture
-                                                                 of FOMs by writing GSERN()_LANE()_TRAIN_12_BCFG[FOM_ARRAY_CLR] set to 1
-                                                                 then writing GSERN()_LANE()_TRAIN_12_BCFG[FOM_ARRAY_CLR] cleared to 0 then
-                                                                 poll GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_ARRAY_RDY] set to 1 to indicate that
-                                                                 the FOM array has been cleared and reset.  Prior to resetting the FOM array
-                                                                 write:
-                                                                 * Write [PCIE_TST_FOM_EN] cleared to 0
-                                                                 * Write [PCIE_TST_FOM_LD] cleared to 0.
-                                                                 * Write [PCIE_TST_FOM_RD] cleared to 0.
-                                                                 * Write [PCIE_TST_FOM_MODE] cleared to 0.
-                                                                 * Write [PCIE_TST_FOM_ADDR] cleared to 0x0.
-
-                                                                 Related Registers:
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_ADDR],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_LD],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_RD],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_EN],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_MODE],
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_ARRAY_RDY],
-                                                                 GSERN()_LANE()_TRAIN_12_BCFG[FOM_ARRAY_CLR]. */
-        uint64_t pcie_tst_fom_addr     : 7;  /**< [ 18: 12](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit array address.  Allows addressing one of the 128 locations
-                                                                 in the PCIe FOM array. Valid array locations are 0x0 to 0x7F.
-                                                                 For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_ld       : 1;  /**< [ 19: 19](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit array load signal. For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_rd       : 1;  /**< [ 20: 20](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit array read signal. For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_en       : 1;  /**< [ 21: 21](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test figure of merit array enable. For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_fom_mode     : 1;  /**< [ 22: 22](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe test FOM array mode. For verification diagnostic use only.
-                                                                 See [PCIE_TST_FOM_VAL].
-                                                                 PCIe test FOM array mode.  For verification diagnostic use only.
-                                                                     0x0 = Test FOM array is used to load and play back test FOMs for PCIe link
-                                                                           training.
-                                                                     0x1 = Test FOM array is used to capture raw FOMs during link training for
-                                                                           diagnostic verification.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
-        uint64_t pcie_tst_array_rdy    : 1;  /**< [ 23: 23](RO/H) Reserved.
-                                                                 Internal:
-                                                                 PCIe test FOM array ready flag.  For verification diagnostic use only.
-                                                                 All entries of the PCIe test FOM array are cleared following the release
-                                                                 of reset.  When [PCIE_TST_ARRAY_RDY] is set to 1 the PCIe test FOM
-                                                                 array is ready and can be used for PCIe training EQ testing.  Do not
-                                                                 read or write the PCIe test FOM array while [PCIE_TST_ARRAY_RDY] is
-                                                                 cleared to 0.  When the GSER QLM is released from reset the
-                                                                 [PCIE_TST_ARRAY_RDY] will transition from 0 to 1 after 128 service
-                                                                 clock cycles.
-                                                                 See [PCIE_TST_FOM_VAL] for more information. */
+        uint64_t pcie_tst_fom_val      : 12; /**< [ 11:  0](R/W/H) Reserved. */
+        uint64_t pcie_tst_fom_addr     : 7;  /**< [ 18: 12](R/W) Reserved. */
+        uint64_t pcie_tst_fom_ld       : 1;  /**< [ 19: 19](R/W) Reserved. */
+        uint64_t pcie_tst_fom_rd       : 1;  /**< [ 20: 20](R/W) Reserved. */
+        uint64_t pcie_tst_fom_en       : 1;  /**< [ 21: 21](R/W) Reserved. */
+        uint64_t pcie_tst_fom_mode     : 1;  /**< [ 22: 22](R/W) Reserved. */
+        uint64_t pcie_tst_array_rdy    : 1;  /**< [ 23: 23](RO/H) Reserved. */
         uint64_t pcie_pre_dir          : 2;  /**< [ 25: 24](RO/H) PCIe direction change equalization pre (C-1) tap direction.
                                                                  During PCIe Gen3/Gen4 link training using direction change equalization
                                                                  the [PCIE_PRE_DIR] field reflects the value of the pre (C-1) tap
@@ -22043,14 +19984,7 @@ union cavm_gsernx_lanex_train_7_bcfg
                                                                  GSERN()_LANE()_TRAIN_7_BCFG[PCIE_ADTMOUT_SEL] and
                                                                  GSERN()_LANE()_TRAIN_7_BCFG[PCIE_ADTMOUT_FAST].
                                                                  For diagnostic use only. */
-        uint64_t pcie_adtmout_fast     : 1;  /**< [ 55: 55](R/W) Reserved.
-                                                                 Internal:
-                                                                 For simulation use only. When set accelerates the PCIe Gen3/Gen4 direction change
-                                                                 feedback equalization timeout timer period.  When set shortens the direction change
-                                                                 equalization time-out timer.
-                                                                 See the description for
-                                                                 GSERN()_LANE()_TRAIN_7_BCFG[PCIE_ADTMOUT_SEL].
-                                                                 For diagnostic use only. */
+        uint64_t pcie_adtmout_fast     : 1;  /**< [ 55: 55](R/W) Reserved. */
         uint64_t pcie_term_adtmout     : 1;  /**< [ 56: 56](R/W) PCIe terminate direction change feedback equalization when reached the
                                                                  the equalization timeout specified in
                                                                  GSERN()_LANE()_TRAIN_7_BCFG[PCIE_ADTMOUT_SEL].
@@ -22071,26 +20005,8 @@ union cavm_gsernx_lanex_train_7_bcfg
                                                                  direction change equalization tap adjustment sequence is complete.
                                                                  Reset automatically by hardware when PCIe Gen3/Gen4 equalization is
                                                                  completed. */
-        uint64_t pcie_fasteq           : 1;  /**< [ 58: 58](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe fast equalization mode for simulation.
-                                                                 When testing PCIe Gen3/Gen4 equalization in simulation setting [PCIE_FASTEQ]
-                                                                 to 1 will reduce the PCIe equalization response to 1.6 microseconds.
-                                                                 Can be used in conjunction with GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_EN].
-                                                                 If the GSERN()_LANE()_TRAIN_7_BCFG[PCIE_TST_FOM_EN] is not used the raw FOM
-                                                                 value returned will be zero.  Further the [PCIE_FASTEQ] is set the link evaluation
-                                                                 feedback direction change for C(-1), C(0), and C(+1) will indicate no change.
-                                                                 For simulation use only. */
-        uint64_t pcie_fasteq_val       : 5;  /**< [ 63: 59](R/W) Reserved.
-                                                                 Internal:
-                                                                 PCIe fast equalization delay value for simulation.
-                                                                 Used in conjunction with GSERN()_LANE()_TRAIN_7_BCFG[PCIE_FASTEQ]
-                                                                 When testing PCIe Gen3/Gen4 equalization in simulation.
-                                                                 The default value of 0x6 programs the PCIe equalization FOM and
-                                                                 link evaluation direction change request acknowledgement handshake
-                                                                 to 1.6 microseconds to accelerate simulation modeling of the PCIe
-                                                                 Gen3/Gen4 equalization phases 2 and 3. .
-                                                                 For simulation use only. */
+        uint64_t pcie_fasteq           : 1;  /**< [ 58: 58](R/W) Reserved. */
+        uint64_t pcie_fasteq_val       : 5;  /**< [ 63: 59](R/W) Reserved. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_gsernx_lanex_train_7_bcfg_s cn; */
@@ -22947,22 +20863,11 @@ union cavm_gsernx_lanex_tx_rxd_bcfg
                                                                    0x2 = Threshold of (2/18) vddtx.
                                                                    0x3 = Threshold of (2/19) vddtx. */
         uint64_t reserved_42_47        : 6;
-        uint64_t ovrride_tx_rxd_en     : 1;  /**< [ 41: 41](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable use of [OVRRIDE_TX_RXD] to directly control the transmitter's tx_rxd
-                                                                 input. For diagnostic use only. */
-        uint64_t ovrride_tx_rxd        : 1;  /**< [ 40: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 When [OVRRIDE_TX_RXD_EN] is asserted, controls the tx_rxd
-                                                                 signal sent to the transmitter's termination circuit. When in use and asserted,
-                                                                 pulls the termination node to ground. For diagnostic use only. */
+        uint64_t ovrride_tx_rxd_en     : 1;  /**< [ 41: 41](R/W) Reserved. */
+        uint64_t ovrride_tx_rxd        : 1;  /**< [ 40: 40](R/W) Reserved. */
         uint64_t reserved_34_39        : 6;
         uint64_t ovrride_det_en        : 1;  /**< [ 33: 33](R/W) Enable use of the [OVRRIDE_DET] value for the result of PCIe transmitter
-                                                                 receiver presense detection instead of the normal measured result.
-
-                                                                 Internal:
-                                                                 When asserted, this control will also suppress the normal pull-down and release
-                                                                 of the transmit signals that takes place during receiver presence detaction. */
+                                                                 receiver presense detection instead of the normal measured result. */
         uint64_t ovrride_det           : 1;  /**< [ 32: 32](R/W) When enabled by [OVRRIDE_DET_EN], the PCIe transmitter receiver presence
                                                                  detector will use this value instead of that measured by the functional
                                                                  circuit. This provides a mechanism to force recognition of a known number of
@@ -23037,21 +20942,10 @@ union cavm_gsernx_lanex_tx_rxd_bcfg
                                                                  lanes in the link independent of the normal receiver presence detection
                                                                  procedure. */
         uint64_t ovrride_det_en        : 1;  /**< [ 33: 33](R/W) Enable use of the [OVRRIDE_DET] value for the result of PCIe transmitter
-                                                                 receiver presense detection instead of the normal measured result.
-
-                                                                 Internal:
-                                                                 When asserted, this control will also suppress the normal pull-down and release
-                                                                 of the transmit signals that takes place during receiver presence detaction. */
+                                                                 receiver presense detection instead of the normal measured result. */
         uint64_t reserved_34_39        : 6;
-        uint64_t ovrride_tx_rxd        : 1;  /**< [ 40: 40](R/W) Reserved.
-                                                                 Internal:
-                                                                 When [OVRRIDE_TX_RXD_EN] is asserted, controls the tx_rxd
-                                                                 signal sent to the transmitter's termination circuit. When in use and asserted,
-                                                                 pulls the termination node to ground. For diagnostic use only. */
-        uint64_t ovrride_tx_rxd_en     : 1;  /**< [ 41: 41](R/W) Reserved.
-                                                                 Internal:
-                                                                 Enable use of [OVRRIDE_TX_RXD] to directly control the transmitter's tx_rxd
-                                                                 input. For diagnostic use only. */
+        uint64_t ovrride_tx_rxd        : 1;  /**< [ 40: 40](R/W) Reserved. */
+        uint64_t ovrride_tx_rxd_en     : 1;  /**< [ 41: 41](R/W) Reserved. */
         uint64_t reserved_42_47        : 6;
         uint64_t thresh                : 2;  /**< [ 49: 48](R/W) Detection threshold as a fraction of the transmit supply voltage:
                                                                    0x0 = Threshold of (2/16) vddtx.

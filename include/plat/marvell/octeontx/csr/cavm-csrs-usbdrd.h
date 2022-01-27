@@ -110,9 +110,6 @@
  * USB UAHC Device Generic Command Enumeration
  * Commands for USBDRD()_UAHC_DGCMD[CMDTYPE].
  * Any command encodings that are not present are considered Reserved.
- *
- * Internal:
- * Synopsys DWC_usb3 Databook v3.10a, section 6.3.1.6.1 for details.
  */
 #define CAVM_USBDRD_UAHC_DGCMD_CMDTYPE_E_ALL_FIFO_FLUSH (0xa)
 #define CAVM_USBDRD_UAHC_DGCMD_CMDTYPE_E_RUN_SOC_BUS_LOOPBACK_TEST (0x10)
@@ -122,83 +119,6 @@
 #define CAVM_USBDRD_UAHC_DGCMD_CMDTYPE_E_SET_SCRATCHPAD_BUFFER_ARRAY_ADDR_H (5)
 #define CAVM_USBDRD_UAHC_DGCMD_CMDTYPE_E_SET_SCRATCHPAD_BUFFER_ARRAY_ADDR_L (4)
 #define CAVM_USBDRD_UAHC_DGCMD_CMDTYPE_E_TRANSMIT_DEVICE_NOTIFICATION (7)
-
-/**
- * Register (NCB) usbdrd#_bp_test0
- *
- * INTERNAL: USB Backpressure Test Register
- */
-union cavm_usbdrdx_bp_test0
-{
-    uint64_t u;
-    struct cavm_usbdrdx_bp_test0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Limit the NCBI posted request FIFO from unloading.
-                                                                 \<61\> = Limit the NCBI nonposted request FIFO from unloading.
-                                                                 \<60\> = Limit the NCBI completion request FIFO from unloading. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                   \<23:22\> = Config 3.
-                                                                   \<21:20\> = Config 2.
-                                                                   \<19:18\> = Config 1.
-                                                                   \<17:16\> = Config 0. */
-        uint64_t reserved_24_59        : 36;
-        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Limit the NCBI posted request FIFO from unloading.
-                                                                 \<61\> = Limit the NCBI nonposted request FIFO from unloading.
-                                                                 \<60\> = Limit the NCBI completion request FIFO from unloading. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_usbdrdx_bp_test0_s cn; */
-};
-typedef union cavm_usbdrdx_bp_test0 cavm_usbdrdx_bp_test0_t;
-
-static inline uint64_t CAVM_USBDRDX_BP_TEST0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_BP_TEST0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
-        return 0x868000100070ll + 0x1000000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a==0))
-        return 0x868000100070ll + 0x1000000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x868000100070ll + 0x1000000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("USBDRDX_BP_TEST0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_USBDRDX_BP_TEST0(a) cavm_usbdrdx_bp_test0_t
-#define bustype_CAVM_USBDRDX_BP_TEST0(a) CSR_TYPE_NCB
-#define basename_CAVM_USBDRDX_BP_TEST0(a) "USBDRDX_BP_TEST0"
-#define device_bar_CAVM_USBDRDX_BP_TEST0(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_USBDRDX_BP_TEST0(a) (a)
-#define arguments_CAVM_USBDRDX_BP_TEST0(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) usbdrd#_const
@@ -672,9 +592,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_CRCR(uint64_t a)
  * USBDRD()_UAHC_GCTL[CORESOFTRESET] or
  * USBDRD()_UAHC_USBCMD[HCRST] or USBDRD()_UAHC_USBCMD[LHCRST] or
  * USBDRD()_UAHC_DCTL[CSFTRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.7
  */
 union cavm_usbdrdx_uahc_dalepena
 {
@@ -700,11 +617,7 @@ union cavm_usbdrdx_uahc_dalepena
                                                                  Application software clears these bits for all endpoints (other than EP0-OUT
                                                                  and EP0-IN) after detecting a USB reset. After receiving SetConfiguration
                                                                  and SetInterface requests, the application must program endpoint registers
-                                                                 accordingly and set these bits.
-
-                                                                 Internal:
-                                                                 For more information, see 'Flexible Endpoint Mapping' on Synopsys DWC_usb3
-                                                                 Databook v2.80a, page 82. */
+                                                                 accordingly and set these bits. */
 #else /* Word 0 - Little Endian */
         uint32_t usbactep              : 32; /**< [ 31:  0](R/W) This field indicates if a USB endpoint is active in the current configuration
                                                                  and interface. It applies to USB IN endpoints 0-15 and OUT endpoints 0-15,
@@ -724,11 +637,7 @@ union cavm_usbdrdx_uahc_dalepena
                                                                  Application software clears these bits for all endpoints (other than EP0-OUT
                                                                  and EP0-IN) after detecting a USB reset. After receiving SetConfiguration
                                                                  and SetInterface requests, the application must program endpoint registers
-                                                                 accordingly and set these bits.
-
-                                                                 Internal:
-                                                                 For more information, see 'Flexible Endpoint Mapping' on Synopsys DWC_usb3
-                                                                 Databook v2.80a, page 82. */
+                                                                 accordingly and set these bits. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_usbdrdx_uahc_dalepena_s cn; */
@@ -766,10 +675,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DALEPENA(uint64_t a)
  * or USBDRD()_UCTL_CTL[UAHC_RST],
  * or USBDRD()_UAHC_GCTL[CORESOFTRESET],
  * or USBDRD()_UAHC_USBCMD[HCRST], or USBDRD()_UAHC_USBCMD[LHCRST].
- *
- * Internal:
- * xHCI spec, page 32: there are USBDRD()_UAHC_HCSPARAMS1[MAXSLOTS]+1 doorbell
- * registers.
  */
 union cavm_usbdrdx_uahc_dbx
 {
@@ -916,9 +821,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DCBAAP(uint64_t a)
  * commands or enumeration. Do not make changes to this register after initial programming.
  *
  * This register can be reset by core domain reset or USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.1.1.
  */
 union cavm_usbdrdx_uahc_dcfg
 {
@@ -959,10 +861,7 @@ union cavm_usbdrdx_uahc_dcfg
                                                                  is set to 0x0. The application can program this value based on RxFIFO size,
                                                                  buffer sizes programmed in descriptors, and system latency.
                                                                  For an OUT endpoint, this field controls the number of receive buffers
-                                                                 reported in the NumP field of the ACK TP transmitted by the core.
-
-                                                                 Internal:
-                                                                 Note: This bit is used in host mode when Debug Capability is enabled. */
+                                                                 reported in the NumP field of the ACK TP transmitted by the core. */
         uint32_t intrnum               : 5;  /**< [ 16: 12](R/W) Interrupt number.
                                                                  Indicates interrupt/EventQ number on which non-endpoint-specific device-related
                                                                  interrupts (see DEVT) are generated. */
@@ -1003,10 +902,7 @@ union cavm_usbdrdx_uahc_dcfg
                                                                  is set to 0x0. The application can program this value based on RxFIFO size,
                                                                  buffer sizes programmed in descriptors, and system latency.
                                                                  For an OUT endpoint, this field controls the number of receive buffers
-                                                                 reported in the NumP field of the ACK TP transmitted by the core.
-
-                                                                 Internal:
-                                                                 Note: This bit is used in host mode when Debug Capability is enabled. */
+                                                                 reported in the NumP field of the ACK TP transmitted by the core. */
         uint32_t lpmcap                : 1;  /**< [ 22: 22](R/W) LPM capable.
                                                                  The application uses this bit to control the controller's core LPM
                                                                  capabilities. If the core operates as a non-LPM-capable device, it cannot
@@ -1072,10 +968,7 @@ union cavm_usbdrdx_uahc_dcfg
                                                                  is set to 0x0. The application can program this value based on RxFIFO size,
                                                                  buffer sizes programmed in descriptors, and system latency.
                                                                  For an OUT endpoint, this field controls the number of receive buffers
-                                                                 reported in the NumP field of the ACK TP transmitted by the core.
-
-                                                                 Internal:
-                                                                 Note: This bit is used in host mode when Debug Capability is enabled. */
+                                                                 reported in the NumP field of the ACK TP transmitted by the core. */
         uint32_t intrnum               : 5;  /**< [ 16: 12](R/W) Interrupt number.
                                                                  Indicates interrupt/EventQ number on which non-endpoint-specific device-related
                                                                  interrupts (see DEVT) are generated. */
@@ -1116,10 +1009,7 @@ union cavm_usbdrdx_uahc_dcfg
                                                                  is set to 0x0. The application can program this value based on RxFIFO size,
                                                                  buffer sizes programmed in descriptors, and system latency.
                                                                  For an OUT endpoint, this field controls the number of receive buffers
-                                                                 reported in the NumP field of the ACK TP transmitted by the core.
-
-                                                                 Internal:
-                                                                 Note: This bit is used in host mode when Debug Capability is enabled. */
+                                                                 reported in the NumP field of the ACK TP transmitted by the core. */
         uint32_t lpmcap                : 1;  /**< [ 22: 22](R/W) LPM capable.
                                                                  The application uses this bit to control the controller's core LPM
                                                                  capabilities. If the core operates as a non-LPM-capable device, it cannot
@@ -1179,9 +1069,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DCFG(uint64_t a)
  * This register controls device mode.
  *
  * This register can be reset by core domain reset or USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.1.2.
  */
 union cavm_usbdrdx_uahc_dctl
 {
@@ -1210,14 +1097,7 @@ union cavm_usbdrdx_uahc_dctl
 
                                                                     If the software attempts a connect after the soft disconnect or detects a
                                                                     disconnect event, it must set USBDRD()_UAHC_DCTL[ULSTCHNGREQ] to
-                                                                    "Rx.Detect" before reasserting the Run/Stop bit.
-
-                                                                 Internal:
-                                                                 3. When the USB or Link is in a lower power state and the Two Power Rails
-                                                                    configuration is selected, software writes 0 to this bit to indicate that it is going
-                                                                    to turn off the Core Power Rail. After the software turns on the Core Power Rail
-                                                                    again and re-initializes the device controller, it must set this bit to start the
-                                                                    device controller. For more details, see Low Power Operation on page 599. */
+                                                                    "Rx.Detect" before reasserting the Run/Stop bit. */
         uint32_t csftrst               : 1;  /**< [ 30: 30](R/W1S/H) Core soft reset.
                                                                  Resets the all clock domains as follows:
                                                                  * Clears the interrupts and all the CSRs except the following registers:
@@ -1285,12 +1165,8 @@ union cavm_usbdrdx_uahc_dctl
                                                                      * A valid bLinkState = 0001B (L1) is received in the LPM transaction (else
                                                                      STALL). */
         uint32_t reserved_20_22        : 3;
-        uint32_t keepconnect           : 1;  /**< [ 19: 19](WO) Always write 0.
-                                                                 Internal:
-                                                                 Writing this bit to 0x1 does nothing since we don't have hibernation feature. */
-        uint32_t l1hibernationen       : 1;  /**< [ 18: 18](WO) Always write 0.
-                                                                 Internal:
-                                                                 Writing this bit to 0x1 does nothing since we don't have hibernation feature. */
+        uint32_t keepconnect           : 1;  /**< [ 19: 19](WO) Always write 0. */
+        uint32_t l1hibernationen       : 1;  /**< [ 18: 18](WO) Always write 0. */
         uint32_t crs                   : 1;  /**< [ 17: 17](WO) Controller restore state.
                                                                  This command is similar to the USBDRD()_UAHC_USBCMD[CRS] bit in host mode and
                                                                  initiates the restore process. When software sets this bit to 1, the controller
@@ -1464,12 +1340,8 @@ union cavm_usbdrdx_uahc_dctl
                                                                  immediately sets USBDRD()_UAHC_DSTS[RSS] to 1. When the controller has finished
                                                                  the restore process, it sets USBDRD()_UAHC_DSTS[RSS] to 0.
                                                                  Note: When read, this field always returns 0. */
-        uint32_t l1hibernationen       : 1;  /**< [ 18: 18](WO) Always write 0.
-                                                                 Internal:
-                                                                 Writing this bit to 0x1 does nothing since we don't have hibernation feature. */
-        uint32_t keepconnect           : 1;  /**< [ 19: 19](WO) Always write 0.
-                                                                 Internal:
-                                                                 Writing this bit to 0x1 does nothing since we don't have hibernation feature. */
+        uint32_t l1hibernationen       : 1;  /**< [ 18: 18](WO) Always write 0. */
+        uint32_t keepconnect           : 1;  /**< [ 19: 19](WO) Always write 0. */
         uint32_t reserved_20_22        : 3;
         uint32_t appl1res              : 1;  /**< [ 23: 23](R/W) LPM response programmed by application.
                                                                  Handshake response to LPM token specified by device application. Response
@@ -1558,14 +1430,7 @@ union cavm_usbdrdx_uahc_dctl
 
                                                                     If the software attempts a connect after the soft disconnect or detects a
                                                                     disconnect event, it must set USBDRD()_UAHC_DCTL[ULSTCHNGREQ] to
-                                                                    "Rx.Detect" before reasserting the Run/Stop bit.
-
-                                                                 Internal:
-                                                                 3. When the USB or Link is in a lower power state and the Two Power Rails
-                                                                    configuration is selected, software writes 0 to this bit to indicate that it is going
-                                                                    to turn off the Core Power Rail. After the software turns on the Core Power Rail
-                                                                    again and re-initializes the device controller, it must set this bit to start the
-                                                                    device controller. For more details, see Low Power Operation on page 599. */
+                                                                    "Rx.Detect" before reasserting the Run/Stop bit. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_usbdrdx_uahc_dctl_s cn; */
@@ -1611,9 +1476,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DCTL(uint64_t a)
  * USBDRD()_UAHC_GCTL[CORESOFTRESET] or
  * USBDRD()_UAHC_USBCMD[HCRST] or USBDRD()_UAHC_USBCMD[LHCRST] or
  * USBDRD()_UAHC_DCTL[CSFTRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.12
  */
 union cavm_usbdrdx_uahc_depcmdx
 {
@@ -1720,10 +1582,7 @@ union cavm_usbdrdx_uahc_depcmdx
                                                                        resources to be assigned than have been configured in the hardware.
 
                                                                  In response to a end transfer command:
-                                                                 _ [15:12] = 0x1: Indicates an invalid transfer resource was specified.
-
-                                                                 Internal:
-                                                                 For abort handling, see also Synopsys DWC_usb3 Databook v2.80a, Section 8.4. */
+                                                                 _ [15:12] = 0x1: Indicates an invalid transfer resource was specified. */
         uint32_t hipri_forcerm         : 1;  /**< [ 11: 11](R/W) HighPriority: Only valid for start transfer command.
                                                                  ForceRM: Only valid for end transfer command. */
         uint32_t cmdact                : 1;  /**< [ 10: 10](R/W) Software sets this bit to 1 to enable the device endpoint controller to
@@ -1832,10 +1691,7 @@ union cavm_usbdrdx_uahc_depcmdx
                                                                        resources to be assigned than have been configured in the hardware.
 
                                                                  In response to a end transfer command:
-                                                                 _ [15:12] = 0x1: Indicates an invalid transfer resource was specified.
-
-                                                                 Internal:
-                                                                 For abort handling, see also Synopsys DWC_usb3 Databook v2.80a, Section 8.4. */
+                                                                 _ [15:12] = 0x1: Indicates an invalid transfer resource was specified. */
         uint32_t commandparam          : 16; /**< [ 31: 16](R/W) Command or event parameters.
                                                                  When this register is written:
 
@@ -1924,9 +1780,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDX(uint64_t a, uint64_t b)
  * USBDRD()_UAHC_GCTL[CORESOFTRESET] or
  * USBDRD()_UAHC_USBCMD[HCRST] or USBDRD()_UAHC_USBCMD[LHCRST] or
  * USBDRD()_UAHC_DCTL[CSFTRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.11
  */
 union cavm_usbdrdx_uahc_depcmdpar0_x
 {
@@ -1975,9 +1828,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR0_X(uint64_t a, uint64_t b)
  * USBDRD()_UAHC_GCTL[CORESOFTRESET] or
  * USBDRD()_UAHC_USBCMD[HCRST] or USBDRD()_UAHC_USBCMD[LHCRST] or
  * USBDRD()_UAHC_DCTL[CSFTRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.10
  */
 union cavm_usbdrdx_uahc_depcmdpar1_x
 {
@@ -2026,9 +1876,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR1_X(uint64_t a, uint64_t b)
  * USBDRD()_UAHC_GCTL[CORESOFTRESET] or
  * USBDRD()_UAHC_USBCMD[HCRST] or USBDRD()_UAHC_USBCMD[LHCRST] or
  * USBDRD()_UAHC_DCTL[CSFTRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.9
  */
 union cavm_usbdrdx_uahc_depcmdpar2_x
 {
@@ -2123,9 +1970,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DEV_IMODX(uint64_t a, uint64_t b)
  * If an enable bit is set to 0, the event will not be generated.
  *
  * This register can be reset by core domain reset or USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.3
  */
 union cavm_usbdrdx_uahc_devten
 {
@@ -2143,9 +1987,7 @@ union cavm_usbdrdx_uahc_devten
         uint32_t sofen                 : 1;  /**< [  7:  7](R/W) Start of (micro)frame enable.
                                                                  For debug purposes only; normally software must disable this event. */
         uint32_t u3l2l1suspen          : 1;  /**< [  6:  6](R/W) U3/L2-L1 suspend event enable. */
-        uint32_t hibernationreqevten   : 1;  /**< [  5:  5](R/W) This bit enables/disables the generation of the hibernation request event.
-                                                                 Internal:
-                                                                 Writing this bit to 0x1 does nothing since we don't have hibernation feature. */
+        uint32_t hibernationreqevten   : 1;  /**< [  5:  5](R/W) This bit enables/disables the generation of the hibernation request event. */
         uint32_t wkupevten             : 1;  /**< [  4:  4](R/W) Resume/remote wakeup detected event enable. */
         uint32_t ulstcngen             : 1;  /**< [  3:  3](R/W) USB/link state change event enable. */
         uint32_t connectdoneen         : 1;  /**< [  2:  2](R/W) Connection done enable. */
@@ -2157,9 +1999,7 @@ union cavm_usbdrdx_uahc_devten
         uint32_t connectdoneen         : 1;  /**< [  2:  2](R/W) Connection done enable. */
         uint32_t ulstcngen             : 1;  /**< [  3:  3](R/W) USB/link state change event enable. */
         uint32_t wkupevten             : 1;  /**< [  4:  4](R/W) Resume/remote wakeup detected event enable. */
-        uint32_t hibernationreqevten   : 1;  /**< [  5:  5](R/W) This bit enables/disables the generation of the hibernation request event.
-                                                                 Internal:
-                                                                 Writing this bit to 0x1 does nothing since we don't have hibernation feature. */
+        uint32_t hibernationreqevten   : 1;  /**< [  5:  5](R/W) This bit enables/disables the generation of the hibernation request event. */
         uint32_t u3l2l1suspen          : 1;  /**< [  6:  6](R/W) U3/L2-L1 suspend event enable. */
         uint32_t sofen                 : 1;  /**< [  7:  7](R/W) Start of (micro)frame enable.
                                                                  For debug purposes only; normally software must disable this event. */
@@ -2183,9 +2023,7 @@ union cavm_usbdrdx_uahc_devten
         uint32_t sofen                 : 1;  /**< [  7:  7](R/W) Start of (micro)frame enable.
                                                                  For debug purposes only; normally software must disable this event. */
         uint32_t u3l2l1suspen          : 1;  /**< [  6:  6](R/W) U3/L2-L1 suspend event enable. */
-        uint32_t hibernationreqevten   : 1;  /**< [  5:  5](R/W) This bit enables/disables the generation of the hibernation request event.
-                                                                 Internal:
-                                                                 Writing this bit to 0x1 does nothing since we don't have hibernation feature. */
+        uint32_t hibernationreqevten   : 1;  /**< [  5:  5](R/W) This bit enables/disables the generation of the hibernation request event. */
         uint32_t wkupevten             : 1;  /**< [  4:  4](R/W) Resume/remote wakeup detected event enable. */
         uint32_t ulstcngen             : 1;  /**< [  3:  3](R/W) USB/link state change event enable. */
         uint32_t connectdoneen         : 1;  /**< [  2:  2](R/W) Connection done enable. */
@@ -2197,9 +2035,7 @@ union cavm_usbdrdx_uahc_devten
         uint32_t connectdoneen         : 1;  /**< [  2:  2](R/W) Connection done enable. */
         uint32_t ulstcngen             : 1;  /**< [  3:  3](R/W) USB/link state change event enable. */
         uint32_t wkupevten             : 1;  /**< [  4:  4](R/W) Resume/remote wakeup detected event enable. */
-        uint32_t hibernationreqevten   : 1;  /**< [  5:  5](R/W) This bit enables/disables the generation of the hibernation request event.
-                                                                 Internal:
-                                                                 Writing this bit to 0x1 does nothing since we don't have hibernation feature. */
+        uint32_t hibernationreqevten   : 1;  /**< [  5:  5](R/W) This bit enables/disables the generation of the hibernation request event. */
         uint32_t u3l2l1suspen          : 1;  /**< [  6:  6](R/W) U3/L2-L1 suspend event enable. */
         uint32_t sofen                 : 1;  /**< [  7:  7](R/W) Start of (micro)frame enable.
                                                                  For debug purposes only; normally software must disable this event. */
@@ -2248,9 +2084,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DEVTEN(uint64_t a)
  * USBDRD()_UAHC_GCTL[CORESOFTRESET] or
  * USBDRD()_UAHC_USBCMD[HCRST] or USBDRD()_UAHC_USBCMD[LHCRST] or
  * USBDRD()_UAHC_DCTL[CSFTRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.6
  */
 union cavm_usbdrdx_uahc_dgcmd
 {
@@ -2333,9 +2166,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DGCMD(uint64_t a)
  * USBDRD()_UAHC_GCTL[CORESOFTRESET] or
  * USBDRD()_UAHC_USBCMD[HCRST] or USBDRD()_UAHC_USBCMD[LHCRST] or
  * USBDRD()_UAHC_DCTL[CSFTRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.5
  */
 union cavm_usbdrdx_uahc_dgcmdpar
 {
@@ -2437,9 +2267,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_DNCTRL(uint64_t a)
  * events.
  *
  * This register can be reset by core domain reset or USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.3.4
  */
 union cavm_usbdrdx_uahc_dsts
 {
@@ -2449,10 +2276,7 @@ union cavm_usbdrdx_uahc_dsts
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_30_31        : 2;
         uint32_t dcnrd                 : 1;  /**< [ 29: 29](RO/H) Device controller not ready.
-                                                                 Will always read-as-zero.
-
-                                                                 Internal:
-                                                                 Bit is only used with hibernation. */
+                                                                 Will always read-as-zero. */
         uint32_t sre                   : 1;  /**< [ 28: 28](R/W1C/H) Save/restore error.
                                                                  This bit is currently not supported. */
         uint32_t reserved_26_27        : 2;
@@ -2461,19 +2285,13 @@ union cavm_usbdrdx_uahc_dsts
                                                                  When the controller has finished the restore process, it will complete the
                                                                  command by setting RSS to 0.
 
-                                                                 Will always read-as-zero.
-
-                                                                 Internal:
-                                                                 Bit is only used with hibernation. */
+                                                                 Will always read-as-zero. */
         uint32_t sss                   : 1;  /**< [ 24: 24](RO) Save state status.
                                                                  This bit is similar to the USBDRD()_UAHC_USBSTS[SSS] in host mode.
                                                                  When the controller has finished the save process, it will complete the
                                                                  command by setting SSS to 0.
 
-                                                                 Will always read-as-zero.
-
-                                                                 Internal:
-                                                                 Bit is only used with hibernation. */
+                                                                 Will always read-as-zero. */
         uint32_t coreidle              : 1;  /**< [ 23: 23](RO/H) Core idle.
                                                                  The bit indicates that the core finished transferring all RxFIFO data to
                                                                  system memory, writing out all completed descriptors, and all event counts
@@ -2600,27 +2418,18 @@ union cavm_usbdrdx_uahc_dsts
                                                                  When the controller has finished the save process, it will complete the
                                                                  command by setting SSS to 0.
 
-                                                                 Will always read-as-zero.
-
-                                                                 Internal:
-                                                                 Bit is only used with hibernation. */
+                                                                 Will always read-as-zero. */
         uint32_t rss                   : 1;  /**< [ 25: 25](RO) Restore state status.
                                                                  This bit is similar to the USBDRD()_UAHC_USBSTS[RSS] in host mode.
                                                                  When the controller has finished the restore process, it will complete the
                                                                  command by setting RSS to 0.
 
-                                                                 Will always read-as-zero.
-
-                                                                 Internal:
-                                                                 Bit is only used with hibernation. */
+                                                                 Will always read-as-zero. */
         uint32_t reserved_26_27        : 2;
         uint32_t sre                   : 1;  /**< [ 28: 28](R/W1C/H) Save/restore error.
                                                                  This bit is currently not supported. */
         uint32_t dcnrd                 : 1;  /**< [ 29: 29](RO/H) Device controller not ready.
-                                                                 Will always read-as-zero.
-
-                                                                 Internal:
-                                                                 Bit is only used with hibernation. */
+                                                                 Will always read-as-zero. */
         uint32_t reserved_30_31        : 2;
 #endif /* Word 0 - End */
     } s;
@@ -2819,9 +2628,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_ERSTSZX(uint64_t a, uint64_t b)
  * regardless of which AXI transaction received the error.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.13.
  */
 union cavm_usbdrdx_uahc_gbuserraddr
 {
@@ -2868,8 +2674,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GBUSERRADDR(uint64_t a)
  *
  * USB UAHC Control Register
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.5.
  */
 union cavm_usbdrdx_uahc_gctl
 {
@@ -2905,12 +2709,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  frequency used). */
         uint32_t masterfiltbypass      : 1;  /**< [ 18: 18](R/W) Master filter bypass. Not relevant for Cavium's configuration. */
         uint32_t bypssetaddr           : 1;  /**< [ 17: 17](R/W) Bypass SetAddress in device mode.
-                                                                 Always set to 0.
-
-                                                                 Internal:
-                                                                 When set, core uses the value in USBDRD()_UAHC_DCFG[DEVADDR] directly
-                                                                 for comparing the device address tokens. In simulation, this can be used to avoid
-                                                                 sending a SET_ADDRESS command. */
+                                                                 Always set to 0. */
         uint32_t u2rstecn              : 1;  /**< [ 16: 16](R/W) If the SuperSpeed connection fails during POLL or LMP exchange, the device connects
                                                                  at non-SuperSpeed mode. If this bit is set, then the device attempts three more times to
                                                                  connect at SuperSpeed, even if it previously failed to operate in SuperSpeed mode.
@@ -2934,13 +2733,7 @@ union cavm_usbdrdx_uahc_gctl
 
                                                                  When you reset PHYs (using USBDRD()_UAHC_GUSB2PHYCFG() or
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()), you must keep the core in reset state until PHY
-                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets.
-
-                                                                 Internal:
-                                                                 Refer to Reset Generation on Synopsys Databook page 250.
-                                                                 Under soft reset, accesses to USBDRD()_UAHC_* CSRs other than USBDRD()_UAHC_GCTL may fail
-                                                                 (timeout).
-                                                                 This bit is for debug purposes only. Use USBDRD()_UAHC_USBCMD[HCRST] for soft reset. */
+                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets. */
         uint32_t sofitpsync            : 1;  /**< [ 10: 10](R/W) Synchronize ITP to reference clock. In host mode, if this bit is set to:
                                                                  0 = The core keeps the UTMI/ULPI PHY on the first port in non-suspended state whenever
                                                                  there is a SuperSpeed port that is not in Rx.Detect, SS.Disable, and U3 state.
@@ -2998,13 +2791,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  0x1 = Enables scaled down SuperSpeed timing and repeat values including:
                                                                  * Number of TxEq training sequences reduce to eight.
                                                                  * LFPS polling burst time reduce to 100 ns.
-                                                                 * LFPS warm reset receive reduce to 30 us.
-
-                                                                 Internal:
-                                                                 Refer to the rtl_vip_scaledown_mapping.xls file under \<workspace\>/sim/SoC_sim
-                                                                 directory for the complete list.
-                                                                 0x2 = No TxEq training sequences are sent. Overrides bit\<4\>.
-                                                                 0x3 = Enables bits\<0\> and \<1\> scale-down timing values. */
+                                                                 * LFPS warm reset receive reduce to 30 us. */
         uint32_t disscramble           : 1;  /**< [  3:  3](R/W) Disable scrambling. Transmit request to link partner on next transition to recovery or polling. */
         uint32_t u2exit_lfps           : 1;  /**< [  2:  2](R/W) LFPS U2 exit.
                                                                  0 = The link treats 248 ns LFPS as a valid U2 exit.
@@ -3053,13 +2840,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  0x1 = Enables scaled down SuperSpeed timing and repeat values including:
                                                                  * Number of TxEq training sequences reduce to eight.
                                                                  * LFPS polling burst time reduce to 100 ns.
-                                                                 * LFPS warm reset receive reduce to 30 us.
-
-                                                                 Internal:
-                                                                 Refer to the rtl_vip_scaledown_mapping.xls file under \<workspace\>/sim/SoC_sim
-                                                                 directory for the complete list.
-                                                                 0x2 = No TxEq training sequences are sent. Overrides bit\<4\>.
-                                                                 0x3 = Enables bits\<0\> and \<1\> scale-down timing values. */
+                                                                 * LFPS warm reset receive reduce to 30 us. */
         uint32_t ramclksel             : 2;  /**< [  7:  6](R/W) RAM clock select. Always keep set to 0x0. */
         uint32_t debugattach           : 1;  /**< [  8:  8](R/W) Debug attach. When this bit is set:
                                                                  * SuperSpeed link proceeds directly to the polling-link state (USBDRD()_UAHC_DCTL[RS] = 1)
@@ -3107,13 +2888,7 @@ union cavm_usbdrdx_uahc_gctl
 
                                                                  When you reset PHYs (using USBDRD()_UAHC_GUSB2PHYCFG() or
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()), you must keep the core in reset state until PHY
-                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets.
-
-                                                                 Internal:
-                                                                 Refer to Reset Generation on Synopsys Databook page 250.
-                                                                 Under soft reset, accesses to USBDRD()_UAHC_* CSRs other than USBDRD()_UAHC_GCTL may fail
-                                                                 (timeout).
-                                                                 This bit is for debug purposes only. Use USBDRD()_UAHC_USBCMD[HCRST] for soft reset. */
+                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets. */
         uint32_t prtcapdir             : 2;  /**< [ 13: 12](R/W) 0x1 = for Host configurations.
                                                                  0x2 = for Device configurations. */
         uint32_t frmscldwn             : 2;  /**< [ 15: 14](R/W) Frame scale down. Scales down device view of a SOF/USOF/ITP duration.
@@ -3129,12 +2904,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  connect at SuperSpeed, even if it previously failed to operate in SuperSpeed mode.
                                                                  This bit is only applicable in device mode. */
         uint32_t bypssetaddr           : 1;  /**< [ 17: 17](R/W) Bypass SetAddress in device mode.
-                                                                 Always set to 0.
-
-                                                                 Internal:
-                                                                 When set, core uses the value in USBDRD()_UAHC_DCFG[DEVADDR] directly
-                                                                 for comparing the device address tokens. In simulation, this can be used to avoid
-                                                                 sending a SET_ADDRESS command. */
+                                                                 Always set to 0. */
         uint32_t masterfiltbypass      : 1;  /**< [ 18: 18](R/W) Master filter bypass. Not relevant for Cavium's configuration. */
         uint32_t pwrdnscale            : 13; /**< [ 31: 19](R/W) Power down scale. The USB3 suspend-clock input replaces pipe3_rx_pclk as a clock source to
                                                                  a small part of the USB3 core that operates when the SuperSpeed PHY is in its lowest power
@@ -3195,12 +2965,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  frequency used). */
         uint32_t masterfiltbypass      : 1;  /**< [ 18: 18](R/W) Master filter bypass. Not relevant for Cavium's configuration. */
         uint32_t bypssetaddr           : 1;  /**< [ 17: 17](R/W) Bypass SetAddress in device mode.
-                                                                 Always set to 0.
-
-                                                                 Internal:
-                                                                 When set, core uses the value in USBDRD()_UAHC_DCFG[DEVADDR] directly
-                                                                 for comparing the device address tokens. In simulation, this can be used to avoid
-                                                                 sending a SET_ADDRESS command. */
+                                                                 Always set to 0. */
         uint32_t u2rstecn              : 1;  /**< [ 16: 16](R/W) If the SuperSpeed connection fails during POLL or LMP exchange, the device connects
                                                                  at non-SuperSpeed mode. If this bit is set, then the device attempts three more times to
                                                                  connect at SuperSpeed, even if it previously failed to operate in SuperSpeed mode.
@@ -3224,13 +2989,7 @@ union cavm_usbdrdx_uahc_gctl
 
                                                                  When you reset PHYs (using USBDRD()_UAHC_GUSB2PHYCFG() or
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()), you must keep the core in reset state until PHY
-                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets.
-
-                                                                 Internal:
-                                                                 Refer to Reset Generation on Synopsys Databook page 250.
-                                                                 Under soft reset, accesses to USBDRD()_UAHC_* CSRs other than USBDRD()_UAHC_GCTL may fail
-                                                                 (timeout).
-                                                                 This bit is for debug purposes only. Use USBDRD()_UAHC_USBCMD[HCRST] for soft reset. */
+                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets. */
         uint32_t sofitpsync            : 1;  /**< [ 10: 10](R/W) Synchronize ITP to reference clock. In host mode, if this bit is set to:
                                                                  0 = The core keeps the UTMI/ULPI PHY on the first port in non-suspended state whenever
                                                                  there is a SuperSpeed port that is not in Rx.Detect, SS.Disable, and U3 state.
@@ -3288,13 +3047,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  0x1 = Enables scaled down SuperSpeed timing and repeat values including:
                                                                  * Number of TxEq training sequences reduce to eight.
                                                                  * LFPS polling burst time reduce to 100 ns.
-                                                                 * LFPS warm reset receive reduce to 30 us.
-
-                                                                 Internal:
-                                                                 Refer to the rtl_vip_scaledown_mapping.xls file under \<workspace\>/sim/SoC_sim
-                                                                 directory for the complete list.
-                                                                 0x2 = No TxEq training sequences are sent. Overrides bit\<4\>.
-                                                                 0x3 = Enables bits\<0\> and \<1\> scale-down timing values. */
+                                                                 * LFPS warm reset receive reduce to 30 us. */
         uint32_t disscramble           : 1;  /**< [  3:  3](R/W) Disable scrambling. Transmit request to link partner on next transition to recovery or polling. */
         uint32_t u2exit_lfps           : 1;  /**< [  2:  2](R/W) LFPS U2 exit.
                                                                  0 = The link treats 248 ns LFPS as a valid U2 exit.
@@ -3343,13 +3096,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  0x1 = Enables scaled down SuperSpeed timing and repeat values including:
                                                                  * Number of TxEq training sequences reduce to eight.
                                                                  * LFPS polling burst time reduce to 100 ns.
-                                                                 * LFPS warm reset receive reduce to 30 us.
-
-                                                                 Internal:
-                                                                 Refer to the rtl_vip_scaledown_mapping.xls file under \<workspace\>/sim/SoC_sim
-                                                                 directory for the complete list.
-                                                                 0x2 = No TxEq training sequences are sent. Overrides bit\<4\>.
-                                                                 0x3 = Enables bits\<0\> and \<1\> scale-down timing values. */
+                                                                 * LFPS warm reset receive reduce to 30 us. */
         uint32_t ramclksel             : 2;  /**< [  7:  6](R/W) RAM clock select. Always keep set to 0x0. */
         uint32_t debugattach           : 1;  /**< [  8:  8](R/W) Debug attach. When this bit is set:
                                                                  * SuperSpeed link proceeds directly to the polling-link state (USBDRD()_UAHC_DCTL[RS] = 1)
@@ -3397,13 +3144,7 @@ union cavm_usbdrdx_uahc_gctl
 
                                                                  When you reset PHYs (using USBDRD()_UAHC_GUSB2PHYCFG() or
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()), you must keep the core in reset state until PHY
-                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets.
-
-                                                                 Internal:
-                                                                 Refer to Reset Generation on Synopsys Databook page 250.
-                                                                 Under soft reset, accesses to USBDRD()_UAHC_* CSRs other than USBDRD()_UAHC_GCTL may fail
-                                                                 (timeout).
-                                                                 This bit is for debug purposes only. Use USBDRD()_UAHC_USBCMD[HCRST] for soft reset. */
+                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets. */
         uint32_t prtcapdir             : 2;  /**< [ 13: 12](R/W) 0x1 = for Host configurations.
                                                                  0x2 = for Device configurations. */
         uint32_t frmscldwn             : 2;  /**< [ 15: 14](R/W) Frame scale down. Scales down device view of a SOF/USOF/ITP duration.
@@ -3419,12 +3160,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  connect at SuperSpeed, even if it previously failed to operate in SuperSpeed mode.
                                                                  This bit is only applicable in device mode. */
         uint32_t bypssetaddr           : 1;  /**< [ 17: 17](R/W) Bypass SetAddress in device mode.
-                                                                 Always set to 0.
-
-                                                                 Internal:
-                                                                 When set, core uses the value in USBDRD()_UAHC_DCFG[DEVADDR] directly
-                                                                 for comparing the device address tokens. In simulation, this can be used to avoid
-                                                                 sending a SET_ADDRESS command. */
+                                                                 Always set to 0. */
         uint32_t masterfiltbypass      : 1;  /**< [ 18: 18](R/W) Master filter bypass. Not relevant for Cavium's configuration. */
         uint32_t pwrdnscale            : 13; /**< [ 31: 19](R/W) Power down scale. The USB3 suspend-clock input replaces pipe3_rx_pclk as a clock source to
                                                                  a small part of the USB3 core that operates when the SuperSpeed PHY is in its lowest power
@@ -3487,12 +3223,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  frequency used). */
         uint32_t masterfiltbypass      : 1;  /**< [ 18: 18](R/W) Master filter bypass. Not relevant for Marvell's configuration. */
         uint32_t bypssetaddr           : 1;  /**< [ 17: 17](R/W) Bypass SetAddress in device mode.
-                                                                 Always set to 0.
-
-                                                                 Internal:
-                                                                 When set, core uses the value in USBDRD()_UAHC_DCFG[DEVADDR] directly
-                                                                 for comparing the device address tokens. In simulation, this can be used to avoid
-                                                                 sending a SET_ADDRESS command. */
+                                                                 Always set to 0. */
         uint32_t u2rstecn              : 1;  /**< [ 16: 16](R/W) If the SuperSpeed connection fails during POLL or LMP exchange, the device connects
                                                                  at non-SuperSpeed mode. If this bit is set, then the device attempts three more times to
                                                                  connect at SuperSpeed, even if it previously failed to operate in SuperSpeed mode.
@@ -3516,13 +3247,7 @@ union cavm_usbdrdx_uahc_gctl
 
                                                                  When you reset PHYs (using USBDRD()_UAHC_GUSB2PHYCFG() or
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()), you must keep the core in reset state until PHY
-                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets.
-
-                                                                 Internal:
-                                                                 Refer to Reset Generation on Synopsys Databook page 250.
-                                                                 Under soft reset, accesses to USBDRD()_UAHC_* CSRs other than USBDRD()_UAHC_GCTL may fail
-                                                                 (timeout).
-                                                                 This bit is for debug purposes only. Use USBDRD()_UAHC_USBCMD[HCRST] for soft reset. */
+                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets. */
         uint32_t sofitpsync            : 1;  /**< [ 10: 10](R/W) Synchronize ITP to reference clock. In host mode, if this bit is set to:
                                                                  0 = The core keeps the UTMI/ULPI PHY on the first port in non-suspended state whenever
                                                                  there is a SuperSpeed port that is not in Rx.Detect, SS.Disable, and U3 state.
@@ -3580,13 +3305,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  0x1 = Enables scaled down SuperSpeed timing and repeat values including:
                                                                  * Number of TxEq training sequences reduce to eight.
                                                                  * LFPS polling burst time reduce to 100 ns.
-                                                                 * LFPS warm reset receive reduce to 30 us.
-
-                                                                 Internal:
-                                                                 Refer to the rtl_vip_scaledown_mapping.xls file under \<workspace\>/sim/SoC_sim
-                                                                 directory for the complete list.
-                                                                 0x2 = No TxEq training sequences are sent. Overrides bit\<4\>.
-                                                                 0x3 = Enables bits\<0\> and \<1\> scale-down timing values. */
+                                                                 * LFPS warm reset receive reduce to 30 us. */
         uint32_t disscramble           : 1;  /**< [  3:  3](R/W) Disable scrambling. Transmit request to link partner on next transition to recovery or polling. */
         uint32_t u2exit_lfps           : 1;  /**< [  2:  2](R/W) LFPS U2 exit.
                                                                  0 = The link treats 248 ns LFPS as a valid U2 exit.
@@ -3635,13 +3354,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  0x1 = Enables scaled down SuperSpeed timing and repeat values including:
                                                                  * Number of TxEq training sequences reduce to eight.
                                                                  * LFPS polling burst time reduce to 100 ns.
-                                                                 * LFPS warm reset receive reduce to 30 us.
-
-                                                                 Internal:
-                                                                 Refer to the rtl_vip_scaledown_mapping.xls file under \<workspace\>/sim/SoC_sim
-                                                                 directory for the complete list.
-                                                                 0x2 = No TxEq training sequences are sent. Overrides bit\<4\>.
-                                                                 0x3 = Enables bits\<0\> and \<1\> scale-down timing values. */
+                                                                 * LFPS warm reset receive reduce to 30 us. */
         uint32_t ramclksel             : 2;  /**< [  7:  6](R/W) RAM clock select. Always keep set to 0x0. */
         uint32_t debugattach           : 1;  /**< [  8:  8](R/W) Debug attach. When this bit is set:
                                                                  * SuperSpeed link proceeds directly to the polling-link state (USBDRD()_UAHC_DCTL[RS] = 1)
@@ -3689,13 +3402,7 @@ union cavm_usbdrdx_uahc_gctl
 
                                                                  When you reset PHYs (using USBDRD()_UAHC_GUSB2PHYCFG() or
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()), you must keep the core in reset state until PHY
-                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets.
-
-                                                                 Internal:
-                                                                 Refer to Reset Generation on Synopsys Databook page 250.
-                                                                 Under soft reset, accesses to USBDRD()_UAHC_* CSRs other than USBDRD()_UAHC_GCTL may fail
-                                                                 (timeout).
-                                                                 This bit is for debug purposes only. Use USBDRD()_UAHC_USBCMD[HCRST] for soft reset. */
+                                                                 clocks are stable. This controls the bus, RAM, and MAC domain resets. */
         uint32_t prtcapdir             : 2;  /**< [ 13: 12](R/W) 0x1 = for Host configurations.
                                                                  0x2 = for Device configurations. */
         uint32_t frmscldwn             : 2;  /**< [ 15: 14](R/W) Frame scale down. Scales down device view of a SOF/USOF/ITP duration.
@@ -3711,12 +3418,7 @@ union cavm_usbdrdx_uahc_gctl
                                                                  connect at SuperSpeed, even if it previously failed to operate in SuperSpeed mode.
                                                                  This bit is only applicable in device mode. */
         uint32_t bypssetaddr           : 1;  /**< [ 17: 17](R/W) Bypass SetAddress in device mode.
-                                                                 Always set to 0.
-
-                                                                 Internal:
-                                                                 When set, core uses the value in USBDRD()_UAHC_DCFG[DEVADDR] directly
-                                                                 for comparing the device address tokens. In simulation, this can be used to avoid
-                                                                 sending a SET_ADDRESS command. */
+                                                                 Always set to 0. */
         uint32_t masterfiltbypass      : 1;  /**< [ 18: 18](R/W) Master filter bypass. Not relevant for Marvell's configuration. */
         uint32_t pwrdnscale            : 13; /**< [ 31: 19](R/W) Power down scale. The USB3 suspend-clock input replaces pipe3_rx_pclk as a clock source to
                                                                  a small part of the USB3 core that operates when the SuperSpeed PHY is in its lowest power
@@ -3778,9 +3480,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GCTL(uint64_t a)
  * See description in USBDRD()_UAHC_GDBGFIFOSPACE.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.30
  */
 union cavm_usbdrdx_uahc_gdbgbmu
 {
@@ -3877,10 +3576,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GDBGEPINFO(uint64_t a)
  * is needed for the silicon, contact customer support with a dump of these registers.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.27
- * INTERNAL: Contact Synopsys directly.
  */
 union cavm_usbdrdx_uahc_gdbgfifospace
 {
@@ -3955,9 +3650,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GDBGFIFOSPACE(uint64_t a)
  * See description in USBDRD()_UAHC_GDBGFIFOSPACE.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.29
  */
 union cavm_usbdrdx_uahc_gdbglnmcc
 {
@@ -4052,10 +3744,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSP(uint64_t a)
  * See description in USBDRD()_UAHC_GDBGFIFOSPACE.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.21
- * INTERNAL: This register is for Synopsys internal use only.
  */
 union cavm_usbdrdx_uahc_gdbglspmux
 {
@@ -4070,20 +3758,14 @@ union cavm_usbdrdx_uahc_gdbglspmux
                                                                  using a mux) this signal with other trace signals in your system to generate a common
                                                                  trace signal, you can use this feature. */
         uint32_t endbc                 : 1;  /**< [ 15: 15](R/W) Enable debugging of the debug capability LSP. Use HOSTSELECT to select the DbC LSP debug
-                                                                 information presented in the GDBGLSP register.
-
-                                                                 Internal:
-                                                                 Note this can only be used if DebugCapabaility was enabled at compile. */
+                                                                 information presented in the GDBGLSP register. */
         uint32_t reserved_14           : 1;
         uint32_t hostselect            : 14; /**< [ 13:  0](R/W) Host select. Selects the LSP debug information presented in USBDRD()_UAHC_GDBGLSP. */
 #else /* Word 0 - Little Endian */
         uint32_t hostselect            : 14; /**< [ 13:  0](R/W) Host select. Selects the LSP debug information presented in USBDRD()_UAHC_GDBGLSP. */
         uint32_t reserved_14           : 1;
         uint32_t endbc                 : 1;  /**< [ 15: 15](R/W) Enable debugging of the debug capability LSP. Use HOSTSELECT to select the DbC LSP debug
-                                                                 information presented in the GDBGLSP register.
-
-                                                                 Internal:
-                                                                 Note this can only be used if DebugCapabaility was enabled at compile. */
+                                                                 information presented in the GDBGLSP register. */
         uint32_t latraceportmuxselect  : 8;  /**< [ 23: 16](R/W) logic_analyzer_trace port multiplexer select. Only bits\<21:16\> are used. For details on
                                                                  how the mux controls the debug traces, refer to the Verilog file.
                                                                  A value of 0x3F drives 0s on the logic_analyzer_trace signal. If you plan to OR (instead
@@ -4127,9 +3809,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSPMUX(uint64_t a)
  * See description in USBDRD()_UAHC_GDBGFIFOSPACE.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.28
  */
 union cavm_usbdrdx_uahc_gdbgltssm
 {
@@ -4251,9 +3930,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLTSSM(uint64_t a)
  * is always awarded; there is no idle.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.63
  */
 union cavm_usbdrdx_uahc_gdmahlratio
 {
@@ -4311,9 +3987,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GDMAHLRATIO(uint64_t a)
  * or USBDRD()_UCTL_CTL[UAHC_RST],
  * or USBDRD()_UAHC_GCTL[CORESOFTRESET],
  * or USBDRD()_UAHC_USBCMD[HCRST], or USBDRD()_UAHC_USBCMD[LHCRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.53.
  */
 union cavm_usbdrdx_uahc_gevntadrx
 {
@@ -4376,9 +4049,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTADRX(uint64_t a, uint64_t b)
  * or USBDRD()_UCTL_CTL[UAHC_RST],
  * or USBDRD()_UAHC_GCTL[CORESOFTRESET],
  * or USBDRD()_UAHC_USBCMD[HCRST], or USBDRD()_UAHC_USBCMD[LHCRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.57
  */
 union cavm_usbdrdx_uahc_gevntcountx
 {
@@ -4436,9 +4106,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTCOUNTX(uint64_t a, uint64_t b)
  * or USBDRD()_UCTL_CTL[UAHC_RST],
  * or USBDRD()_UAHC_GCTL[CORESOFTRESET],
  * or USBDRD()_UAHC_USBCMD[HCRST], or USBDRD()_UAHC_USBCMD[LHCRST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.56
  */
 union cavm_usbdrdx_uahc_gevntsizx
 {
@@ -4498,9 +4165,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTSIZX(uint64_t a, uint64_t b)
  * REF_CLK signal.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.64
  */
 union cavm_usbdrdx_uahc_gfladj
 {
@@ -4550,11 +4214,7 @@ union cavm_usbdrdx_uahc_gfladj
                                                                  When [GFLADJ_REFCLK_LPM_SEL] = 1 the overloading of the suspend control of the USB 2.0
                                                                  first
                                                                  port PHY (UTMI) with USB 3.0 port states is removed. Note that the REF_CLK frequencies
-                                                                 supported in this mode are 16/17/19.2/20/24/39.7/40 MHz.
-
-                                                                 Internal:
-                                                                 The utmi_clk[0] signal of the core must be connected to the FREECLK of the PHY.
-                                                                 If you set this bit to 1, USBDRD()_UAHC_GUSB2PHYCFG()[U2_FREECLK_EXISTS] must be set to 0. */
+                                                                 supported in this mode are 16/17/19.2/20/24/39.7/40 MHz. */
         uint32_t reserved_22           : 1;
         uint32_t gfladj_refclk_fladj   : 14; /**< [ 21:  8](R/W) This field indicates the frame length adjustment to be applied when SOF/ITP counter is
                                                                  running off of the REF_CLK. This register value is used to adjust:.
@@ -4648,11 +4308,7 @@ union cavm_usbdrdx_uahc_gfladj
                                                                  When [GFLADJ_REFCLK_LPM_SEL] = 1 the overloading of the suspend control of the USB 2.0
                                                                  first
                                                                  port PHY (UTMI) with USB 3.0 port states is removed. Note that the REF_CLK frequencies
-                                                                 supported in this mode are 16/17/19.2/20/24/39.7/40 MHz.
-
-                                                                 Internal:
-                                                                 The utmi_clk[0] signal of the core must be connected to the FREECLK of the PHY.
-                                                                 If you set this bit to 1, USBDRD()_UAHC_GUSB2PHYCFG()[U2_FREECLK_EXISTS] must be set to 0. */
+                                                                 supported in this mode are 16/17/19.2/20/24/39.7/40 MHz. */
         uint32_t gfladj_refclk_240mhz_decr : 7;/**< [ 30: 24](R/W) This field indicates the decrement value that the controller applies for each REF_CLK in
                                                                  order to derive a frame timer in terms of a 240-MHz clock. This field must be programmed
                                                                  to a nonzero value only if [GFLADJ_REFCLK_LPM_SEL] is set to 1.
@@ -4724,9 +4380,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GFLADJ(uint64_t a)
  * debugging.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.10
  */
 union cavm_usbdrdx_uahc_ggpio
 {
@@ -4771,9 +4424,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GGPIO(uint64_t a)
  *
  * USB UAHC Hardware Parameters Register 0
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * Register field names refer to Synopsys DWC_USB3_* parameters of the same suffix.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.19
  */
 union cavm_usbdrdx_uahc_ghwparams0
 {
@@ -4826,9 +4476,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS0(uint64_t a)
  *
  * USB UAHC Hardware Parameters Register 1
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * Register field names refer to Synopsys DWC_USB3_* parameters of the same suffix.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.20
  */
 union cavm_usbdrdx_uahc_ghwparams1
 {
@@ -4839,10 +4486,7 @@ union cavm_usbdrdx_uahc_ghwparams1
         uint32_t en_dbc                : 1;  /**< [ 31: 31](RAZ) Enable debug capability. */
         uint32_t rm_opt_features       : 1;  /**< [ 30: 30](RO) Remove optional features. */
         uint32_t sync_rst              : 1;  /**< [ 29: 29](RO) Synchronous reset coding. */
-        uint32_t ram_bus_clks_sync     : 1;  /**< [ 28: 28](RO) RAM_CLK and BUS_CLK are synchronous.
-                                                                 Internal:
-                                                                 (appears to be orthogonal from the
-                                                                 RAM_CLK_TO_BUS_CLK parameter) */
+        uint32_t ram_bus_clks_sync     : 1;  /**< [ 28: 28](RO) RAM_CLK and BUS_CLK are synchronous. */
         uint32_t mac_ram_clks_sync     : 1;  /**< [ 27: 27](RO) MAC3_CLK and RAM_CLK are synchronous. */
         uint32_t mac_phy_clks_sync     : 1;  /**< [ 26: 26](RO) MAC3_CLK and PHY_CLK are synchronous. */
         uint32_t en_pwropt             : 2;  /**< [ 25: 24](RO) Power optimization mode:
@@ -4870,10 +4514,7 @@ union cavm_usbdrdx_uahc_ghwparams1
                                                                  bit\<1\> = Hibernation feature available. */
         uint32_t mac_phy_clks_sync     : 1;  /**< [ 26: 26](RO) MAC3_CLK and PHY_CLK are synchronous. */
         uint32_t mac_ram_clks_sync     : 1;  /**< [ 27: 27](RO) MAC3_CLK and RAM_CLK are synchronous. */
-        uint32_t ram_bus_clks_sync     : 1;  /**< [ 28: 28](RO) RAM_CLK and BUS_CLK are synchronous.
-                                                                 Internal:
-                                                                 (appears to be orthogonal from the
-                                                                 RAM_CLK_TO_BUS_CLK parameter) */
+        uint32_t ram_bus_clks_sync     : 1;  /**< [ 28: 28](RO) RAM_CLK and BUS_CLK are synchronous. */
         uint32_t sync_rst              : 1;  /**< [ 29: 29](RO) Synchronous reset coding. */
         uint32_t rm_opt_features       : 1;  /**< [ 30: 30](RO) Remove optional features. */
         uint32_t en_dbc                : 1;  /**< [ 31: 31](RAZ) Enable debug capability. */
@@ -4909,9 +4550,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS1(uint64_t a)
  *
  * USB UAHC Core GHW Parameters Register 2
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * Register field names refer to Synopsys DWC_USB3_* parameters of the same suffix.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.21
  */
 union cavm_usbdrdx_uahc_ghwparams2
 {
@@ -4954,8 +4592,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS2(uint64_t a)
  *
  * USB UAHC GHW Parameters Register 3
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.22
  */
 union cavm_usbdrdx_uahc_ghwparams3
 {
@@ -5018,9 +4654,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS3(uint64_t a)
  *
  * USB UAHC GHW Parameters Register 4
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * Register field names refer to Synopsys DWC_USB3_* parameters of the same suffix.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.23
  */
 union cavm_usbdrdx_uahc_ghwparams4
 {
@@ -5079,9 +4712,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS4(uint64_t a)
  *
  * USB UAHC GHW Parameters Register 5
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * Register field names refer to Synopsys DWC_USB3_* parameters of the same suffix.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.24
  */
 union cavm_usbdrdx_uahc_ghwparams5
 {
@@ -5134,9 +4764,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS5(uint64_t a)
  *
  * USB UAHC GHW Parameters Register 6
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * Register field names refer to Synopsys DWC_USB3_* parameters of the same suffix.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.25
  */
 union cavm_usbdrdx_uahc_ghwparams6
 {
@@ -5199,9 +4826,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS6(uint64_t a)
  *
  * USB UAHC GHW Parameters Register 7
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * Register field names refer to Synopsys DWC_USB3_* parameters of the same suffix.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.26
  */
 union cavm_usbdrdx_uahc_ghwparams7
 {
@@ -5246,9 +4870,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS7(uint64_t a)
  *
  * USB UAHC GHW Parameters Register 8
  * This register contains the hardware configuration options selected at compile-time.
- * Internal:
- * Register field names refer to Synopsys DWC_USB3_* parameters of the same suffix.
- * INTERNAL: See Synopsys DWC_usb3 Databook v2.20a, section 6.2.3.9.
  */
 union cavm_usbdrdx_uahc_ghwparams8
 {
@@ -5297,10 +4918,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS8(uint64_t a)
  * assistance is needed for the silicon, contact customer support with a dump of these registers.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.6
- * INTERNAL: Contact Synopsys directly.
  */
 union cavm_usbdrdx_uahc_gpmsts
 {
@@ -5387,9 +5004,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GPMSTS(uint64_t a)
  * register should always be 0.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.16
  */
 union cavm_usbdrdx_uahc_gprtbimap
 {
@@ -5440,9 +5054,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP(uint64_t a)
  * low-speed bus-instance, so this register should always be 0x0.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v2.20a, section 6.2.2.3.
  */
 union cavm_usbdrdx_uahc_gprtbimap_fs
 {
@@ -5493,9 +5104,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_FS(uint64_t a)
  * register should always be 0.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v2.20a, section 6.2.2.2.
  */
 union cavm_usbdrdx_uahc_gprtbimap_hs
 {
@@ -5540,9 +5148,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_HS(uint64_t a)
  *
  * USB UAHC Release ID Register
  * This is a read-only register that contains the release number of the core.
- * Internal:
- * Original name: GSNPSID = Synopsys ID.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.9.
  */
 union cavm_usbdrdx_uahc_grlsid
 {
@@ -5550,40 +5155,12 @@ union cavm_usbdrdx_uahc_grlsid
     struct cavm_usbdrdx_uahc_grlsid_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t releaseid             : 32; /**< [ 31:  0](RO) Software can use this register to configure release-specific features in the driver.
-                                                                 Internal:
-                                                                 Synopsys ID
-                                                                  * SynopsysID[31:16] indicates Core Identification Number. 0x5533 is ASCII for
-                                                                 U3 (DWC_usb3).
-                                                                  * SynopsysID[15:0] indicates the release number. Current Release is 2.50a. */
+        uint32_t releaseid             : 32; /**< [ 31:  0](RO) Software can use this register to configure release-specific features in the driver. */
 #else /* Word 0 - Little Endian */
-        uint32_t releaseid             : 32; /**< [ 31:  0](RO) Software can use this register to configure release-specific features in the driver.
-                                                                 Internal:
-                                                                 Synopsys ID
-                                                                  * SynopsysID[31:16] indicates Core Identification Number. 0x5533 is ASCII for
-                                                                 U3 (DWC_usb3).
-                                                                  * SynopsysID[15:0] indicates the release number. Current Release is 2.50a. */
+        uint32_t releaseid             : 32; /**< [ 31:  0](RO) Software can use this register to configure release-specific features in the driver. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_usbdrdx_uahc_grlsid_s cn8; */
-    struct cavm_usbdrdx_uahc_grlsid_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t releaseid             : 32; /**< [ 31:  0](RO) Software can use this register to configure release-specific features in the driver.
-                                                                 Internal:
-                                                                 Synopsys ID
-                                                                  * SynopsysID[31:16] indicates Core Identification Number. 0x5533 is ASCII for
-                                                                 U3 (DWC_usb3).
-                                                                  * SynopsysID[15:0] indicates the release number. Current Release is 3.10a. */
-#else /* Word 0 - Little Endian */
-        uint32_t releaseid             : 32; /**< [ 31:  0](RO) Software can use this register to configure release-specific features in the driver.
-                                                                 Internal:
-                                                                 Synopsys ID
-                                                                  * SynopsysID[31:16] indicates Core Identification Number. 0x5533 is ASCII for
-                                                                 U3 (DWC_usb3).
-                                                                  * SynopsysID[15:0] indicates the release number. Current Release is 3.10a. */
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_usbdrdx_uahc_grlsid_s cn; */
 };
 typedef union cavm_usbdrdx_uahc_grlsid cavm_usbdrdx_uahc_grlsid_t;
 
@@ -5634,9 +5211,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GRLSID(uint64_t a)
  * SuperSpeed, one high-speed, and one full-speed/low-speed).
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.60
  */
 union cavm_usbdrdx_uahc_grxfifoprihst
 {
@@ -5687,11 +5261,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOPRIHST(uint64_t a)
  * Reset values = 0:{0x0000_0084} 1:{0x0084_0104} 2:{0x0188_0180}.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v2.20a, section 6.2.6.2.
- * INTERNAL: For more information, see the BMU section in Block Descriptions on Synopsys Databook
- * page 238.
  */
 union cavm_usbdrdx_uahc_grxfifosizx
 {
@@ -5702,20 +5271,10 @@ union cavm_usbdrdx_uahc_grxfifosizx
         uint32_t rxfstaddr             : 16; /**< [ 31: 16](R/W) RxFIFOn RAM start address. This field contains the memory start address for RxFIFOn. The
                                                                  reset value is derived from configuration parameters. */
         uint32_t rxfdep                : 16; /**< [ 15:  0](R/W) RxFIFOn depth. This value is in terms of RX RAM data width.
-                                                                 minimum value = 0x20, maximum value = 0x4000.
-
-                                                                 Internal:
-                                                                 For more information, see the Hardware Integration chapter of the Synopsys
-                                                                 Databook.
-                                                                 The reset value is derived from configuration parameters. */
+                                                                 minimum value = 0x20, maximum value = 0x4000. */
 #else /* Word 0 - Little Endian */
         uint32_t rxfdep                : 16; /**< [ 15:  0](R/W) RxFIFOn depth. This value is in terms of RX RAM data width.
-                                                                 minimum value = 0x20, maximum value = 0x4000.
-
-                                                                 Internal:
-                                                                 For more information, see the Hardware Integration chapter of the Synopsys
-                                                                 Databook.
-                                                                 The reset value is derived from configuration parameters. */
+                                                                 minimum value = 0x20, maximum value = 0x4000. */
         uint32_t rxfstaddr             : 16; /**< [ 31: 16](R/W) RxFIFOn RAM start address. This field contains the memory start address for RxFIFOn. The
                                                                  reset value is derived from configuration parameters. */
 #endif /* Word 0 - End */
@@ -5768,9 +5327,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOSIZX(uint64_t a, uint64_t b)
  * A larger RX threshold affects the performance since the scheduler is idle during this time.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.4.
  */
 union cavm_usbdrdx_uahc_grxthrcfg
 {
@@ -5936,11 +5492,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GRXTHRCFG(uint64_t a)
  * priority over other burst lengths. The core always performs the largest burst when enabled.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * The AXI cache signals are not connected in Marvell's hookup, so the *REQINFO fields
- * can be ignored.
- * INTERNAL: See Synopsys DWC_usb3 Databook v3.10a, section 6.2.1
  */
 union cavm_usbdrdx_uahc_gsbuscfg0
 {
@@ -6112,9 +5663,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG0(uint64_t a)
  * before starting any transactions on AXI.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.2.
  */
 union cavm_usbdrdx_uahc_gsbuscfg1
 {
@@ -6189,8 +5737,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG1(uint64_t a)
  *
  * USB UAHC Core Status Register
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.7
  */
 union cavm_usbdrdx_uahc_gsts
 {
@@ -6279,9 +5825,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GSTS(uint64_t a)
  * SuperSpeed, one high-speed, and one full-speed/low-speed).
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.59
  */
 union cavm_usbdrdx_uahc_gtxfifopridev
 {
@@ -6352,9 +5895,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIDEV(uint64_t a)
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST],
  * or USBDRD()_UAHC_GCTL[CORESOFTRESET].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.60
  */
 union cavm_usbdrdx_uahc_gtxfifoprihst
 {
@@ -6408,11 +5948,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIHST(uint64_t a)
  * Reset values = 0:{0x0000_0082} 1:{0x0082_0103} 2:{0x0185_0205}.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v2.20a, section 6.2.6.1.
- * INTERNAL: For more information, refer to the BMU section in Block Descriptions on Synopsys
- * Databook page 238.
  */
 union cavm_usbdrdx_uahc_gtxfifosizx
 {
@@ -6423,20 +5958,10 @@ union cavm_usbdrdx_uahc_gtxfifosizx
         uint32_t txfstaddr             : 16; /**< [ 31: 16](R/W) Transmit FIFOn RAM start address. Contains the memory start address for TxFIFOn. The reset
                                                                  is value derived from configuration parameters. */
         uint32_t txfdep                : 16; /**< [ 15:  0](R/W) TxFIFOn depth. This value is in terms of TX RAM data width.
-                                                                 minimum value = 0x20, maximum value = 0x8000.
-
-                                                                 Internal:
-                                                                 For more information, see the Hardware Integration chapter of the Synopsys
-                                                                 Databook.
-                                                                 The reset value derived from configuration parameters. */
+                                                                 minimum value = 0x20, maximum value = 0x8000. */
 #else /* Word 0 - Little Endian */
         uint32_t txfdep                : 16; /**< [ 15:  0](R/W) TxFIFOn depth. This value is in terms of TX RAM data width.
-                                                                 minimum value = 0x20, maximum value = 0x8000.
-
-                                                                 Internal:
-                                                                 For more information, see the Hardware Integration chapter of the Synopsys
-                                                                 Databook.
-                                                                 The reset value derived from configuration parameters. */
+                                                                 minimum value = 0x20, maximum value = 0x8000. */
         uint32_t txfstaddr             : 16; /**< [ 31: 16](R/W) Transmit FIFOn RAM start address. Contains the memory start address for TxFIFOn. The reset
                                                                  is value derived from configuration parameters. */
 #endif /* Word 0 - End */
@@ -6486,9 +6011,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOSIZX(uint64_t a, uint64_t b)
  * * A larger threshold affects the performance, since the scheduler is idle during this time.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.3
  */
 union cavm_usbdrdx_uahc_gtxthrcfg
 {
@@ -6629,9 +6151,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GTXTHRCFG(uint64_t a)
  * mode. Most of the options are used to improve host interoperability with different devices.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.12
  */
 union cavm_usbdrdx_uahc_guctl
 {
@@ -6880,8 +6399,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL(uint64_t a)
  *
  * USB UAHC Global User Control Register 1
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.8
  */
 union cavm_usbdrdx_uahc_guctl1
 {
@@ -6998,8 +6515,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL1(uint64_t a)
  *
  * UAHC Global User Control Register 2
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.44.
  */
 union cavm_usbdrdx_uahc_guctl2
 {
@@ -7059,9 +6574,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL2(uint64_t a)
  * * As a scratch register.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v3.10a, section 6.2.11.
  */
 union cavm_usbdrdx_uahc_guid
 {
@@ -7106,9 +6618,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GUID(uint64_t a)
  * This register is reserved for future use.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v2.20a, section 6.2.5.2.
  */
 union cavm_usbdrdx_uahc_gusb2i2cctlx
 {
@@ -7158,9 +6667,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2I2CCTLX(uint64_t a, uint64_t b)
  * Do not make changes to this register after the initial programming.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v2.20a, section 6.2.5.1.
  */
 union cavm_usbdrdx_uahc_gusb2phycfgx
 {
@@ -7511,9 +7017,6 @@ static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2PHYCFGX(uint64_t a, uint64_t b)
  * Do not make changes to this register after the initial programming.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UAHC_RST].
- *
- * Internal:
- * See Synopsys DWC_usb3 Databook v2.20a, section 6.2.5.4.
  */
 union cavm_usbdrdx_uahc_gusb3pipectlx
 {
@@ -7556,18 +7059,10 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  1 = Core does U1/U2/U3 exit in PHY power state P1/P2/P3 respectively.
 
                                                                  This bit is added for SuperSpeed PHY workaround where SuperSpeed PHY injects a glitch on
-                                                                 pipe3_RxElecIdle while receiving Ux exit LFPS, and pipe3_PowerDown change is in progress.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 pipe3_RxElecIdle while receiving Ux exit LFPS, and pipe3_PowerDown change is in progress. */
         uint32_t ping_enchance_en      : 1;  /**< [ 26: 26](R/W) Ping enhancement enable. When set to 1, the downstream-port U1-ping-receive timeout
                                                                  becomes 500 ms instead of 300 ms. Minimum Ping.LFPS receive duration is 8 ns (one mac3_clk
-                                                                 cycle). This field is valid for the downstream port only.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 cycle). This field is valid for the downstream port only. */
         uint32_t u1u2exitfail_to_recov : 1;  /**< [ 25: 25](R/W) U1U2exit fail to recovery. When set to 1, and U1/U2 LFPS handshake fails, the LTSSM
                                                                  transitions from U1/U2 to recovery instead of SS.inactive.
                                                                  If recovery fails, then the LTSSM can enter SS.Inactive. This is an enhancement only. It
@@ -7576,43 +7071,26 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  0 = if immediate Ux exit (remotely initiated, or locally initiated) happens, the core does
                                                                  not request P1/P2/P3 power state change.
                                                                  1 = the core always requests PHY power change from P0 to P1/P2/P3 during U0 to U1/U2/U3
-                                                                 transition.
-
-                                                                 Internal:
-                                                                 Note: This bit should be set to 1 for Synopsys PHY. For third-party SuperSpeed
-                                                                 PHY, check with your PHY vendor. */
+                                                                 transition. */
         uint32_t startrxdetu3rxdet     : 1;  /**< [ 23: 23](WO) Start receiver detection in U3/Rx.Detect.
                                                                  If DISRXDETU3RXDET is set to 1 during reset, and the link is in U3 or Rx.Detect state, the
                                                                  core starts receiver detection on rising edge of this bit.
                                                                  This bit is valid for downstream ports only, and this feature must not be enabled for
-                                                                 normal operation.
-
-                                                                 Internal:
-                                                                 If have to use this feature, contact Synopsys. */
+                                                                 normal operation. */
         uint32_t disrxdetu3rxdet       : 1;  /**< [ 22: 22](R/W) Disable receiver detection in U3/Rx.Detect. When set to 1, the core does not do receiver
                                                                  detection in U3 or Rx.Detect state. If STARTRXDETU3RXDET is set to 1 during reset,
                                                                  receiver detection starts manually.
                                                                  This bit is valid for downstream ports only, and this feature must not be enabled for
-                                                                 normal operation.
-
-                                                                 Internal:
-                                                                 If have to use this feature, contact Synopsys. */
+                                                                 normal operation. */
         uint32_t delaypx               : 3;  /**< [ 21: 19](R/W) Delay P1P2P3. Delay P0 to P1/P2/P3 request when entering U1/U2/U3 until (DELAYPX * 8)
                                                                  8B10B error occurs, or Pipe3_RxValid drops to 0.
-                                                                 DELAYPXTRANSENTERUX must reset to 1 to enable this functionality.
-
-                                                                 Internal:
-                                                                 Should always be 0x1 for a Synopsys PHY. */
+                                                                 DELAYPXTRANSENTERUX must reset to 1 to enable this functionality. */
         uint32_t delaypxtransenterux   : 1;  /**< [ 18: 18](R/W) Delay PHY power change from P0 to P1/P2/P3 when link state changing from U0 to U1/U2/U3
                                                                  respectively.
                                                                  0 = when entering U1/U2/U3, transition to P1/P2/P3 without checking for Pipe3_RxElecIlde
                                                                  and pipe3_RxValid.
                                                                  1 = when entering U1/U2/U3, delay the transition to P1/P2/P3 until the pipe3 signals,
-                                                                 Pipe3_RxElecIlde is 1 and pipe3_RxValid is 0.
-
-                                                                 Internal:
-                                                                 Note: This bit should be set to 1 for Synopsys PHY. It is also used by third-
-                                                                 party SuperSpeed PHY. */
+                                                                 Pipe3_RxElecIlde is 1 and pipe3_RxValid is 0. */
         uint32_t suspend_en            : 1;  /**< [ 17: 17](R/W) Suspend USB3.0 SuperSpeed PHY (Suspend_en). When set to 1, and if suspend conditions are
                                                                  valid, the USB 3.0 PHY enters suspend mode. */
         uint32_t datwidth              : 2;  /**< [ 16: 15](RO) PIPE data width.
@@ -7622,20 +7100,11 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  0x3 = reserved.
 
                                                                  One clock cycle after reset, these bits receive the value seen on the pipe3_DataBusWidth.
-                                                                 This will always be 0x0.
-
-                                                                 Internal:
-                                                                 The simulation testbench uses the coreConsultant parameter to configure the VIP.
-                                                                 INTERNAL: These bits in the coreConsultant parameter should match your PHY data width and
-                                                                 the pipe3_DataBusWidth port. */
+                                                                 This will always be 0x0. */
         uint32_t abortrxdetinu2        : 1;  /**< [ 14: 14](R/W) Abort RX Detect in U2. When set to 1, and the link state is U2, the core aborts receiver
                                                                  detection if it receives U2 exit LFPS from the remote link partner.
 
-                                                                 This bit is for downstream port only.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 This bit is for downstream port only. */
         uint32_t skiprxdet             : 1;  /**< [ 13: 13](R/W) Skip RX detect. When set to 1, the core skips RX detection if pipe3_RxElecIdle is low.
                                                                  Skip is defined as waiting for the appropriate timeout, then repeating the operation. */
         uint32_t lfpsp0algn            : 1;  /**< [ 12: 12](R/W) LFPS P0 align. When set to 1:
@@ -7650,18 +7119,9 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  defined in the PIPE3 specification.
                                                                  1 = the core transitions directly from PHY power state P2 to P3 or from state P3 to P2.
 
-                                                                 According to PIPE3 specification, any direct transition between P3 and P2 is illegal.
-
-                                                                 Internal:
-                                                                 This bit is used only for some non-Synopsys PHYs that cannot do LFPS in P3.
-                                                                 INTERNAL: Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 According to PIPE3 specification, any direct transition between P3 and P2 is illegal. */
         uint32_t p3exsigp2             : 1;  /**< [ 10: 10](R/W) P3 exit signal in P2. When set to 1, the core always changes the PHY power state to P2,
-                                                                 before attempting a U3 exit handshake.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 before attempting a U3 exit handshake. */
         uint32_t lfpsfilt              : 1;  /**< [  9:  9](R/W) LFPS filter. When set to 1, filter LFPS reception with pipe3_RxValid in PHY power state
                                                                  P0, ignore LFPS reception from the PHY unless both pipe3_Rxelecidle and pipe3_RxValid are
                                                                  deasserted. */
@@ -7702,22 +7162,13 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  P0, ignore LFPS reception from the PHY unless both pipe3_Rxelecidle and pipe3_RxValid are
                                                                  deasserted. */
         uint32_t p3exsigp2             : 1;  /**< [ 10: 10](R/W) P3 exit signal in P2. When set to 1, the core always changes the PHY power state to P2,
-                                                                 before attempting a U3 exit handshake.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 before attempting a U3 exit handshake. */
         uint32_t p3p2tranok            : 1;  /**< [ 11: 11](R/W) P3 P2 transitions OK.
                                                                  0 = P0 is always entered as an intermediate state during transitions between P2 and P3, as
                                                                  defined in the PIPE3 specification.
                                                                  1 = the core transitions directly from PHY power state P2 to P3 or from state P3 to P2.
 
-                                                                 According to PIPE3 specification, any direct transition between P3 and P2 is illegal.
-
-                                                                 Internal:
-                                                                 This bit is used only for some non-Synopsys PHYs that cannot do LFPS in P3.
-                                                                 INTERNAL: Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 According to PIPE3 specification, any direct transition between P3 and P2 is illegal. */
         uint32_t lfpsp0algn            : 1;  /**< [ 12: 12](R/W) LFPS P0 align. When set to 1:
                                                                  * Core deasserts LFPS transmission on the clock edge that it requests PHY power state
                                                                  0 when exiting U1, U2, or U3 low power states. Otherwise, LFPS transmission is asserted
@@ -7730,11 +7181,7 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
         uint32_t abortrxdetinu2        : 1;  /**< [ 14: 14](R/W) Abort RX Detect in U2. When set to 1, and the link state is U2, the core aborts receiver
                                                                  detection if it receives U2 exit LFPS from the remote link partner.
 
-                                                                 This bit is for downstream port only.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 This bit is for downstream port only. */
         uint32_t datwidth              : 2;  /**< [ 16: 15](RO) PIPE data width.
                                                                  0x0 = 32 bits.
                                                                  0x1 = 16 bits.
@@ -7742,12 +7189,7 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  0x3 = reserved.
 
                                                                  One clock cycle after reset, these bits receive the value seen on the pipe3_DataBusWidth.
-                                                                 This will always be 0x0.
-
-                                                                 Internal:
-                                                                 The simulation testbench uses the coreConsultant parameter to configure the VIP.
-                                                                 INTERNAL: These bits in the coreConsultant parameter should match your PHY data width and
-                                                                 the pipe3_DataBusWidth port. */
+                                                                 This will always be 0x0. */
         uint32_t suspend_en            : 1;  /**< [ 17: 17](R/W) Suspend USB3.0 SuperSpeed PHY (Suspend_en). When set to 1, and if suspend conditions are
                                                                  valid, the USB 3.0 PHY enters suspend mode. */
         uint32_t delaypxtransenterux   : 1;  /**< [ 18: 18](R/W) Delay PHY power change from P0 to P1/P2/P3 when link state changing from U0 to U1/U2/U3
@@ -7755,63 +7197,38 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  0 = when entering U1/U2/U3, transition to P1/P2/P3 without checking for Pipe3_RxElecIlde
                                                                  and pipe3_RxValid.
                                                                  1 = when entering U1/U2/U3, delay the transition to P1/P2/P3 until the pipe3 signals,
-                                                                 Pipe3_RxElecIlde is 1 and pipe3_RxValid is 0.
-
-                                                                 Internal:
-                                                                 Note: This bit should be set to 1 for Synopsys PHY. It is also used by third-
-                                                                 party SuperSpeed PHY. */
+                                                                 Pipe3_RxElecIlde is 1 and pipe3_RxValid is 0. */
         uint32_t delaypx               : 3;  /**< [ 21: 19](R/W) Delay P1P2P3. Delay P0 to P1/P2/P3 request when entering U1/U2/U3 until (DELAYPX * 8)
                                                                  8B10B error occurs, or Pipe3_RxValid drops to 0.
-                                                                 DELAYPXTRANSENTERUX must reset to 1 to enable this functionality.
-
-                                                                 Internal:
-                                                                 Should always be 0x1 for a Synopsys PHY. */
+                                                                 DELAYPXTRANSENTERUX must reset to 1 to enable this functionality. */
         uint32_t disrxdetu3rxdet       : 1;  /**< [ 22: 22](R/W) Disable receiver detection in U3/Rx.Detect. When set to 1, the core does not do receiver
                                                                  detection in U3 or Rx.Detect state. If STARTRXDETU3RXDET is set to 1 during reset,
                                                                  receiver detection starts manually.
                                                                  This bit is valid for downstream ports only, and this feature must not be enabled for
-                                                                 normal operation.
-
-                                                                 Internal:
-                                                                 If have to use this feature, contact Synopsys. */
+                                                                 normal operation. */
         uint32_t startrxdetu3rxdet     : 1;  /**< [ 23: 23](WO) Start receiver detection in U3/Rx.Detect.
                                                                  If DISRXDETU3RXDET is set to 1 during reset, and the link is in U3 or Rx.Detect state, the
                                                                  core starts receiver detection on rising edge of this bit.
                                                                  This bit is valid for downstream ports only, and this feature must not be enabled for
-                                                                 normal operation.
-
-                                                                 Internal:
-                                                                 If have to use this feature, contact Synopsys. */
+                                                                 normal operation. */
         uint32_t request_p1p2p3        : 1;  /**< [ 24: 24](R/W) Always request P1/P2/P3 for U1/U2/U3.
                                                                  0 = if immediate Ux exit (remotely initiated, or locally initiated) happens, the core does
                                                                  not request P1/P2/P3 power state change.
                                                                  1 = the core always requests PHY power change from P0 to P1/P2/P3 during U0 to U1/U2/U3
-                                                                 transition.
-
-                                                                 Internal:
-                                                                 Note: This bit should be set to 1 for Synopsys PHY. For third-party SuperSpeed
-                                                                 PHY, check with your PHY vendor. */
+                                                                 transition. */
         uint32_t u1u2exitfail_to_recov : 1;  /**< [ 25: 25](R/W) U1U2exit fail to recovery. When set to 1, and U1/U2 LFPS handshake fails, the LTSSM
                                                                  transitions from U1/U2 to recovery instead of SS.inactive.
                                                                  If recovery fails, then the LTSSM can enter SS.Inactive. This is an enhancement only. It
                                                                  prevents interoperability issue if the remote link does not do the proper handshake. */
         uint32_t ping_enchance_en      : 1;  /**< [ 26: 26](R/W) Ping enhancement enable. When set to 1, the downstream-port U1-ping-receive timeout
                                                                  becomes 500 ms instead of 300 ms. Minimum Ping.LFPS receive duration is 8 ns (one mac3_clk
-                                                                 cycle). This field is valid for the downstream port only.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 cycle). This field is valid for the downstream port only. */
         uint32_t ux_exit_in_px         : 1;  /**< [ 27: 27](R/W) UX exit in Px:
                                                                  0 = Core does U1/U2/U3 exit in PHY power state P0 (default behavior).
                                                                  1 = Core does U1/U2/U3 exit in PHY power state P1/P2/P3 respectively.
 
                                                                  This bit is added for SuperSpeed PHY workaround where SuperSpeed PHY injects a glitch on
-                                                                 pipe3_RxElecIdle while receiving Ux exit LFPS, and pipe3_PowerDown change is in progress.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 pipe3_RxElecIdle while receiving Ux exit LFPS, and pipe3_PowerDown change is in progress. */
         uint32_t disrxdetp3            : 1;  /**< [ 28: 28](R/W) Disables receiver detection in P3. If PHY is in P3 and the core needs to perform receiver
                                                                  detection:
                                                                  0 = Core performs receiver detection in P3 (default).
@@ -7884,18 +7301,10 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  1 = Core does U1/U2/U3 exit in PHY power state P1/P2/P3 respectively.
 
                                                                  This bit is added for SuperSpeed PHY workaround where SuperSpeed PHY injects a glitch on
-                                                                 pipe3_RxElecIdle while receiving Ux exit LFPS, and pipe3_PowerDown change is in progress.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 pipe3_RxElecIdle while receiving Ux exit LFPS, and pipe3_PowerDown change is in progress. */
         uint32_t ping_enchance_en      : 1;  /**< [ 26: 26](R/W) Ping enhancement enable. When set to 1, the downstream-port U1-ping-receive timeout
                                                                  becomes 500 ms instead of 300 ms. Minimum Ping.LFPS receive duration is 8 ns (one mac3_clk
-                                                                 cycle). This field is valid for the downstream port only.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 cycle). This field is valid for the downstream port only. */
         uint32_t u1u2exitfail_to_recov : 1;  /**< [ 25: 25](R/W) U1U2exit fail to recovery. When set to 1, and U1/U2 LFPS handshake fails, the LTSSM
                                                                  transitions from U1/U2 to recovery instead of SS.inactive.
                                                                  If recovery fails, then the LTSSM can enter SS.Inactive. This is an enhancement only. It
@@ -7904,43 +7313,26 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  0 = if immediate Ux exit (remotely initiated, or locally initiated) happens, the core does
                                                                  not request P1/P2/P3 power state change.
                                                                  1 = the core always requests PHY power change from P0 to P1/P2/P3 during U0 to U1/U2/U3
-                                                                 transition.
-
-                                                                 Internal:
-                                                                 Note: This bit should be set to 1 for Synopsys PHY. For third-party SuperSpeed
-                                                                 PHY, check with your PHY vendor. */
+                                                                 transition. */
         uint32_t startrxdetu3rxdet     : 1;  /**< [ 23: 23](WO) Start receiver detection in U3/Rx.Detect.
                                                                  If DISRXDETU3RXDET is set to 1 during reset, and the link is in U3 or Rx.Detect state, the
                                                                  core starts receiver detection on rising edge of this bit.
                                                                  This bit is valid for downstream ports only, and this feature must not be enabled for
-                                                                 normal operation.
-
-                                                                 Internal:
-                                                                 If have to use this feature, contact Synopsys. */
+                                                                 normal operation. */
         uint32_t disrxdetu3rxdet       : 1;  /**< [ 22: 22](R/W) Disable receiver detection in U3/Rx.Detect. When set to 1, the core does not do receiver
                                                                  detection in U3 or Rx.Detect state. If STARTRXDETU3RXDET is set to 1 during reset,
                                                                  receiver detection starts manually.
                                                                  This bit is valid for downstream ports only, and this feature must not be enabled for
-                                                                 normal operation.
-
-                                                                 Internal:
-                                                                 If have to use this feature, contact Synopsys. */
+                                                                 normal operation. */
         uint32_t delaypx               : 3;  /**< [ 21: 19](R/W) Delay P1P2P3. Delay P0 to P1/P2/P3 request when entering U1/U2/U3 until (DELAYPX * 8)
                                                                  8B10B error occurs, or Pipe3_RxValid drops to 0.
-                                                                 DELAYPXTRANSENTERUX must reset to 1 to enable this functionality.
-
-                                                                 Internal:
-                                                                 Should always be 0x1 for a Synopsys PHY. */
+                                                                 DELAYPXTRANSENTERUX must reset to 1 to enable this functionality. */
         uint32_t delaypxtransenterux   : 1;  /**< [ 18: 18](R/W) Delay PHY power change from P0 to P1/P2/P3 when link state changing from U0 to U1/U2/U3
                                                                  respectively.
                                                                  0 = when entering U1/U2/U3, transition to P1/P2/P3 without checking for Pipe3_RxElecIlde
                                                                  and pipe3_RxValid.
                                                                  1 = when entering U1/U2/U3, delay the transition to P1/P2/P3 until the pipe3 signals,
-                                                                 Pipe3_RxElecIlde is 1 and pipe3_RxValid is 0.
-
-                                                                 Internal:
-                                                                 Note: This bit should be set to 1 for Synopsys PHY. It is also used by third-
-                                                                 party SuperSpeed PHY. */
+                                                                 Pipe3_RxElecIlde is 1 and pipe3_RxValid is 0. */
         uint32_t suspend_en            : 1;  /**< [ 17: 17](R/W) Suspend USB3.0 SuperSpeed PHY (Suspend_en). When set to 1, and if suspend conditions are
                                                                  valid, the USB 3.0 PHY enters suspend mode. */
         uint32_t datwidth              : 2;  /**< [ 16: 15](RO) PIPE data width.
@@ -7950,20 +7342,11 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  0x3 = reserved.
 
                                                                  One clock cycle after reset, these bits receive the value seen on the pipe3_DataBusWidth.
-                                                                 This will always be 0x0.
-
-                                                                 Internal:
-                                                                 The simulation testbench uses the coreConsultant parameter to configure the VIP.
-                                                                 INTERNAL: These bits in the coreConsultant parameter should match your PHY data width and
-                                                                 the pipe3_DataBusWidth port. */
+                                                                 This will always be 0x0. */
         uint32_t abortrxdetinu2        : 1;  /**< [ 14: 14](R/W) Abort RX Detect in U2. When set to 1, and the link state is U2, the core aborts receiver
                                                                  detection if it receives U2 exit LFPS from the remote link partner.
 
-                                                                 This bit is for downstream port only.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 This bit is for downstream port only. */
         uint32_t skiprxdet             : 1;  /**< [ 13: 13](R/W) Skip RX detect. When set to 1, the core skips RX detection if pipe3_RxElecIdle is low.
                                                                  Skip is defined as waiting for the appropriate timeout, then repeating the operation. */
         uint32_t lfpsp0algn            : 1;  /**< [ 12: 12](R/W) LFPS P0 align. When set to 1:
@@ -7978,18 +7361,9 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  defined in the PIPE3 specification.
                                                                  1 = the core transitions directly from PHY power state P2 to P3 or from state P3 to P2.
 
-                                                                 According to PIPE3 specification, any direct transition between P3 and P2 is illegal.
-
-                                                                 Internal:
-                                                                 This bit is used only for some non-Synopsys PHYs that cannot do LFPS in P3.
-                                                                 INTERNAL: Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 According to PIPE3 specification, any direct transition between P3 and P2 is illegal. */
         uint32_t p3exsigp2             : 1;  /**< [ 10: 10](R/W) P3 exit signal in P2. When set to 1, the core always changes the PHY power state to P2,
-                                                                 before attempting a U3 exit handshake.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 before attempting a U3 exit handshake. */
         uint32_t lfpsfilt              : 1;  /**< [  9:  9](R/W) LFPS filter. When set to 1, filter LFPS reception with pipe3_RxValid in PHY power state
                                                                  P0, ignore LFPS reception from the PHY unless both pipe3_Rxelecidle and pipe3_RxValid are
                                                                  deasserted. */
@@ -8042,22 +7416,13 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  P0, ignore LFPS reception from the PHY unless both pipe3_Rxelecidle and pipe3_RxValid are
                                                                  deasserted. */
         uint32_t p3exsigp2             : 1;  /**< [ 10: 10](R/W) P3 exit signal in P2. When set to 1, the core always changes the PHY power state to P2,
-                                                                 before attempting a U3 exit handshake.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 before attempting a U3 exit handshake. */
         uint32_t p3p2tranok            : 1;  /**< [ 11: 11](R/W) P3 P2 transitions OK.
                                                                  0 = P0 is always entered as an intermediate state during transitions between P2 and P3, as
                                                                  defined in the PIPE3 specification.
                                                                  1 = the core transitions directly from PHY power state P2 to P3 or from state P3 to P2.
 
-                                                                 According to PIPE3 specification, any direct transition between P3 and P2 is illegal.
-
-                                                                 Internal:
-                                                                 This bit is used only for some non-Synopsys PHYs that cannot do LFPS in P3.
-                                                                 INTERNAL: Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 According to PIPE3 specification, any direct transition between P3 and P2 is illegal. */
         uint32_t lfpsp0algn            : 1;  /**< [ 12: 12](R/W) LFPS P0 align. When set to 1:
                                                                  * Core deasserts LFPS transmission on the clock edge that it requests PHY power state
                                                                  0 when exiting U1, U2, or U3 low power states. Otherwise, LFPS transmission is asserted
@@ -8070,11 +7435,7 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
         uint32_t abortrxdetinu2        : 1;  /**< [ 14: 14](R/W) Abort RX Detect in U2. When set to 1, and the link state is U2, the core aborts receiver
                                                                  detection if it receives U2 exit LFPS from the remote link partner.
 
-                                                                 This bit is for downstream port only.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 This bit is for downstream port only. */
         uint32_t datwidth              : 2;  /**< [ 16: 15](RO) PIPE data width.
                                                                  0x0 = 32 bits.
                                                                  0x1 = 16 bits.
@@ -8082,12 +7443,7 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  0x3 = reserved.
 
                                                                  One clock cycle after reset, these bits receive the value seen on the pipe3_DataBusWidth.
-                                                                 This will always be 0x0.
-
-                                                                 Internal:
-                                                                 The simulation testbench uses the coreConsultant parameter to configure the VIP.
-                                                                 INTERNAL: These bits in the coreConsultant parameter should match your PHY data width and
-                                                                 the pipe3_DataBusWidth port. */
+                                                                 This will always be 0x0. */
         uint32_t suspend_en            : 1;  /**< [ 17: 17](R/W) Suspend USB3.0 SuperSpeed PHY (Suspend_en). When set to 1, and if suspend conditions are
                                                                  valid, the USB 3.0 PHY enters suspend mode. */
         uint32_t delaypxtransenterux   : 1;  /**< [ 18: 18](R/W) Delay PHY power change from P0 to P1/P2/P3 when link state changing from U0 to U1/U2/U3
@@ -8095,63 +7451,38 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
                                                                  0 = when entering U1/U2/U3, transition to P1/P2/P3 without checking for Pipe3_RxElecIlde
                                                                  and pipe3_RxValid.
                                                                  1 = when entering U1/U2/U3, delay the transition to P1/P2/P3 until the pipe3 signals,
-                                                                 Pipe3_RxElecIlde is 1 and pipe3_RxValid is 0.
-
-                                                                 Internal:
-                                                                 Note: This bit should be set to 1 for Synopsys PHY. It is also used by third-
-                                                                 party SuperSpeed PHY. */
+                                                                 Pipe3_RxElecIlde is 1 and pipe3_RxValid is 0. */
         uint32_t delaypx               : 3;  /**< [ 21: 19](R/W) Delay P1P2P3. Delay P0 to P1/P2/P3 request when entering U1/U2/U3 until (DELAYPX * 8)
                                                                  8B10B error occurs, or Pipe3_RxValid drops to 0.
-                                                                 DELAYPXTRANSENTERUX must reset to 1 to enable this functionality.
-
-                                                                 Internal:
-                                                                 Should always be 0x1 for a Synopsys PHY. */
+                                                                 DELAYPXTRANSENTERUX must reset to 1 to enable this functionality. */
         uint32_t disrxdetu3rxdet       : 1;  /**< [ 22: 22](R/W) Disable receiver detection in U3/Rx.Detect. When set to 1, the core does not do receiver
                                                                  detection in U3 or Rx.Detect state. If STARTRXDETU3RXDET is set to 1 during reset,
                                                                  receiver detection starts manually.
                                                                  This bit is valid for downstream ports only, and this feature must not be enabled for
-                                                                 normal operation.
-
-                                                                 Internal:
-                                                                 If have to use this feature, contact Synopsys. */
+                                                                 normal operation. */
         uint32_t startrxdetu3rxdet     : 1;  /**< [ 23: 23](WO) Start receiver detection in U3/Rx.Detect.
                                                                  If DISRXDETU3RXDET is set to 1 during reset, and the link is in U3 or Rx.Detect state, the
                                                                  core starts receiver detection on rising edge of this bit.
                                                                  This bit is valid for downstream ports only, and this feature must not be enabled for
-                                                                 normal operation.
-
-                                                                 Internal:
-                                                                 If have to use this feature, contact Synopsys. */
+                                                                 normal operation. */
         uint32_t request_p1p2p3        : 1;  /**< [ 24: 24](R/W) Always request P1/P2/P3 for U1/U2/U3.
                                                                  0 = if immediate Ux exit (remotely initiated, or locally initiated) happens, the core does
                                                                  not request P1/P2/P3 power state change.
                                                                  1 = the core always requests PHY power change from P0 to P1/P2/P3 during U0 to U1/U2/U3
-                                                                 transition.
-
-                                                                 Internal:
-                                                                 Note: This bit should be set to 1 for Synopsys PHY. For third-party SuperSpeed
-                                                                 PHY, check with your PHY vendor. */
+                                                                 transition. */
         uint32_t u1u2exitfail_to_recov : 1;  /**< [ 25: 25](R/W) U1U2exit fail to recovery. When set to 1, and U1/U2 LFPS handshake fails, the LTSSM
                                                                  transitions from U1/U2 to recovery instead of SS.inactive.
                                                                  If recovery fails, then the LTSSM can enter SS.Inactive. This is an enhancement only. It
                                                                  prevents interoperability issue if the remote link does not do the proper handshake. */
         uint32_t ping_enchance_en      : 1;  /**< [ 26: 26](R/W) Ping enhancement enable. When set to 1, the downstream-port U1-ping-receive timeout
                                                                  becomes 500 ms instead of 300 ms. Minimum Ping.LFPS receive duration is 8 ns (one mac3_clk
-                                                                 cycle). This field is valid for the downstream port only.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 cycle). This field is valid for the downstream port only. */
         uint32_t ux_exit_in_px         : 1;  /**< [ 27: 27](R/W) UX exit in Px:
                                                                  0 = Core does U1/U2/U3 exit in PHY power state P0 (default behavior).
                                                                  1 = Core does U1/U2/U3 exit in PHY power state P1/P2/P3 respectively.
 
                                                                  This bit is added for SuperSpeed PHY workaround where SuperSpeed PHY injects a glitch on
-                                                                 pipe3_RxElecIdle while receiving Ux exit LFPS, and pipe3_PowerDown change is in progress.
-
-                                                                 Internal:
-                                                                 Note: This bit is used by third-party SuperSpeed PHY. It should be set to 0 for
-                                                                 Synopsys PHY. */
+                                                                 pipe3_RxElecIdle while receiving Ux exit LFPS, and pipe3_PowerDown change is in progress. */
         uint32_t disrxdetp3            : 1;  /**< [ 28: 28](R/W) Disables receiver detection in P3. If PHY is in P3 and the core needs to perform receiver
                                                                  detection:
                                                                  0 = Core performs receiver detection in P3 (default).
@@ -10048,17 +9379,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value may only be changed during [UPHY_RST].
 
                                                                  If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then [MPLL_MULTPLIER], [REF_CLK_DIV2], and
-                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t mpll_multiplier       : 7;  /**< [ 46: 40](R/W) Multiplies the reference clock to a frequency suitable for intended operating speed.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then the legal values are:
@@ -10076,33 +9397,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                   This value may only be changed during UPHY_RST.
 
                                                                   If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then [MPLL_MULTPLIER], [REF_CLK_DIV2],
-                                                                  and [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                   0x19 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x06, then:
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x64 =  25  MHz on DLMC_REF_CLK*.
-                                                                   0x60 =  26  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  38.4MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  40  MHz on DLMC_REF_CLK*.
-                                                                   0x34 =  48  MHz on DLMC_REF_CLK*.
-                                                                   0x32 =  50  MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  52  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  76.8MHz on DLMC_REF_CLK*.
-                                                                   0x1A =  96  MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  100 MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x1.
-                                                                   0x18 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x0.
-                                                                   0x28 =  125 MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  200 MHz on DLMC_REF_CLK*. */
+                                                                  and [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -10125,18 +9420,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x2 or 0x3, then [MPLL_MULTPLIER], [REF_CLK_DIV2], and
-                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ref_clk_fsel          : 6;  /**< [ 37: 32](R/W) Selects the reference clock frequency for the SuperSpeed and high-speed PLL blocks.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then the legal values are:
@@ -10153,17 +9437,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  When [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, the [MPLL_MULTIPLIER], [REF_CLK_DIV2],
                                                                  and [SSC_REF_CLK_SEL] settings are used to configure the SuperSpeed reference
-                                                                 clock multiplier.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 clock multiplier. */
         uint64_t cmd_flr_en            : 1;  /**< [ 31: 31](R/W) The host controller will stop accepting commands if this bit is set. This bit is
                                                                  for host_mode only.
 
@@ -10181,10 +9455,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
                                                                  This also resets the suspend-clock divider. */
@@ -10216,18 +9487,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If DRD_MODE = HOST, the hclk frequency must be at or above 62.5MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_22_23        : 2;
         uint64_t usb3_port_perm_attach : 1;  /**< [ 21: 21](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
                                                                  only when [UPHY_RST] is asserted. */
@@ -10278,12 +9538,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1, or 0x2 then the reference clock input cannot be
-                                                                 spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements */
+                                                                 spread-spectrum. */
         uint64_t reserved_6_8          : 3;
         uint64_t dma_psn_ign           : 1;  /**< [  5:  5](R/W) Handling of poison indication on DMA read responses.
                                                                  0 = Treat poison data the same way as fault, sending an AXI error to the USB
@@ -10294,33 +9549,19 @@ union cavm_usbdrdx_uctl_ctl
                                                                   0 = Host.
                                                                   1 = Device. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
 #else /* Word 0 - Little Endian */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
         uint64_t drd_mode              : 1;  /**< [  3:  3](R/W) Switches between host or device mode for USBDRD.
                                                                   0 = Host.
@@ -10352,12 +9593,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1, or 0x2 then the reference clock input cannot be
-                                                                 spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements */
+                                                                 spread-spectrum. */
         uint64_t hs_power_en           : 1;  /**< [ 12: 12](R/W) PHY high-speed block power enable.
                                                                  This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
         uint64_t reserved_13           : 1;
@@ -10414,18 +9650,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If DRD_MODE = HOST, the hclk frequency must be at or above 62.5MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_27           : 1;
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
@@ -10439,10 +9664,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
                                                                  enables access to UCTL registers 0x30-0xF8. */
         uint64_t cmd_flr_en            : 1;  /**< [ 31: 31](R/W) The host controller will stop accepting commands if this bit is set. This bit is
@@ -10467,17 +9689,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  When [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, the [MPLL_MULTIPLIER], [REF_CLK_DIV2],
                                                                  and [SSC_REF_CLK_SEL] settings are used to configure the SuperSpeed reference
-                                                                 clock multiplier.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 clock multiplier. */
         uint64_t ref_clk_div2          : 1;  /**< [ 38: 38](R/W) Divides the reference clock by two before feeding it into the REF_CLK_FSEL divider.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1 or 0X2 then the legal values are:
@@ -10493,18 +9705,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x2 or 0x3, then [MPLL_MULTPLIER], [REF_CLK_DIV2], and
-                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -10529,33 +9730,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                   This value may only be changed during UPHY_RST.
 
                                                                   If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then [MPLL_MULTPLIER], [REF_CLK_DIV2],
-                                                                  and [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                   0x19 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x06, then:
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x64 =  25  MHz on DLMC_REF_CLK*.
-                                                                   0x60 =  26  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  38.4MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  40  MHz on DLMC_REF_CLK*.
-                                                                   0x34 =  48  MHz on DLMC_REF_CLK*.
-                                                                   0x32 =  50  MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  52  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  76.8MHz on DLMC_REF_CLK*.
-                                                                   0x1A =  96  MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  100 MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x1.
-                                                                   0x18 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x0.
-                                                                   0x28 =  125 MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  200 MHz on DLMC_REF_CLK*. */
+                                                                  and [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ssc_ref_clk_sel       : 9;  /**< [ 55: 47](R/W) Enables non-standard oscillator frequencies to generate targeted MPLL output rates. Input
                                                                  corresponds to the frequency-synthesis coefficient.
 
@@ -10576,17 +9751,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value may only be changed during [UPHY_RST].
 
                                                                  If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then [MPLL_MULTPLIER], [REF_CLK_DIV2], and
-                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ssc_range             : 3;  /**< [ 58: 56](R/W) Spread-spectrum clock range. Selects the range of spread-spectrum modulation when SSC_EN
                                                                  is asserted and the PHY is spreading the SuperSpeed transmit clocks.
                                                                  Applies a fixed offset to the phase accumulator.
@@ -10708,17 +9873,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value may only be changed during [UPHY_RST].
 
                                                                  If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then [MPLL_MULTPLIER], [REF_CLK_DIV2], and
-                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t mpll_multiplier       : 7;  /**< [ 46: 40](R/W) Multiplies the reference clock to a frequency suitable for intended operating speed.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then the legal values are:
@@ -10736,33 +9891,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                   This value may only be changed during UPHY_RST.
 
                                                                   If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then [MPLL_MULTPLIER], [REF_CLK_DIV2],
-                                                                  and [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                   0x19 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x06, then:
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x64 =  25  MHz on DLMC_REF_CLK*.
-                                                                   0x60 =  26  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  38.4MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  40  MHz on DLMC_REF_CLK*.
-                                                                   0x34 =  48  MHz on DLMC_REF_CLK*.
-                                                                   0x32 =  50  MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  52  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  76.8MHz on DLMC_REF_CLK*.
-                                                                   0x1A =  96  MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  100 MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x1.
-                                                                   0x18 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x0.
-                                                                   0x28 =  125 MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  200 MHz on DLMC_REF_CLK*. */
+                                                                  and [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -10785,18 +9914,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x2 or 0x3, then [MPLL_MULTPLIER], [REF_CLK_DIV2], and
-                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ref_clk_fsel          : 6;  /**< [ 37: 32](R/W) Selects the reference clock frequency for the SuperSpeed and high-speed PLL blocks.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then the legal values are:
@@ -10813,17 +9931,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  When [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, the [MPLL_MULTIPLIER], [REF_CLK_DIV2],
                                                                  and [SSC_REF_CLK_SEL] settings are used to configure the SuperSpeed reference
-                                                                 clock multiplier.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 clock multiplier. */
         uint64_t reserved_31           : 1;
         uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
                                                                  enables access to UCTL registers 0x30-0xF8. */
@@ -10836,10 +9944,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
                                                                  This also resets the suspend-clock divider. */
@@ -10871,18 +9976,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If DRD_MODE = HOST, the hclk frequency must be at or above 62.5MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_22_23        : 2;
         uint64_t usb3_port_perm_attach : 1;  /**< [ 21: 21](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
                                                                  only when [UPHY_RST] is asserted. */
@@ -10933,12 +10027,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1, or 0x2 then the reference clock input cannot be
-                                                                 spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements */
+                                                                 spread-spectrum. */
         uint64_t reserved_5_8          : 4;
         uint64_t csclk_en              : 1;  /**< [  4:  4](R/W) Turns on the USB UCTL interface clock (coprocessor clock). This enables access to UAHC
                                                                  and UCTL registers starting from 0x30. */
@@ -10946,33 +10035,19 @@ union cavm_usbdrdx_uctl_ctl
                                                                   0 = Host.
                                                                   1 = Device. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
 #else /* Word 0 - Little Endian */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
         uint64_t drd_mode              : 1;  /**< [  3:  3](R/W) Switches between host or device mode for USBDRD.
                                                                   0 = Host.
@@ -11001,12 +10076,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1, or 0x2 then the reference clock input cannot be
-                                                                 spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements */
+                                                                 spread-spectrum. */
         uint64_t hs_power_en           : 1;  /**< [ 12: 12](R/W) PHY high-speed block power enable.
                                                                  This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
         uint64_t reserved_13           : 1;
@@ -11063,18 +10133,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If DRD_MODE = HOST, the hclk frequency must be at or above 62.5MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_27           : 1;
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
@@ -11088,10 +10147,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
                                                                  enables access to UCTL registers 0x30-0xF8. */
         uint64_t reserved_31           : 1;
@@ -11111,17 +10167,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  When [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, the [MPLL_MULTIPLIER], [REF_CLK_DIV2],
                                                                  and [SSC_REF_CLK_SEL] settings are used to configure the SuperSpeed reference
-                                                                 clock multiplier.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 clock multiplier. */
         uint64_t ref_clk_div2          : 1;  /**< [ 38: 38](R/W) Divides the reference clock by two before feeding it into the REF_CLK_FSEL divider.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1 or 0X2 then the legal values are:
@@ -11137,18 +10183,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x2 or 0x3, then [MPLL_MULTPLIER], [REF_CLK_DIV2], and
-                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -11173,33 +10208,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                   This value may only be changed during UPHY_RST.
 
                                                                   If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then [MPLL_MULTPLIER], [REF_CLK_DIV2],
-                                                                  and [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                   0x19 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x06, then:
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x64 =  25  MHz on DLMC_REF_CLK*.
-                                                                   0x60 =  26  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  38.4MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  40  MHz on DLMC_REF_CLK*.
-                                                                   0x34 =  48  MHz on DLMC_REF_CLK*.
-                                                                   0x32 =  50  MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  52  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  76.8MHz on DLMC_REF_CLK*.
-                                                                   0x1A =  96  MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  100 MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x1.
-                                                                   0x18 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x0.
-                                                                   0x28 =  125 MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  200 MHz on DLMC_REF_CLK*. */
+                                                                  and [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ssc_ref_clk_sel       : 9;  /**< [ 55: 47](R/W) Enables non-standard oscillator frequencies to generate targeted MPLL output rates. Input
                                                                  corresponds to the frequency-synthesis coefficient.
 
@@ -11220,17 +10229,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value may only be changed during [UPHY_RST].
 
                                                                  If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then [MPLL_MULTPLIER], [REF_CLK_DIV2], and
-                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 [SSC_REF_CLK_SEL] must all be programmed to the same frequency setting. */
         uint64_t ssc_range             : 3;  /**< [ 58: 56](R/W) Spread-spectrum clock range. Selects the range of spread-spectrum modulation when SSC_EN
                                                                  is asserted and the PHY is spreading the SuperSpeed transmit clocks.
                                                                  Applies a fixed offset to the phase accumulator.
@@ -11342,17 +10341,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t mpll_multiplier       : 7;  /**< [ 46: 40](R/W) Multiplies the reference clock to a frequency suitable for intended operating speed.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal values are:
@@ -11361,33 +10350,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                   0x19 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x06, then:
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x64 =  25  MHz on DLMC_REF_CLK*.
-                                                                   0x60 =  26  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  38.4MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  40  MHz on DLMC_REF_CLK*.
-                                                                   0x34 =  48  MHz on DLMC_REF_CLK*.
-                                                                   0x32 =  50  MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  52  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  76.8MHz on DLMC_REF_CLK*.
-                                                                   0x1A =  96  MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  100 MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x1.
-                                                                   0x18 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x0.
-                                                                   0x28 =  125 MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  200 MHz on DLMC_REF_CLK*. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -11399,18 +10362,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal value is 0x0.
 
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 This value can be changed only during UPHY_RST. */
         uint64_t ref_clk_fsel          : 6;  /**< [ 37: 32](R/W) Selects the reference clock frequency for the SuperSpeed and high-speed PLL blocks.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal values are:
@@ -11419,17 +10371,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t reserved_31           : 1;
         uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
                                                                  enables access to UCTL registers 0x30-0xF8. */
@@ -11442,10 +10384,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
                                                                  This also resets the suspend-clock divider. */
@@ -11477,18 +10416,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If [DRD_MODE] = HOST, the HCLK frequency must be at or above 62.5 MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_22_23        : 2;
         uint64_t usb3_port_perm_attach : 1;  /**< [ 21: 21](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
                                                                  only when [UPHY_RST] is asserted. */
@@ -11532,12 +10460,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1, or 0x2 then the reference clock input cannot be
-                                                                 spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements */
+                                                                 spread-spectrum. */
         uint64_t reserved_5_8          : 4;
         uint64_t csclk_en              : 1;  /**< [  4:  4](R/W) Turns on the USB UCTL interface clock (coprocessor clock). This enables access to UAHC
                                                                  and UCTL registers starting from 0x30. */
@@ -11545,33 +10468,19 @@ union cavm_usbdrdx_uctl_ctl
                                                                   0 = Host.
                                                                   1 = Device. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
 #else /* Word 0 - Little Endian */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
         uint64_t drd_mode              : 1;  /**< [  3:  3](R/W) Switches between host or device mode for USBDRD.
                                                                   0 = Host.
@@ -11593,12 +10502,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  This value can be changed only during UPHY_RST.
 
                                                                  If [REF_CLK_SEL] = 0x0, 0x1, or 0x2 then the reference clock input cannot be
-                                                                 spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements */
+                                                                 spread-spectrum. */
         uint64_t hs_power_en           : 1;  /**< [ 12: 12](R/W) PHY high-speed block power enable.
                                                                  This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
         uint64_t reserved_13           : 1;
@@ -11655,18 +10559,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If [DRD_MODE] = HOST, the HCLK frequency must be at or above 62.5 MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_27           : 1;
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
@@ -11680,10 +10573,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
                                                                  enables access to UCTL registers 0x30-0xF8. */
         uint64_t reserved_31           : 1;
@@ -11695,33 +10585,12 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ref_clk_div2          : 1;  /**< [ 38: 38](R/W) Divides the reference clock by two before feeding it into the REF_CLK_FSEL divider.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal value is 0x0.
 
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 This value can be changed only during UPHY_RST. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -11737,33 +10606,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                   0x19 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x06, then:
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x64 =  25  MHz on DLMC_REF_CLK*.
-                                                                   0x60 =  26  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  38.4MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  40  MHz on DLMC_REF_CLK*.
-                                                                   0x34 =  48  MHz on DLMC_REF_CLK*.
-                                                                   0x32 =  50  MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  52  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  76.8MHz on DLMC_REF_CLK*.
-                                                                   0x1A =  96  MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  100 MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x1.
-                                                                   0x18 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x0.
-                                                                   0x28 =  125 MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  200 MHz on DLMC_REF_CLK*. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ssc_ref_clk_sel       : 9;  /**< [ 55: 47](R/W) Enables non-standard oscillator frequencies to generate targeted MPLL output rates. Input
                                                                  corresponds to the frequency-synthesis coefficient.
 
@@ -11776,17 +10619,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ssc_range             : 3;  /**< [ 58: 56](R/W) Spread-spectrum clock range. Selects the range of spread-spectrum modulation when SSC_EN
                                                                  is asserted and the PHY is spreading the SuperSpeed transmit clocks.
                                                                  Applies a fixed offset to the phase accumulator.
@@ -11869,17 +10702,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t mpll_multiplier       : 7;  /**< [ 46: 40](R/W) Multiplies the reference clock to a frequency suitable for intended operating speed.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal values are:
@@ -11888,33 +10711,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                   0x19 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x06, then:
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x64 =  25  MHz on DLMC_REF_CLK*.
-                                                                   0x60 =  26  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  38.4MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  40  MHz on DLMC_REF_CLK*.
-                                                                   0x34 =  48  MHz on DLMC_REF_CLK*.
-                                                                   0x32 =  50  MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  52  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  76.8MHz on DLMC_REF_CLK*.
-                                                                   0x1A =  96  MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  100 MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x1.
-                                                                   0x18 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x0.
-                                                                   0x28 =  125 MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  200 MHz on DLMC_REF_CLK*. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -11926,18 +10723,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal value is 0x0.
 
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 This value can be changed only during UPHY_RST. */
         uint64_t ref_clk_fsel          : 6;  /**< [ 37: 32](R/W) Selects the reference clock frequency for the SuperSpeed and high-speed PLL blocks.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal values are:
@@ -11946,17 +10732,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t cmd_flr_en            : 1;  /**< [ 31: 31](R/W) The host controller will stop accepting commands if this bit is set. This bit is
                                                                  for host_mode only.
 
@@ -11974,10 +10750,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
                                                                  This also resets the suspend-clock divider. */
@@ -12009,18 +10782,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If [DRD_MODE] = HOST, the HCLK frequency must be at or above 62.5 MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_22_23        : 2;
         uint64_t usb3_port_perm_attach : 1;  /**< [ 21: 21](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
                                                                  only when [UPHY_RST] is asserted. */
@@ -12063,15 +10825,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  This value can be changed only during UPHY_RST.
 
-                                                                 The reference clock selected cannot be spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements
-
-                                                                 0x1 was for clock sources for both PLLs come from USBDRD PADs; not connected in
-                                                                 CNXXXX. */
+                                                                 The reference clock selected cannot be spread-spectrum. */
         uint64_t reserved_6_8          : 3;
         uint64_t dma_psn_ign           : 1;  /**< [  5:  5](R/W) Handling of poison indication on DMA read responses.
                                                                  0 = Treat poison data the same way as fault, sending an AXI error to the USB
@@ -12085,33 +10839,19 @@ union cavm_usbdrdx_uctl_ctl
                                                                   0 = Host.
                                                                   1 = Device. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
 #else /* Word 0 - Little Endian */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
         uint64_t drd_mode              : 1;  /**< [  3:  3](R/W) Switches between host or device mode for USBDRD.
                                                                   0 = Host.
@@ -12138,15 +10878,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  This value can be changed only during UPHY_RST.
 
-                                                                 The reference clock selected cannot be spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements
-
-                                                                 0x1 was for clock sources for both PLLs come from USBDRD PADs; not connected in
-                                                                 CNXXXX. */
+                                                                 The reference clock selected cannot be spread-spectrum. */
         uint64_t hs_power_en           : 1;  /**< [ 12: 12](R/W) PHY high-speed block power enable.
                                                                  This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
         uint64_t reserved_13           : 1;
@@ -12203,18 +10935,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If [DRD_MODE] = HOST, the HCLK frequency must be at or above 62.5 MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_27           : 1;
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
@@ -12228,10 +10949,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
                                                                  enables access to UCTL registers 0x30-0xF8. */
         uint64_t cmd_flr_en            : 1;  /**< [ 31: 31](R/W) The host controller will stop accepting commands if this bit is set. This bit is
@@ -12248,33 +10966,12 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ref_clk_div2          : 1;  /**< [ 38: 38](R/W) Divides the reference clock by two before feeding it into the REF_CLK_FSEL divider.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal value is 0x0.
 
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 This value can be changed only during UPHY_RST. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -12290,33 +10987,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                   0x19 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x06, then:
-                                                                   0x02 =  19.2MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x68 =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x64 =  25  MHz on DLMC_REF_CLK*.
-                                                                   0x60 =  26  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  38.4MHz on DLMC_REF_CLK*.
-                                                                   0x7D =  40  MHz on DLMC_REF_CLK*.
-                                                                   0x34 =  48  MHz on DLMC_REF_CLK*.
-                                                                   0x32 =  50  MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  52  MHz on DLMC_REF_CLK*.
-                                                                   0x41 =  76.8MHz on DLMC_REF_CLK*.
-                                                                   0x1A =  96  MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  100 MHz on DLMC_REF_CLK*.
-                                                                   0x30 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x1.
-                                                                   0x18 =  104 MHz on DLMC_REF_CLK* if [REF_CLK_DIV2] = 0x0.
-                                                                   0x28 =  125 MHz on DLMC_REF_CLK*.
-                                                                   0x19 =  200 MHz on DLMC_REF_CLK*. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ssc_ref_clk_sel       : 9;  /**< [ 55: 47](R/W) Enables non-standard oscillator frequencies to generate targeted MPLL output rates. Input
                                                                  corresponds to the frequency-synthesis coefficient.
 
@@ -12329,17 +11000,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ssc_range             : 3;  /**< [ 58: 56](R/W) Spread-spectrum clock range. Selects the range of spread-spectrum modulation when SSC_EN
                                                                  is asserted and the PHY is spreading the SuperSpeed transmit clocks.
                                                                  Applies a fixed offset to the phase accumulator.
@@ -12398,17 +11059,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t mpll_multiplier       : 7;  /**< [ 46: 40](R/W) Multiplies the reference clock to a frequency suitable for intended operating speed.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal values are:
@@ -12417,21 +11068,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 0x00 =  19.2 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  20 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  24 MHz on DLMC_REF_CLK*.
-                                                                 0x64 =  25 MHz on DLMC_REF_CLK*.
-                                                                 0x60 =  26 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  38.4 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  40 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  48 MHz on DLMC_REF_CLK*.
-                                                                 0x64 =  50 MHz on DLMC_REF_CLK*.
-                                                                 0x60 =  52 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  100 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  200 MHz on DLMC_REF_CLK*. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -12443,18 +11080,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal value is 0x0.
 
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 This value can be changed only during UPHY_RST. */
         uint64_t ref_clk_fsel          : 6;  /**< [ 37: 32](R/W) Selects the reference clock frequency for the SuperSpeed and high-speed PLL blocks.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal values are:
@@ -12463,17 +11089,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t cmd_flr_en            : 1;  /**< [ 31: 31](R/W) The host controller will stop accepting commands if this bit is set. This bit is
                                                                  for host_mode only.
 
@@ -12491,10 +11107,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
                                                                  This also resets the suspend-clock divider. */
@@ -12526,18 +11139,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If [DRD_MODE] = HOST, the HCLK frequency must be at or above 62.5 MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_22_23        : 2;
         uint64_t usb3_port_perm_attach : 1;  /**< [ 21: 21](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
                                                                  only when [UPHY_RST] is asserted. */
@@ -12580,15 +11182,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  This value can be changed only during UPHY_RST.
 
-                                                                 The reference clock selected cannot be spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements
-
-                                                                 0x1 was for clock sources for both PLLs come from USBDRD PADs; not connected in
-                                                                 CNXXXX. */
+                                                                 The reference clock selected cannot be spread-spectrum. */
         uint64_t reserved_6_8          : 3;
         uint64_t dma_psn_ign           : 1;  /**< [  5:  5](R/W) Handling of poison indication on DMA read responses.
                                                                  0 = Treat poison data the same way as fault, sending an AXI error to the USB
@@ -12602,33 +11196,19 @@ union cavm_usbdrdx_uctl_ctl
                                                                   0 = Host.
                                                                   1 = Device. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
 #else /* Word 0 - Little Endian */
         uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
                                                                  Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
                                                                  Does not reset UCTL registers 0x0-0x28.
                                                                  UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
+                                                                 active and [UCTL_RST] is deasserted. */
+        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high. */
         uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
         uint64_t drd_mode              : 1;  /**< [  3:  3](R/W) Switches between host or device mode for USBDRD.
                                                                   0 = Host.
@@ -12655,15 +11235,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  This value can be changed only during UPHY_RST.
 
-                                                                 The reference clock selected cannot be spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements
-
-                                                                 0x1 was for clock sources for both PLLs come from USBDRD PADs; not connected in
-                                                                 CNXXXX. */
+                                                                 The reference clock selected cannot be spread-spectrum. */
         uint64_t hs_power_en           : 1;  /**< [ 12: 12](R/W) PHY high-speed block power enable.
                                                                  This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
         uint64_t reserved_13           : 1;
@@ -12720,18 +11292,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  If [DRD_MODE] = HOST, the HCLK frequency must be at or above 62.5 MHz
                                                                  for any USB2 operation.
 
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
+                                                                 This field can be changed only when [H_CLKDIV_RST] = 1. */
         uint64_t reserved_27           : 1;
         uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
                                                                  being reset.
@@ -12745,10 +11306,7 @@ union cavm_usbdrdx_uctl_ctl
                                                                  unless H_CLKDIV_EN is disabled.
 
                                                                  The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
+                                                                 running. */
         uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
                                                                  enables access to UCTL registers 0x30-0xF8. */
         uint64_t cmd_flr_en            : 1;  /**< [ 31: 31](R/W) The host controller will stop accepting commands if this bit is set. This bit is
@@ -12765,33 +11323,12 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ref_clk_div2          : 1;  /**< [ 38: 38](R/W) Divides the reference clock by two before feeding it into the REF_CLK_FSEL divider.
 
                                                                  As [REF_CLK_SEL] = 0x0, the legal value is 0x0.
 
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
+                                                                 This value can be changed only during UPHY_RST. */
         uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
                                                                  enabled since this output clock is used to drive the UAHC suspend-mode clock during
                                                                  low-power states.
@@ -12807,21 +11344,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 0x00 =  19.2 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  20 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  24 MHz on DLMC_REF_CLK*.
-                                                                 0x64 =  25 MHz on DLMC_REF_CLK*.
-                                                                 0x60 =  26 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  38.4 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  40 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  48 MHz on DLMC_REF_CLK*.
-                                                                 0x64 =  50 MHz on DLMC_REF_CLK*.
-                                                                 0x60 =  52 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  100 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  200 MHz on DLMC_REF_CLK*. */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ssc_ref_clk_sel       : 9;  /**< [ 55: 47](R/W) Enables non-standard oscillator frequencies to generate targeted MPLL output rates. Input
                                                                  corresponds to the frequency-synthesis coefficient.
 
@@ -12834,17 +11357,7 @@ union cavm_usbdrdx_uctl_ctl
 
                                                                  All other values are reserved.
 
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
+                                                                 This value may only be changed during [UPHY_RST]. */
         uint64_t ssc_range             : 3;  /**< [ 58: 56](R/W) Spread-spectrum clock range. Selects the range of spread-spectrum modulation when SSC_EN
                                                                  is asserted and the PHY is spreading the SuperSpeed transmit clocks.
                                                                  Applies a fixed offset to the phase accumulator.
@@ -12867,516 +11380,7 @@ union cavm_usbdrdx_uctl_ctl
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    struct cavm_usbdrdx_uctl_ctl_cn98xx
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_60_63        : 4;
-        uint64_t ssc_en                : 1;  /**< [ 59: 59](R/W) Spread-spectrum clock enable. Enables spread-spectrum clock production in the SuperSpeed
-                                                                 function. If the input reference clock for the SuperSpeed PLL is already spread-spectrum,
-                                                                 then do not enable this feature. The clocks sourced to the SuperSpeed function must have
-                                                                 spread-spectrum to be compliant with the USB specification.
-
-                                                                 This value may only be changed during [UPHY_RST]. */
-        uint64_t ssc_range             : 3;  /**< [ 58: 56](R/W) Spread-spectrum clock range. Selects the range of spread-spectrum modulation when SSC_EN
-                                                                 is asserted and the PHY is spreading the SuperSpeed transmit clocks.
-                                                                 Applies a fixed offset to the phase accumulator.
-                                                                 0x0 = -4980 ppm downspread of clock.
-                                                                 0x1 = -4492 ppm.
-                                                                 0x2 = -4003 ppm.
-                                                                 0x3-0x7 = reserved.
-
-                                                                 All of these settings are within the USB 3.0 specification. The amount of EMI emission
-                                                                 reduction might decrease as the [SSC_RANGE] increases; therefore, the [SSC_RANGE] settings
-                                                                 can
-                                                                 be registered to enable the amount of spreading to be adjusted on a per-application basis.
-                                                                 This value can be changed only during UPHY_RST. */
-        uint64_t ssc_ref_clk_sel       : 9;  /**< [ 55: 47](R/W) Enables non-standard oscillator frequencies to generate targeted MPLL output rates. Input
-                                                                 corresponds to the frequency-synthesis coefficient.
-
-                                                                 [55:53]: modulus - 1,
-                                                                 [52:47]: 2's complement push amount.
-
-                                                                 A value of 0x0 means this feature is disabled.
-
-                                                                 The legal values are 0x0.
-
-                                                                 All other values are reserved.
-
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
-        uint64_t mpll_multiplier       : 7;  /**< [ 46: 40](R/W) Multiplies the reference clock to a frequency suitable for intended operating speed.
-
-                                                                 As [REF_CLK_SEL] = 0x0, the legal values are:
-
-                                                                   0x00 = 100  MHz on DLMC_REF_CLK*.
-
-                                                                 All other values are reserved.
-
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 0x00 =  19.2 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  20 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  24 MHz on DLMC_REF_CLK*.
-                                                                 0x64 =  25 MHz on DLMC_REF_CLK*.
-                                                                 0x60 =  26 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  38.4 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  40 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  48 MHz on DLMC_REF_CLK*.
-                                                                 0x64 =  50 MHz on DLMC_REF_CLK*.
-                                                                 0x60 =  52 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  100 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  200 MHz on DLMC_REF_CLK*. */
-        uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
-                                                                 enabled since this output clock is used to drive the UAHC suspend-mode clock during
-                                                                 low-power states.
-
-                                                                 This value can be changed only during UPHY_RST or during low-power states.
-                                                                 The reference clock must be running and stable before [UPHY_RST] is deasserted and before
-                                                                 [REF_SSP_EN] is asserted. */
-        uint64_t ref_clk_div2          : 1;  /**< [ 38: 38](R/W) Divides the reference clock by two before feeding it into the REF_CLK_FSEL divider.
-
-                                                                 As [REF_CLK_SEL] = 0x0, the legal value is 0x0.
-
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
-        uint64_t ref_clk_fsel          : 6;  /**< [ 37: 32](R/W) Selects the reference clock frequency for the SuperSpeed and high-speed PLL blocks.
-
-                                                                 As [REF_CLK_SEL] = 0x0, the legal values are:
-
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-
-                                                                 All other values are reserved.
-
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
-        uint64_t cmd_flr_en            : 1;  /**< [ 31: 31](R/W) The host controller will stop accepting commands if this bit is set. This bit is
-                                                                 for host_mode only.
-
-                                                                 In normal FLR, this bit should be set to 0. If software wants the command to
-                                                                 finish before FLR, write this bit to 1 and poll USBDRD()_UAHC_USBSTS[HCH] to
-                                                                 make sure the command is finished before disabling USBDRD's PCCPF_XXX_CMD[ME]. */
-        uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
-                                                                 enables access to UCTL registers 0x30-0xF8. */
-        uint64_t h_clk_byp_sel         : 1;  /**< [ 29: 29](R/W) Select the bypass input to the controller-clock divider.
-                                                                 0 = Use the divided coprocessor clock from the H_CLKDIV divider.
-                                                                 1 = Use the bypass clock from the GPIO pins.
-
-                                                                 This signal is just a multiplexer-select signal; it does not enable the controller clock.
-                                                                 You must still set H_CLKDIV_EN separately. [H_CLK_BYP_SEL] select should not be changed
-                                                                 unless H_CLKDIV_EN is disabled.
-
-                                                                 The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
-        uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
-                                                                 being reset.
-                                                                 This also resets the suspend-clock divider. */
-        uint64_t reserved_27           : 1;
-        uint64_t h_clkdiv_sel          : 3;  /**< [ 26: 24](R/W) Controller clock-frequency-divider select. The controller-clock frequency is the
-                                                                 coprocessor-clock frequency divided by [H_CLKDIV_SEL] and must be at or below 300 MHz.
-                                                                 The divider values are the following:
-                                                                 0x0 = divide by 1.
-                                                                 0x1 = divide by 2.
-                                                                 0x2 = divide by 4.
-                                                                 0x3 = divide by 6.
-                                                                 0x4 = divide by 8.
-                                                                 0x5 = divide by 16.
-                                                                 0x6 = divide by 24.
-                                                                 0x7 = divide by 32.
-
-                                                                 The HCLK frequency must be at or below 300 MHz.
-                                                                 The HCLK frequency must be at or above 150 MHz for full-rate USB3
-                                                                 operation.
-                                                                 The HCLK frequency must be at or above 125 MHz for any USB3
-                                                                 functionality.
-
-                                                                 If [DRD_MODE] = DEVICE, the HCLK frequency must be at or above 125 MHz for
-                                                                 correct USB2 functionality.
-
-                                                                 If [DRD_MODE] = HOST, the HCLK frequency must be at or above 90 MHz
-                                                                 for full-rate USB2 operation.
-
-                                                                 If [DRD_MODE] = HOST, the HCLK frequency must be at or above 62.5 MHz
-                                                                 for any USB2 operation.
-
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
-        uint64_t reserved_22_23        : 2;
-        uint64_t usb3_port_perm_attach : 1;  /**< [ 21: 21](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
-                                                                 only when [UPHY_RST] is asserted. */
-        uint64_t usb2_port_perm_attach : 1;  /**< [ 20: 20](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
-                                                                 only when [UPHY_RST] is asserted. */
-        uint64_t reserved_19           : 1;
-        uint64_t usb3_port_disable     : 1;  /**< [ 18: 18](R/W) Disables the USB3 (SuperSpeed) portion of this PHY. When set to 1, this signal stops
-                                                                 reporting connect/disconnect events on the port and keeps the port in disabled state. This
-                                                                 could be used for security reasons where hardware can disable a port regardless of whether
-                                                                 xHCI driver enables a port or not.
-                                                                 USBDRD()_UAHC_HCSPARAMS1[MAXPORTS] is not affected by this signal.
-
-                                                                 This is a strap signal; it should be modified only when [UPHY_RST] is asserted. */
-        uint64_t reserved_17           : 1;
-        uint64_t usb2_port_disable     : 1;  /**< [ 16: 16](R/W) Disables USB2 (high-speed/full-speed/low-speed) portion of this PHY. When set to 1, this
-                                                                 signal stops reporting connect/disconnect events on the port and keeps the port in
-                                                                 disabled state. This could be used for security reasons where hardware can disable a port
-                                                                 regardless of whether xHCI driver enables a port or not.
-                                                                 USBDRD()_UAHC_HCSPARAMS1[MAXPORTS] is not affected by this signal.
-
-                                                                 This is a strap signal; it should only be modified when [UPHY_RST] is asserted.
-                                                                 If Port0 is required to be disabled, ensure that the utmi_clk[0] is running at the normal
-                                                                 speed. Also, all the enabled USB2.0 ports should have the same clock frequency as Port0. */
-        uint64_t reserved_15           : 1;
-        uint64_t ss_power_en           : 1;  /**< [ 14: 14](R/W) PHY SuperSpeed block power enable.
-                                                                 This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
-        uint64_t reserved_13           : 1;
-        uint64_t hs_power_en           : 1;  /**< [ 12: 12](R/W) PHY high-speed block power enable.
-                                                                 This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
-        uint64_t ref_clk_sel           : 3;  /**< [ 11:  9](R/W) Reference clock select. Choose reference-clock source for the SuperSpeed and high-speed
-                                                                 PLL blocks.
-                                                                 0x0 = Reference clock sources for both PLLs come from GSERC_REF_CLK0_P/N.
-                                                                 0x1 = Reserved.
-                                                                 0x2 = Reserved.
-                                                                 0x3 = Reserved.
-                                                                 0x4 = Reserved.
-                                                                 0x5 = Reserved.
-                                                                 0x6 = Reserved.
-                                                                 0x7 = Reserved.
-
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 The reference clock selected cannot be spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements
-
-                                                                 0x1 was for clock sources for both PLLs come from USBDRD PADs; not connected in
-                                                                 CNXXXX. */
-        uint64_t reserved_6_8          : 3;
-        uint64_t dma_psn_ign           : 1;  /**< [  5:  5](R/W) Handling of poison indication on DMA read responses.
-                                                                 0 = Treat poison data the same way as fault, sending an AXI error to the USB
-                                                                 controller.
-                                                                 1 = Ignore poison and proceed with the transaction as if no problems. */
-        uint64_t csclk_force           : 1;  /**< [  4:  4](R/W) Force conditional clock and NCBI conditional clock to be running. For diagnostic
-                                                                 use only.
-                                                                 0 = No override.
-                                                                 1 = Override the enable of conditional clock to force it running.
-
-                                                                 Internal:
-                                                                 Clock gating should not be used for usbdrd's NCB interface in CN98XX. */
-        uint64_t drd_mode              : 1;  /**< [  3:  3](R/W) Switches between host or device mode for USBDRD.
-                                                                  0 = Host.
-                                                                  1 = Device. */
-        uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
-        uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
-                                                                 Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
-                                                                 Does not reset UCTL registers 0x0-0x28.
-                                                                 UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
-#else /* Word 0 - Little Endian */
-        uint64_t uctl_rst              : 1;  /**< [  0:  0](R/W) Software reset; resets UCTL; active-high.
-                                                                 Resets UAHC DMA and register shims. Resets UCTL registers 0x30-0xF8.
-                                                                 Does not reset UCTL registers 0x0-0x28.
-                                                                 UCTL registers starting from 0x30 can be accessed only after the controller clock is
-                                                                 active and [UCTL_RST] is deasserted.
-
-                                                                 Internal:
-                                                                 Note that soft-resetting the UCTL while it is active may cause violations of
-                                                                 RSL, NCB, and CIB protocols. */
-        uint64_t uahc_rst              : 1;  /**< [  1:  1](R/W) Software reset; resets UAHC; active-high.
-                                                                 Internal:
-                                                                 Note that soft-resetting the UAHC while it is active may cause violations of RSL
-                                                                 or NCB protocols. */
-        uint64_t uphy_rst              : 1;  /**< [  2:  2](R/W) PHY reset; resets UPHY; active-high. */
-        uint64_t drd_mode              : 1;  /**< [  3:  3](R/W) Switches between host or device mode for USBDRD.
-                                                                  0 = Host.
-                                                                  1 = Device. */
-        uint64_t csclk_force           : 1;  /**< [  4:  4](R/W) Force conditional clock and NCBI conditional clock to be running. For diagnostic
-                                                                 use only.
-                                                                 0 = No override.
-                                                                 1 = Override the enable of conditional clock to force it running.
-
-                                                                 Internal:
-                                                                 Clock gating should not be used for usbdrd's NCB interface in CN98XX. */
-        uint64_t dma_psn_ign           : 1;  /**< [  5:  5](R/W) Handling of poison indication on DMA read responses.
-                                                                 0 = Treat poison data the same way as fault, sending an AXI error to the USB
-                                                                 controller.
-                                                                 1 = Ignore poison and proceed with the transaction as if no problems. */
-        uint64_t reserved_6_8          : 3;
-        uint64_t ref_clk_sel           : 3;  /**< [ 11:  9](R/W) Reference clock select. Choose reference-clock source for the SuperSpeed and high-speed
-                                                                 PLL blocks.
-                                                                 0x0 = Reference clock sources for both PLLs come from GSERC_REF_CLK0_P/N.
-                                                                 0x1 = Reserved.
-                                                                 0x2 = Reserved.
-                                                                 0x3 = Reserved.
-                                                                 0x4 = Reserved.
-                                                                 0x5 = Reserved.
-                                                                 0x6 = Reserved.
-                                                                 0x7 = Reserved.
-
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 The reference clock selected cannot be spread-spectrum.
-
-                                                                 Internal:
-                                                                 For the 0x6 selection, reference clock source for SuperSpeed PLL is from the USB
-                                                                 pads, reference clock source for high-speed PLL is PLL_REF_CLK. But in CNXXXX,
-                                                                 PLL_REF_CLK cannot be routed to USB without violating jitter requirements
-
-                                                                 0x1 was for clock sources for both PLLs come from USBDRD PADs; not connected in
-                                                                 CNXXXX. */
-        uint64_t hs_power_en           : 1;  /**< [ 12: 12](R/W) PHY high-speed block power enable.
-                                                                 This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
-        uint64_t reserved_13           : 1;
-        uint64_t ss_power_en           : 1;  /**< [ 14: 14](R/W) PHY SuperSpeed block power enable.
-                                                                 This is a strap signal; it should only be modified when [UPHY_RST] is asserted. */
-        uint64_t reserved_15           : 1;
-        uint64_t usb2_port_disable     : 1;  /**< [ 16: 16](R/W) Disables USB2 (high-speed/full-speed/low-speed) portion of this PHY. When set to 1, this
-                                                                 signal stops reporting connect/disconnect events on the port and keeps the port in
-                                                                 disabled state. This could be used for security reasons where hardware can disable a port
-                                                                 regardless of whether xHCI driver enables a port or not.
-                                                                 USBDRD()_UAHC_HCSPARAMS1[MAXPORTS] is not affected by this signal.
-
-                                                                 This is a strap signal; it should only be modified when [UPHY_RST] is asserted.
-                                                                 If Port0 is required to be disabled, ensure that the utmi_clk[0] is running at the normal
-                                                                 speed. Also, all the enabled USB2.0 ports should have the same clock frequency as Port0. */
-        uint64_t reserved_17           : 1;
-        uint64_t usb3_port_disable     : 1;  /**< [ 18: 18](R/W) Disables the USB3 (SuperSpeed) portion of this PHY. When set to 1, this signal stops
-                                                                 reporting connect/disconnect events on the port and keeps the port in disabled state. This
-                                                                 could be used for security reasons where hardware can disable a port regardless of whether
-                                                                 xHCI driver enables a port or not.
-                                                                 USBDRD()_UAHC_HCSPARAMS1[MAXPORTS] is not affected by this signal.
-
-                                                                 This is a strap signal; it should be modified only when [UPHY_RST] is asserted. */
-        uint64_t reserved_19           : 1;
-        uint64_t usb2_port_perm_attach : 1;  /**< [ 20: 20](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
-                                                                 only when [UPHY_RST] is asserted. */
-        uint64_t usb3_port_perm_attach : 1;  /**< [ 21: 21](R/W) Indicates this port is permanently attached. This is a strap signal; it should be modified
-                                                                 only when [UPHY_RST] is asserted. */
-        uint64_t reserved_22_23        : 2;
-        uint64_t h_clkdiv_sel          : 3;  /**< [ 26: 24](R/W) Controller clock-frequency-divider select. The controller-clock frequency is the
-                                                                 coprocessor-clock frequency divided by [H_CLKDIV_SEL] and must be at or below 300 MHz.
-                                                                 The divider values are the following:
-                                                                 0x0 = divide by 1.
-                                                                 0x1 = divide by 2.
-                                                                 0x2 = divide by 4.
-                                                                 0x3 = divide by 6.
-                                                                 0x4 = divide by 8.
-                                                                 0x5 = divide by 16.
-                                                                 0x6 = divide by 24.
-                                                                 0x7 = divide by 32.
-
-                                                                 The HCLK frequency must be at or below 300 MHz.
-                                                                 The HCLK frequency must be at or above 150 MHz for full-rate USB3
-                                                                 operation.
-                                                                 The HCLK frequency must be at or above 125 MHz for any USB3
-                                                                 functionality.
-
-                                                                 If [DRD_MODE] = DEVICE, the HCLK frequency must be at or above 125 MHz for
-                                                                 correct USB2 functionality.
-
-                                                                 If [DRD_MODE] = HOST, the HCLK frequency must be at or above 90 MHz
-                                                                 for full-rate USB2 operation.
-
-                                                                 If [DRD_MODE] = HOST, the HCLK frequency must be at or above 62.5 MHz
-                                                                 for any USB2 operation.
-
-                                                                 This field can be changed only when [H_CLKDIV_RST] = 1.
-
-                                                                 Internal:
-                                                                 150MHz is from the maximum of:
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 1, col 12.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-17, row 7, col 9.
-                                                                             Synopsys DWC_usb3 Databook v2.80a, table A-16, row 7, col 9.
-                                                                           DEVICE\>125MHz is from Synopsys DWC_usb3 Databook v2.80a, section A.12.4.
-                                                                           HOST2\>62.5MHz in HOST mode is from Synopsys DWC_usb3 Databook v2.80a,
-                                                                             section A.12.5, 3rd bullet in Note on page 894.
-                                                                           HOST2\>90MHz was arrived at from some math: 62.5MHz +
-                                                                             (diff between row 1 and 2, col 12 of table A-16). */
-        uint64_t reserved_27           : 1;
-        uint64_t h_clkdiv_rst          : 1;  /**< [ 28: 28](R/W) Controller clock divider reset. Divided clocks are not generated while the divider is
-                                                                 being reset.
-                                                                 This also resets the suspend-clock divider. */
-        uint64_t h_clk_byp_sel         : 1;  /**< [ 29: 29](R/W) Select the bypass input to the controller-clock divider.
-                                                                 0 = Use the divided coprocessor clock from the H_CLKDIV divider.
-                                                                 1 = Use the bypass clock from the GPIO pins.
-
-                                                                 This signal is just a multiplexer-select signal; it does not enable the controller clock.
-                                                                 You must still set H_CLKDIV_EN separately. [H_CLK_BYP_SEL] select should not be changed
-                                                                 unless H_CLKDIV_EN is disabled.
-
-                                                                 The bypass clock can be selected and running even if the controller-clock dividers are not
-                                                                 running.
-
-                                                                 Internal:
-                                                                 Generally bypass is only used for scan purposes. */
-        uint64_t h_clk_en              : 1;  /**< [ 30: 30](R/W) Controller-clock enable. When set to 1, the controller clock is generated. This also
-                                                                 enables access to UCTL registers 0x30-0xF8. */
-        uint64_t cmd_flr_en            : 1;  /**< [ 31: 31](R/W) The host controller will stop accepting commands if this bit is set. This bit is
-                                                                 for host_mode only.
-
-                                                                 In normal FLR, this bit should be set to 0. If software wants the command to
-                                                                 finish before FLR, write this bit to 1 and poll USBDRD()_UAHC_USBSTS[HCH] to
-                                                                 make sure the command is finished before disabling USBDRD's PCCPF_XXX_CMD[ME]. */
-        uint64_t ref_clk_fsel          : 6;  /**< [ 37: 32](R/W) Selects the reference clock frequency for the SuperSpeed and high-speed PLL blocks.
-
-                                                                 As [REF_CLK_SEL] = 0x0, the legal values are:
-
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-
-                                                                 All other values are reserved.
-
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   0x27 = 100  MHz on DLMC_REF_CLK*.
-                                                                   0x2A =  24  MHz on DLMC_REF_CLK*.
-                                                                   0x31 =  20  MHz on DLMC_REF_CLK*.
-                                                                   0x38 =  19.2MHz on DLMC_REF_CLK*.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6 then:
-                                                                   0x07 is the only legal value. */
-        uint64_t ref_clk_div2          : 1;  /**< [ 38: 38](R/W) Divides the reference clock by two before feeding it into the REF_CLK_FSEL divider.
-
-                                                                 As [REF_CLK_SEL] = 0x0, the legal value is 0x0.
-
-                                                                 This value can be changed only during UPHY_RST.
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2 then:
-                                                                   all DLMC_REF_CLK* frequencies: 0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                   0x1: if DLMC_REF_CLK* is 125MHz.
-                                                                   0x1: if DLMC_REF_CLK* is 40MHz, 76.8MHz, or 200MHz.
-                                                                   0x0, 0x1 if DLMC_REF_CLK* is 104MHz (depending on [MPLL_MULTIPLIER]).
-                                                                   0x0: if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                   [MPLL_MULTIPLIER] description). */
-        uint64_t ref_ssp_en            : 1;  /**< [ 39: 39](R/W) Enables reference clock to the prescaler for SuperSpeed function. This should always be
-                                                                 enabled since this output clock is used to drive the UAHC suspend-mode clock during
-                                                                 low-power states.
-
-                                                                 This value can be changed only during UPHY_RST or during low-power states.
-                                                                 The reference clock must be running and stable before [UPHY_RST] is deasserted and before
-                                                                 [REF_SSP_EN] is asserted. */
-        uint64_t mpll_multiplier       : 7;  /**< [ 46: 40](R/W) Multiplies the reference clock to a frequency suitable for intended operating speed.
-
-                                                                 As [REF_CLK_SEL] = 0x0, the legal values are:
-
-                                                                   0x00 = 100  MHz on DLMC_REF_CLK*.
-
-                                                                 All other values are reserved.
-
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 0x00 =  19.2 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  20 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  24 MHz on DLMC_REF_CLK*.
-                                                                 0x64 =  25 MHz on DLMC_REF_CLK*.
-                                                                 0x60 =  26 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  38.4 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  40 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  48 MHz on DLMC_REF_CLK*.
-                                                                 0x64 =  50 MHz on DLMC_REF_CLK*.
-                                                                 0x60 =  52 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  100 MHz on DLMC_REF_CLK*.
-                                                                 0x00 =  200 MHz on DLMC_REF_CLK*. */
-        uint64_t ssc_ref_clk_sel       : 9;  /**< [ 55: 47](R/W) Enables non-standard oscillator frequencies to generate targeted MPLL output rates. Input
-                                                                 corresponds to the frequency-synthesis coefficient.
-
-                                                                 [55:53]: modulus - 1,
-                                                                 [52:47]: 2's complement push amount.
-
-                                                                 A value of 0x0 means this feature is disabled.
-
-                                                                 The legal values are 0x0.
-
-                                                                 All other values are reserved.
-
-                                                                 This value may only be changed during [UPHY_RST].
-
-                                                                 Internal:
-                                                                 If [REF_CLK_SEL] = 0x0, 0x1 or 0x2, then:
-                                                                 *  0x0 is the only legal value.
-
-                                                                 If [REF_CLK_SEL] = 0x4 or 0x5 or 0x6, then:
-                                                                 *  0x108: if DLMC_REF_CLK* is 19.2MHz, 24MHz, 26MHz, 38.4MHz, 48MHz,
-                                                                              52MHz, 76.8MHz, 96MHz, 104MHz.
-                                                                 *  0x0:   if DLMC_REF_CLK* is another supported frequency (see list in
-                                                                              [MPLL_MULTIPLIER] description). */
-        uint64_t ssc_range             : 3;  /**< [ 58: 56](R/W) Spread-spectrum clock range. Selects the range of spread-spectrum modulation when SSC_EN
-                                                                 is asserted and the PHY is spreading the SuperSpeed transmit clocks.
-                                                                 Applies a fixed offset to the phase accumulator.
-                                                                 0x0 = -4980 ppm downspread of clock.
-                                                                 0x1 = -4492 ppm.
-                                                                 0x2 = -4003 ppm.
-                                                                 0x3-0x7 = reserved.
-
-                                                                 All of these settings are within the USB 3.0 specification. The amount of EMI emission
-                                                                 reduction might decrease as the [SSC_RANGE] increases; therefore, the [SSC_RANGE] settings
-                                                                 can
-                                                                 be registered to enable the amount of spreading to be adjusted on a per-application basis.
-                                                                 This value can be changed only during UPHY_RST. */
-        uint64_t ssc_en                : 1;  /**< [ 59: 59](R/W) Spread-spectrum clock enable. Enables spread-spectrum clock production in the SuperSpeed
-                                                                 function. If the input reference clock for the SuperSpeed PLL is already spread-spectrum,
-                                                                 then do not enable this feature. The clocks sourced to the SuperSpeed function must have
-                                                                 spread-spectrum to be compliant with the USB specification.
-
-                                                                 This value may only be changed during [UPHY_RST]. */
-        uint64_t reserved_60_63        : 4;
-#endif /* Word 0 - End */
-    } cn98xx;
+    /* struct cavm_usbdrdx_uctl_ctl_cn96xxp3 cn98xx; */
 };
 typedef union cavm_usbdrdx_uctl_ctl cavm_usbdrdx_uctl_ctl_t;
 
@@ -14405,9 +12409,6 @@ static inline uint64_t CAVM_USBDRDX_UCTL_PIPECLK_COUNTER(uint64_t a)
  * This register is accessible only when USBDRD()_UCTL_CTL[H_CLK_EN] = 1.
  *
  * This register can be reset by core domain reset.
- *
- * Internal:
- * INTERNAL: All these settings are for HS functionality, connect on DVDD power domain.
  */
 union cavm_usbdrdx_uctl_portx_cfg_hs
 {
@@ -14995,9 +12996,6 @@ static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_HS(uint64_t a, uint64_t b)
  * This register is accessible only when USBDRD()_UCTL_CTL[H_CLK_EN] = 1.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UCTL_RST].
- *
- * Internal:
- * All these settings are for high-speed functionality, connect on DVDD power domain.
  */
 union cavm_usbdrdx_uctl_portx_cfg_ss
 {
@@ -15078,10 +13076,7 @@ union cavm_usbdrdx_uctl_portx_cfg_ss
                                                                  In general, the parameter controls are static signals to be set prior to taking the PHY
                                                                  out of reset. However, you can dynamically change these values on-the-fly for test
                                                                  purposes. In this case, changes to the transmitter to reflect the current value occur only
-                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes.
-
-                                                                 Internal:
-                                                                 Default value is package dependant. */
+                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes. */
         uint64_t pcs_tx_deemph_6db     : 6;  /**< [ 25: 20](R/W) Fine-tune transmitter driver deemphasis when set to 6 db.
                                                                  This static value sets the TX driver deemphasis value when
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS]  is set to
@@ -15094,10 +13089,7 @@ union cavm_usbdrdx_uctl_portx_cfg_ss
                                                                  In general, the parameter controls are static signals to be set prior to taking the PHY
                                                                  out of reset. However, you can dynamically change these values on-the-fly for test
                                                                  purposes. In this case, changes to the transmitter to reflect the current value occur only
-                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes.
-
-                                                                 Internal:
-                                                                 Default value is package dependant. */
+                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes. */
         uint64_t pcs_tx_swing_full     : 7;  /**< [ 19: 13](R/W) Launch amplitude of the transmitter. Sets the launch amplitude of the transmitter. The
                                                                  values for transmit amplitude are derived from the following equation:
                                                                  TX amplitude (V) = vptx * ((pcs_tx_swing_full + 1)/128)
@@ -15105,10 +13097,7 @@ union cavm_usbdrdx_uctl_portx_cfg_ss
                                                                  In general, the parameter controls are static signals to be set prior to taking the PHY
                                                                  out of reset. However, you can dynamically change these values on-the-fly for test
                                                                  purposes. In this case, changes to the transmitter to reflect the current value occur only
-                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes.
-
-                                                                 Internal:
-                                                                 Default value is package dependant. */
+                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes. */
         uint64_t lane0_tx_term_offset  : 5;  /**< [ 12:  8](R/W) Transmitter termination offset. Reserved, set to 0x0. */
         uint64_t reserved_6_7          : 2;
         uint64_t res_tune_ack          : 1;  /**< [  5:  5](RO/H) Resistor tune acknowledge. While asserted, indicates a resistor tune is in progress. */
@@ -15137,10 +13126,7 @@ union cavm_usbdrdx_uctl_portx_cfg_ss
                                                                  In general, the parameter controls are static signals to be set prior to taking the PHY
                                                                  out of reset. However, you can dynamically change these values on-the-fly for test
                                                                  purposes. In this case, changes to the transmitter to reflect the current value occur only
-                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes.
-
-                                                                 Internal:
-                                                                 Default value is package dependant. */
+                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes. */
         uint64_t pcs_tx_deemph_6db     : 6;  /**< [ 25: 20](R/W) Fine-tune transmitter driver deemphasis when set to 6 db.
                                                                  This static value sets the TX driver deemphasis value when
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS]  is set to
@@ -15153,10 +13139,7 @@ union cavm_usbdrdx_uctl_portx_cfg_ss
                                                                  In general, the parameter controls are static signals to be set prior to taking the PHY
                                                                  out of reset. However, you can dynamically change these values on-the-fly for test
                                                                  purposes. In this case, changes to the transmitter to reflect the current value occur only
-                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes.
-
-                                                                 Internal:
-                                                                 Default value is package dependant. */
+                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes. */
         uint64_t pcs_tx_deemph_3p5db   : 6;  /**< [ 31: 26](R/W) Fine-tune transmitter driver deemphasis when set to 3.5db.
                                                                  This static value sets the TX driver deemphasis value when
                                                                  USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] is set to
@@ -15168,10 +13151,7 @@ union cavm_usbdrdx_uctl_portx_cfg_ss
                                                                  In general, the parameter controls are static signals to be set prior to taking the PHY
                                                                  out of reset. However, you can dynamically change these values on-the-fly for test
                                                                  purposes. In this case, changes to the transmitter to reflect the current value occur only
-                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes.
-
-                                                                 Internal:
-                                                                 Default value is package dependant. */
+                                                                 after USBDRD()_UAHC_GUSB3PIPECTL()[TXDEEMPHASIS] changes. */
         uint64_t pcs_rx_los_mask_val   : 10; /**< [ 41: 32](R/W) Configurable loss-of-signal mask width. Sets the number of reference clock cycles to mask
                                                                  the incoming LFPS in U3 and U2 states. Masks the incoming LFPS for the number of reference
                                                                  clock cycles equal to the value of pcs_rx_los_mask_val\<9:0\>. This control filters out
@@ -15271,62 +13251,6 @@ static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_SS(uint64_t a, uint64_t b)
  * This register is accessible only when USBDRD()_UCTL_CTL[H_CLK_EN] = 1.
  *
  * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UCTL_RST].
- *
- * Internal:
- * (In body of HRM)
- * To access the PHY registers indirectly through the CR interface, the HCLK must be running,
- * UCTL_RST must be deasserted, and UPHY_RST must be deasserted. Software is responsible for
- * ensuring that only one indirect access is ongoing at a time.
- *
- * To read a PHY register via indirect CR interface:
- *   1. Write UCTL_PORTn_CR_DBG_CFG with:
- *     * [DATA_IN] with the \<\<address\>\> of the register,
- *     * [CAP_ADDR], [CAP_DATA], [READ], and [WRITE] fields 0x0.
- *   2. Write UCTL_PORTn_CR_DBG_CFG with:
- *     * [DATA_IN] with the \<\<address\>\> of the register,
- *     * [CAP_ADDR] field 0x1,
- *     * [CAP_DATA], [READ], and [WRITE] fields 0x0.
- *   3. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x1.
- *   4. Write UCTL_PORTn_CR_DBG_CFG with all 0x0's.
- *   5. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x0.
- *   6. Write UCTL_PORTn_CR_DBG_CFG with:
- *     * [READ] field 0x1,
- *     * [DATA_IN], [CAP_ADDR], [CAP_DATA], and [WRITE] fields 0x0.
- *   7. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x1.
- *   8. Read UCTL_PORTn_CR_DBG_STATUS[DATA_OUT]. This is the \<\<read data\>\>.
- *   9. Write UCTL_PORTn_CR_DBG_CFG with all 0x0's.
- *   10. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x0.
- *
- * To write a PHY register via indirect CR interface:
- *   1. Write UCTL_PORTn_CR_DBG_CFG with:
- *     * [DATA_IN] with the \<\<address\>\> of the register,
- *     * [CAP_ADDR], [CAP_DATA], [READ], and [WRITE] fields 0x0.
- *   2. Write UCTL_PORTn_CR_DBG_CFG with:
- *     * [DATA_IN] with the \<\<address\>\> of the register,
- *     * [CAP_ADDR] field 0x1,
- *     * [CAP_DATA], [READ], and [WRITE] fields 0x0.
- *   3. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x1.
- *   4. Write UCTL_PORTn_CR_DBG_CFG with all 0x0's.
- *   5. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x0.
- *   6. Write UCTL_PORTn_CR_DBG_CFG with:
- *     * [DATA_IN] with the \<\<write data\>\>,
- *     * [CAP_ADDR], [CAP_DATA], [READ], and [WRITE] fields 0x0.
- *   7. Write UCTL_PORTn_CR_DBG_CFG with:
- *     * [DATA_IN] with the write data,
- *     * [CAP_DATA] field 0x1,
- *     * [CAP_ADDR], [READ], and [WRITE] fields 0x0.
- *   8. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x1.
- *   9. Write UCTL_PORTn_CR_DBG_CFG with all 0x0's.
- *   10. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x0.
- *   11. Write UCTL_PORTn_CR_DBG_CFG with:
- *     * [WRITE] field 0x1,
- *     * [DATA_IN], [CAP_ADDR], and [READ] fields 0x0.
- *   12. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x1.
- *   13. Write UCTL_PORTn_CR_DBG_CFG with all 0x0's.
- *   14. Poll for UCTL_PORTn_CR_DBG_STATUS[ACK] 0x0.
- *
- * For partial writes, a read-modify write is required. Note that the CAP_ADDR steps (1-5)
- * do not have to be repeated until the address needs changed.
  */
 union cavm_usbdrdx_uctl_portx_cr_dbg_cfg
 {
@@ -15722,94 +13646,6 @@ static inline uint64_t CAVM_USBDRDX_UCTL_SHIM_CFG(uint64_t a)
 #define device_bar_CAVM_USBDRDX_UCTL_SHIM_CFG(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_USBDRDX_UCTL_SHIM_CFG(a) (a)
 #define arguments_CAVM_USBDRDX_UCTL_SHIM_CFG(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) usbdrd#_uctl_spare0
- *
- * INTERNAL: USB UCTL Spare Register 0
- *
- * This register is a spare register. This register can be reset by core domain reset.
- */
-union cavm_usbdrdx_uctl_spare0
-{
-    uint64_t u;
-    struct cavm_usbdrdx_uctl_spare0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t spare                 : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t spare                 : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_usbdrdx_uctl_spare0_s cn; */
-};
-typedef union cavm_usbdrdx_uctl_spare0 cavm_usbdrdx_uctl_spare0_t;
-
-static inline uint64_t CAVM_USBDRDX_UCTL_SPARE0(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_SPARE0(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
-        return 0x868000100010ll + 0x1000000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
-        return 0x868000100010ll + 0x1000000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a==0))
-        return 0x868000100010ll + 0x1000000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x868000100010ll + 0x1000000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("USBDRDX_UCTL_SPARE0", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_USBDRDX_UCTL_SPARE0(a) cavm_usbdrdx_uctl_spare0_t
-#define bustype_CAVM_USBDRDX_UCTL_SPARE0(a) CSR_TYPE_NCB
-#define basename_CAVM_USBDRDX_UCTL_SPARE0(a) "USBDRDX_UCTL_SPARE0"
-#define device_bar_CAVM_USBDRDX_UCTL_SPARE0(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_USBDRDX_UCTL_SPARE0(a) (a)
-#define arguments_CAVM_USBDRDX_UCTL_SPARE0(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) usbdrd#_uctl_spare1
- *
- * INTERNAL: USB UCTL Spare Register 1
- *
- * This register is accessible only when USBDRD()_UCTL_CTL[H_CLK_EN] = 1.
- *
- * This register can be reset by core domain reset or with USBDRD()_UCTL_CTL[UCTL_RST].
- */
-union cavm_usbdrdx_uctl_spare1
-{
-    uint64_t u;
-    struct cavm_usbdrdx_uctl_spare1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t spare                 : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t spare                 : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_usbdrdx_uctl_spare1_s cn; */
-};
-typedef union cavm_usbdrdx_uctl_spare1 cavm_usbdrdx_uctl_spare1_t;
-
-static inline uint64_t CAVM_USBDRDX_UCTL_SPARE1(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_SPARE1(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
-        return 0x8680001000f8ll + 0x1000000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
-        return 0x8680001000f8ll + 0x1000000000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a==0))
-        return 0x8680001000f8ll + 0x1000000000ll * ((a) & 0x0);
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x8680001000f8ll + 0x1000000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("USBDRDX_UCTL_SPARE1", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_USBDRDX_UCTL_SPARE1(a) cavm_usbdrdx_uctl_spare1_t
-#define bustype_CAVM_USBDRDX_UCTL_SPARE1(a) CSR_TYPE_NCB
-#define basename_CAVM_USBDRDX_UCTL_SPARE1(a) "USBDRDX_UCTL_SPARE1"
-#define device_bar_CAVM_USBDRDX_UCTL_SPARE1(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_USBDRDX_UCTL_SPARE1(a) (a)
-#define arguments_CAVM_USBDRDX_UCTL_SPARE1(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) usbdrd#_uctl_utmiclk_counter

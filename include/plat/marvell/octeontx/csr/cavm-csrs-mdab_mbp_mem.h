@@ -25,22 +25,6 @@
  * MDAB MBP Data Memory Array Registers
  * This address range provides OCTEON TX2 cores access to any MDAB MBP data memory array. Intended for
  * debug purposes only because RSL accesses are slow.
- *
- * Internal:
- * "SW RESTRICTIONS: When generating RSL addresses please use the following equation:
- *   rsl_byte_address = 0x87E044800000 + (MDAB-ID[5:0] \<\< 17) + (8B_OFFSET[13:0] \<\< 3)
- *   where:
- *     MEMTYP = {0:IMEM/1:DMEM}
- *     MDAB-IDs:
- *       MBP[0:42]:  {0..42}
- *
- *     SW must also be sure to restrict the 8B_OFFSET (based on DSPTYPE/RAMTYPE) as follows:
- *
- *       DSPTYPE    RAMTYPE   8B_OFFSET (range)
- *     ------------------------------------------
- *       cnMBP2       DMEM     [0..(16K-1)]
- *
- *     "
  */
 union cavm_mdab_mbpx_dmem_arrayx
 {
@@ -81,21 +65,6 @@ static inline uint64_t CAVM_MDAB_MBPX_DMEM_ARRAYX(uint64_t a, uint64_t b)
  * MDAB Instruction Memory Array Registers
  * This address range provides OCTEON TX2 cores access to any MDAB instruction memory array. Intended
  * for debug purposes only because RSL accesses are slow.
- *
- * Internal:
- * "SW RESTRICTIONS: When generating RSL addresses please use the following equation:
- *   rsl_byte_address = 0x87E044400000 + (MDAB-ID[5:0] \<\< 16) + (8B_OFFSET[12:0] \<\< 3)
- *    where:
- *     MDAB-IDs:
- *       MBP[0:42]:  {0..42}
- *
- *     SW must also be sure to restrict the 8B_OFFSET (based on DSPTYPE/RAMTYPE) as follows:
- *
- *       DSPTYPE    RAMTYPE   8B_OFFSET (range)
- *     ------------------------------------------
- *       cnMBP2       IMEM     [0..(8K-1)]
- *
- *     "
  */
 union cavm_mdab_mbpx_imem_arrayx
 {

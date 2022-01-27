@@ -489,10 +489,7 @@ union cavm_pko_send_aura_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send aura. Enumerated by PKO_SENDSUBDC_E::AURA. */
         uint64_t reserved_49_59        : 11;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_40_47        : 8;
         uint64_t aura                  : 16; /**< [ 39: 24] Guest-aura number. The guest-aura to use for subsequent FPA frees in this
                                                                  PKO SEND descriptor and the aura whose aura count may be decremented by
@@ -580,10 +577,7 @@ union cavm_pko_send_aura_s
                                                                  with [AURA]. For a successful aura update, FPA_PF_MAP() must map [AURA]
                                                                  and PKO_PF_VF()_GMCTL[GMID] as valid. */
         uint64_t reserved_40_47        : 8;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_59        : 11;
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send aura. Enumerated by PKO_SENDSUBDC_E::AURA. */
 #endif /* Word 0 - End */
@@ -653,10 +647,7 @@ union cavm_pko_send_crc_s
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send CRC. Enumerated by PKO_SENDSUBDC_E::CRC. */
         uint64_t alg                   : 2;  /**< [ 59: 58] Checksum algorithm. See PKO_SENDCRCALG_E. */
         uint64_t reserved_49_57        : 9;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t insert                : 16; /**< [ 47: 32] Byte position relative to the first packet byte at which to insert the first byte of the
                                                                  calculated CRC. PKO does not allocate bytes as it inserts the CRC result into the packet,
                                                                  it overwrites four pre-supplied packet bytes using PKO_SEND_GATHER_S or PKO_SEND_LINK_S or
@@ -678,10 +669,7 @@ union cavm_pko_send_crc_s
                                                                  it overwrites four pre-supplied packet bytes using PKO_SEND_GATHER_S or PKO_SEND_LINK_S or
                                                                  PKO_SEND_IMM_S. The insertion point may not be within the start/size region of another
                                                                  PKO_SEND_CRC_S. */
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_57        : 9;
         uint64_t alg                   : 2;  /**< [ 59: 58] Checksum algorithm. See PKO_SENDCRCALG_E. */
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send CRC. Enumerated by PKO_SENDSUBDC_E::CRC. */
@@ -715,10 +703,7 @@ union cavm_pko_send_free_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send free. Enumerated by PKO_SENDSUBDC_E::FREE. */
         uint64_t reserved_49_59        : 11;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_40_47        : 8;
         uint64_t aura                  : 16; /**< [ 39: 24] Aura number. The aura to free to.
 
@@ -734,10 +719,7 @@ union cavm_pko_send_free_s
                                                                  with [AURA]. For a successful free request, FPA_PF_MAP() must map [AURA]
                                                                  and PKO_PF_VF()_GMCTL[GMID] as valid. */
         uint64_t reserved_40_47        : 8;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_59        : 11;
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send free. Enumerated by PKO_SENDSUBDC_E::FREE. */
 #endif /* Word 0 - End */
@@ -871,10 +853,7 @@ union cavm_pko_send_gather_s
                                                                  Software must not modify the path of meta descriptors from the DQ through
                                                                  PKO to an output FIFO between TSO segments. */
         uint64_t reserved_49_56        : 8;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_40_47        : 8;
         uint64_t aura                  : 16; /**< [ 39: 24] See PKO_SEND_FREE_S[AURA]. */
         uint64_t reserved_16_23        : 8;
@@ -918,10 +897,7 @@ union cavm_pko_send_gather_s
         uint64_t reserved_16_23        : 8;
         uint64_t aura                  : 16; /**< [ 39: 24] See PKO_SEND_FREE_S[AURA]. */
         uint64_t reserved_40_47        : 8;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_56        : 8;
         uint64_t i                     : 1;  /**< [ 57: 57] Invert free. See PKO_SEND_HDR_S[DF,II].
 
@@ -993,10 +969,7 @@ union cavm_pko_send_hdr_s
     struct cavm_pko_send_hdr_s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t scntm1                : 3;  /**< [ 63: 61] Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Sub-descriptor count. PKO packs the send operation's number of sub-descriptors
-                                                                 (minus one) here.  Software should not modify this. */
+        uint64_t scntm1                : 3;  /**< [ 63: 61] Reserved. Must be zero. */
         uint64_t n2                    : 1;  /**< [ 60: 60] No L2 allocate. When clear, PKO allocates all packet load data into the L2 cache.
                                                                  When set, PKO does not allocate blocks containing segment bytes into the L2 cache.
                                                                  [N2] affects performance, but otherwise does not affect CNXXXX behavior. It may be
@@ -1234,9 +1207,7 @@ union cavm_pko_send_hdr_s
                                                                  not once per TSO segment.
                                                                  Software must not modify the path of meta descriptors from the DQ through
                                                                  PKO to an output FIFO between TSO segments. */
-        uint64_t tso_eom               : 1;  /**< [ 57: 57] Reserved. Must be zero.
-                                                                 Internal:
-                                                                 End of message. PKO sets [EOM] in the last replicated packet descriptor. */
+        uint64_t tso_eom               : 1;  /**< [ 57: 57] Reserved. Must be zero. */
         uint64_t tstmp                 : 1;  /**< [ 56: 56] PTP timestamp. If set, a later PKO_SEND_MEM_S will be present in this descriptor with
                                                                  PKO_SEND_MEM_S[ALG]=PKO_MEMALG_E::SETTSTMP to request IEEE 1588 PTP time-stamping.
                                                                  Furthermore, if set, [SHP_RA] must be PKO_REDALG_E::SEND.
@@ -1248,10 +1219,7 @@ union cavm_pko_send_hdr_s
 
                                                                  When [TSO]=1, PKO marks each TSO segment independently, using [FORMAT]
                                                                  for every TSO segment. */
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. Must be zero. */
         uint64_t ckl4                  : 2;  /**< [ 47: 46] L4 outer checksum, Enumerated by PKO_CKL4ALG_E.
 
                                                                  CKL4 should correspond to an outer L4 header. If both [CKL4,CKLF] are set,
@@ -1725,10 +1693,7 @@ union cavm_pko_send_hdr_s
                                                                  but does not calculate any checksum for this outer UDP header.
                                                                  [CKL4]=PKO_CKL4ALG_E::SCTP may be appropriate for a VXLAN inner TSO, for
                                                                  example. */
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. Must be zero. */
         uint64_t format                : 7;  /**< [ 55: 49] Selects a CSR from the PKO_FORMAT()_CTL array which specifies
                                                                  how PKO will mark YELLOW and RED_SEND packets. [FORMAT] must
                                                                  be less than the size of the PKO_FORMAT()_CTL array.
@@ -1740,9 +1705,7 @@ union cavm_pko_send_hdr_s
                                                                  Furthermore, if set, [SHP_RA] must be PKO_REDALG_E::SEND.
 
                                                                  [TSTMP] must not be set when [TSO]=1. */
-        uint64_t tso_eom               : 1;  /**< [ 57: 57] Reserved. Must be zero.
-                                                                 Internal:
-                                                                 End of message. PKO sets [EOM] in the last replicated packet descriptor. */
+        uint64_t tso_eom               : 1;  /**< [ 57: 57] Reserved. Must be zero. */
         uint64_t df                    : 1;  /**< [ 58: 58] Don't free. If set, by default PKO will not free the surrounding buffer after
                                                                  processing a packet segment. If clear, by default PKO will free the
                                                                  surrounding buffer after processing a packet segment.
@@ -1980,10 +1943,7 @@ union cavm_pko_send_hdr_s
                                                                  into the L2 cache on the first-pass packet read of a two-pass TCP/UDP checksum
                                                                  calculation, and may allocate portions of packet data into the L2 cache when
                                                                  [TSO]==1. */
-        uint64_t scntm1                : 3;  /**< [ 63: 61] Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Sub-descriptor count. PKO packs the send operation's number of sub-descriptors
-                                                                 (minus one) here.  Software should not modify this. */
+        uint64_t scntm1                : 3;  /**< [ 63: 61] Reserved. Must be zero. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t l2len                 : 8;  /**< [127:120] Offset in bytes to the two-byte L2 header-type/length field. Must be
@@ -1993,9 +1953,7 @@ union cavm_pko_send_hdr_s
                                                                  packet is 0 .. 1535, PKO considers it to be a length field, and modifies
                                                                  it for each produced segment. When [TSO]=1, [L2LEN] must refer to the
                                                                  outer L2, i.e. [L2LEN] must be less than [L3PTR]. */
-        uint64_t tso_fn                : 7;  /**< [119:113] Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Frame number. PKO increases [FN] in every replicated packet descriptor. */
+        uint64_t tso_fn                : 7;  /**< [119:113] Reserved. Must be zero. */
         uint64_t shp_chg               : 9;  /**< [112:104] Signed packet size adjustment. The packet size used for shaper {a} (PIR_ACCUM and
                                                                  CIR_ACCUM) and DWRR scheduler {a} (RR_COUNT) calculations at level {b} is:
 
@@ -2011,13 +1969,7 @@ union cavm_pko_send_hdr_s
                                                                  [SHP_CHG] becomes PKO_META_DESC_S[ADJUST] and PKO_{b}m_PICK[ADJUST].
 
                                                                  When [TSO]=1, PKO applies [SHP_CHG] to each TSO segment - PKO copies [SHP_CHG]
-                                                                 to each PKO_META_DESC_S[ADJUST] and PKO_nm_PICK[ADJUST].
-
-                                                                 Internal:
-                                                                 When PDM hardware writes a descriptor to memory, it crams a checksum in
-                                                                 [SHP_CHG] to help detect memory corruption. The corresponding
-                                                                 PKO_META_DESC_S[ADJUST] have already been created from [SHP_CHG] at that
-                                                                 time. */
+                                                                 to each PKO_META_DESC_S[ADJUST] and PKO_nm_PICK[ADJUST]. */
         uint64_t lfptr                 : 8;  /**< [103: 96] Inner Layer 4 offset. Specifies the location of the first byte of the inner
                                                                  TCP/UDP/SCTP header for L4 checksum calculation. (See [CKLF].) The inner
                                                                  Layer 4 header must be exactly [LFPTR] bytes from the beginning of the packet.
@@ -2186,16 +2138,8 @@ union cavm_pko_send_hdr_s
                                                                  [SHP_CHG] becomes PKO_META_DESC_S[ADJUST] and PKO_{b}m_PICK[ADJUST].
 
                                                                  When [TSO]=1, PKO applies [SHP_CHG] to each TSO segment - PKO copies [SHP_CHG]
-                                                                 to each PKO_META_DESC_S[ADJUST] and PKO_nm_PICK[ADJUST].
-
-                                                                 Internal:
-                                                                 When PDM hardware writes a descriptor to memory, it crams a checksum in
-                                                                 [SHP_CHG] to help detect memory corruption. The corresponding
-                                                                 PKO_META_DESC_S[ADJUST] have already been created from [SHP_CHG] at that
-                                                                 time. */
-        uint64_t tso_fn                : 7;  /**< [119:113] Reserved. Must be zero.
-                                                                 Internal:
-                                                                 Frame number. PKO increases [FN] in every replicated packet descriptor. */
+                                                                 to each PKO_META_DESC_S[ADJUST] and PKO_nm_PICK[ADJUST]. */
+        uint64_t tso_fn                : 7;  /**< [119:113] Reserved. Must be zero. */
         uint64_t l2len                 : 8;  /**< [127:120] Offset in bytes to the two-byte L2 header-type/length field. Must be
                                                                  zero when [TSO] is clear. See also the [TSO] description.
 
@@ -2237,10 +2181,7 @@ union cavm_pko_send_imm_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send immediate. Enumerated by PKO_SENDSUBDC_E::IMM. */
         uint64_t reserved_49_59        : 11;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_16_47        : 32;
         uint64_t size                  : 16; /**< [ 15:  0] Size of immediate data in bytes. [SIZE] must be between 1 and 40 bytes.
                                                                  When [SIZE] \<= 8, [DATA] contains all the immediate data. When [SIZE] \> 8,
@@ -2274,10 +2215,7 @@ union cavm_pko_send_imm_s
                                                                  PKO_SEND_LINK_S[SIZE]s in the descriptor plus any PKI_BUFLINK_S[SIZE]s
                                                                  linked by any PKO_SEND_LINK_S must equal or exceed PKO_SEND_HDR_S[TOTAL]. */
         uint64_t reserved_16_47        : 32;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_59        : 11;
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send immediate. Enumerated by PKO_SENDSUBDC_E::IMM. */
 #endif /* Word 0 - End */
@@ -2339,10 +2277,7 @@ union cavm_pko_send_jump_s
                                                                  Software must not modify the path of meta descriptors from the DQ through
                                                                  PKO to an output FIFO between TSO segments. */
         uint64_t reserved_49_52        : 4;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_40_47        : 8;
         uint64_t aura                  : 16; /**< [ 39: 24] See PKO_SEND_FREE_S[AURA]. */
         uint64_t reserved_16_23        : 8;
@@ -2356,10 +2291,7 @@ union cavm_pko_send_jump_s
         uint64_t reserved_16_23        : 8;
         uint64_t aura                  : 16; /**< [ 39: 24] See PKO_SEND_FREE_S[AURA]. */
         uint64_t reserved_40_47        : 8;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_52        : 4;
         uint64_t f                     : 1;  /**< [ 53: 53] When set, PKO will free the buffer indicated by [ADDR] to FPA after it has read all
                                                                  subdescriptors from it. When clear, PKO will not free the buffer indicated by [ADDR].
@@ -2464,10 +2396,7 @@ union cavm_pko_send_link_s
                                                                  Software must not modify the path of meta descriptors from the DQ through
                                                                  PKO to an output FIFO between TSO segments. */
         uint64_t reserved_49_56        : 8;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_40_47        : 8;
         uint64_t aura                  : 16; /**< [ 39: 24] see PKO_SEND_FREE_S[AURA] */
         uint64_t reserved_16_23        : 8;
@@ -2517,10 +2446,7 @@ union cavm_pko_send_link_s
         uint64_t reserved_16_23        : 8;
         uint64_t aura                  : 16; /**< [ 39: 24] see PKO_SEND_FREE_S[AURA] */
         uint64_t reserved_40_47        : 8;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_56        : 8;
         uint64_t i                     : 1;  /**< [ 57: 57] Invert free. See PKO_SEND_HDR_S[DF,II].
 
@@ -2631,33 +2557,17 @@ union cavm_pko_send_mem_s
                                                                  operation may complete after the ADD_WORK and potentially after software has begun
                                                                  servicing the work. */
         uint64_t reserved_49_52        : 4;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_16_47        : 32;
         uint64_t offset                : 16; /**< [ 15:  0] Adder offset. Constant value to add or subtract or set. If the count being modified is to
                                                                  represent the true packet size, then the offset would represent the outside FCS appended
-                                                                 to the packet.
-
-                                                                 Internal:
-                                                                 Note IOB hardware has a special encoding for atomic decrement,
-                                                                 therefore a change of minus one is twice as IOB bandwidth efficient as adding/subtracting
-                                                                 other values or setting. */
+                                                                 to the packet. */
 #else /* Word 0 - Little Endian */
         uint64_t offset                : 16; /**< [ 15:  0] Adder offset. Constant value to add or subtract or set. If the count being modified is to
                                                                  represent the true packet size, then the offset would represent the outside FCS appended
-                                                                 to the packet.
-
-                                                                 Internal:
-                                                                 Note IOB hardware has a special encoding for atomic decrement,
-                                                                 therefore a change of minus one is twice as IOB bandwidth efficient as adding/subtracting
-                                                                 other values or setting. */
+                                                                 to the packet. */
         uint64_t reserved_16_47        : 32;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_52        : 4;
         uint64_t wmem                  : 1;  /**< [ 53: 53] Wait for memory. When set, there must be an SSO ADD_WORK requested with the final
                                                                  PKO_SEND_WORK_S subdescriptor. PKO will wait for this PKO_SEND_MEM_S requested memory
@@ -2723,10 +2633,7 @@ union cavm_pko_send_work_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send work. Enumerated by PKO_SENDSUBDC_E::WORK. */
         uint64_t reserved_49_59        : 11;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_44_47        : 4;
         uint64_t grp                   : 10; /**< [ 43: 34] SSO group. The SSO group number to add work to. Note the upper two bits
                                                                  correspond to a node number.
@@ -2746,10 +2653,7 @@ union cavm_pko_send_work_s
                                                                  with [GRP]. For a successful work add, SSO_PF_MAP() must map [GRP] and
                                                                  PKO_PF_VF()_GMCTL[GMID] as valid. */
         uint64_t reserved_44_47        : 4;
-        uint64_t p                     : 1;  /**< [ 48: 48] Reserved.
-                                                                 Internal:
-                                                                 Intent was to stripe an 8-bit CRC across these bits in the cacheline, but
-                                                                 not implemented. */
+        uint64_t p                     : 1;  /**< [ 48: 48] Reserved. */
         uint64_t reserved_49_59        : 11;
         uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send work. Enumerated by PKO_SENDSUBDC_E::WORK. */
 #endif /* Word 0 - End */
@@ -3425,47 +3329,6 @@ static inline uint64_t CAVM_PKO_DQX_DROPPED_PACKETS(uint64_t a)
 #define arguments_CAVM_PKO_DQX_DROPPED_PACKETS(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pko_dq#_fifo
- *
- * INTERNAL: PKO PSE Descriptor Queue FIFO State Debug Register
- */
-union cavm_pko_dqx_fifo
-{
-    uint64_t u;
-    struct cavm_pko_dqx_fifo_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_15_63        : 49;
-        uint64_t p_con                 : 1;  /**< [ 14: 14](RO/H) Parent connect. Asserted when DQ is connected to its parent. */
-        uint64_t head                  : 7;  /**< [ 13:  7](RO/H) DQ FIFO head pointer. */
-        uint64_t tail                  : 7;  /**< [  6:  0](RO/H) DQ FIFO tail pointer. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 7;  /**< [  6:  0](RO/H) DQ FIFO tail pointer. */
-        uint64_t head                  : 7;  /**< [ 13:  7](RO/H) DQ FIFO head pointer. */
-        uint64_t p_con                 : 1;  /**< [ 14: 14](RO/H) Parent connect. Asserted when DQ is connected to its parent. */
-        uint64_t reserved_15_63        : 49;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_dqx_fifo_s cn; */
-};
-typedef union cavm_pko_dqx_fifo cavm_pko_dqx_fifo_t;
-
-static inline uint64_t CAVM_PKO_DQX_FIFO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_FIFO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000300078ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_DQX_FIFO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_DQX_FIFO(a) cavm_pko_dqx_fifo_t
-#define bustype_CAVM_PKO_DQX_FIFO(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_DQX_FIFO(a) "PKO_DQX_FIFO"
-#define device_bar_CAVM_PKO_DQX_FIFO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_DQX_FIFO(a) (a)
-#define arguments_CAVM_PKO_DQX_FIFO(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) pko_dq#_packets
  *
  * PKO PSE Descriptor Queue Sent Packets Register
@@ -3727,49 +3590,6 @@ static inline uint64_t CAVM_PKO_DQX_PIR(uint64_t a)
 #define device_bar_CAVM_PKO_DQX_PIR(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_DQX_PIR(a) (a)
 #define arguments_CAVM_PKO_DQX_PIR(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_dq#_pointers
- *
- * INTERNAL: PKO PSE Descriptor Queue Linked List Pointers Debug Register
- *
- * This register has the same bit fields as PKO_L3_SQ(0..255)_POINTERS.
- */
-union cavm_pko_dqx_pointers
-{
-    uint64_t u;
-    struct cavm_pko_dqx_pointers_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_24_63        : 40;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-#else /* Word 0 - Little Endian */
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_24_63        : 40;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_dqx_pointers_s cn; */
-};
-typedef union cavm_pko_dqx_pointers cavm_pko_dqx_pointers_t;
-
-static inline uint64_t CAVM_PKO_DQX_POINTERS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_POINTERS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000280078ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_DQX_POINTERS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_DQX_POINTERS(a) cavm_pko_dqx_pointers_t
-#define bustype_CAVM_PKO_DQX_POINTERS(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_DQX_POINTERS(a) "PKO_DQX_POINTERS"
-#define device_bar_CAVM_PKO_DQX_POINTERS(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_DQX_POINTERS(a) (a)
-#define arguments_CAVM_PKO_DQX_POINTERS(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) pko_dq#_sched_state
@@ -4067,42 +3887,6 @@ static inline uint64_t CAVM_PKO_DQ_CONST_FUNC(void)
 #define device_bar_CAVM_PKO_DQ_CONST 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_DQ_CONST 0
 #define arguments_CAVM_PKO_DQ_CONST -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_dq_debug
- *
- * INTERNAL: PKO PSE DQ Internal Debug Register
- */
-union cavm_pko_dq_debug
-{
-    uint64_t u;
-    struct cavm_pko_dq_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_dq_debug_s cn; */
-};
-typedef union cavm_pko_dq_debug cavm_pko_dq_debug_t;
-
-#define CAVM_PKO_DQ_DEBUG CAVM_PKO_DQ_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_DQ_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQ_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000300128ll;
-    __cavm_csr_fatal("PKO_DQ_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_DQ_DEBUG cavm_pko_dq_debug_t
-#define bustype_CAVM_PKO_DQ_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_DQ_DEBUG "PKO_DQ_DEBUG"
-#define device_bar_CAVM_PKO_DQ_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_DQ_DEBUG 0
-#define arguments_CAVM_PKO_DQ_DEBUG -1,-1,-1,-1
 
 /**
  * Register (NCB) pko_dq_ecc_dbe_int_ena_w1c
@@ -5023,63 +4807,6 @@ static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_PACKETS(uint64_t a)
 #define arguments_CAVM_PKO_L1_SQX_DROPPED_PACKETS(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pko_l1_sq#_green
- *
- * INTERNAL: PKO PSE Level 1 Shaping Queue Green State Debug Register
- */
-union cavm_pko_l1_sqx_green
-{
-    uint64_t u;
-    struct cavm_pko_l1_sqx_green_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_41_63        : 23;
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Set when the RED_SEND+RED_DROP DWRR child list is not empty.
-                                                                 For internal use only. */
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 20-bit vector, 2 bits per each of the 10 supported priorities.
-                                                                 For the non-RR_PRIO priorities, the 2 bits encode whether the child is active
-                                                                 GREEN, active YELLOW, active RED_SEND+RED_DROP, or inactive. At RR_PRIO, one
-                                                                 bit is set if the GREEN DWRR child list is not empty, and the other is set if the
-                                                                 YELLOW DWRR child list is not empty. For internal use only. */
-        uint64_t reserved_19           : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19           : 1;
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 20-bit vector, 2 bits per each of the 10 supported priorities.
-                                                                 For the non-RR_PRIO priorities, the 2 bits encode whether the child is active
-                                                                 GREEN, active YELLOW, active RED_SEND+RED_DROP, or inactive. At RR_PRIO, one
-                                                                 bit is set if the GREEN DWRR child list is not empty, and the other is set if the
-                                                                 YELLOW DWRR child list is not empty. For internal use only. */
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Set when the RED_SEND+RED_DROP DWRR child list is not empty.
-                                                                 For internal use only. */
-        uint64_t reserved_41_63        : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l1_sqx_green_s cn; */
-};
-typedef union cavm_pko_l1_sqx_green cavm_pko_l1_sqx_green_t;
-
-static inline uint64_t CAVM_PKO_L1_SQX_GREEN(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_GREEN(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
-        return 0x854000080058ll + 0x200ll * ((a) & 0x1f);
-    __cavm_csr_fatal("PKO_L1_SQX_GREEN", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L1_SQX_GREEN(a) cavm_pko_l1_sqx_green_t
-#define bustype_CAVM_PKO_L1_SQX_GREEN(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L1_SQX_GREEN(a) "PKO_L1_SQX_GREEN"
-#define device_bar_CAVM_PKO_L1_SQX_GREEN(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L1_SQX_GREEN(a) (a)
-#define arguments_CAVM_PKO_L1_SQX_GREEN(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) pko_l1_sq#_green_bytes
  *
  * PKO PSE Port Queue Green Sent Bytes Register
@@ -5348,49 +5075,6 @@ static inline uint64_t CAVM_PKO_L1_SQX_PICK(uint64_t a)
 #define device_bar_CAVM_PKO_L1_SQX_PICK(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_L1_SQX_PICK(a) (a)
 #define arguments_CAVM_PKO_L1_SQX_PICK(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l1_sq#_red
- *
- * INTERNAL: PKO PSE Level 1 Shaping Queue Red State Debug Register
- *
- * This register has the same bit fields as PKO_L1_SQ()_YELLOW.
- */
-union cavm_pko_l1_sqx_red
-{
-    uint64_t u;
-    struct cavm_pko_l1_sqx_red_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_19_63        : 45;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19_63        : 45;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l1_sqx_red_s cn; */
-};
-typedef union cavm_pko_l1_sqx_red cavm_pko_l1_sqx_red_t;
-
-static inline uint64_t CAVM_PKO_L1_SQX_RED(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_RED(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
-        return 0x854000080068ll + 0x200ll * ((a) & 0x1f);
-    __cavm_csr_fatal("PKO_L1_SQX_RED", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L1_SQX_RED(a) cavm_pko_l1_sqx_red_t
-#define bustype_CAVM_PKO_L1_SQX_RED(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L1_SQX_RED(a) "PKO_L1_SQX_RED"
-#define device_bar_CAVM_PKO_L1_SQX_RED(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L1_SQX_RED(a) (a)
-#define arguments_CAVM_PKO_L1_SQX_RED(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) pko_l1_sq#_red_bytes
@@ -5853,47 +5537,6 @@ static inline uint64_t CAVM_PKO_L1_SQX_TOPOLOGY(uint64_t a)
 #define arguments_CAVM_PKO_L1_SQX_TOPOLOGY(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pko_l1_sq#_yellow
- *
- * INTERNAL: PKO PSE Level 1 Shaping Queue Yellow State Debug Register
- */
-union cavm_pko_l1_sqx_yellow
-{
-    uint64_t u;
-    struct cavm_pko_l1_sqx_yellow_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_19_63        : 45;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19_63        : 45;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l1_sqx_yellow_s cn; */
-};
-typedef union cavm_pko_l1_sqx_yellow cavm_pko_l1_sqx_yellow_t;
-
-static inline uint64_t CAVM_PKO_L1_SQX_YELLOW(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_YELLOW(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
-        return 0x854000080060ll + 0x200ll * ((a) & 0x1f);
-    __cavm_csr_fatal("PKO_L1_SQX_YELLOW", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L1_SQX_YELLOW(a) cavm_pko_l1_sqx_yellow_t
-#define bustype_CAVM_PKO_L1_SQX_YELLOW(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L1_SQX_YELLOW(a) "PKO_L1_SQX_YELLOW"
-#define device_bar_CAVM_PKO_L1_SQX_YELLOW(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L1_SQX_YELLOW(a) (a)
-#define arguments_CAVM_PKO_L1_SQX_YELLOW(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) pko_l1_sq#_yellow_bytes
  *
  * PKO PSE Port Queue Yellow Sent Bytes Register
@@ -5968,82 +5611,6 @@ static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_PACKETS(uint64_t a)
 #define device_bar_CAVM_PKO_L1_SQX_YELLOW_PACKETS(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_L1_SQX_YELLOW_PACKETS(a) (a)
 #define arguments_CAVM_PKO_L1_SQX_YELLOW_PACKETS(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l1_sqa_debug
- *
- * INTERNAL: PKO PSE Level 1 SQ-A Internal Debug Register
- *
- * This register has the same bit fields as PKO_PQA_DEBUG.
- */
-union cavm_pko_l1_sqa_debug
-{
-    uint64_t u;
-    struct cavm_pko_l1_sqa_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l1_sqa_debug_s cn; */
-};
-typedef union cavm_pko_l1_sqa_debug cavm_pko_l1_sqa_debug_t;
-
-#define CAVM_PKO_L1_SQA_DEBUG CAVM_PKO_L1_SQA_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_L1_SQA_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQA_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000080128ll;
-    __cavm_csr_fatal("PKO_L1_SQA_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L1_SQA_DEBUG cavm_pko_l1_sqa_debug_t
-#define bustype_CAVM_PKO_L1_SQA_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_L1_SQA_DEBUG "PKO_L1_SQA_DEBUG"
-#define device_bar_CAVM_PKO_L1_SQA_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L1_SQA_DEBUG 0
-#define arguments_CAVM_PKO_L1_SQA_DEBUG -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_l1_sqb_debug
- *
- * INTERNAL: PKO PSE Level 1 SQ-B Internal Debug Register
- *
- * This register has the same bit fields as PKO_PQA_DEBUG.
- */
-union cavm_pko_l1_sqb_debug
-{
-    uint64_t u;
-    struct cavm_pko_l1_sqb_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l1_sqb_debug_s cn; */
-};
-typedef union cavm_pko_l1_sqb_debug cavm_pko_l1_sqb_debug_t;
-
-#define CAVM_PKO_L1_SQB_DEBUG CAVM_PKO_L1_SQB_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_L1_SQB_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQB_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000080130ll;
-    __cavm_csr_fatal("PKO_L1_SQB_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L1_SQB_DEBUG cavm_pko_l1_sqb_debug_t
-#define bustype_CAVM_PKO_L1_SQB_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_L1_SQB_DEBUG "PKO_L1_SQB_DEBUG"
-#define device_bar_CAVM_PKO_L1_SQB_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L1_SQB_DEBUG 0
-#define arguments_CAVM_PKO_L1_SQB_DEBUG -1,-1,-1,-1
 
 /**
  * Register (NCB) pko_l2_const
@@ -6475,65 +6042,6 @@ static inline uint64_t CAVM_PKO_L2_SQX_CIR(uint64_t a)
 #define arguments_CAVM_PKO_L2_SQX_CIR(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pko_l2_sq#_green
- *
- * INTERNAL: PKO PSE Level 2 Shaping Queue Green State Debug Register
- *
- * This register has the same bit fields as PKO_L1_SQ()_GREEN.
- */
-union cavm_pko_l2_sqx_green
-{
-    uint64_t u;
-    struct cavm_pko_l2_sqx_green_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_41_63        : 23;
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Set when the RED_SEND+RED_DROP DWRR child list is not empty.
-                                                                 For internal use only. */
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 20-bit vector, 2 bits per each of the 10 supported priorities.
-                                                                 For the non-RR_PRIO priorities, the 2 bits encode whether the child is active
-                                                                 GREEN, active YELLOW, active RED_SEND+RED_DROP, or inactive. At RR_PRIO, one
-                                                                 bit is set if the GREEN DWRR child list is not empty, and the other is set if the
-                                                                 YELLOW DWRR child list is not empty. For internal use only. */
-        uint64_t reserved_19           : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19           : 1;
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 20-bit vector, 2 bits per each of the 10 supported priorities.
-                                                                 For the non-RR_PRIO priorities, the 2 bits encode whether the child is active
-                                                                 GREEN, active YELLOW, active RED_SEND+RED_DROP, or inactive. At RR_PRIO, one
-                                                                 bit is set if the GREEN DWRR child list is not empty, and the other is set if the
-                                                                 YELLOW DWRR child list is not empty. For internal use only. */
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Set when the RED_SEND+RED_DROP DWRR child list is not empty.
-                                                                 For internal use only. */
-        uint64_t reserved_41_63        : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l2_sqx_green_s cn; */
-};
-typedef union cavm_pko_l2_sqx_green cavm_pko_l2_sqx_green_t;
-
-static inline uint64_t CAVM_PKO_L2_SQX_GREEN(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_GREEN(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000100058ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_L2_SQX_GREEN", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L2_SQX_GREEN(a) cavm_pko_l2_sqx_green_t
-#define bustype_CAVM_PKO_L2_SQX_GREEN(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L2_SQX_GREEN(a) "PKO_L2_SQX_GREEN"
-#define device_bar_CAVM_PKO_L2_SQX_GREEN(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L2_SQX_GREEN(a) (a)
-#define arguments_CAVM_PKO_L2_SQX_GREEN(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) pko_l2_sq#_pick
  *
  * PKO PSE Level 2 Shaping Queue Packet Pick State Debug Register
@@ -6757,90 +6265,6 @@ static inline uint64_t CAVM_PKO_L2_SQX_PIR(uint64_t a)
 #define device_bar_CAVM_PKO_L2_SQX_PIR(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_L2_SQX_PIR(a) (a)
 #define arguments_CAVM_PKO_L2_SQX_PIR(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l2_sq#_pointers
- *
- * INTERNAL: PKO PSE Level 2 Shaping Queue Linked List Pointers Debug Register
- */
-union cavm_pko_l2_sqx_pointers
-{
-    uint64_t u;
-    struct cavm_pko_l2_sqx_pointers_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_24_63        : 40;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-#else /* Word 0 - Little Endian */
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_24_63        : 40;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l2_sqx_pointers_s cn; */
-};
-typedef union cavm_pko_l2_sqx_pointers cavm_pko_l2_sqx_pointers_t;
-
-static inline uint64_t CAVM_PKO_L2_SQX_POINTERS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_POINTERS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000080078ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_L2_SQX_POINTERS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L2_SQX_POINTERS(a) cavm_pko_l2_sqx_pointers_t
-#define bustype_CAVM_PKO_L2_SQX_POINTERS(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L2_SQX_POINTERS(a) "PKO_L2_SQX_POINTERS"
-#define device_bar_CAVM_PKO_L2_SQX_POINTERS(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L2_SQX_POINTERS(a) (a)
-#define arguments_CAVM_PKO_L2_SQX_POINTERS(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l2_sq#_red
- *
- * INTERNAL: PKO PSE Level 2 Shaping Queue Red State Debug Register
- *
- * This register has the same bit fields as PKO_L1_SQ()_RED.
- */
-union cavm_pko_l2_sqx_red
-{
-    uint64_t u;
-    struct cavm_pko_l2_sqx_red_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_19_63        : 45;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19_63        : 45;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l2_sqx_red_s cn; */
-};
-typedef union cavm_pko_l2_sqx_red cavm_pko_l2_sqx_red_t;
-
-static inline uint64_t CAVM_PKO_L2_SQX_RED(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_RED(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000100068ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_L2_SQX_RED", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L2_SQX_RED(a) cavm_pko_l2_sqx_red_t
-#define bustype_CAVM_PKO_L2_SQX_RED(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L2_SQX_RED(a) "PKO_L2_SQX_RED"
-#define device_bar_CAVM_PKO_L2_SQX_RED(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L2_SQX_RED(a) (a)
-#define arguments_CAVM_PKO_L2_SQX_RED(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) pko_l2_sq#_sched_state
@@ -7255,125 +6679,6 @@ static inline uint64_t CAVM_PKO_L2_SQX_TOPOLOGY(uint64_t a)
 #define device_bar_CAVM_PKO_L2_SQX_TOPOLOGY(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_L2_SQX_TOPOLOGY(a) (a)
 #define arguments_CAVM_PKO_L2_SQX_TOPOLOGY(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l2_sq#_yellow
- *
- * INTERNAL: PKO PSE Level 2 Shaping Queue Yellow State Debug Register
- *
- * This register has the same bit fields as PKO_L1_SQ()_YELLOW.
- */
-union cavm_pko_l2_sqx_yellow
-{
-    uint64_t u;
-    struct cavm_pko_l2_sqx_yellow_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_19_63        : 45;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 9;  /**< [  8:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_9            : 1;
-        uint64_t head                  : 9;  /**< [ 18: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_19_63        : 45;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l2_sqx_yellow_s cn; */
-};
-typedef union cavm_pko_l2_sqx_yellow cavm_pko_l2_sqx_yellow_t;
-
-static inline uint64_t CAVM_PKO_L2_SQX_YELLOW(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_YELLOW(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000100060ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_L2_SQX_YELLOW", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L2_SQX_YELLOW(a) cavm_pko_l2_sqx_yellow_t
-#define bustype_CAVM_PKO_L2_SQX_YELLOW(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L2_SQX_YELLOW(a) "PKO_L2_SQX_YELLOW"
-#define device_bar_CAVM_PKO_L2_SQX_YELLOW(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L2_SQX_YELLOW(a) (a)
-#define arguments_CAVM_PKO_L2_SQX_YELLOW(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l2_sqa_debug
- *
- * INTERNAL: PKO PSE Level 2 SQ-A Internal Debug Register
- *
- * This register has the same bit fields as PKO_PQA_DEBUG.
- */
-union cavm_pko_l2_sqa_debug
-{
-    uint64_t u;
-    struct cavm_pko_l2_sqa_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l2_sqa_debug_s cn; */
-};
-typedef union cavm_pko_l2_sqa_debug cavm_pko_l2_sqa_debug_t;
-
-#define CAVM_PKO_L2_SQA_DEBUG CAVM_PKO_L2_SQA_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_L2_SQA_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQA_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000100128ll;
-    __cavm_csr_fatal("PKO_L2_SQA_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L2_SQA_DEBUG cavm_pko_l2_sqa_debug_t
-#define bustype_CAVM_PKO_L2_SQA_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_L2_SQA_DEBUG "PKO_L2_SQA_DEBUG"
-#define device_bar_CAVM_PKO_L2_SQA_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L2_SQA_DEBUG 0
-#define arguments_CAVM_PKO_L2_SQA_DEBUG -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_l2_sqb_debug
- *
- * INTERNAL: PKO PSE Level 2 SQ-B Internal Debug Register
- *
- * This register has the same bit fields as PKO_PQA_DEBUG.
- */
-union cavm_pko_l2_sqb_debug
-{
-    uint64_t u;
-    struct cavm_pko_l2_sqb_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l2_sqb_debug_s cn; */
-};
-typedef union cavm_pko_l2_sqb_debug cavm_pko_l2_sqb_debug_t;
-
-#define CAVM_PKO_L2_SQB_DEBUG CAVM_PKO_L2_SQB_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_L2_SQB_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQB_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000100130ll;
-    __cavm_csr_fatal("PKO_L2_SQB_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L2_SQB_DEBUG cavm_pko_l2_sqb_debug_t
-#define bustype_CAVM_PKO_L2_SQB_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_L2_SQB_DEBUG "PKO_L2_SQB_DEBUG"
-#define device_bar_CAVM_PKO_L2_SQB_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L2_SQB_DEBUG 0
-#define arguments_CAVM_PKO_L2_SQB_DEBUG -1,-1,-1,-1
 
 /**
  * Register (NCB) pko_l3_const
@@ -7874,55 +7179,6 @@ static inline uint64_t CAVM_PKO_L3_SQX_CIR(uint64_t a)
 #define arguments_CAVM_PKO_L3_SQX_CIR(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pko_l3_sq#_green
- *
- * INTERNAL: PKO PSE Level 3 Shaping Queue Green State Debug Register
- */
-union cavm_pko_l3_sqx_green
-{
-    uint64_t u;
-    struct cavm_pko_l3_sqx_green_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_41_63        : 23;
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Indicates that the round-robin input is mapped to RED. */
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 10-bit vector, ordered by priority, that indicate which inputs to this
-                                                                 scheduling queue are active. For internal use only. */
-        uint64_t reserved_18_19        : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_19        : 2;
-        uint64_t active_vec            : 20; /**< [ 39: 20](R/W/H) Active vector. A 10-bit vector, ordered by priority, that indicate which inputs to this
-                                                                 scheduling queue are active. For internal use only. */
-        uint64_t rr_active             : 1;  /**< [ 40: 40](R/W/H) Round-robin red active. Indicates that the round-robin input is mapped to RED. */
-        uint64_t reserved_41_63        : 23;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l3_sqx_green_s cn; */
-};
-typedef union cavm_pko_l3_sqx_green cavm_pko_l3_sqx_green_t;
-
-static inline uint64_t CAVM_PKO_L3_SQX_GREEN(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_GREEN(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000180058ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_L3_SQX_GREEN", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L3_SQX_GREEN(a) cavm_pko_l3_sqx_green_t
-#define bustype_CAVM_PKO_L3_SQX_GREEN(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L3_SQX_GREEN(a) "PKO_L3_SQX_GREEN"
-#define device_bar_CAVM_PKO_L3_SQX_GREEN(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L3_SQX_GREEN(a) (a)
-#define arguments_CAVM_PKO_L3_SQX_GREEN(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) pko_l3_sq#_pick
  *
  * PKO PSE Level 3 Shaping Queue Packet Pick State Debug Register
@@ -8146,92 +7402,6 @@ static inline uint64_t CAVM_PKO_L3_SQX_PIR(uint64_t a)
 #define device_bar_CAVM_PKO_L3_SQX_PIR(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_L3_SQX_PIR(a) (a)
 #define arguments_CAVM_PKO_L3_SQX_PIR(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l3_sq#_pointers
- *
- * INTERNAL: PKO PSE Level 3 Shaping Queue Linked List Pointers Debug Register
- *
- * This register has the same bit fields as PKO_L2_SQ()_POINTERS.
- */
-union cavm_pko_l3_sqx_pointers
-{
-    uint64_t u;
-    struct cavm_pko_l3_sqx_pointers_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_24_63        : 40;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-#else /* Word 0 - Little Endian */
-        uint64_t next                  : 8;  /**< [  7:  0](R/W/H) Next pointer. The linked-list next pointer. */
-        uint64_t reserved_8_15         : 8;
-        uint64_t prev                  : 8;  /**< [ 23: 16](R/W/H) Previous pointer. The linked-list previous pointer. */
-        uint64_t reserved_24_63        : 40;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l3_sqx_pointers_s cn; */
-};
-typedef union cavm_pko_l3_sqx_pointers cavm_pko_l3_sqx_pointers_t;
-
-static inline uint64_t CAVM_PKO_L3_SQX_POINTERS(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_POINTERS(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000100078ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_L3_SQX_POINTERS", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L3_SQX_POINTERS(a) cavm_pko_l3_sqx_pointers_t
-#define bustype_CAVM_PKO_L3_SQX_POINTERS(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L3_SQX_POINTERS(a) "PKO_L3_SQX_POINTERS"
-#define device_bar_CAVM_PKO_L3_SQX_POINTERS(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L3_SQX_POINTERS(a) (a)
-#define arguments_CAVM_PKO_L3_SQX_POINTERS(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l3_sq#_red
- *
- * INTERNAL: PKO PSE Level 3 Shaping Queue Red State Debug Register
- *
- * This register has the same bit fields as PKO_L3_SQ()_YELLOW.
- */
-union cavm_pko_l3_sqx_red
-{
-    uint64_t u;
-    struct cavm_pko_l3_sqx_red_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_18_63        : 46;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_63        : 46;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l3_sqx_red_s cn; */
-};
-typedef union cavm_pko_l3_sqx_red cavm_pko_l3_sqx_red_t;
-
-static inline uint64_t CAVM_PKO_L3_SQX_RED(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_RED(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000180068ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_L3_SQX_RED", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L3_SQX_RED(a) cavm_pko_l3_sqx_red_t
-#define bustype_CAVM_PKO_L3_SQX_RED(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L3_SQX_RED(a) "PKO_L3_SQX_RED"
-#define device_bar_CAVM_PKO_L3_SQX_RED(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L3_SQX_RED(a) (a)
-#define arguments_CAVM_PKO_L3_SQX_RED(a) (a),-1,-1,-1
 
 /**
  * Register (NCB) pko_l3_sq#_sched_state
@@ -8587,123 +7757,6 @@ static inline uint64_t CAVM_PKO_L3_SQX_TOPOLOGY(uint64_t a)
 #define arguments_CAVM_PKO_L3_SQX_TOPOLOGY(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pko_l3_sq#_yellow
- *
- * INTERNAL: PKO PSE Level 3 Shaping Queue Yellow State Debug Register
- */
-union cavm_pko_l3_sqx_yellow
-{
-    uint64_t u;
-    struct cavm_pko_l3_sqx_yellow_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_18_63        : 46;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-#else /* Word 0 - Little Endian */
-        uint64_t tail                  : 8;  /**< [  7:  0](R/W/H) Tail pointer. The index of round-robin linked-list tail. For internal use only. */
-        uint64_t reserved_8_9          : 2;
-        uint64_t head                  : 8;  /**< [ 17: 10](R/W/H) Head pointer. The index of round-robin linked-list head. For internal use only. */
-        uint64_t reserved_18_63        : 46;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l3_sqx_yellow_s cn; */
-};
-typedef union cavm_pko_l3_sqx_yellow cavm_pko_l3_sqx_yellow_t;
-
-static inline uint64_t CAVM_PKO_L3_SQX_YELLOW(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_YELLOW(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
-        return 0x854000180060ll + 0x200ll * ((a) & 0xff);
-    __cavm_csr_fatal("PKO_L3_SQX_YELLOW", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L3_SQX_YELLOW(a) cavm_pko_l3_sqx_yellow_t
-#define bustype_CAVM_PKO_L3_SQX_YELLOW(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_L3_SQX_YELLOW(a) "PKO_L3_SQX_YELLOW"
-#define device_bar_CAVM_PKO_L3_SQX_YELLOW(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L3_SQX_YELLOW(a) (a)
-#define arguments_CAVM_PKO_L3_SQX_YELLOW(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_l3_sqa_debug
- *
- * INTERNAL: PKO PSE Level 3 SQ-A Internal Debug Register
- *
- * This register has the same bit fields as PKO_PQA_DEBUG.
- */
-union cavm_pko_l3_sqa_debug
-{
-    uint64_t u;
-    struct cavm_pko_l3_sqa_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l3_sqa_debug_s cn; */
-};
-typedef union cavm_pko_l3_sqa_debug cavm_pko_l3_sqa_debug_t;
-
-#define CAVM_PKO_L3_SQA_DEBUG CAVM_PKO_L3_SQA_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_L3_SQA_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQA_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000180128ll;
-    __cavm_csr_fatal("PKO_L3_SQA_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L3_SQA_DEBUG cavm_pko_l3_sqa_debug_t
-#define bustype_CAVM_PKO_L3_SQA_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_L3_SQA_DEBUG "PKO_L3_SQA_DEBUG"
-#define device_bar_CAVM_PKO_L3_SQA_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L3_SQA_DEBUG 0
-#define arguments_CAVM_PKO_L3_SQA_DEBUG -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_l3_sqb_debug
- *
- * INTERNAL: PKO PSE Level 3 SQ-B Internal Debug Register
- *
- * This register has the same bit fields as PKO_PQA_DEBUG.
- */
-union cavm_pko_l3_sqb_debug
-{
-    uint64_t u;
-    struct cavm_pko_l3_sqb_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_l3_sqb_debug_s cn; */
-};
-typedef union cavm_pko_l3_sqb_debug cavm_pko_l3_sqb_debug_t;
-
-#define CAVM_PKO_L3_SQB_DEBUG CAVM_PKO_L3_SQB_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_L3_SQB_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQB_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000180130ll;
-    __cavm_csr_fatal("PKO_L3_SQB_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_L3_SQB_DEBUG cavm_pko_l3_sqb_debug_t
-#define bustype_CAVM_PKO_L3_SQB_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_L3_SQB_DEBUG "PKO_L3_SQB_DEBUG"
-#define device_bar_CAVM_PKO_L3_SQB_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_L3_SQB_DEBUG 0
-#define arguments_CAVM_PKO_L3_SQB_DEBUG -1,-1,-1,-1
-
-/**
  * Register (NCB) pko_l4_const
  *
  * PKO L4 Constants Register
@@ -8952,17 +8005,11 @@ union cavm_pko_lut_ecc_dbe_int_ena_w1c
     struct cavm_pko_lut_ecc_dbe_int_ena_w1c_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Reads or clears enable for PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Reads or clears enable for PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM]. */
         uint64_t reserved_0_62         : 63;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_62         : 63;
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Reads or clears enable for PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Reads or clears enable for PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pko_lut_ecc_dbe_int_ena_w1c_s cn; */
@@ -8997,17 +8044,11 @@ union cavm_pko_lut_ecc_dbe_int_ena_w1s
     struct cavm_pko_lut_ecc_dbe_int_ena_w1s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets enable for PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets enable for PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM]. */
         uint64_t reserved_0_62         : 63;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_62         : 63;
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets enable for PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets enable for PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pko_lut_ecc_dbe_int_ena_w1s_s cn; */
@@ -9041,17 +8082,11 @@ union cavm_pko_lut_ecc_dbe_w1c
     struct cavm_pko_lut_ecc_dbe_w1c_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Error for C2Q_LUT_RAM.
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Error for C2Q_LUT_RAM. */
         uint64_t reserved_0_62         : 63;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_62         : 63;
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Error for C2Q_LUT_RAM.
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Error for C2Q_LUT_RAM. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pko_lut_ecc_dbe_w1c_s cn; */
@@ -9086,17 +8121,11 @@ union cavm_pko_lut_ecc_dbe_w1s
     struct cavm_pko_lut_ecc_dbe_w1s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM]. */
         uint64_t reserved_0_62         : 63;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_62         : 63;
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets PKO_LUT_ECC_DBE_W1C[C2Q_LUT_RAM]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pko_lut_ecc_dbe_w1s_s cn; */
@@ -9131,17 +8160,11 @@ union cavm_pko_lut_ecc_sbe_int_ena_w1c
     struct cavm_pko_lut_ecc_sbe_int_ena_w1c_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Reads or clears enable for PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Reads or clears enable for PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM]. */
         uint64_t reserved_0_62         : 63;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_62         : 63;
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Reads or clears enable for PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Reads or clears enable for PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pko_lut_ecc_sbe_int_ena_w1c_s cn; */
@@ -9176,17 +8199,11 @@ union cavm_pko_lut_ecc_sbe_int_ena_w1s
     struct cavm_pko_lut_ecc_sbe_int_ena_w1s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets enable for PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets enable for PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM]. */
         uint64_t reserved_0_62         : 63;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_62         : 63;
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets enable for PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets enable for PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pko_lut_ecc_sbe_int_ena_w1s_s cn; */
@@ -9220,17 +8237,11 @@ union cavm_pko_lut_ecc_sbe_w1c
     struct cavm_pko_lut_ecc_sbe_w1c_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Error for C2Q_LUT_RAM.
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Error for C2Q_LUT_RAM. */
         uint64_t reserved_0_62         : 63;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_62         : 63;
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Error for C2Q_LUT_RAM.
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1C/H) Error for C2Q_LUT_RAM. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pko_lut_ecc_sbe_w1c_s cn; */
@@ -9265,17 +8276,11 @@ union cavm_pko_lut_ecc_sbe_w1s
     struct cavm_pko_lut_ecc_sbe_w1s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM]. */
         uint64_t reserved_0_62         : 63;
 #else /* Word 0 - Little Endian */
         uint64_t reserved_0_62         : 63;
-        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM].
-                                                                 Internal:
-                                                                 Instances:
-                                                                 pko_pnr2.nonpse.pko_c2q_lut.pko_c2q_lut_ram_i */
+        uint64_t c2q_lut_ram           : 1;  /**< [ 63: 63](R/W1S/H) Reads or sets PKO_LUT_ECC_SBE_W1C[C2Q_LUT_RAM]. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_pko_lut_ecc_sbe_w1s_s cn; */
@@ -9656,104 +8661,6 @@ static inline uint64_t CAVM_PKO_PDM_CFG_FUNC(void)
 #define arguments_CAVM_PKO_PDM_CFG -1,-1,-1,-1
 
 /**
- * Register (NCB) pko_pdm_cfg_dbg
- *
- * INTERNAL: PKO PDM Configuration Debug Register
- */
-union cavm_pko_pdm_cfg_dbg
-{
-    uint64_t u;
-    struct cavm_pko_pdm_cfg_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t cp_stall_thrshld      : 32; /**< [ 31:  0](R/W) Program this register to the 32-bit number of cycles to test for the PDM(CP)
-                                                                 stalled on inputs going into the ISRs. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT] indicates the threshold has been hit. */
-#else /* Word 0 - Little Endian */
-        uint64_t cp_stall_thrshld      : 32; /**< [ 31:  0](R/W) Program this register to the 32-bit number of cycles to test for the PDM(CP)
-                                                                 stalled on inputs going into the ISRs. For diagnostic use only.
-
-                                                                 Internal:
-                                                                 PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT] indicates the threshold has been hit. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_cfg_dbg_s cn; */
-};
-typedef union cavm_pko_pdm_cfg_dbg cavm_pko_pdm_cfg_dbg_t;
-
-#define CAVM_PKO_PDM_CFG_DBG CAVM_PKO_PDM_CFG_DBG_FUNC()
-static inline uint64_t CAVM_PKO_PDM_CFG_DBG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_CFG_DBG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000800ff8ll;
-    __cavm_csr_fatal("PKO_PDM_CFG_DBG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_CFG_DBG cavm_pko_pdm_cfg_dbg_t
-#define bustype_CAVM_PKO_PDM_CFG_DBG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_CFG_DBG "PKO_PDM_CFG_DBG"
-#define device_bar_CAVM_PKO_PDM_CFG_DBG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_CFG_DBG 0
-#define arguments_CAVM_PKO_PDM_CFG_DBG -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_cp_dbg
- *
- * INTERNAL: PKO PDM CP Internal Debug Register
- */
-union cavm_pko_pdm_cp_dbg
-{
-    uint64_t u;
-    struct cavm_pko_pdm_cp_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_16_63        : 48;
-        uint64_t stateless_fif_cnt     : 6;  /**< [ 15: 10](RO/H) Stateless FIFO count. */
-        uint64_t reserved_5_9          : 5;
-        uint64_t op_fif_not_full       : 5;  /**< [  4:  0](RO/H) Output fifo not full signals. The order of the bits is:
-                                                                 0x4 = ISR CMD FIFO not full.
-                                                                 0x3 = DESC DAT FIFO HIGH not full.
-                                                                 0x2 = DESC DAT FIFO LOW not full.
-                                                                 0x1 = MP DAT FIFO not full.
-                                                                 0x0 = PSE CMD RESP FIFO has credit. */
-#else /* Word 0 - Little Endian */
-        uint64_t op_fif_not_full       : 5;  /**< [  4:  0](RO/H) Output fifo not full signals. The order of the bits is:
-                                                                 0x4 = ISR CMD FIFO not full.
-                                                                 0x3 = DESC DAT FIFO HIGH not full.
-                                                                 0x2 = DESC DAT FIFO LOW not full.
-                                                                 0x1 = MP DAT FIFO not full.
-                                                                 0x0 = PSE CMD RESP FIFO has credit. */
-        uint64_t reserved_5_9          : 5;
-        uint64_t stateless_fif_cnt     : 6;  /**< [ 15: 10](RO/H) Stateless FIFO count. */
-        uint64_t reserved_16_63        : 48;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_cp_dbg_s cn; */
-};
-typedef union cavm_pko_pdm_cp_dbg cavm_pko_pdm_cp_dbg_t;
-
-#define CAVM_PKO_PDM_CP_DBG CAVM_PKO_PDM_CP_DBG_FUNC()
-static inline uint64_t CAVM_PKO_PDM_CP_DBG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_CP_DBG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000800190ll;
-    __cavm_csr_fatal("PKO_PDM_CP_DBG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_CP_DBG cavm_pko_pdm_cp_dbg_t
-#define bustype_CAVM_PKO_PDM_CP_DBG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_CP_DBG "PKO_PDM_CP_DBG"
-#define device_bar_CAVM_PKO_PDM_CP_DBG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_CP_DBG 0
-#define arguments_CAVM_PKO_PDM_CP_DBG -1,-1,-1,-1
-
-/**
  * Register (NCB) pko_pdm_dq#_minpad
  *
  * PKO PDM Descriptor Queue Minimum Pad Register
@@ -9823,144 +8730,6 @@ static inline uint64_t CAVM_PKO_PDM_DQX_MINPAD(uint64_t a)
 #define device_bar_CAVM_PKO_PDM_DQX_MINPAD(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_PDM_DQX_MINPAD(a) (a)
 #define arguments_CAVM_PKO_PDM_DQX_MINPAD(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_drpbuf_dbg
- *
- * INTERNAL: PKO PDM DRPBUF Debug Register
- */
-union cavm_pko_pdm_drpbuf_dbg
-{
-    uint64_t u;
-    struct cavm_pko_pdm_drpbuf_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_43_63        : 21;
-        uint64_t sel_nxt_ptr           : 1;  /**< [ 42: 42](RO/H) Sel_nxt_ptr signal. */
-        uint64_t load_val              : 1;  /**< [ 41: 41](RO/H) Load valid signal. */
-        uint64_t rdy                   : 1;  /**< [ 40: 40](RO/H) Ready signal. */
-        uint64_t cur_state             : 3;  /**< [ 39: 37](RO/H) Current state from the pbuf controller. */
-        uint64_t reserved_33_36        : 4;
-        uint64_t track_rd_cnt          : 6;  /**< [ 32: 27](RO/H) Track read count value. */
-        uint64_t track_wr_cnt          : 6;  /**< [ 26: 21](RO/H) Track write count value. */
-        uint64_t reserved_17_20        : 4;
-        uint64_t mem_addr              : 13; /**< [ 16:  4](RO/H) Memory address for pbuf ram. */
-        uint64_t mem_en                : 4;  /**< [  3:  0](RO/H) Memory write/chip enable signals. The order of the bits is:
-                                                                 0x3 = Low wen.
-                                                                 0x2 = Low cen.
-                                                                 0x1 = High wen.
-                                                                 0x0 = High cen. */
-#else /* Word 0 - Little Endian */
-        uint64_t mem_en                : 4;  /**< [  3:  0](RO/H) Memory write/chip enable signals. The order of the bits is:
-                                                                 0x3 = Low wen.
-                                                                 0x2 = Low cen.
-                                                                 0x1 = High wen.
-                                                                 0x0 = High cen. */
-        uint64_t mem_addr              : 13; /**< [ 16:  4](RO/H) Memory address for pbuf ram. */
-        uint64_t reserved_17_20        : 4;
-        uint64_t track_wr_cnt          : 6;  /**< [ 26: 21](RO/H) Track write count value. */
-        uint64_t track_rd_cnt          : 6;  /**< [ 32: 27](RO/H) Track read count value. */
-        uint64_t reserved_33_36        : 4;
-        uint64_t cur_state             : 3;  /**< [ 39: 37](RO/H) Current state from the pbuf controller. */
-        uint64_t rdy                   : 1;  /**< [ 40: 40](RO/H) Ready signal. */
-        uint64_t load_val              : 1;  /**< [ 41: 41](RO/H) Load valid signal. */
-        uint64_t sel_nxt_ptr           : 1;  /**< [ 42: 42](RO/H) Sel_nxt_ptr signal. */
-        uint64_t reserved_43_63        : 21;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_drpbuf_dbg_s cn; */
-};
-typedef union cavm_pko_pdm_drpbuf_dbg cavm_pko_pdm_drpbuf_dbg_t;
-
-#define CAVM_PKO_PDM_DRPBUF_DBG CAVM_PKO_PDM_DRPBUF_DBG_FUNC()
-static inline uint64_t CAVM_PKO_PDM_DRPBUF_DBG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_DRPBUF_DBG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8540008000b0ll;
-    __cavm_csr_fatal("PKO_PDM_DRPBUF_DBG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_DRPBUF_DBG cavm_pko_pdm_drpbuf_dbg_t
-#define bustype_CAVM_PKO_PDM_DRPBUF_DBG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_DRPBUF_DBG "PKO_PDM_DRPBUF_DBG"
-#define device_bar_CAVM_PKO_PDM_DRPBUF_DBG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_DRPBUF_DBG 0
-#define arguments_CAVM_PKO_PDM_DRPBUF_DBG -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_dwpbuf_dbg
- *
- * INTERNAL: PKO PDM DWPBUF Debug Register
- */
-union cavm_pko_pdm_dwpbuf_dbg
-{
-    uint64_t u;
-    struct cavm_pko_pdm_dwpbuf_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t cmd_proc              : 1;  /**< [ 47: 47](RO/H) Command process signal. */
-        uint64_t reserved_46           : 1;
-        uint64_t mem_data_val          : 1;  /**< [ 45: 45](RO/H) Memory data valid. */
-        uint64_t insert_np             : 1;  /**< [ 44: 44](RO/H) Next pointer insertion signal. */
-        uint64_t reserved_43           : 1;
-        uint64_t sel_nxt_ptr           : 1;  /**< [ 42: 42](RO/H) Sel_nxt_ptr signal. */
-        uint64_t load_val              : 1;  /**< [ 41: 41](RO/H) Load valid signal. */
-        uint64_t rdy                   : 1;  /**< [ 40: 40](RO/H) Ready signal. */
-        uint64_t reserved_37_39        : 3;
-        uint64_t mem_rdy               : 1;  /**< [ 36: 36](RO/H) Memory stage ready signal. */
-        uint64_t reserved_19_35        : 17;
-        uint64_t insert_dp             : 2;  /**< [ 18: 17](RO/H) Descriptor insertion signals. */
-        uint64_t reserved_15_16        : 2;
-        uint64_t mem_addr              : 11; /**< [ 14:  4](RO/H) Memory address for pbuf ram. */
-        uint64_t mem_en                : 4;  /**< [  3:  0](RO/H) Memory write/chip enable signals. The order of the bits is:
-                                                                 0x3 = Low wen.
-                                                                 0x2 = Low cen.
-                                                                 0x1 = High wen.
-                                                                 0x0 = High cen. */
-#else /* Word 0 - Little Endian */
-        uint64_t mem_en                : 4;  /**< [  3:  0](RO/H) Memory write/chip enable signals. The order of the bits is:
-                                                                 0x3 = Low wen.
-                                                                 0x2 = Low cen.
-                                                                 0x1 = High wen.
-                                                                 0x0 = High cen. */
-        uint64_t mem_addr              : 11; /**< [ 14:  4](RO/H) Memory address for pbuf ram. */
-        uint64_t reserved_15_16        : 2;
-        uint64_t insert_dp             : 2;  /**< [ 18: 17](RO/H) Descriptor insertion signals. */
-        uint64_t reserved_19_35        : 17;
-        uint64_t mem_rdy               : 1;  /**< [ 36: 36](RO/H) Memory stage ready signal. */
-        uint64_t reserved_37_39        : 3;
-        uint64_t rdy                   : 1;  /**< [ 40: 40](RO/H) Ready signal. */
-        uint64_t load_val              : 1;  /**< [ 41: 41](RO/H) Load valid signal. */
-        uint64_t sel_nxt_ptr           : 1;  /**< [ 42: 42](RO/H) Sel_nxt_ptr signal. */
-        uint64_t reserved_43           : 1;
-        uint64_t insert_np             : 1;  /**< [ 44: 44](RO/H) Next pointer insertion signal. */
-        uint64_t mem_data_val          : 1;  /**< [ 45: 45](RO/H) Memory data valid. */
-        uint64_t reserved_46           : 1;
-        uint64_t cmd_proc              : 1;  /**< [ 47: 47](RO/H) Command process signal. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_dwpbuf_dbg_s cn; */
-};
-typedef union cavm_pko_pdm_dwpbuf_dbg cavm_pko_pdm_dwpbuf_dbg_t;
-
-#define CAVM_PKO_PDM_DWPBUF_DBG CAVM_PKO_PDM_DWPBUF_DBG_FUNC()
-static inline uint64_t CAVM_PKO_PDM_DWPBUF_DBG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_DWPBUF_DBG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8540008000a8ll;
-    __cavm_csr_fatal("PKO_PDM_DWPBUF_DBG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_DWPBUF_DBG cavm_pko_pdm_dwpbuf_dbg_t
-#define bustype_CAVM_PKO_PDM_DWPBUF_DBG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_DWPBUF_DBG "PKO_PDM_DWPBUF_DBG"
-#define device_bar_CAVM_PKO_PDM_DWPBUF_DBG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_DWPBUF_DBG 0
-#define arguments_CAVM_PKO_PDM_DWPBUF_DBG -1,-1,-1,-1
 
 /**
  * Register (NCB) pko_pdm_ecc_ctl0
@@ -10413,706 +9182,6 @@ static inline uint64_t CAVM_PKO_PDM_ECC_SBE_W1S_FUNC(void)
 #define arguments_CAVM_PKO_PDM_ECC_SBE_W1S -1,-1,-1,-1
 
 /**
- * Register (NCB) pko_pdm_fillb_dbg0
- *
- * INTERNAL: PKO PDM Fill Buffer Debug Register 0
- */
-union cavm_pko_pdm_fillb_dbg0
-{
-    uint64_t u;
-    struct cavm_pko_pdm_fillb_dbg0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_57_63        : 7;
-        uint64_t pd_seq                : 5;  /**< [ 56: 52](RO/H) Sequence number for next packet descriptor fill request. */
-        uint64_t resp_pd_seq           : 5;  /**< [ 51: 47](RO/H) Sequence number for next response to be written into packet descriptor buffer RAM. */
-        uint64_t d_rsp_lo_ram_addr_sel : 2;  /**< [ 46: 45](RO/H) Source of read/write address to low PD fill buffer RAM.
-                                                                 0x0 = No access.
-                                                                 0x1 = Read access sourced by PD fill buffer response FIFO (feeding DRPBUF).
-                                                                 0x2 = Write access sourced by IOBP0.
-                                                                 0x3 = Write access sourced by flush buffer. */
-        uint64_t d_rsp_hi_ram_addr_sel : 2;  /**< [ 44: 43](RO/H) Source of read/write address to high PD fill buffer RAM.
-                                                                 0x0 = No access.
-                                                                 0x1 = Read access sourced by PD fill buffer response FIFO (feeding DRPBUF).
-                                                                 0x2 = Write access sourced by IOBP0.
-                                                                 0x3 = Write access sourced by flush buffer. */
-        uint64_t d_rsp_rd_seq          : 5;  /**< [ 42: 38](RO/H) Sequence number for next response to be read from packet descriptor buffer RAM. */
-        uint64_t d_rsp_fifo_rd_seq     : 5;  /**< [ 37: 33](RO/H) Sequence number for next PD fill response to be sent to DRPBUF. */
-        uint64_t d_fill_req_fifo_val   : 1;  /**< [ 32: 32](RO/H) Fill buffer PD read request FIFO has a valid entry. */
-        uint64_t d_rsp_ram_valid       : 32; /**< [ 31:  0](RO/H) Fill buffer packet descriptor RAM valid flags. */
-#else /* Word 0 - Little Endian */
-        uint64_t d_rsp_ram_valid       : 32; /**< [ 31:  0](RO/H) Fill buffer packet descriptor RAM valid flags. */
-        uint64_t d_fill_req_fifo_val   : 1;  /**< [ 32: 32](RO/H) Fill buffer PD read request FIFO has a valid entry. */
-        uint64_t d_rsp_fifo_rd_seq     : 5;  /**< [ 37: 33](RO/H) Sequence number for next PD fill response to be sent to DRPBUF. */
-        uint64_t d_rsp_rd_seq          : 5;  /**< [ 42: 38](RO/H) Sequence number for next response to be read from packet descriptor buffer RAM. */
-        uint64_t d_rsp_hi_ram_addr_sel : 2;  /**< [ 44: 43](RO/H) Source of read/write address to high PD fill buffer RAM.
-                                                                 0x0 = No access.
-                                                                 0x1 = Read access sourced by PD fill buffer response FIFO (feeding DRPBUF).
-                                                                 0x2 = Write access sourced by IOBP0.
-                                                                 0x3 = Write access sourced by flush buffer. */
-        uint64_t d_rsp_lo_ram_addr_sel : 2;  /**< [ 46: 45](RO/H) Source of read/write address to low PD fill buffer RAM.
-                                                                 0x0 = No access.
-                                                                 0x1 = Read access sourced by PD fill buffer response FIFO (feeding DRPBUF).
-                                                                 0x2 = Write access sourced by IOBP0.
-                                                                 0x3 = Write access sourced by flush buffer. */
-        uint64_t resp_pd_seq           : 5;  /**< [ 51: 47](RO/H) Sequence number for next response to be written into packet descriptor buffer RAM. */
-        uint64_t pd_seq                : 5;  /**< [ 56: 52](RO/H) Sequence number for next packet descriptor fill request. */
-        uint64_t reserved_57_63        : 7;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_fillb_dbg0_s cn; */
-};
-typedef union cavm_pko_pdm_fillb_dbg0 cavm_pko_pdm_fillb_dbg0_t;
-
-#define CAVM_PKO_PDM_FILLB_DBG0 CAVM_PKO_PDM_FILLB_DBG0_FUNC()
-static inline uint64_t CAVM_PKO_PDM_FILLB_DBG0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_FILLB_DBG0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8540008002a0ll;
-    __cavm_csr_fatal("PKO_PDM_FILLB_DBG0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_FILLB_DBG0 cavm_pko_pdm_fillb_dbg0_t
-#define bustype_CAVM_PKO_PDM_FILLB_DBG0 CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_FILLB_DBG0 "PKO_PDM_FILLB_DBG0"
-#define device_bar_CAVM_PKO_PDM_FILLB_DBG0 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_FILLB_DBG0 0
-#define arguments_CAVM_PKO_PDM_FILLB_DBG0 -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_fillb_dbg1
- *
- * INTERNAL: PKO PDM Fill Buffer Debug Register 1
- */
-union cavm_pko_pdm_fillb_dbg1
-{
-    uint64_t u;
-    struct cavm_pko_pdm_fillb_dbg1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_57_63        : 7;
-        uint64_t mp_seq                : 5;  /**< [ 56: 52](RO/H) Sequence number for next meta packet cache line fill request. */
-        uint64_t resp_mp_seq           : 5;  /**< [ 51: 47](RO/H) Sequence number for next response to be written into meta packet buffer RAM. */
-        uint64_t m_rsp_lo_ram_addr_sel : 2;  /**< [ 46: 45](RO/H) Source of read/write address to low MP fill buffer RAM.
-                                                                 0x0 = No access.
-                                                                 0x1 = Read access sourced by MP fill buffer response FIFO (feeding DRPBUF).
-                                                                 0x2 = Write access sourced by IOBP0.
-                                                                 0x3 = Write access sourced by flush buffer. */
-        uint64_t m_rsp_hi_ram_addr_sel : 2;  /**< [ 44: 43](RO/H) Source of read/write address to high MP fill buffer RAM.
-                                                                 0x0 = No access.
-                                                                 0x1 = Read access sourced by MP fill buffer response FIFO (feeding DRPBUF).
-                                                                 0x2 = Write access sourced by IOBP0.
-                                                                 0x3 = Write access sourced by flush buffer. */
-        uint64_t m_rsp_rd_seq          : 5;  /**< [ 42: 38](RO/H) Sequence number for next response to be read from meta packet buffer RAM. */
-        uint64_t m_rsp_fifo_rd_seq     : 5;  /**< [ 37: 33](RO/H) Sequence number for next MP fill response to be sent to DRPBUF. */
-        uint64_t m_fill_req_fifo_val   : 1;  /**< [ 32: 32](RO/H) Fill buffer MP read request FIFO has a valid entry. */
-        uint64_t m_rsp_ram_valid       : 32; /**< [ 31:  0](RO/H) Fill buffer meta packet RAM valid flags. */
-#else /* Word 0 - Little Endian */
-        uint64_t m_rsp_ram_valid       : 32; /**< [ 31:  0](RO/H) Fill buffer meta packet RAM valid flags. */
-        uint64_t m_fill_req_fifo_val   : 1;  /**< [ 32: 32](RO/H) Fill buffer MP read request FIFO has a valid entry. */
-        uint64_t m_rsp_fifo_rd_seq     : 5;  /**< [ 37: 33](RO/H) Sequence number for next MP fill response to be sent to DRPBUF. */
-        uint64_t m_rsp_rd_seq          : 5;  /**< [ 42: 38](RO/H) Sequence number for next response to be read from meta packet buffer RAM. */
-        uint64_t m_rsp_hi_ram_addr_sel : 2;  /**< [ 44: 43](RO/H) Source of read/write address to high MP fill buffer RAM.
-                                                                 0x0 = No access.
-                                                                 0x1 = Read access sourced by MP fill buffer response FIFO (feeding DRPBUF).
-                                                                 0x2 = Write access sourced by IOBP0.
-                                                                 0x3 = Write access sourced by flush buffer. */
-        uint64_t m_rsp_lo_ram_addr_sel : 2;  /**< [ 46: 45](RO/H) Source of read/write address to low MP fill buffer RAM.
-                                                                 0x0 = No access.
-                                                                 0x1 = Read access sourced by MP fill buffer response FIFO (feeding DRPBUF).
-                                                                 0x2 = Write access sourced by IOBP0.
-                                                                 0x3 = Write access sourced by flush buffer. */
-        uint64_t resp_mp_seq           : 5;  /**< [ 51: 47](RO/H) Sequence number for next response to be written into meta packet buffer RAM. */
-        uint64_t mp_seq                : 5;  /**< [ 56: 52](RO/H) Sequence number for next meta packet cache line fill request. */
-        uint64_t reserved_57_63        : 7;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_fillb_dbg1_s cn; */
-};
-typedef union cavm_pko_pdm_fillb_dbg1 cavm_pko_pdm_fillb_dbg1_t;
-
-#define CAVM_PKO_PDM_FILLB_DBG1 CAVM_PKO_PDM_FILLB_DBG1_FUNC()
-static inline uint64_t CAVM_PKO_PDM_FILLB_DBG1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_FILLB_DBG1_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8540008002a8ll;
-    __cavm_csr_fatal("PKO_PDM_FILLB_DBG1", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_FILLB_DBG1 cavm_pko_pdm_fillb_dbg1_t
-#define bustype_CAVM_PKO_PDM_FILLB_DBG1 CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_FILLB_DBG1 "PKO_PDM_FILLB_DBG1"
-#define device_bar_CAVM_PKO_PDM_FILLB_DBG1 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_FILLB_DBG1 0
-#define arguments_CAVM_PKO_PDM_FILLB_DBG1 -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_fillb_dbg2
- *
- * INTERNAL: PKO PDM Fill Buffer Debug Register 2
- */
-union cavm_pko_pdm_fillb_dbg2
-{
-    uint64_t u;
-    struct cavm_pko_pdm_fillb_dbg2_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_9_63         : 55;
-        uint64_t fillb_sm              : 5;  /**< [  8:  4](RO/H) Fill buffer state machine state. */
-        uint64_t credit_cntr           : 4;  /**< [  3:  0](RO/H) PKO_PDM_NCB_PDMP_LD read request credit counter. */
-#else /* Word 0 - Little Endian */
-        uint64_t credit_cntr           : 4;  /**< [  3:  0](RO/H) PKO_PDM_NCB_PDMP_LD read request credit counter. */
-        uint64_t fillb_sm              : 5;  /**< [  8:  4](RO/H) Fill buffer state machine state. */
-        uint64_t reserved_9_63         : 55;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_fillb_dbg2_s cn; */
-};
-typedef union cavm_pko_pdm_fillb_dbg2 cavm_pko_pdm_fillb_dbg2_t;
-
-#define CAVM_PKO_PDM_FILLB_DBG2 CAVM_PKO_PDM_FILLB_DBG2_FUNC()
-static inline uint64_t CAVM_PKO_PDM_FILLB_DBG2_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_FILLB_DBG2_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8540008002b0ll;
-    __cavm_csr_fatal("PKO_PDM_FILLB_DBG2", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_FILLB_DBG2 cavm_pko_pdm_fillb_dbg2_t
-#define bustype_CAVM_PKO_PDM_FILLB_DBG2 CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_FILLB_DBG2 "PKO_PDM_FILLB_DBG2"
-#define device_bar_CAVM_PKO_PDM_FILLB_DBG2 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_FILLB_DBG2 0
-#define arguments_CAVM_PKO_PDM_FILLB_DBG2 -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_flshb_dbg0
- *
- * INTERNAL: PKO PDM Flush Buffer Debug Register 0
- */
-union cavm_pko_pdm_flshb_dbg0
-{
-    uint64_t u;
-    struct cavm_pko_pdm_flshb_dbg0_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_44_63        : 20;
-        uint64_t flshb_sm              : 7;  /**< [ 43: 37](RO/H) Flush buffer state machine state. */
-        uint64_t flshb_ctl_sm          : 9;  /**< [ 36: 28](RO/H) Flush buffer control state machine. */
-        uint64_t cam_hptr              : 5;  /**< [ 27: 23](RO/H) Flush buffer CAM head pointer. */
-        uint64_t cam_tptr              : 5;  /**< [ 22: 18](RO/H) Flush buffer CAM tail pointer. */
-        uint64_t expected_stdns        : 6;  /**< [ 17: 12](RO/H) Number of store done responses still pending. */
-        uint64_t d_flshb_eot_cntr      : 3;  /**< [ 11:  9](RO/H) Number of packet descriptor flush requests pending. */
-        uint64_t m_flshb_eot_cntr      : 3;  /**< [  8:  6](RO/H) Number of meta packet flush requests pending. */
-        uint64_t ncbi_credit_cntr      : 6;  /**< [  5:  0](RO/H) NCBI FIFO credit counter. */
-#else /* Word 0 - Little Endian */
-        uint64_t ncbi_credit_cntr      : 6;  /**< [  5:  0](RO/H) NCBI FIFO credit counter. */
-        uint64_t m_flshb_eot_cntr      : 3;  /**< [  8:  6](RO/H) Number of meta packet flush requests pending. */
-        uint64_t d_flshb_eot_cntr      : 3;  /**< [ 11:  9](RO/H) Number of packet descriptor flush requests pending. */
-        uint64_t expected_stdns        : 6;  /**< [ 17: 12](RO/H) Number of store done responses still pending. */
-        uint64_t cam_tptr              : 5;  /**< [ 22: 18](RO/H) Flush buffer CAM tail pointer. */
-        uint64_t cam_hptr              : 5;  /**< [ 27: 23](RO/H) Flush buffer CAM head pointer. */
-        uint64_t flshb_ctl_sm          : 9;  /**< [ 36: 28](RO/H) Flush buffer control state machine. */
-        uint64_t flshb_sm              : 7;  /**< [ 43: 37](RO/H) Flush buffer state machine state. */
-        uint64_t reserved_44_63        : 20;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_flshb_dbg0_s cn; */
-};
-typedef union cavm_pko_pdm_flshb_dbg0 cavm_pko_pdm_flshb_dbg0_t;
-
-#define CAVM_PKO_PDM_FLSHB_DBG0 CAVM_PKO_PDM_FLSHB_DBG0_FUNC()
-static inline uint64_t CAVM_PKO_PDM_FLSHB_DBG0_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_FLSHB_DBG0_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8540008002b8ll;
-    __cavm_csr_fatal("PKO_PDM_FLSHB_DBG0", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_FLSHB_DBG0 cavm_pko_pdm_flshb_dbg0_t
-#define bustype_CAVM_PKO_PDM_FLSHB_DBG0 CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_FLSHB_DBG0 "PKO_PDM_FLSHB_DBG0"
-#define device_bar_CAVM_PKO_PDM_FLSHB_DBG0 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_FLSHB_DBG0 0
-#define arguments_CAVM_PKO_PDM_FLSHB_DBG0 -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_flshb_dbg1
- *
- * INTERNAL: PKO PDM Flush Buffer Debug Register 1
- */
-union cavm_pko_pdm_flshb_dbg1
-{
-    uint64_t u;
-    struct cavm_pko_pdm_flshb_dbg1_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t cam_stdn              : 32; /**< [ 63: 32](RO/H) Flush buffer entry store done request flags. */
-        uint64_t cam_valid             : 32; /**< [ 31:  0](RO/H) Flush buffer entry valid flags. */
-#else /* Word 0 - Little Endian */
-        uint64_t cam_valid             : 32; /**< [ 31:  0](RO/H) Flush buffer entry valid flags. */
-        uint64_t cam_stdn              : 32; /**< [ 63: 32](RO/H) Flush buffer entry store done request flags. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_flshb_dbg1_s cn; */
-};
-typedef union cavm_pko_pdm_flshb_dbg1 cavm_pko_pdm_flshb_dbg1_t;
-
-#define CAVM_PKO_PDM_FLSHB_DBG1 CAVM_PKO_PDM_FLSHB_DBG1_FUNC()
-static inline uint64_t CAVM_PKO_PDM_FLSHB_DBG1_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_FLSHB_DBG1_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8540008002c0ll;
-    __cavm_csr_fatal("PKO_PDM_FLSHB_DBG1", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_FLSHB_DBG1 cavm_pko_pdm_flshb_dbg1_t
-#define bustype_CAVM_PKO_PDM_FLSHB_DBG1 CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_FLSHB_DBG1 "PKO_PDM_FLSHB_DBG1"
-#define device_bar_CAVM_PKO_PDM_FLSHB_DBG1 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_FLSHB_DBG1 0
-#define arguments_CAVM_PKO_PDM_FLSHB_DBG1 -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_intf_dbg_rd
- *
- * INTERNAL: PKO Module Debug Read Register
- *
- * For diagnostic use only.
- */
-union cavm_pko_pdm_intf_dbg_rd
-{
-    uint64_t u;
-    struct cavm_pko_pdm_intf_dbg_rd_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_48_63        : 16;
-        uint64_t in_flight             : 8;  /**< [ 47: 40](RO/H) Number of packets in-flight to PDM. */
-        uint64_t pdm_req_cred_cnt      : 8;  /**< [ 39: 32](RO/H) PDM req/ack credit counter. */
-        uint64_t pse_buf_waddr         : 8;  /**< [ 31: 24](RO/H) PSE buffer write address. */
-        uint64_t pse_buf_raddr         : 8;  /**< [ 23: 16](RO/H) PSE buffer read address. */
-        uint64_t resp_buf_waddr        : 8;  /**< [ 15:  8](RO/H) Interface buffer write address. */
-        uint64_t resp_buf_raddr        : 8;  /**< [  7:  0](RO/H) Interface buffer read address. */
-#else /* Word 0 - Little Endian */
-        uint64_t resp_buf_raddr        : 8;  /**< [  7:  0](RO/H) Interface buffer read address. */
-        uint64_t resp_buf_waddr        : 8;  /**< [ 15:  8](RO/H) Interface buffer write address. */
-        uint64_t pse_buf_raddr         : 8;  /**< [ 23: 16](RO/H) PSE buffer read address. */
-        uint64_t pse_buf_waddr         : 8;  /**< [ 31: 24](RO/H) PSE buffer write address. */
-        uint64_t pdm_req_cred_cnt      : 8;  /**< [ 39: 32](RO/H) PDM req/ack credit counter. */
-        uint64_t in_flight             : 8;  /**< [ 47: 40](RO/H) Number of packets in-flight to PDM. */
-        uint64_t reserved_48_63        : 16;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_intf_dbg_rd_s cn; */
-};
-typedef union cavm_pko_pdm_intf_dbg_rd cavm_pko_pdm_intf_dbg_rd_t;
-
-#define CAVM_PKO_PDM_INTF_DBG_RD CAVM_PKO_PDM_INTF_DBG_RD_FUNC()
-static inline uint64_t CAVM_PKO_PDM_INTF_DBG_RD_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_INTF_DBG_RD_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000900f20ll;
-    __cavm_csr_fatal("PKO_PDM_INTF_DBG_RD", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_INTF_DBG_RD cavm_pko_pdm_intf_dbg_rd_t
-#define bustype_CAVM_PKO_PDM_INTF_DBG_RD CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_INTF_DBG_RD "PKO_PDM_INTF_DBG_RD"
-#define device_bar_CAVM_PKO_PDM_INTF_DBG_RD 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_INTF_DBG_RD 0
-#define arguments_CAVM_PKO_PDM_INTF_DBG_RD -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_isrd_dbg
- *
- * INTERNAL: PKO PDM ISRD Debug Register
- */
-union cavm_pko_pdm_isrd_dbg
-{
-    uint64_t u;
-    struct cavm_pko_pdm_isrd_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t isrd_vals_in          : 4;  /**< [ 63: 60](RO/H) Valid signals for ISRD input stage. Bits and descriptions:
-                                                                   \<63\> = prof__isrdex_peb_fill_req_val.
-                                                                   \<62\> = prof__isrdex_rd_req_val.
-                                                                   \<61\> = cp__isr_cval.
-                                                                   \<60\> = fillb__isrd_d_dval. */
-        uint64_t reserved_59           : 1;
-        uint64_t req_hptr              : 6;  /**< [ 58: 53](RO/H) Input arbitration request signals. */
-        uint64_t rdy_hptr              : 6;  /**< [ 52: 47](RO/H) Input arbitration request signals. */
-        uint64_t reserved_44_46        : 3;
-        uint64_t in_arb_reqs           : 8;  /**< [ 43: 36](RO/H) Input arbitration request signals. The order of the bits is:
-                                                                 0x2B = Fill response - normal path request.
-                                                                 0x2A = Fill response - flushb path request.
-                                                                 0x29 = CP queue-open request.
-                                                                 0x28 = CP queue-closed request.
-                                                                 0x27 = CP queue-query request.
-                                                                 0x26 = CP send-packet request.
-                                                                 0x25 = PEB fill request.
-                                                                 0x24 = PEB read request. */
-        uint64_t in_arb_gnts           : 7;  /**< [ 35: 29](RO/H) Input arbitration grant signals. The order of the bits is:
-                                                                 0x23 = Fill response grant.
-                                                                 0x22 = CP - queue-open grant.
-                                                                 0x21 = CP - queue-close grant.
-                                                                 0x20 = CP - queue-query grant.
-                                                                 0x1F = CP - send-packet grant.
-                                                                 0x1E = PEB fill grant.
-                                                                 0x1D = PEB read grant. */
-        uint64_t cmt_arb_reqs          : 7;  /**< [ 28: 22](RO/H) Commit arbitration request signals. The order of the bits is:
-                                                                 0x1C = Fill response grant.
-                                                                 0x1B = CP - queue-open grant.
-                                                                 0x1A = CP - queue-close grant.
-                                                                 0x19 = CP - queue-query grant.
-                                                                 0x18 = CP - send-packet grant.
-                                                                 0x17 = PEB fill grant.
-                                                                 0x16 = PEB read grant. */
-        uint64_t cmt_arb_gnts          : 7;  /**< [ 21: 15](RO/H) Commit arbitration grant signals. The order of the bits is:
-                                                                 0x15 = Fill response grant.
-                                                                 0x14 = CP - queue-open grant.
-                                                                 0x13 = CP - queue-close grant.
-                                                                 0x12 = CP - queue-query grant.
-                                                                 0x11 = CP - send-packet grant.
-                                                                 0x10 = PEB fill grant.
-                                                                 0xF = PEB read grant. */
-        uint64_t in_use                : 4;  /**< [ 14: 11](RO/H) In use signals indicate the execution units are in use. The order of the bits is:
-                                                                 0xE = PEB fill unit.
-                                                                 0xD = PEB read unit.
-                                                                 0xC = CP unit.
-                                                                 0xB = Fill response unit. */
-        uint64_t has_cred              : 4;  /**< [ 10:  7](RO/H) Has credit signals indicate there is sufficient credit to commit. The order of the bits
-                                                                 is:
-                                                                 0xA = Flush buffer has credit.
-                                                                 0x9 = Fill buffer has credit.
-                                                                 0x8 = DW command output FIFO has credit.
-                                                                 0x7 = DR command output FIFO has credit. */
-        uint64_t val_exec              : 7;  /**< [  6:  0](RO/H) Valid bits for the execution units; means the unit can commit if it gets the grant of the
-                                                                 commit arb and other conditions are met. The order of the bits is:
-                                                                 0x6 = Fill response unit.
-                                                                 0x5 = CP unit - queue-open.
-                                                                 0x4 = CP unit - queue-close.
-                                                                 0x3 = CP unit - queue-probe.
-                                                                 0x2 = CP unit - send-packet.
-                                                                 0x1 = PEB fill unit.
-                                                                 0x0 = PEB read unit. */
-#else /* Word 0 - Little Endian */
-        uint64_t val_exec              : 7;  /**< [  6:  0](RO/H) Valid bits for the execution units; means the unit can commit if it gets the grant of the
-                                                                 commit arb and other conditions are met. The order of the bits is:
-                                                                 0x6 = Fill response unit.
-                                                                 0x5 = CP unit - queue-open.
-                                                                 0x4 = CP unit - queue-close.
-                                                                 0x3 = CP unit - queue-probe.
-                                                                 0x2 = CP unit - send-packet.
-                                                                 0x1 = PEB fill unit.
-                                                                 0x0 = PEB read unit. */
-        uint64_t has_cred              : 4;  /**< [ 10:  7](RO/H) Has credit signals indicate there is sufficient credit to commit. The order of the bits
-                                                                 is:
-                                                                 0xA = Flush buffer has credit.
-                                                                 0x9 = Fill buffer has credit.
-                                                                 0x8 = DW command output FIFO has credit.
-                                                                 0x7 = DR command output FIFO has credit. */
-        uint64_t in_use                : 4;  /**< [ 14: 11](RO/H) In use signals indicate the execution units are in use. The order of the bits is:
-                                                                 0xE = PEB fill unit.
-                                                                 0xD = PEB read unit.
-                                                                 0xC = CP unit.
-                                                                 0xB = Fill response unit. */
-        uint64_t cmt_arb_gnts          : 7;  /**< [ 21: 15](RO/H) Commit arbitration grant signals. The order of the bits is:
-                                                                 0x15 = Fill response grant.
-                                                                 0x14 = CP - queue-open grant.
-                                                                 0x13 = CP - queue-close grant.
-                                                                 0x12 = CP - queue-query grant.
-                                                                 0x11 = CP - send-packet grant.
-                                                                 0x10 = PEB fill grant.
-                                                                 0xF = PEB read grant. */
-        uint64_t cmt_arb_reqs          : 7;  /**< [ 28: 22](RO/H) Commit arbitration request signals. The order of the bits is:
-                                                                 0x1C = Fill response grant.
-                                                                 0x1B = CP - queue-open grant.
-                                                                 0x1A = CP - queue-close grant.
-                                                                 0x19 = CP - queue-query grant.
-                                                                 0x18 = CP - send-packet grant.
-                                                                 0x17 = PEB fill grant.
-                                                                 0x16 = PEB read grant. */
-        uint64_t in_arb_gnts           : 7;  /**< [ 35: 29](RO/H) Input arbitration grant signals. The order of the bits is:
-                                                                 0x23 = Fill response grant.
-                                                                 0x22 = CP - queue-open grant.
-                                                                 0x21 = CP - queue-close grant.
-                                                                 0x20 = CP - queue-query grant.
-                                                                 0x1F = CP - send-packet grant.
-                                                                 0x1E = PEB fill grant.
-                                                                 0x1D = PEB read grant. */
-        uint64_t in_arb_reqs           : 8;  /**< [ 43: 36](RO/H) Input arbitration request signals. The order of the bits is:
-                                                                 0x2B = Fill response - normal path request.
-                                                                 0x2A = Fill response - flushb path request.
-                                                                 0x29 = CP queue-open request.
-                                                                 0x28 = CP queue-closed request.
-                                                                 0x27 = CP queue-query request.
-                                                                 0x26 = CP send-packet request.
-                                                                 0x25 = PEB fill request.
-                                                                 0x24 = PEB read request. */
-        uint64_t reserved_44_46        : 3;
-        uint64_t rdy_hptr              : 6;  /**< [ 52: 47](RO/H) Input arbitration request signals. */
-        uint64_t req_hptr              : 6;  /**< [ 58: 53](RO/H) Input arbitration request signals. */
-        uint64_t reserved_59           : 1;
-        uint64_t isrd_vals_in          : 4;  /**< [ 63: 60](RO/H) Valid signals for ISRD input stage. Bits and descriptions:
-                                                                   \<63\> = prof__isrdex_peb_fill_req_val.
-                                                                   \<62\> = prof__isrdex_rd_req_val.
-                                                                   \<61\> = cp__isr_cval.
-                                                                   \<60\> = fillb__isrd_d_dval. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_isrd_dbg_s cn; */
-};
-typedef union cavm_pko_pdm_isrd_dbg cavm_pko_pdm_isrd_dbg_t;
-
-#define CAVM_PKO_PDM_ISRD_DBG CAVM_PKO_PDM_ISRD_DBG_FUNC()
-static inline uint64_t CAVM_PKO_PDM_ISRD_DBG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_ISRD_DBG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000800090ll;
-    __cavm_csr_fatal("PKO_PDM_ISRD_DBG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_ISRD_DBG cavm_pko_pdm_isrd_dbg_t
-#define bustype_CAVM_PKO_PDM_ISRD_DBG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_ISRD_DBG "PKO_PDM_ISRD_DBG"
-#define device_bar_CAVM_PKO_PDM_ISRD_DBG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_ISRD_DBG 0
-#define arguments_CAVM_PKO_PDM_ISRD_DBG -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_isrd_dbg_dq
- *
- * INTERNAL: PKO PDM ISRD DQ Debug Register
- */
-union cavm_pko_pdm_isrd_dbg_dq
-{
-    uint64_t u;
-    struct cavm_pko_pdm_isrd_dbg_dq_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_46_63        : 18;
-        uint64_t pebrd_sic_dq          : 10; /**< [ 45: 36](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_34_35        : 2;
-        uint64_t pebfill_sic_dq        : 10; /**< [ 33: 24](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_22_23        : 2;
-        uint64_t fr_sic_dq             : 10; /**< [ 21: 12](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_10_11        : 2;
-        uint64_t cp_sic_dq             : 10; /**< [  9:  0](RO/H) CP SIC's DQ number. */
-#else /* Word 0 - Little Endian */
-        uint64_t cp_sic_dq             : 10; /**< [  9:  0](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_10_11        : 2;
-        uint64_t fr_sic_dq             : 10; /**< [ 21: 12](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_22_23        : 2;
-        uint64_t pebfill_sic_dq        : 10; /**< [ 33: 24](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_34_35        : 2;
-        uint64_t pebrd_sic_dq          : 10; /**< [ 45: 36](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_46_63        : 18;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_isrd_dbg_dq_s cn; */
-};
-typedef union cavm_pko_pdm_isrd_dbg_dq cavm_pko_pdm_isrd_dbg_dq_t;
-
-#define CAVM_PKO_PDM_ISRD_DBG_DQ CAVM_PKO_PDM_ISRD_DBG_DQ_FUNC()
-static inline uint64_t CAVM_PKO_PDM_ISRD_DBG_DQ_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_ISRD_DBG_DQ_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000800290ll;
-    __cavm_csr_fatal("PKO_PDM_ISRD_DBG_DQ", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_ISRD_DBG_DQ cavm_pko_pdm_isrd_dbg_dq_t
-#define bustype_CAVM_PKO_PDM_ISRD_DBG_DQ CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_ISRD_DBG_DQ "PKO_PDM_ISRD_DBG_DQ"
-#define device_bar_CAVM_PKO_PDM_ISRD_DBG_DQ 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_ISRD_DBG_DQ 0
-#define arguments_CAVM_PKO_PDM_ISRD_DBG_DQ -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_isrm_dbg
- *
- * INTERNAL: PKO PDM ISRM Debug Register
- */
-union cavm_pko_pdm_isrm_dbg
-{
-    uint64_t u;
-    struct cavm_pko_pdm_isrm_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t val_in                : 3;  /**< [ 63: 61](RO/H) Valids into ISRM.
-                                                                 \<63\> = pse_ack_val.
-                                                                 \<62\> = fillb__isrm_mp_dval.
-                                                                 \<61\> = isrd__isrm_cval. */
-        uint64_t reserved_34_60        : 27;
-        uint64_t in_arb_reqs           : 7;  /**< [ 33: 27](RO/H) Input arbitration request signals. The order of the bits is:
-                                                                 0x21 = PSE ACK.
-                                                                 0x20 = Fill Response - normal path request.
-                                                                 0x1F = Fill Response - flushb path request.
-                                                                 0x1E = CP queue-open.
-                                                                 0x1D = CP queue-closed.
-                                                                 0x1C = CP queue-query.
-                                                                 0x1B = CP send-packet. */
-        uint64_t in_arb_gnts           : 6;  /**< [ 26: 21](RO/H) Input arbitration grant signals. The order of the bits is:
-                                                                 0x1A = PSE ACK.
-                                                                 0x19 = Fill Response.
-                                                                 0x18 = CP - queue-open.
-                                                                 0x17 = CP - queue-close.
-                                                                 0x16 = CP - queue-query.
-                                                                 0x15 = CP - send-packet. */
-        uint64_t cmt_arb_reqs          : 6;  /**< [ 20: 15](RO/H) Commit arbitration request signals. The order of the bits is:
-                                                                 0x14 = PSE ACK.
-                                                                 0x13 = Fill Response.
-                                                                 0x12 = CP - queue-open.
-                                                                 0x11 = CP - queue-close.
-                                                                 0x10 = CP - queue-query.
-                                                                 0xF CP - send-packet. */
-        uint64_t cmt_arb_gnts          : 6;  /**< [ 14:  9](RO/H) Commit arbitration grant signals. The order of the bits is:
-                                                                 0xE = PSE ACK.
-                                                                 0xD = Fill Response.
-                                                                 0xC = CP - queue-open.
-                                                                 0xB = CP - queue-close.
-                                                                 0xA = CP - queue-query.
-                                                                 0x9 = CP - send-packet. */
-        uint64_t in_use                : 3;  /**< [  8:  6](RO/H) In use signals indicate the execution units are in use. The order of the bits is:
-                                                                 0x8 = (PSE) ACK unit.
-                                                                 0x7 = Fill response unit.
-                                                                 0x6 = CP unit. */
-        uint64_t has_cred              : 3;  /**< [  5:  3](RO/H) Has credit signals indicate there is sufficient credit to commit. The order of the bits
-                                                                 is:
-                                                                 0x5 = Flush buffer has credit.
-                                                                 0x4 = Fill buffer has credit.
-                                                                 0x3 = MWP command output FIFO has credit. */
-        uint64_t val_exec              : 3;  /**< [  2:  0](RO/H) Valid bits for the execution units; means the unit can commit if it gets the grant of the
-                                                                 commit arb and other conditions are met. The order of the bits is:
-                                                                 0x2 = (PSE) ACK unit.
-                                                                 0x1 = Fill response unit.
-                                                                 0x0 = CP unit - ALL. */
-#else /* Word 0 - Little Endian */
-        uint64_t val_exec              : 3;  /**< [  2:  0](RO/H) Valid bits for the execution units; means the unit can commit if it gets the grant of the
-                                                                 commit arb and other conditions are met. The order of the bits is:
-                                                                 0x2 = (PSE) ACK unit.
-                                                                 0x1 = Fill response unit.
-                                                                 0x0 = CP unit - ALL. */
-        uint64_t has_cred              : 3;  /**< [  5:  3](RO/H) Has credit signals indicate there is sufficient credit to commit. The order of the bits
-                                                                 is:
-                                                                 0x5 = Flush buffer has credit.
-                                                                 0x4 = Fill buffer has credit.
-                                                                 0x3 = MWP command output FIFO has credit. */
-        uint64_t in_use                : 3;  /**< [  8:  6](RO/H) In use signals indicate the execution units are in use. The order of the bits is:
-                                                                 0x8 = (PSE) ACK unit.
-                                                                 0x7 = Fill response unit.
-                                                                 0x6 = CP unit. */
-        uint64_t cmt_arb_gnts          : 6;  /**< [ 14:  9](RO/H) Commit arbitration grant signals. The order of the bits is:
-                                                                 0xE = PSE ACK.
-                                                                 0xD = Fill Response.
-                                                                 0xC = CP - queue-open.
-                                                                 0xB = CP - queue-close.
-                                                                 0xA = CP - queue-query.
-                                                                 0x9 = CP - send-packet. */
-        uint64_t cmt_arb_reqs          : 6;  /**< [ 20: 15](RO/H) Commit arbitration request signals. The order of the bits is:
-                                                                 0x14 = PSE ACK.
-                                                                 0x13 = Fill Response.
-                                                                 0x12 = CP - queue-open.
-                                                                 0x11 = CP - queue-close.
-                                                                 0x10 = CP - queue-query.
-                                                                 0xF CP - send-packet. */
-        uint64_t in_arb_gnts           : 6;  /**< [ 26: 21](RO/H) Input arbitration grant signals. The order of the bits is:
-                                                                 0x1A = PSE ACK.
-                                                                 0x19 = Fill Response.
-                                                                 0x18 = CP - queue-open.
-                                                                 0x17 = CP - queue-close.
-                                                                 0x16 = CP - queue-query.
-                                                                 0x15 = CP - send-packet. */
-        uint64_t in_arb_reqs           : 7;  /**< [ 33: 27](RO/H) Input arbitration request signals. The order of the bits is:
-                                                                 0x21 = PSE ACK.
-                                                                 0x20 = Fill Response - normal path request.
-                                                                 0x1F = Fill Response - flushb path request.
-                                                                 0x1E = CP queue-open.
-                                                                 0x1D = CP queue-closed.
-                                                                 0x1C = CP queue-query.
-                                                                 0x1B = CP send-packet. */
-        uint64_t reserved_34_60        : 27;
-        uint64_t val_in                : 3;  /**< [ 63: 61](RO/H) Valids into ISRM.
-                                                                 \<63\> = pse_ack_val.
-                                                                 \<62\> = fillb__isrm_mp_dval.
-                                                                 \<61\> = isrd__isrm_cval. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_isrm_dbg_s cn; */
-};
-typedef union cavm_pko_pdm_isrm_dbg cavm_pko_pdm_isrm_dbg_t;
-
-#define CAVM_PKO_PDM_ISRM_DBG CAVM_PKO_PDM_ISRM_DBG_FUNC()
-static inline uint64_t CAVM_PKO_PDM_ISRM_DBG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_ISRM_DBG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000800098ll;
-    __cavm_csr_fatal("PKO_PDM_ISRM_DBG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_ISRM_DBG cavm_pko_pdm_isrm_dbg_t
-#define bustype_CAVM_PKO_PDM_ISRM_DBG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_ISRM_DBG "PKO_PDM_ISRM_DBG"
-#define device_bar_CAVM_PKO_PDM_ISRM_DBG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_ISRM_DBG 0
-#define arguments_CAVM_PKO_PDM_ISRM_DBG -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_isrm_dbg_dq
- *
- * INTERNAL: PKO PDM ISRM DQ Debug Register
- */
-union cavm_pko_pdm_isrm_dbg_dq
-{
-    uint64_t u;
-    struct cavm_pko_pdm_isrm_dbg_dq_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_34_63        : 30;
-        uint64_t ack_sic_dq            : 10; /**< [ 33: 24](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_22_23        : 2;
-        uint64_t fr_sic_dq             : 10; /**< [ 21: 12](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_10_11        : 2;
-        uint64_t cp_sic_dq             : 10; /**< [  9:  0](RO/H) CP SIC's DQ number. */
-#else /* Word 0 - Little Endian */
-        uint64_t cp_sic_dq             : 10; /**< [  9:  0](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_10_11        : 2;
-        uint64_t fr_sic_dq             : 10; /**< [ 21: 12](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_22_23        : 2;
-        uint64_t ack_sic_dq            : 10; /**< [ 33: 24](RO/H) CP SIC's DQ number. */
-        uint64_t reserved_34_63        : 30;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_isrm_dbg_dq_s cn; */
-};
-typedef union cavm_pko_pdm_isrm_dbg_dq cavm_pko_pdm_isrm_dbg_dq_t;
-
-#define CAVM_PKO_PDM_ISRM_DBG_DQ CAVM_PKO_PDM_ISRM_DBG_DQ_FUNC()
-static inline uint64_t CAVM_PKO_PDM_ISRM_DBG_DQ_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_ISRM_DBG_DQ_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000800298ll;
-    __cavm_csr_fatal("PKO_PDM_ISRM_DBG_DQ", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_ISRM_DBG_DQ cavm_pko_pdm_isrm_dbg_dq_t
-#define bustype_CAVM_PKO_PDM_ISRM_DBG_DQ CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_ISRM_DBG_DQ "PKO_PDM_ISRM_DBG_DQ"
-#define device_bar_CAVM_PKO_PDM_ISRM_DBG_DQ 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_ISRM_DBG_DQ 0
-#define arguments_CAVM_PKO_PDM_ISRM_DBG_DQ -1,-1,-1,-1
-
-/**
  * Register (NCB) pko_pdm_mem_addr
  *
  * PKO PDM Memory Read/Write Address Register
@@ -11289,96 +9358,6 @@ static inline uint64_t CAVM_PKO_PDM_MEM_RW_STS_FUNC(void)
 #define device_bar_CAVM_PKO_PDM_MEM_RW_STS 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_PDM_MEM_RW_STS 0
 #define arguments_CAVM_PKO_PDM_MEM_RW_STS -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pdm_mwpbuf_dbg
- *
- * INTERNAL: PKO PDM MWPBUF Debug Register
- */
-union cavm_pko_pdm_mwpbuf_dbg
-{
-    uint64_t u;
-    struct cavm_pko_pdm_mwpbuf_dbg_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_49_63        : 15;
-        uint64_t str_proc              : 1;  /**< [ 48: 48](RO/H) Stream process for data streaming. */
-        uint64_t cmd_proc              : 1;  /**< [ 47: 47](RO/H) Command process for memory-type instruction. */
-        uint64_t str_val               : 1;  /**< [ 46: 46](RO/H) streaming valid. */
-        uint64_t mem_data_val          : 1;  /**< [ 45: 45](RO/H) Memory data valid. */
-        uint64_t insert_np             : 1;  /**< [ 44: 44](RO/H) Next pointer insertion. */
-        uint64_t insert_mp             : 1;  /**< [ 43: 43](RO/H) Meta-packet insertion. */
-        uint64_t sel_nxt_ptr           : 1;  /**< [ 42: 42](RO/H) Sel_nxt_ptr signal. */
-        uint64_t load_val              : 1;  /**< [ 41: 41](RO/H) Load valid signal. */
-        uint64_t rdy                   : 1;  /**< [ 40: 40](RO/H) Ready signal. */
-        uint64_t cur_state             : 3;  /**< [ 39: 37](RO/H) Stall count value. */
-        uint64_t mem_rdy               : 1;  /**< [ 36: 36](RO/H) Memory stage ready. */
-        uint64_t str_rdy               : 1;  /**< [ 35: 35](RO/H) Streaming logic ready. */
-        uint64_t contention_type       : 2;  /**< [ 34: 33](RO/H) Contention detected and type mwpbuf__csr_conflict[1:0] bit 0 - a streamFill followed by a
-                                                                 flush (same dq, same dst) bit 1 - a flush followed by a stream (same dq, same dst) */
-        uint64_t reserved_21_32        : 12;
-        uint64_t mem_wen               : 4;  /**< [ 20: 17](RO/H) Memory write enable signals. The order of the bits is:
-                                                                 0x3 = wen mem3.
-                                                                 0x2 = wen mem2.
-                                                                 0x1 = wen mem1.
-                                                                 0x0 = wen mem0. */
-        uint64_t reserved_15_16        : 2;
-        uint64_t mem_addr              : 11; /**< [ 14:  4](RO/H) Memory address for pbuf ram. */
-        uint64_t mem_en                : 4;  /**< [  3:  0](RO/H) Memory chip enable signals. The order of the bits is:
-                                                                 0x3 = cen mem3.
-                                                                 0x2 = cen mem2.
-                                                                 0x1 = cen mem1.
-                                                                 0x0 = cen mem0. */
-#else /* Word 0 - Little Endian */
-        uint64_t mem_en                : 4;  /**< [  3:  0](RO/H) Memory chip enable signals. The order of the bits is:
-                                                                 0x3 = cen mem3.
-                                                                 0x2 = cen mem2.
-                                                                 0x1 = cen mem1.
-                                                                 0x0 = cen mem0. */
-        uint64_t mem_addr              : 11; /**< [ 14:  4](RO/H) Memory address for pbuf ram. */
-        uint64_t reserved_15_16        : 2;
-        uint64_t mem_wen               : 4;  /**< [ 20: 17](RO/H) Memory write enable signals. The order of the bits is:
-                                                                 0x3 = wen mem3.
-                                                                 0x2 = wen mem2.
-                                                                 0x1 = wen mem1.
-                                                                 0x0 = wen mem0. */
-        uint64_t reserved_21_32        : 12;
-        uint64_t contention_type       : 2;  /**< [ 34: 33](RO/H) Contention detected and type mwpbuf__csr_conflict[1:0] bit 0 - a streamFill followed by a
-                                                                 flush (same dq, same dst) bit 1 - a flush followed by a stream (same dq, same dst) */
-        uint64_t str_rdy               : 1;  /**< [ 35: 35](RO/H) Streaming logic ready. */
-        uint64_t mem_rdy               : 1;  /**< [ 36: 36](RO/H) Memory stage ready. */
-        uint64_t cur_state             : 3;  /**< [ 39: 37](RO/H) Stall count value. */
-        uint64_t rdy                   : 1;  /**< [ 40: 40](RO/H) Ready signal. */
-        uint64_t load_val              : 1;  /**< [ 41: 41](RO/H) Load valid signal. */
-        uint64_t sel_nxt_ptr           : 1;  /**< [ 42: 42](RO/H) Sel_nxt_ptr signal. */
-        uint64_t insert_mp             : 1;  /**< [ 43: 43](RO/H) Meta-packet insertion. */
-        uint64_t insert_np             : 1;  /**< [ 44: 44](RO/H) Next pointer insertion. */
-        uint64_t mem_data_val          : 1;  /**< [ 45: 45](RO/H) Memory data valid. */
-        uint64_t str_val               : 1;  /**< [ 46: 46](RO/H) streaming valid. */
-        uint64_t cmd_proc              : 1;  /**< [ 47: 47](RO/H) Command process for memory-type instruction. */
-        uint64_t str_proc              : 1;  /**< [ 48: 48](RO/H) Stream process for data streaming. */
-        uint64_t reserved_49_63        : 15;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pdm_mwpbuf_dbg_s cn; */
-};
-typedef union cavm_pko_pdm_mwpbuf_dbg cavm_pko_pdm_mwpbuf_dbg_t;
-
-#define CAVM_PKO_PDM_MWPBUF_DBG CAVM_PKO_PDM_MWPBUF_DBG_FUNC()
-static inline uint64_t CAVM_PKO_PDM_MWPBUF_DBG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_MWPBUF_DBG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x8540008000a0ll;
-    __cavm_csr_fatal("PKO_PDM_MWPBUF_DBG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PDM_MWPBUF_DBG cavm_pko_pdm_mwpbuf_dbg_t
-#define bustype_CAVM_PKO_PDM_MWPBUF_DBG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PDM_MWPBUF_DBG "PKO_PDM_MWPBUF_DBG"
-#define device_bar_CAVM_PKO_PDM_MWPBUF_DBG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PDM_MWPBUF_DBG 0
-#define arguments_CAVM_PKO_PDM_MWPBUF_DBG -1,-1,-1,-1
 
 /**
  * Register (NCB) pko_pdm_ncb_bist_status
@@ -12300,10 +10279,7 @@ union cavm_pko_pdm_sts_int_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_38_63        : 26;
-        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1C/H) Reads or clears enable for PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT].
-                                                                 Internal:
-                                                                 This register is set to 1 if the PDM stalls the inputs for more than
-                                                                 PKO_PDM_CFG_DBG[CP_STALL_THRSHLD]: Do not list field in HRM. For lab debug only. */
+        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1C/H) Reads or clears enable for PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT]. */
         uint64_t reserved_35_36        : 2;
         uint64_t mwpbuf_data_val_err   : 1;  /**< [ 34: 34](R/W1C/H) Reads or clears enable for PKO_PDM_STS_W1C[MWPBUF_DATA_VAL_ERR]. */
         uint64_t drpbuf_data_val_err   : 1;  /**< [ 33: 33](R/W1C/H) Reads or clears enable for PKO_PDM_STS_W1C[DRPBUF_DATA_VAL_ERR]. */
@@ -12335,10 +10311,7 @@ union cavm_pko_pdm_sts_int_ena_w1c
         uint64_t drpbuf_data_val_err   : 1;  /**< [ 33: 33](R/W1C/H) Reads or clears enable for PKO_PDM_STS_W1C[DRPBUF_DATA_VAL_ERR]. */
         uint64_t mwpbuf_data_val_err   : 1;  /**< [ 34: 34](R/W1C/H) Reads or clears enable for PKO_PDM_STS_W1C[MWPBUF_DATA_VAL_ERR]. */
         uint64_t reserved_35_36        : 2;
-        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1C/H) Reads or clears enable for PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT].
-                                                                 Internal:
-                                                                 This register is set to 1 if the PDM stalls the inputs for more than
-                                                                 PKO_PDM_CFG_DBG[CP_STALL_THRSHLD]: Do not list field in HRM. For lab debug only. */
+        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1C/H) Reads or clears enable for PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT]. */
         uint64_t reserved_38_63        : 26;
 #endif /* Word 0 - End */
     } s;
@@ -12375,10 +10348,7 @@ union cavm_pko_pdm_sts_int_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_38_63        : 26;
-        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1S/H) Reads or sets enable for PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT].
-                                                                 Internal:
-                                                                 This register is set to 1 if the PDM stalls the inputs for more than
-                                                                 PKO_PDM_CFG_DBG[CP_STALL_THRSHLD]: Do not list field in HRM. For lab debug only. */
+        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1S/H) Reads or sets enable for PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT]. */
         uint64_t reserved_35_36        : 2;
         uint64_t mwpbuf_data_val_err   : 1;  /**< [ 34: 34](R/W1S/H) Reads or sets enable for PKO_PDM_STS_W1C[MWPBUF_DATA_VAL_ERR]. */
         uint64_t drpbuf_data_val_err   : 1;  /**< [ 33: 33](R/W1S/H) Reads or sets enable for PKO_PDM_STS_W1C[DRPBUF_DATA_VAL_ERR]. */
@@ -12410,10 +10380,7 @@ union cavm_pko_pdm_sts_int_ena_w1s
         uint64_t drpbuf_data_val_err   : 1;  /**< [ 33: 33](R/W1S/H) Reads or sets enable for PKO_PDM_STS_W1C[DRPBUF_DATA_VAL_ERR]. */
         uint64_t mwpbuf_data_val_err   : 1;  /**< [ 34: 34](R/W1S/H) Reads or sets enable for PKO_PDM_STS_W1C[MWPBUF_DATA_VAL_ERR]. */
         uint64_t reserved_35_36        : 2;
-        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1S/H) Reads or sets enable for PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT].
-                                                                 Internal:
-                                                                 This register is set to 1 if the PDM stalls the inputs for more than
-                                                                 PKO_PDM_CFG_DBG[CP_STALL_THRSHLD]: Do not list field in HRM. For lab debug only. */
+        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1S/H) Reads or sets enable for PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT]. */
         uint64_t reserved_38_63        : 26;
 #endif /* Word 0 - End */
     } s;
@@ -12449,10 +10416,7 @@ union cavm_pko_pdm_sts_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_38_63        : 26;
-        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 This register is set to 1 if the PDM stalls the inputs for more than
-                                                                 PKO_PDM_CFG_DBG[CP_STALL_THRSHLD]: Do not list field in HRM. For lab debug only. */
+        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1C/H) Reserved. */
         uint64_t reserved_35_36        : 2;
         uint64_t mwpbuf_data_val_err   : 1;  /**< [ 34: 34](R/W1C/H) Received signal that MWPBUF had data valid error. */
         uint64_t drpbuf_data_val_err   : 1;  /**< [ 33: 33](R/W1C/H) Received signal that DRPBUF had data valid error. */
@@ -12502,10 +10466,7 @@ union cavm_pko_pdm_sts_w1c
         uint64_t drpbuf_data_val_err   : 1;  /**< [ 33: 33](R/W1C/H) Received signal that DRPBUF had data valid error. */
         uint64_t mwpbuf_data_val_err   : 1;  /**< [ 34: 34](R/W1C/H) Received signal that MWPBUF had data valid error. */
         uint64_t reserved_35_36        : 2;
-        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 This register is set to 1 if the PDM stalls the inputs for more than
-                                                                 PKO_PDM_CFG_DBG[CP_STALL_THRSHLD]: Do not list field in HRM. For lab debug only. */
+        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1C/H) Reserved. */
         uint64_t reserved_38_63        : 26;
 #endif /* Word 0 - End */
     } s;
@@ -12542,10 +10503,7 @@ union cavm_pko_pdm_sts_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_38_63        : 26;
-        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1S/H) Reads or sets PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT].
-                                                                 Internal:
-                                                                 This register is set to 1 if the PDM stalls the inputs for more than
-                                                                 PKO_PDM_CFG_DBG[CP_STALL_THRSHLD]: Do not list field in HRM. For lab debug only. */
+        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1S/H) Reads or sets PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT]. */
         uint64_t reserved_35_36        : 2;
         uint64_t mwpbuf_data_val_err   : 1;  /**< [ 34: 34](R/W1S/H) Reads or sets PKO_PDM_STS_W1C[MWPBUF_DATA_VAL_ERR]. */
         uint64_t drpbuf_data_val_err   : 1;  /**< [ 33: 33](R/W1S/H) Reads or sets PKO_PDM_STS_W1C[DRPBUF_DATA_VAL_ERR]. */
@@ -12577,10 +10535,7 @@ union cavm_pko_pdm_sts_w1s
         uint64_t drpbuf_data_val_err   : 1;  /**< [ 33: 33](R/W1S/H) Reads or sets PKO_PDM_STS_W1C[DRPBUF_DATA_VAL_ERR]. */
         uint64_t mwpbuf_data_val_err   : 1;  /**< [ 34: 34](R/W1S/H) Reads or sets PKO_PDM_STS_W1C[MWPBUF_DATA_VAL_ERR]. */
         uint64_t reserved_35_36        : 2;
-        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1S/H) Reads or sets PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT].
-                                                                 Internal:
-                                                                 This register is set to 1 if the PDM stalls the inputs for more than
-                                                                 PKO_PDM_CFG_DBG[CP_STALL_THRSHLD]: Do not list field in HRM. For lab debug only. */
+        uint64_t cp_stalled_thrshld_hit : 1; /**< [ 37: 37](R/W1S/H) Reads or sets PKO_PDM_STS_W1C[CP_STALLED_THRSHLD_HIT]. */
         uint64_t reserved_38_63        : 26;
 #endif /* Word 0 - End */
     } s;
@@ -13144,46 +11099,6 @@ static inline uint64_t CAVM_PKO_PEB_ECC_SBE_W1S_FUNC(void)
 #define device_bar_CAVM_PKO_PEB_ECC_SBE_W1S 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_PEB_ECC_SBE_W1S 0
 #define arguments_CAVM_PKO_PEB_ECC_SBE_W1S -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_peb_eco
- *
- * INTERNAL: PKO PEB ECO Register
- */
-union cavm_pko_peb_eco
-{
-    uint64_t u;
-    struct cavm_pko_peb_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_peb_eco_s cn; */
-};
-typedef union cavm_pko_peb_eco cavm_pko_peb_eco_t;
-
-#define CAVM_PKO_PEB_ECO CAVM_PKO_PEB_ECO_FUNC()
-static inline uint64_t CAVM_PKO_PEB_ECO_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PEB_ECO_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000901000ll;
-    __cavm_csr_fatal("PKO_PEB_ECO", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PEB_ECO cavm_pko_peb_eco_t
-#define bustype_CAVM_PKO_PEB_ECO CSR_TYPE_NCB
-#define basename_CAVM_PKO_PEB_ECO "PKO_PEB_ECO"
-#define device_bar_CAVM_PKO_PEB_ECO 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PEB_ECO 0
-#define arguments_CAVM_PKO_PEB_ECO -1,-1,-1,-1
 
 /**
  * Register (NCB) pko_peb_err_int_ena_w1c
@@ -14718,165 +12633,6 @@ static inline uint64_t CAVM_PKO_PF_VFX_GMCTL(uint64_t a)
 #define arguments_CAVM_PKO_PF_VFX_GMCTL(a) (a),-1,-1,-1
 
 /**
- * Register (NCB) pko_pf_vf#_gmctl_pdm_ro
- *
- * INTERNAL: PKO PF Guest Machine Control Read-only Register
- *
- * This register is for diagnostic use only, and is a read-only copy of PKO_PF_VF()_GMCTL.
- */
-union cavm_pko_pf_vfx_gmctl_pdm_ro
-{
-    uint64_t u;
-    struct cavm_pko_pf_vfx_gmctl_pdm_ro_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_25_63        : 39;
-        uint64_t be                    : 1;  /**< [ 24: 24](RO) Shadow read-only version of PKO_PF_VF(0..31)_GMCTL[BE]. */
-        uint64_t strm                  : 8;  /**< [ 23: 16](RO) Shadow read-only version of PKO_PF_VF(0..31)_GMCTL[STRM]. */
-        uint64_t reserved_0_15         : 16;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_15         : 16;
-        uint64_t strm                  : 8;  /**< [ 23: 16](RO) Shadow read-only version of PKO_PF_VF(0..31)_GMCTL[STRM]. */
-        uint64_t be                    : 1;  /**< [ 24: 24](RO) Shadow read-only version of PKO_PF_VF(0..31)_GMCTL[BE]. */
-        uint64_t reserved_25_63        : 39;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pf_vfx_gmctl_pdm_ro_s cn; */
-};
-typedef union cavm_pko_pf_vfx_gmctl_pdm_ro cavm_pko_pf_vfx_gmctl_pdm_ro_t;
-
-static inline uint64_t CAVM_PKO_PF_VFX_GMCTL_PDM_RO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PF_VFX_GMCTL_PDM_RO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
-        return 0x854040011000ll + 0x100000ll * ((a) & 0x1f);
-    __cavm_csr_fatal("PKO_PF_VFX_GMCTL_PDM_RO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PF_VFX_GMCTL_PDM_RO(a) cavm_pko_pf_vfx_gmctl_pdm_ro_t
-#define bustype_CAVM_PKO_PF_VFX_GMCTL_PDM_RO(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_PF_VFX_GMCTL_PDM_RO(a) "PKO_PF_VFX_GMCTL_PDM_RO"
-#define device_bar_CAVM_PKO_PF_VFX_GMCTL_PDM_RO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PF_VFX_GMCTL_PDM_RO(a) (a)
-#define arguments_CAVM_PKO_PF_VFX_GMCTL_PDM_RO(a) (a),-1,-1,-1
-
-/**
- * Register (NCB) pko_pq_debug_green
- *
- * INTERNAL: PKO PSE PQ Level Green Vector Debug Register
- */
-union cavm_pko_pq_debug_green
-{
-    uint64_t u;
-    struct cavm_pko_pq_debug_green_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t g_valid               : 32; /**< [ 63: 32](RO/H) g_valid vector. */
-        uint64_t cred_ok_n             : 32; /**< [ 31:  0](RO/H) cred_ok_n vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t cred_ok_n             : 32; /**< [ 31:  0](RO/H) cred_ok_n vector. */
-        uint64_t g_valid               : 32; /**< [ 63: 32](RO/H) g_valid vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pq_debug_green_s cn; */
-};
-typedef union cavm_pko_pq_debug_green cavm_pko_pq_debug_green_t;
-
-#define CAVM_PKO_PQ_DEBUG_GREEN CAVM_PKO_PQ_DEBUG_GREEN_FUNC()
-static inline uint64_t CAVM_PKO_PQ_DEBUG_GREEN_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PQ_DEBUG_GREEN_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000000058ll;
-    __cavm_csr_fatal("PKO_PQ_DEBUG_GREEN", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PQ_DEBUG_GREEN cavm_pko_pq_debug_green_t
-#define bustype_CAVM_PKO_PQ_DEBUG_GREEN CSR_TYPE_NCB
-#define basename_CAVM_PKO_PQ_DEBUG_GREEN "PKO_PQ_DEBUG_GREEN"
-#define device_bar_CAVM_PKO_PQ_DEBUG_GREEN 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PQ_DEBUG_GREEN 0
-#define arguments_CAVM_PKO_PQ_DEBUG_GREEN -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pq_debug_links
- *
- * INTERNAL: PKO PSE PQ Level Red Vector Debug Register
- */
-union cavm_pko_pq_debug_links
-{
-    uint64_t u;
-    struct cavm_pko_pq_debug_links_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t links_ready           : 32; /**< [ 63: 32](RO/H) links_ready vector. */
-        uint64_t peb_lnk_rdy_ir        : 32; /**< [ 31:  0](RO/H) peb_lnk_rdy_ir vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t peb_lnk_rdy_ir        : 32; /**< [ 31:  0](RO/H) peb_lnk_rdy_ir vector. */
-        uint64_t links_ready           : 32; /**< [ 63: 32](RO/H) links_ready vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pq_debug_links_s cn; */
-};
-typedef union cavm_pko_pq_debug_links cavm_pko_pq_debug_links_t;
-
-#define CAVM_PKO_PQ_DEBUG_LINKS CAVM_PKO_PQ_DEBUG_LINKS_FUNC()
-static inline uint64_t CAVM_PKO_PQ_DEBUG_LINKS_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PQ_DEBUG_LINKS_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000000068ll;
-    __cavm_csr_fatal("PKO_PQ_DEBUG_LINKS", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PQ_DEBUG_LINKS cavm_pko_pq_debug_links_t
-#define bustype_CAVM_PKO_PQ_DEBUG_LINKS CSR_TYPE_NCB
-#define basename_CAVM_PKO_PQ_DEBUG_LINKS "PKO_PQ_DEBUG_LINKS"
-#define device_bar_CAVM_PKO_PQ_DEBUG_LINKS 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PQ_DEBUG_LINKS 0
-#define arguments_CAVM_PKO_PQ_DEBUG_LINKS -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pq_debug_yellow
- *
- * INTERNAL: PKO PSE PQ Level Yellow Vector Debug Register
- */
-union cavm_pko_pq_debug_yellow
-{
-    uint64_t u;
-    struct cavm_pko_pq_debug_yellow_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t y_valid               : 32; /**< [ 63: 32](RO/H) y_valid vector. */
-        uint64_t reserved_28_31        : 4;
-        uint64_t link_vv               : 28; /**< [ 27:  0](RO/H) link_vv vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t link_vv               : 28; /**< [ 27:  0](RO/H) link_vv vector. */
-        uint64_t reserved_28_31        : 4;
-        uint64_t y_valid               : 32; /**< [ 63: 32](RO/H) y_valid vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pq_debug_yellow_s cn; */
-};
-typedef union cavm_pko_pq_debug_yellow cavm_pko_pq_debug_yellow_t;
-
-#define CAVM_PKO_PQ_DEBUG_YELLOW CAVM_PKO_PQ_DEBUG_YELLOW_FUNC()
-static inline uint64_t CAVM_PKO_PQ_DEBUG_YELLOW_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PQ_DEBUG_YELLOW_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000000060ll;
-    __cavm_csr_fatal("PKO_PQ_DEBUG_YELLOW", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PQ_DEBUG_YELLOW cavm_pko_pq_debug_yellow_t
-#define bustype_CAVM_PKO_PQ_DEBUG_YELLOW CSR_TYPE_NCB
-#define basename_CAVM_PKO_PQ_DEBUG_YELLOW "PKO_PQ_DEBUG_YELLOW"
-#define device_bar_CAVM_PKO_PQ_DEBUG_YELLOW 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PQ_DEBUG_YELLOW 0
-#define arguments_CAVM_PKO_PQ_DEBUG_YELLOW -1,-1,-1,-1
-
-/**
  * Register (NCB) pko_pq_drain_int_ena_w1c
  *
  * PKO Drain Interrupt Enable Clear Register
@@ -15328,80 +13084,6 @@ static inline uint64_t CAVM_PKO_PQ_ECC_SBE_W1S_FUNC(void)
 #define device_bar_CAVM_PKO_PQ_ECC_SBE_W1S 0x0 /* PF_BAR0 */
 #define busnum_CAVM_PKO_PQ_ECC_SBE_W1S 0
 #define arguments_CAVM_PKO_PQ_ECC_SBE_W1S -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pqa_debug
- *
- * INTERNAL: PKO PSE PQA Internal Debug Register
- */
-union cavm_pko_pqa_debug
-{
-    uint64_t u;
-    struct cavm_pko_pqa_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pqa_debug_s cn; */
-};
-typedef union cavm_pko_pqa_debug cavm_pko_pqa_debug_t;
-
-#define CAVM_PKO_PQA_DEBUG CAVM_PKO_PQA_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_PQA_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PQA_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000000128ll;
-    __cavm_csr_fatal("PKO_PQA_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PQA_DEBUG cavm_pko_pqa_debug_t
-#define bustype_CAVM_PKO_PQA_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PQA_DEBUG "PKO_PQA_DEBUG"
-#define device_bar_CAVM_PKO_PQA_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PQA_DEBUG 0
-#define arguments_CAVM_PKO_PQA_DEBUG -1,-1,-1,-1
-
-/**
- * Register (NCB) pko_pqb_debug
- *
- * INTERNAL: PKO PSE PQB Internal Debug Register
- *
- * This register has the same bit fields as PKO_PQA_DEBUG.
- */
-union cavm_pko_pqb_debug
-{
-    uint64_t u;
-    struct cavm_pko_pqb_debug_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#else /* Word 0 - Little Endian */
-        uint64_t dbg_vec               : 64; /**< [ 63:  0](RO/H) Debug Vector. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_pqb_debug_s cn; */
-};
-typedef union cavm_pko_pqb_debug cavm_pko_pqb_debug_t;
-
-#define CAVM_PKO_PQB_DEBUG CAVM_PKO_PQB_DEBUG_FUNC()
-static inline uint64_t CAVM_PKO_PQB_DEBUG_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PQB_DEBUG_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX))
-        return 0x854000000130ll;
-    __cavm_csr_fatal("PKO_PQB_DEBUG", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_PQB_DEBUG cavm_pko_pqb_debug_t
-#define bustype_CAVM_PKO_PQB_DEBUG CSR_TYPE_NCB
-#define basename_CAVM_PKO_PQB_DEBUG "PKO_PQB_DEBUG"
-#define device_bar_CAVM_PKO_PQB_DEBUG 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_PQB_DEBUG 0
-#define arguments_CAVM_PKO_PQB_DEBUG -1,-1,-1,-1
 
 /**
  * Register (NCB) pko_pse_dq_bist_status
@@ -16469,43 +14151,6 @@ static inline uint64_t CAVM_PKO_SHAPER_CFG_FUNC(void)
 #define arguments_CAVM_PKO_SHAPER_CFG -1,-1,-1,-1
 
 /**
- * Register (NCB) pko_state_uid_in_use#_rd
- *
- * INTERNAL: PKO PEB State Memory Allocation Read Register
- *
- * For diagnostic use only.
- */
-union cavm_pko_state_uid_in_usex_rd
-{
-    uint64_t u;
-    struct cavm_pko_state_uid_in_usex_rd_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t in_use                : 64; /**< [ 63:  0](RO/H) When set, a state memory bucket (aka UID) is assigned. */
-#else /* Word 0 - Little Endian */
-        uint64_t in_use                : 64; /**< [ 63:  0](RO/H) When set, a state memory bucket (aka UID) is assigned. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_state_uid_in_usex_rd_s cn; */
-};
-typedef union cavm_pko_state_uid_in_usex_rd cavm_pko_state_uid_in_usex_rd_t;
-
-static inline uint64_t CAVM_PKO_STATE_UID_IN_USEX_RD(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_STATE_UID_IN_USEX_RD(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
-        return 0x854000900f00ll + 8ll * ((a) & 0x1);
-    __cavm_csr_fatal("PKO_STATE_UID_IN_USEX_RD", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_STATE_UID_IN_USEX_RD(a) cavm_pko_state_uid_in_usex_rd_t
-#define bustype_CAVM_PKO_STATE_UID_IN_USEX_RD(a) CSR_TYPE_NCB
-#define basename_CAVM_PKO_STATE_UID_IN_USEX_RD(a) "PKO_STATE_UID_IN_USEX_RD"
-#define device_bar_CAVM_PKO_STATE_UID_IN_USEX_RD(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_STATE_UID_IN_USEX_RD(a) (a)
-#define arguments_CAVM_PKO_STATE_UID_IN_USEX_RD(a) (a),-1,-1,-1
-
-/**
  * Register (NCB) pko_status
  *
  * PKO Global Status Register
@@ -16660,47 +14305,6 @@ static inline uint64_t CAVM_PKO_VFX_DQX_FC_STATUS(uint64_t a, uint64_t b)
 #define device_bar_CAVM_PKO_VFX_DQX_FC_STATUS(a,b) 0x0 /* VF_BAR0 */
 #define busnum_CAVM_PKO_VFX_DQX_FC_STATUS(a,b) (a)
 #define arguments_CAVM_PKO_VFX_DQX_FC_STATUS(a,b) (a),(b),-1,-1
-
-/**
- * Register (NCB) pko_vf#_dq#_mp_state#
- *
- * INTERNAL: PKO Packet Meta-packet-descriptor State Per DQ Access Register
- */
-union cavm_pko_vfx_dqx_mp_statex
-{
-    uint64_t u;
-    struct cavm_pko_vfx_dqx_mp_statex_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W/H) Internal state for meta-packet per each DQ. For diagnostic use only.
-
-                                                                 Warning that this will modify internal state. It must not be changed while DQ is
-                                                                 active or system will need to be reset. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W/H) Internal state for meta-packet per each DQ. For diagnostic use only.
-
-                                                                 Warning that this will modify internal state. It must not be changed while DQ is
-                                                                 active or system will need to be reset. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_vfx_dqx_mp_statex_s cn; */
-};
-typedef union cavm_pko_vfx_dqx_mp_statex cavm_pko_vfx_dqx_mp_statex_t;
-
-static inline uint64_t CAVM_PKO_VFX_DQX_MP_STATEX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_MP_STATEX(uint64_t a, uint64_t b, uint64_t c)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7) && (c<=3)))
-        return 0x85407001fe00ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7) + 8ll * ((c) & 0x3);
-    __cavm_csr_fatal("PKO_VFX_DQX_MP_STATEX", 3, a, b, c, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_VFX_DQX_MP_STATEX(a,b,c) cavm_pko_vfx_dqx_mp_statex_t
-#define bustype_CAVM_PKO_VFX_DQX_MP_STATEX(a,b,c) CSR_TYPE_NCB
-#define basename_CAVM_PKO_VFX_DQX_MP_STATEX(a,b,c) "PKO_VFX_DQX_MP_STATEX"
-#define device_bar_CAVM_PKO_VFX_DQX_MP_STATEX(a,b,c) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_VFX_DQX_MP_STATEX(a,b,c) (a)
-#define arguments_CAVM_PKO_VFX_DQX_MP_STATEX(a,b,c) (a),(b),(c),-1
 
 /**
  * Register (NCB) pko_vf#_dq#_op_close
@@ -17012,47 +14616,6 @@ static inline uint64_t CAVM_PKO_VFX_DQX_OP_SENDX(uint64_t a, uint64_t b, uint64_
 #define device_bar_CAVM_PKO_VFX_DQX_OP_SENDX(a,b,c) 0x0 /* VF_BAR0 */
 #define busnum_CAVM_PKO_VFX_DQX_OP_SENDX(a,b,c) (a)
 #define arguments_CAVM_PKO_VFX_DQX_OP_SENDX(a,b,c) (a),(b),(c),-1
-
-/**
- * Register (NCB) pko_vf#_dq#_pd_state#
- *
- * INTERNAL: PKO Packet Descriptor State Per DQ Access Register
- */
-union cavm_pko_vfx_dqx_pd_statex
-{
-    uint64_t u;
-    struct cavm_pko_vfx_dqx_pd_statex_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W/H) Internal state for descriptors per each DQ. For diagnostic use only.
-
-                                                                 Warning that this will modify internal state. It must not be changed while DQ is
-                                                                 active or system will need to be reset. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W/H) Internal state for descriptors per each DQ. For diagnostic use only.
-
-                                                                 Warning that this will modify internal state. It must not be changed while DQ is
-                                                                 active or system will need to be reset. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pko_vfx_dqx_pd_statex_s cn; */
-};
-typedef union cavm_pko_vfx_dqx_pd_statex cavm_pko_vfx_dqx_pd_statex_t;
-
-static inline uint64_t CAVM_PKO_VFX_DQX_PD_STATEX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_PD_STATEX(uint64_t a, uint64_t b, uint64_t c)
-{
-    if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7) && (c<=3)))
-        return 0x85407001ff00ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7) + 8ll * ((c) & 0x3);
-    __cavm_csr_fatal("PKO_VFX_DQX_PD_STATEX", 3, a, b, c, 0, 0, 0);
-}
-
-#define typedef_CAVM_PKO_VFX_DQX_PD_STATEX(a,b,c) cavm_pko_vfx_dqx_pd_statex_t
-#define bustype_CAVM_PKO_VFX_DQX_PD_STATEX(a,b,c) CSR_TYPE_NCB
-#define basename_CAVM_PKO_VFX_DQX_PD_STATEX(a,b,c) "PKO_VFX_DQX_PD_STATEX"
-#define device_bar_CAVM_PKO_VFX_DQX_PD_STATEX(a,b,c) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_PKO_VFX_DQX_PD_STATEX(a,b,c) (a)
-#define arguments_CAVM_PKO_VFX_DQX_PD_STATEX(a,b,c) (a),(b),(c),-1
 
 /**
  * Register (NCB) pko_vf#_dq#_sw_xoff

@@ -35,8 +35,6 @@
  *
  * REE Descriptor Mode Flag Enumeration
  * Enumerates REE_INST_S[REE_JOB_CTRL.MODE] and REE_RES_S[REE_RES_STATUS.MODE].
- * Internal:
- * These encodings must be kept updated with Titan REE IP.
  */
 #define CAVM_REE_DESC_MODE_E_HPM (1)
 #define CAVM_REE_DESC_MODE_E_NORMAL (0)
@@ -47,8 +45,6 @@
  *
  * REE Descriptor Type Flag Enumeration
  * Enumerates REE_INST_S[REE_JOB_CTRL.TYPE] and REE_RES_S[REE_RES_STATUS.TYPE].
- * Internal:
- * These encodings must be kept updated with Titan REE IP.
  */
 #define CAVM_REE_DESC_TYPE_E_TYPE_JOB_DESC (0)
 #define CAVM_REE_DESC_TYPE_E_TYPE_RESULT_DESC (1)
@@ -59,9 +55,6 @@
  * REE Load Type Enumeration
  * Enumerates the type of NCB command to use for loads. See REE_AF_QUE()_GCFG[IL2LD_CMD],
  * REE_AF_QUE()_GCFG[PL2LD_CMD], and REE_AF_CTL_CFG[RL2LD_CMD].
- *
- * Internal:
- * If a reserved value is used, hardare defaults to LDI.
  */
 #define CAVM_REE_L2LD_CMD_E_LDD (0)
 #define CAVM_REE_L2LD_CMD_E_LDE (2)
@@ -99,8 +92,6 @@
  *
  * Memory Initialization Mode Enumeration
  * Enumerates REE_AF_REEXR_CTRL.INIT_MODE.
- * Internal:
- * These encodings must be kept updated with Titan REE IP.
  */
 #define CAVM_REE_RTRU_INIT_MODE_E_INIT_MODE_1 (1)
 #define CAVM_REE_RTRU_INIT_MODE_E_INIT_MODE_2 (2)
@@ -407,10 +398,7 @@ union cavm_ree_inst_s
 
                                                                  REE adds SSO work from REE_INST_S's in the same LF/queue that have [OOJ]=0
                                                                  in queue order. REE may add to SSO in any order in all other situations, even
-                                                                 amongst instructions in the same queue.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 amongst instructions in the same queue. */
 #else /* Word 4 - Little Endian */
         uint64_t wq_ptr                : 64; /**< [319:256] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that the REE coprocessor
                                                                  uses to submit work to the SSO after all match data, and result write operations are
@@ -424,10 +412,7 @@ union cavm_ree_inst_s
 
                                                                  REE adds SSO work from REE_INST_S's in the same LF/queue that have [OOJ]=0
                                                                  in queue order. REE may add to SSO in any order in all other situations, even
-                                                                 amongst instructions in the same queue.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 amongst instructions in the same queue. */
 #endif /* Word 4 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
         uint64_t reserved_364_383      : 20;
@@ -628,10 +613,7 @@ union cavm_ree_inst_s
 
                                                                  REE adds SSO work from REE_INST_S's in the same LF/queue that have [OOJ]=0
                                                                  in queue order. REE may add to SSO in any order in all other situations, even
-                                                                 amongst instructions in the same queue.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 amongst instructions in the same queue. */
 #else /* Word 4 - Little Endian */
         uint64_t wq_ptr                : 64; /**< [319:256] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that the REE coprocessor
                                                                  uses to submit work to the SSO after all match data, and result write operations are
@@ -645,10 +627,7 @@ union cavm_ree_inst_s
 
                                                                  REE adds SSO work from REE_INST_S's in the same LF/queue that have [OOJ]=0
                                                                  in queue order. REE may add to SSO in any order in all other situations, even
-                                                                 amongst instructions in the same queue.
-
-                                                                 Internal:
-                                                                 Bits \<63:53\>, \<2:0\> are ignored by hardware, treated as always 0x0. */
+                                                                 amongst instructions in the same queue. */
 #endif /* Word 4 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
         uint64_t reserved_364_383      : 20;
@@ -1215,62 +1194,6 @@ static inline uint64_t CAVM_REEX_AF_AQ_DONE_ACK(uint64_t a)
 #define arguments_CAVM_REEX_AF_AQ_DONE_ACK(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) ree#_af_aq_done_int
- *
- * INTERNAL: REE Administrative Queue Done Interrupt Clear Registers
- *
- * Internal:
- * This CSR description is only here to keep the scripts happy.
- */
-union cavm_reex_af_aq_done_int
-{
-    uint64_t u;
-    struct cavm_reex_af_aq_done_int_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See ree_AQ_DONE[DONE].  Note this bit is read-only - acknowledge
-                                                                 interrupts using REE_AF_AQ_DONE_ACK.
-
-                                                                 To test interrupts, write REE_AF_AQ_DONE_ACK to make REE_AF_AQ_DONE[DONE] nonzero.
-
-                                                                 Internal:
-                                                                 This is called the conceptual interrupt bit in the REE_AF_AQ_DONE[DONE] documentation.
-                                                                 This bit does not need to be implemented, and this CSR could be removed (except
-                                                                 that the scripts will blow up). */
-#else /* Word 0 - Little Endian */
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See ree_AQ_DONE[DONE].  Note this bit is read-only - acknowledge
-                                                                 interrupts using REE_AF_AQ_DONE_ACK.
-
-                                                                 To test interrupts, write REE_AF_AQ_DONE_ACK to make REE_AF_AQ_DONE[DONE] nonzero.
-
-                                                                 Internal:
-                                                                 This is called the conceptual interrupt bit in the REE_AF_AQ_DONE[DONE] documentation.
-                                                                 This bit does not need to be implemented, and this CSR could be removed (except
-                                                                 that the scripts will blow up). */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_reex_af_aq_done_int_s cn; */
-};
-typedef union cavm_reex_af_aq_done_int cavm_reex_af_aq_done_int_t;
-
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840140000150ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("REEX_AF_AQ_DONE_INT", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_REEX_AF_AQ_DONE_INT(a) cavm_reex_af_aq_done_int_t
-#define bustype_CAVM_REEX_AF_AQ_DONE_INT(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_REEX_AF_AQ_DONE_INT(a) "REEX_AF_AQ_DONE_INT"
-#define device_bar_CAVM_REEX_AF_AQ_DONE_INT(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_REEX_AF_AQ_DONE_INT(a) (a)
-#define arguments_CAVM_REEX_AF_AQ_DONE_INT(a) (a),-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) ree#_af_aq_done_int_ena_w1c
  *
  * REE Administrative Queue Done Interrupt Enable Clear Registers
@@ -1349,62 +1272,6 @@ static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1S(uint64_t a)
 #define device_bar_CAVM_REEX_AF_AQ_DONE_INT_ENA_W1S(a) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_REEX_AF_AQ_DONE_INT_ENA_W1S(a) (a)
 #define arguments_CAVM_REEX_AF_AQ_DONE_INT_ENA_W1S(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) ree#_af_aq_done_int_w1s
- *
- * INTERNAL: REE Administrative Queue Done Interrupt Set Registers
- *
- * Internal:
- * This CSR description is only here to keep the scripts happy.
- */
-union cavm_reex_af_aq_done_int_w1s
-{
-    uint64_t u;
-    struct cavm_reex_af_aq_done_int_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See ree_AQ_DONE[DONE].  Note this bit is read-only - acknowledge
-                                                                 interrupts using REE_AF_AQ_DONE_ACK.
-
-                                                                 To test interrupts, write REE_AF_AQ_DONE_ACK to make REE_AF_AQ_DONE[DONE] nonzero.
-
-                                                                 Internal:
-                                                                 This is called the conceptual interrupt bit in the REE_AF_AQ_DONE[DONE] documentation.
-                                                                 This bit does not need to be implemented, and this CSR could be removed (except
-                                                                 that the scripts will blow up). */
-#else /* Word 0 - Little Endian */
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See ree_AQ_DONE[DONE].  Note this bit is read-only - acknowledge
-                                                                 interrupts using REE_AF_AQ_DONE_ACK.
-
-                                                                 To test interrupts, write REE_AF_AQ_DONE_ACK to make REE_AF_AQ_DONE[DONE] nonzero.
-
-                                                                 Internal:
-                                                                 This is called the conceptual interrupt bit in the REE_AF_AQ_DONE[DONE] documentation.
-                                                                 This bit does not need to be implemented, and this CSR could be removed (except
-                                                                 that the scripts will blow up). */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_reex_af_aq_done_int_w1s_s cn; */
-};
-typedef union cavm_reex_af_aq_done_int_w1s cavm_reex_af_aq_done_int_w1s_t;
-
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_W1S(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840140000160ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("REEX_AF_AQ_DONE_INT_W1S", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_REEX_AF_AQ_DONE_INT_W1S(a) cavm_reex_af_aq_done_int_w1s_t
-#define bustype_CAVM_REEX_AF_AQ_DONE_INT_W1S(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_REEX_AF_AQ_DONE_INT_W1S(a) "REEX_AF_AQ_DONE_INT_W1S"
-#define device_bar_CAVM_REEX_AF_AQ_DONE_INT_W1S(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_REEX_AF_AQ_DONE_INT_W1S(a) (a)
-#define arguments_CAVM_REEX_AF_AQ_DONE_INT_W1S(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) ree#_af_aq_doorbell
@@ -1887,87 +1754,6 @@ static inline uint64_t CAVM_REEX_AF_AQ_SBUF_CTL(uint64_t a)
 #define arguments_CAVM_REEX_AF_AQ_SBUF_CTL(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PF_BAR0) ree#_af_bar2_alias#
- *
- * INTERNAL: REE Admin Function  BAR2 Alias Registers
- *
- * These registers alias to the REE BAR2 registers for the PF and function
- * selected by REE_AF_BAR2_SEL[PF_FUNC].
- */
-union cavm_reex_af_bar2_aliasx
-{
-    uint64_t u;
-    struct cavm_reex_af_bar2_aliasx_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W/H) Aliased register data. */
-#else /* Word 0 - Little Endian */
-        uint64_t data                  : 64; /**< [ 63:  0](R/W/H) Aliased register data. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_reex_af_bar2_aliasx_s cn; */
-};
-typedef union cavm_reex_af_bar2_aliasx cavm_reex_af_bar2_aliasx_t;
-
-static inline uint64_t CAVM_REEX_AF_BAR2_ALIASX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_BAR2_ALIASX(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=131071)))
-        return 0x840149100000ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1ffff);
-    __cavm_csr_fatal("REEX_AF_BAR2_ALIASX", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_REEX_AF_BAR2_ALIASX(a,b) cavm_reex_af_bar2_aliasx_t
-#define bustype_CAVM_REEX_AF_BAR2_ALIASX(a,b) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_REEX_AF_BAR2_ALIASX(a,b) "REEX_AF_BAR2_ALIASX"
-#define device_bar_CAVM_REEX_AF_BAR2_ALIASX(a,b) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_REEX_AF_BAR2_ALIASX(a,b) (a)
-#define arguments_CAVM_REEX_AF_BAR2_ALIASX(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) ree#_af_bar2_sel
- *
- * INTERNAL: REE Admin Function BAR2 Select Register
- *
- * This register configures BAR2 accesses from the REE_AF_BAR2_ALIAS() registers in BAR0.
- */
-union cavm_reex_af_bar2_sel
-{
-    uint64_t u;
-    struct cavm_reex_af_bar2_sel_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_17_63        : 47;
-        uint64_t alias_ena             : 1;  /**< [ 16: 16](R/W) Enable BAR2 register accesses from the AF BAR2 alias registers in BAR0. */
-        uint64_t alias_pf_func         : 16; /**< [ 15:  0](R/W) PF and function whose BAR2 registers may be accessed from the AF BAR2 alias
-                                                                 registers. Format specified by RVU_PF_FUNC_S. */
-#else /* Word 0 - Little Endian */
-        uint64_t alias_pf_func         : 16; /**< [ 15:  0](R/W) PF and function whose BAR2 registers may be accessed from the AF BAR2 alias
-                                                                 registers. Format specified by RVU_PF_FUNC_S. */
-        uint64_t alias_ena             : 1;  /**< [ 16: 16](R/W) Enable BAR2 register accesses from the AF BAR2 alias registers in BAR0. */
-        uint64_t reserved_17_63        : 47;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_reex_af_bar2_sel_s cn; */
-};
-typedef union cavm_reex_af_bar2_sel cavm_reex_af_bar2_sel_t;
-
-static inline uint64_t CAVM_REEX_AF_BAR2_SEL(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_BAR2_SEL(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840149000000ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("REEX_AF_BAR2_SEL", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_REEX_AF_BAR2_SEL(a) cavm_reex_af_bar2_sel_t
-#define bustype_CAVM_REEX_AF_BAR2_SEL(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_REEX_AF_BAR2_SEL(a) "REEX_AF_BAR2_SEL"
-#define device_bar_CAVM_REEX_AF_BAR2_SEL(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_REEX_AF_BAR2_SEL(a) (a)
-#define arguments_CAVM_REEX_AF_BAR2_SEL(a) (a),-1,-1,-1
-
-/**
  * Register (RVU_PF_BAR0) ree#_af_blk_rst
  *
  * REE AF Block Reset Registers
@@ -2013,132 +1799,6 @@ static inline uint64_t CAVM_REEX_AF_BLK_RST(uint64_t a)
 #define device_bar_CAVM_REEX_AF_BLK_RST(a) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_REEX_AF_BLK_RST(a) (a)
 #define arguments_CAVM_REEX_AF_BLK_RST(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PF_BAR0) ree#_af_bp_test
- *
- * INTERNAL: |
- *   REE Backpressure Test Register
- */
-union cavm_reex_af_bp_test
-{
-    uint64_t u;
-    struct cavm_reex_af_bp_test_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t enable                : 16; /**< [ 63: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Randomly make REE memory interface (rmif) not ready.
-                                                                 \<60\> = Randomly make REEX response match FIFO (rrmf) empty.
-                                                                 \<59\> = Randomly make REEX response descriptor FIFO (rrdf) empty.
-                                                                 \<58\> = Randomly make NCBI match request FIFO (match_req_0) output not valid.
-                                                                 \<57\> = Randomly make NCBI rdc request FIFO (rdc_req_fifo) output not valid.
-                                                                 \<56\> = Randomly make NCBI rmic request FIFO (rmic_req_fifo) output not valid.
-                                                                 \<55\> = Randomly make NCBI ddf request FIFO (ddf_req_fifo) output not valid.
-                                                                 \<54\> = Randomly make NCBI ifi instruction request FIFO (ifi_instr_req) output not valid.
-                                                                 \<53\> = Randomly make SJD packet FIFO (ree_pkt_fifo) output not valid.
-                                                                 \<52\> = Randomly make RJD instruction pending FIFO (instr_pnd_fifo) output not valid.
-                                                                 \<51\> = Randomly make DPR gather pointer FIFO (gthr_ptr_fifo) output not valid.
-                                                                 \<50\> = Randomly make DPR data ready FIFO (data_rdy_fifo) output not valid.
-                                                                 \<49\> = Randomly make DDF gather request FIFO (gthr_req_fifo) output not valid.
-                                                                 \<48\> = Randomly make DDF DMA request FIFO (dma_req_fifo) output not valid. */
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                    \<47:46\> = Reserved.
-                                                                    \<45:44\> = Reserved.
-                                                                    \<43:42\> = Config 13.
-                                                                    \<41:40\> = Config 12.
-                                                                    \<39:38\> = Config 11.
-                                                                    \<37:36\> = Config 10.
-                                                                    \<35:34\> = Config 9.
-                                                                    \<33:32\> = Config 8.
-                                                                    \<31:30\> = Config 7.
-                                                                    \<29:28\> = Config 6.
-                                                                    \<27:26\> = Config 5.
-                                                                    \<25:24\> = Config 4.
-                                                                    \<23:22\> = Config 3.
-                                                                    \<21:20\> = Config 2.
-                                                                    \<19:18\> = Config 1.
-                                                                    \<17:16\> = Config 0.
-
-                                                                  When using 0x0, the constant backpressure means the testbench must toggle the
-                                                                  corresponding [ENABLE] bit to keep traffic flowing. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-#else /* Word 0 - Little Endian */
-        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
-        uint64_t reserved_12_15        : 4;
-        uint64_t bp_cfg                : 32; /**< [ 47: 16](R/W) Backpressure weight. For diagnostic use only.
-                                                                 Internal:
-                                                                 There are 2 backpressure configuration bits per enable, with the two bits
-                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
-                                                                 0x3=25% of the time.
-                                                                    \<47:46\> = Reserved.
-                                                                    \<45:44\> = Reserved.
-                                                                    \<43:42\> = Config 13.
-                                                                    \<41:40\> = Config 12.
-                                                                    \<39:38\> = Config 11.
-                                                                    \<37:36\> = Config 10.
-                                                                    \<35:34\> = Config 9.
-                                                                    \<33:32\> = Config 8.
-                                                                    \<31:30\> = Config 7.
-                                                                    \<29:28\> = Config 6.
-                                                                    \<27:26\> = Config 5.
-                                                                    \<25:24\> = Config 4.
-                                                                    \<23:22\> = Config 3.
-                                                                    \<21:20\> = Config 2.
-                                                                    \<19:18\> = Config 1.
-                                                                    \<17:16\> = Config 0.
-
-                                                                  When using 0x0, the constant backpressure means the testbench must toggle the
-                                                                  corresponding [ENABLE] bit to keep traffic flowing. */
-        uint64_t enable                : 16; /**< [ 63: 48](R/W) Enable test mode. For diagnostic use only.
-                                                                 Internal:
-                                                                 Once a bit is set, random backpressure is generated
-                                                                 at the corresponding point to allow for more frequent backpressure.
-                                                                 \<63\> = Reserved.
-                                                                 \<62\> = Reserved.
-                                                                 \<61\> = Randomly make REE memory interface (rmif) not ready.
-                                                                 \<60\> = Randomly make REEX response match FIFO (rrmf) empty.
-                                                                 \<59\> = Randomly make REEX response descriptor FIFO (rrdf) empty.
-                                                                 \<58\> = Randomly make NCBI match request FIFO (match_req_0) output not valid.
-                                                                 \<57\> = Randomly make NCBI rdc request FIFO (rdc_req_fifo) output not valid.
-                                                                 \<56\> = Randomly make NCBI rmic request FIFO (rmic_req_fifo) output not valid.
-                                                                 \<55\> = Randomly make NCBI ddf request FIFO (ddf_req_fifo) output not valid.
-                                                                 \<54\> = Randomly make NCBI ifi instruction request FIFO (ifi_instr_req) output not valid.
-                                                                 \<53\> = Randomly make SJD packet FIFO (ree_pkt_fifo) output not valid.
-                                                                 \<52\> = Randomly make RJD instruction pending FIFO (instr_pnd_fifo) output not valid.
-                                                                 \<51\> = Randomly make DPR gather pointer FIFO (gthr_ptr_fifo) output not valid.
-                                                                 \<50\> = Randomly make DPR data ready FIFO (data_rdy_fifo) output not valid.
-                                                                 \<49\> = Randomly make DDF gather request FIFO (gthr_req_fifo) output not valid.
-                                                                 \<48\> = Randomly make DDF DMA request FIFO (dma_req_fifo) output not valid. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_reex_af_bp_test_s cn; */
-};
-typedef union cavm_reex_af_bp_test cavm_reex_af_bp_test_t;
-
-static inline uint64_t CAVM_REEX_AF_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_BP_TEST(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840140003400ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("REEX_AF_BP_TEST", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_REEX_AF_BP_TEST(a) cavm_reex_af_bp_test_t
-#define bustype_CAVM_REEX_AF_BP_TEST(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_REEX_AF_BP_TEST(a) "REEX_AF_BP_TEST"
-#define device_bar_CAVM_REEX_AF_BP_TEST(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_REEX_AF_BP_TEST(a) (a)
-#define arguments_CAVM_REEX_AF_BP_TEST(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) ree#_af_cmd_ctl
@@ -2271,8 +1931,6 @@ static inline uint64_t CAVM_REEX_AF_CORE_RESET(uint64_t a)
  * Register (RVU_PF_BAR0) ree#_af_crdt_halt_ncb_req_pc
  *
  * REE Data FIFO Credit Halt NCB Load Requests Counter Register
- * Internal:
- * if (ddf__csri.dma_req_denied) REE_AF_CRDT_HALT_NCB_REQ_PC++
  */
 union cavm_reex_af_crdt_halt_ncb_req_pc
 {
@@ -2426,41 +2084,6 @@ static inline uint64_t CAVM_REEX_AF_DBG_QUEX_STA(uint64_t a, uint64_t b)
 #define device_bar_CAVM_REEX_AF_DBG_QUEX_STA(a,b) 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_REEX_AF_DBG_QUEX_STA(a,b) (a)
 #define arguments_CAVM_REEX_AF_DBG_QUEX_STA(a,b) (a),(b),-1,-1
-
-/**
- * Register (RVU_PF_BAR0) ree#_af_eco
- *
- * INTERNAL: REE ECO Register
- */
-union cavm_reex_af_eco
-{
-    uint64_t u;
-    struct cavm_reex_af_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_reex_af_eco_s cn; */
-};
-typedef union cavm_reex_af_eco cavm_reex_af_eco_t;
-
-static inline uint64_t CAVM_REEX_AF_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x8401400005f0ll + 0x10000000ll * ((a) & 0x1);
-    __cavm_csr_fatal("REEX_AF_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_REEX_AF_ECO(a) cavm_reex_af_eco_t
-#define bustype_CAVM_REEX_AF_ECO(a) CSR_TYPE_RVU_PF_BAR0
-#define basename_CAVM_REEX_AF_ECO(a) "REEX_AF_ECO"
-#define device_bar_CAVM_REEX_AF_ECO(a) 0x0 /* RVU_BAR0 */
-#define busnum_CAVM_REEX_AF_ECO(a) (a)
-#define arguments_CAVM_REEX_AF_ECO(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PF_BAR0) ree#_af_em_base
@@ -2686,18 +2309,6 @@ static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_STATUS(uint64_t a)
  * Register (RVU_PF_BAR0) ree#_af_inst_latency_pc
  *
  * REE AF Instruction Latency Counter Register
- * Internal:
- * Hardware increments outstanding counter (inst_inflight_cnt) when NCB load request
- * is sent for an LF instruction.
- * Hardware decrements outstanding counter when hwjid is freed, or instruction is
- * dropped due to error.
- * Note that hwjid is freed either when stdn is received for descriptor write,
- * or if instruction is marked for SSO - after SSO request is sent.
- *
- * This register is incremented by the outstanding counter value (inst_inflight_cnt)
- * each cycle outstaniding count!=0.
- * Note: For error cases where we drop instructions count is decremented at the point
- * error was detected.
  */
 union cavm_reex_af_inst_latency_pc
 {
@@ -2741,8 +2352,6 @@ static inline uint64_t CAVM_REEX_AF_INST_LATENCY_PC(uint64_t a)
  * Register (RVU_PF_BAR0) ree#_af_inst_req_pc
  *
  * REE AF Instruction Request Performance Counter Register
- * Internal:
- * if (ncbi__csri.ncbi_stat.ld_instr_sent) REE_AF_INST_REQ_PC += ncbi__csri.ncbi_stat.ld_instr_cnt
  */
 union cavm_reex_af_inst_req_pc
 {
@@ -2788,17 +2397,7 @@ union cavm_reex_af_lf_rst
         uint64_t reserved_13_63        : 51;
         uint64_t exec                  : 1;  /**< [ 12: 12](R/W1S/H) Execute LF software-initiated reset. When software writes a one to set this bit, hardware
                                                                  resets the local function selected by [LF]. Hardware clears this bit when
-                                                                 done.
-
-                                                                 Internal:
-                                                                 This comment applies to all blocks that refer to this register:
-
-                                                                 This should preferrably reset all registers/state associated with the LF, including
-                                                                 any BLK_LF_* and BLK_AF_LF()_* registers. It would also be nice to reset any per-LF
-                                                                 bits in other registers but its OK to have exceptions as long as the AF software has
-                                                                 another way to reset them, e.g. by writing to the bits. Such additional steps
-                                                                 expected from software should be documented in the HRM, e.g. in section 19.11.5
-                                                                 "VF Function Level Reset". */
+                                                                 done. */
         uint64_t reserved_8_11         : 4;
         uint64_t lf                    : 8;  /**< [  7:  0](R/W) Local function that is reset when [EXEC] is set. */
 #else /* Word 0 - Little Endian */
@@ -2806,17 +2405,7 @@ union cavm_reex_af_lf_rst
         uint64_t reserved_8_11         : 4;
         uint64_t exec                  : 1;  /**< [ 12: 12](R/W1S/H) Execute LF software-initiated reset. When software writes a one to set this bit, hardware
                                                                  resets the local function selected by [LF]. Hardware clears this bit when
-                                                                 done.
-
-                                                                 Internal:
-                                                                 This comment applies to all blocks that refer to this register:
-
-                                                                 This should preferrably reset all registers/state associated with the LF, including
-                                                                 any BLK_LF_* and BLK_AF_LF()_* registers. It would also be nice to reset any per-LF
-                                                                 bits in other registers but its OK to have exceptions as long as the AF software has
-                                                                 another way to reset them, e.g. by writing to the bits. Such additional steps
-                                                                 expected from software should be documented in the HRM, e.g. in section 19.11.5
-                                                                 "VF Function Level Reset". */
+                                                                 done. */
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } s;
@@ -3299,8 +2888,6 @@ static inline uint64_t CAVM_REEX_AF_RD_LATENCY_PC(uint64_t a)
  * Register (RVU_PF_BAR0) ree#_af_rd_req_pc
  *
  * REE AF Read Request Performance Counter Register
- * Internal:
- * if (ncbi__csri.ncbi_stat.ld_sent) REE_AF_RD_REQ_PC += ncbi__csri.ncbi_stat.ld_sent
  */
 union cavm_reex_af_rd_req_pc
 {
@@ -3336,10 +2923,6 @@ static inline uint64_t CAVM_REEX_AF_RD_REQ_PC(uint64_t a)
  * Register (RVU_PF_BAR0) ree#_af_reex_active_jobs_pc
  *
  * REE AF REEX Active Jobs Counter Register
- * Internal:
- * if (fjm__csri_full_job_in_valid || fjm__csri_full_job_out_valid)
- * REE_AF_REEX_ACTIVE_JOBS_PC += (fjm__csri_full_job_in_valid -
- * fjm__csri_full_job_out_valid)
  */
 union cavm_reex_af_reex_active_jobs_pc
 {
@@ -3418,9 +3001,6 @@ static inline uint64_t CAVM_REEX_AF_REEX_RD_LATENCY_PC(uint64_t a)
  * Register (RVU_PF_BAR0) ree#_af_reex_rd_req_pc
  *
  * REE AF REEX Read Request Performance Counter Register
- * Internal:
- * if (ncbi__csri.ncbi_stat.ld_sent && (ncbi__csri.ncbi_stat.ld_sent_tag ==
- * ree_defs::REE_RSP_REEX) REE_AF_REEX_RD_REQ_PC++
  */
 union cavm_reex_af_reex_rd_req_pc
 {
@@ -3854,12 +3434,7 @@ union cavm_reex_af_reexm_ctrl
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_32_63        : 32;
-        uint64_t reex_reserved_1       : 28; /**< [ 31:  4](R/W) Reserved. Must be kept 0.
-                                                                 Internal:
-                                                                 Bits 7,5,4 are disable bits for L2_CACHE, Match-FIFO, Result-Descriptor FIFO,
-                                                                 respcetively, for Titan internal use.
-                                                                 Bits 5,4 must be set to 0, otherwise REEX FIFOs might not be in sync, and REE
-                                                                 might get hung up waiting for Matches or Descriptors. */
+        uint64_t reex_reserved_1       : 28; /**< [ 31:  4](R/W) Reserved. Must be kept 0. */
         uint64_t go                    : 1;  /**< [  3:  3](R/W) Set this bit to cause REEX to start scanning jobs for matches. */
         uint64_t reex_reserved_2       : 2;  /**< [  2:  1](R/W) Reserved, Must be kept 0. */
         uint64_t init                  : 1;  /**< [  0:  0](R/W) Set to initialize REEX. */
@@ -3867,12 +3442,7 @@ union cavm_reex_af_reexm_ctrl
         uint64_t init                  : 1;  /**< [  0:  0](R/W) Set to initialize REEX. */
         uint64_t reex_reserved_2       : 2;  /**< [  2:  1](R/W) Reserved, Must be kept 0. */
         uint64_t go                    : 1;  /**< [  3:  3](R/W) Set this bit to cause REEX to start scanning jobs for matches. */
-        uint64_t reex_reserved_1       : 28; /**< [ 31:  4](R/W) Reserved. Must be kept 0.
-                                                                 Internal:
-                                                                 Bits 7,5,4 are disable bits for L2_CACHE, Match-FIFO, Result-Descriptor FIFO,
-                                                                 respcetively, for Titan internal use.
-                                                                 Bits 5,4 must be set to 0, otherwise REEX FIFOs might not be in sync, and REE
-                                                                 might get hung up waiting for Matches or Descriptors. */
+        uint64_t reex_reserved_1       : 28; /**< [ 31:  4](R/W) Reserved. Must be kept 0. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } s;
@@ -4551,13 +4121,9 @@ union cavm_reex_af_reexm_status
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_7_63         : 57;
-        uint64_t idle                  : 1;  /**< [  6:  6](RO/H) --
-                                                                 Internal:
-                                                                 Indicates that there are no jobs in REEX (for debug) */
+        uint64_t idle                  : 1;  /**< [  6:  6](RO/H) -- */
         uint64_t reserved_4_5          : 2;
-        uint64_t going                 : 1;  /**< [  3:  3](RO/H) --
-                                                                 Internal:
-                                                                 Indicates that one or more jobs are in REEX (for debug) */
+        uint64_t going                 : 1;  /**< [  3:  3](RO/H) -- */
         uint64_t reserved_1_2          : 2;
         uint64_t init_done             : 1;  /**< [  0:  0](RO/H) After software sets and clears REEXM_CTRL[INIT], it must poll [INIT_DONE] until
                                                                  set, which indicates REEX has been initialized. */
@@ -4565,13 +4131,9 @@ union cavm_reex_af_reexm_status
         uint64_t init_done             : 1;  /**< [  0:  0](RO/H) After software sets and clears REEXM_CTRL[INIT], it must poll [INIT_DONE] until
                                                                  set, which indicates REEX has been initialized. */
         uint64_t reserved_1_2          : 2;
-        uint64_t going                 : 1;  /**< [  3:  3](RO/H) --
-                                                                 Internal:
-                                                                 Indicates that one or more jobs are in REEX (for debug) */
+        uint64_t going                 : 1;  /**< [  3:  3](RO/H) -- */
         uint64_t reserved_4_5          : 2;
-        uint64_t idle                  : 1;  /**< [  6:  6](RO/H) --
-                                                                 Internal:
-                                                                 Indicates that there are no jobs in REEX (for debug) */
+        uint64_t idle                  : 1;  /**< [  6:  6](RO/H) -- */
         uint64_t reserved_7_63         : 57;
 #endif /* Word 0 - End */
     } s;
@@ -4762,10 +4324,7 @@ union cavm_reex_af_reexr_ctrl
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_32_63        : 32;
         uint64_t reex_reserved_2       : 26; /**< [ 31:  6](R/W) Reserved, keep 0. */
-        uint64_t init_mode             : 2;  /**< [  5:  4](R/W) Init mode regarding memories.
-                                                                 Internal:
-                                                                 First init value should be 0x1, and change to 0x2 for further inits.
-                                                                 Modes 0x0 and 0x3 are not supported by REE. */
+        uint64_t init_mode             : 2;  /**< [  5:  4](R/W) Init mode regarding memories. */
         uint64_t reex_reserved_1       : 2;  /**< [  3:  2](R/W) Reserved, keep 0. */
         uint64_t go                    : 1;  /**< [  1:  1](R/W) GO. */
         uint64_t init                  : 1;  /**< [  0:  0](R/W) Initialize REEX. */
@@ -4773,10 +4332,7 @@ union cavm_reex_af_reexr_ctrl
         uint64_t init                  : 1;  /**< [  0:  0](R/W) Initialize REEX. */
         uint64_t go                    : 1;  /**< [  1:  1](R/W) GO. */
         uint64_t reex_reserved_1       : 2;  /**< [  3:  2](R/W) Reserved, keep 0. */
-        uint64_t init_mode             : 2;  /**< [  5:  4](R/W) Init mode regarding memories.
-                                                                 Internal:
-                                                                 First init value should be 0x1, and change to 0x2 for further inits.
-                                                                 Modes 0x0 and 0x3 are not supported by REE. */
+        uint64_t init_mode             : 2;  /**< [  5:  4](R/W) Init mode regarding memories. */
         uint64_t reex_reserved_2       : 26; /**< [ 31:  6](R/W) Reserved, keep 0. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
@@ -5071,22 +4627,14 @@ union cavm_reex_af_reexs_cluster_0
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t instruction_duty_cycle : 8; /**< [ 31: 24](RO/H) Number of instructions that were executed in the previous
@@ -5131,22 +4679,14 @@ union cavm_reex_af_reexs_cluster_1
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t instruction_duty_cycle : 8; /**< [ 31: 24](RO/H) Number of instructions that were executed in the previous
@@ -5191,22 +4731,14 @@ union cavm_reex_af_reexs_cluster_2
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t instruction_duty_cycle : 8; /**< [ 31: 24](RO/H) Number of instructions that were executed in the previous
@@ -5251,22 +4783,14 @@ union cavm_reex_af_reexs_cluster_3
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t instruction_duty_cycle : 8; /**< [ 31: 24](RO/H) Number of instructions that were executed in the previous
@@ -5311,22 +4835,14 @@ union cavm_reex_af_reexs_cluster_4
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t instruction_duty_cycle : 8; /**< [ 31: 24](RO/H) Number of instructions that were executed in the previous
@@ -5371,22 +4887,14 @@ union cavm_reex_af_reexs_cluster_5
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t instruction_duty_cycle : 8; /**< [ 31: 24](RO/H) Number of instructions that were executed in the previous
@@ -5431,22 +4939,14 @@ union cavm_reex_af_reexs_cluster_6
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t instruction_duty_cycle : 8; /**< [ 31: 24](RO/H) Number of instructions that were executed in the previous
@@ -5491,22 +4991,14 @@ union cavm_reex_af_reexs_cluster_7
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
 #else /* Word 0 - Little Endian */
         uint64_t jce_idle_1d           : 8;  /**< [  7:  0](RO/H) Each bit is asserted if associated JCE(7:0) was idle
                                                                  for the previous window block of 256 clock cycles. */
         uint64_t tce_idle_1d           : 8;  /**< [ 15:  8](RO/H) Each bit is asserted if associated TCE(7:0) was idle
-                                                                 for the previous window block of 256 clock cycles.
-
-                                                                 Internal:
-                                                                 FIXME - Titan to fix, there are now 16 TCEs per cluster, but only 8 bits.
-                                                                 Also, reset value might be wrong, Titan to update. */
+                                                                 for the previous window block of 256 clock cycles. */
         uint64_t hit_duty_cycle        : 8;  /**< [ 23: 16](RO/H) Number of clock cycles HIT was asserted in the previous
                                                                  window block of 256 clock cycles. */
         uint64_t instruction_duty_cycle : 8; /**< [ 31: 24](RO/H) Number of instructions that were executed in the previous
@@ -5691,16 +5183,10 @@ union cavm_reex_af_rvu_int
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
         uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Unmapped slot. Received an I/O request to a VF/PF slot in BAR2 that is not
-                                                                 reverse mapped to an LF. See REE_PRIV_LF()_CFG.
-
-                                                                 Internal:
-                                                                 A reverse lookup using REE_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+                                                                 reverse mapped to an LF. See REE_PRIV_LF()_CFG. */
 #else /* Word 0 - Little Endian */
         uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Unmapped slot. Received an I/O request to a VF/PF slot in BAR2 that is not
-                                                                 reverse mapped to an LF. See REE_PRIV_LF()_CFG.
-
-                                                                 Internal:
-                                                                 A reverse lookup using REE_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+                                                                 reverse mapped to an LF. See REE_PRIV_LF()_CFG. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -5736,13 +5222,9 @@ union cavm_reex_af_rvu_int_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for REE_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using REE_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for REE_AF_RVU_INT[UNMAPPED_SLOT]. */
 #else /* Word 0 - Little Endian */
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for REE_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using REE_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for REE_AF_RVU_INT[UNMAPPED_SLOT]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -5778,13 +5260,9 @@ union cavm_reex_af_rvu_int_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for REE_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using REE_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for REE_AF_RVU_INT[UNMAPPED_SLOT]. */
 #else /* Word 0 - Little Endian */
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for REE_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using REE_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for REE_AF_RVU_INT[UNMAPPED_SLOT]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -5820,13 +5298,9 @@ union cavm_reex_af_rvu_int_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets REE_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using REE_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets REE_AF_RVU_INT[UNMAPPED_SLOT]. */
 #else /* Word 0 - Little Endian */
-        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets REE_AF_RVU_INT[UNMAPPED_SLOT].
-                                                                 Internal:
-                                                                 A reverse lookup using REE_AF_RVU_LF_CFG_DEBUG will never set this bit. */
+        uint64_t unmapped_slot         : 1;  /**< [  0:  0](R/W1S/H) Reads or sets REE_AF_RVU_INT[UNMAPPED_SLOT]. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
@@ -6108,62 +5582,6 @@ static inline uint64_t CAVM_REEX_LF_DONE_ACK(uint64_t a)
 #define arguments_CAVM_REEX_LF_DONE_ACK(a) (a),-1,-1,-1
 
 /**
- * Register (RVU_PFVF_BAR2) ree#_lf_done_int
- *
- * INTERNAL: REE Queue Done Interrupt Clear Registers
- *
- * Internal:
- * This CSR description is only here to keep the scripts happy.
- */
-union cavm_reex_lf_done_int
-{
-    uint64_t u;
-    struct cavm_reex_lf_done_int_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See ree_LF_DONE[DONE].  Note this bit is read-only - acknowledge
-                                                                 interrupts using REE_LF_DONE_ACK.
-
-                                                                 To test interrupts, write REE_LF_DONE_ACK to make REE_LF_DONE[DONE] nonzero.
-
-                                                                 Internal:
-                                                                 This is called the conceptual interrupt bit in the REE_LF_DONE[DONE] documentation.
-                                                                 This bit does not need to be implemented, and this CSR could be removed (except
-                                                                 that the scripts will blow up). */
-#else /* Word 0 - Little Endian */
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See ree_LF_DONE[DONE].  Note this bit is read-only - acknowledge
-                                                                 interrupts using REE_LF_DONE_ACK.
-
-                                                                 To test interrupts, write REE_LF_DONE_ACK to make REE_LF_DONE[DONE] nonzero.
-
-                                                                 Internal:
-                                                                 This is called the conceptual interrupt bit in the REE_LF_DONE[DONE] documentation.
-                                                                 This bit does not need to be implemented, and this CSR could be removed (except
-                                                                 that the scripts will blow up). */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_reex_lf_done_int_s cn; */
-};
-typedef union cavm_reex_lf_done_int cavm_reex_lf_done_int_t;
-
-static inline uint64_t CAVM_REEX_LF_DONE_INT(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE_INT(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840201400120ll + 0x100000ll * ((a) & 0x1);
-    __cavm_csr_fatal("REEX_LF_DONE_INT", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_REEX_LF_DONE_INT(a) cavm_reex_lf_done_int_t
-#define bustype_CAVM_REEX_LF_DONE_INT(a) CSR_TYPE_RVU_PFVF_BAR2
-#define basename_CAVM_REEX_LF_DONE_INT(a) "REEX_LF_DONE_INT"
-#define device_bar_CAVM_REEX_LF_DONE_INT(a) 0x2 /* RVU_BAR2 */
-#define busnum_CAVM_REEX_LF_DONE_INT(a) (a)
-#define arguments_CAVM_REEX_LF_DONE_INT(a) (a),-1,-1,-1
-
-/**
  * Register (RVU_PFVF_BAR2) ree#_lf_done_int_ena_w1c
  *
  * REE LF Queue Done Interrupt Enable Clear Registers
@@ -6242,62 +5660,6 @@ static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1S(uint64_t a)
 #define device_bar_CAVM_REEX_LF_DONE_INT_ENA_W1S(a) 0x2 /* RVU_BAR2 */
 #define busnum_CAVM_REEX_LF_DONE_INT_ENA_W1S(a) (a)
 #define arguments_CAVM_REEX_LF_DONE_INT_ENA_W1S(a) (a),-1,-1,-1
-
-/**
- * Register (RVU_PFVF_BAR2) ree#_lf_done_int_w1s
- *
- * INTERNAL: REE Queue Done Interrupt Set Registers
- *
- * Internal:
- * This CSR description is only here to keep the scripts happy.
- */
-union cavm_reex_lf_done_int_w1s
-{
-    uint64_t u;
-    struct cavm_reex_lf_done_int_w1s_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_1_63         : 63;
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See ree_LF_DONE[DONE].  Note this bit is read-only - acknowledge
-                                                                 interrupts using REE_LF_DONE_ACK.
-
-                                                                 To test interrupts, write REE_LF_DONE_ACK to make REE_LF_DONE[DONE] nonzero.
-
-                                                                 Internal:
-                                                                 This is called the conceptual interrupt bit in the REE_LF_DONE[DONE] documentation.
-                                                                 This bit does not need to be implemented, and this CSR could be removed (except
-                                                                 that the scripts will blow up). */
-#else /* Word 0 - Little Endian */
-        uint64_t done                  : 1;  /**< [  0:  0](RO/H) Done interrupt. See ree_LF_DONE[DONE].  Note this bit is read-only - acknowledge
-                                                                 interrupts using REE_LF_DONE_ACK.
-
-                                                                 To test interrupts, write REE_LF_DONE_ACK to make REE_LF_DONE[DONE] nonzero.
-
-                                                                 Internal:
-                                                                 This is called the conceptual interrupt bit in the REE_LF_DONE[DONE] documentation.
-                                                                 This bit does not need to be implemented, and this CSR could be removed (except
-                                                                 that the scripts will blow up). */
-        uint64_t reserved_1_63         : 63;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_reex_lf_done_int_w1s_s cn; */
-};
-typedef union cavm_reex_lf_done_int_w1s cavm_reex_lf_done_int_w1s_t;
-
-static inline uint64_t CAVM_REEX_LF_DONE_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE_INT_W1S(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x840201400130ll + 0x100000ll * ((a) & 0x1);
-    __cavm_csr_fatal("REEX_LF_DONE_INT_W1S", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_REEX_LF_DONE_INT_W1S(a) cavm_reex_lf_done_int_w1s_t
-#define bustype_CAVM_REEX_LF_DONE_INT_W1S(a) CSR_TYPE_RVU_PFVF_BAR2
-#define basename_CAVM_REEX_LF_DONE_INT_W1S(a) "REEX_LF_DONE_INT_W1S"
-#define device_bar_CAVM_REEX_LF_DONE_INT_W1S(a) 0x2 /* RVU_BAR2 */
-#define busnum_CAVM_REEX_LF_DONE_INT_W1S(a) (a)
-#define arguments_CAVM_REEX_LF_DONE_INT_W1S(a) (a),-1,-1,-1
 
 /**
  * Register (RVU_PFVF_BAR2) ree#_lf_done_wait

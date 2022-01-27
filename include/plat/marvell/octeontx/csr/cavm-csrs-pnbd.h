@@ -69,50 +69,6 @@ static inline uint64_t CAVM_PNBX_DMAX_CONTROL(uint64_t a, uint64_t b)
 #define arguments_CAVM_PNBX_DMAX_CONTROL(a,b) (a),(b),-1,-1
 
 /**
- * Register (RSL) pnb#_dma#_eco
- *
- * INTERNAL: PNB DMA CORE ECO Register
- *
- * An ECO CSR.
- */
-union cavm_pnbx_dmax_eco
-{
-    uint64_t u;
-    struct cavm_pnbx_dmax_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 64; /**< [ 63:  0](R/W) Internal:
-                                                                 Reserved for ECO usage. */
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pnbx_dmax_eco_s cn; */
-};
-typedef union cavm_pnbx_dmax_eco cavm_pnbx_dmax_eco_t;
-
-static inline uint64_t CAVM_PNBX_DMAX_ECO(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PNBX_DMAX_ECO(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043900058ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
-        return 0x87e043900058ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x87e043900058ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e043900058ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    __cavm_csr_fatal("PNBX_DMAX_ECO", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PNBX_DMAX_ECO(a,b) cavm_pnbx_dmax_eco_t
-#define bustype_CAVM_PNBX_DMAX_ECO(a,b) CSR_TYPE_RSL
-#define basename_CAVM_PNBX_DMAX_ECO(a,b) "PNBX_DMAX_ECO"
-#define busnum_CAVM_PNBX_DMAX_ECO(a,b) (a)
-#define arguments_CAVM_PNBX_DMAX_ECO(a,b) (a),(b),-1,-1
-
-/**
  * Register (RSL) pnb#_dma#_err_enable0
  *
  * PNB DMA AB Error Enable Register 0
@@ -205,48 +161,6 @@ static inline uint64_t CAVM_PNBX_DMAX_ERR_SOURCE0(uint64_t a, uint64_t b)
 #define basename_CAVM_PNBX_DMAX_ERR_SOURCE0(a,b) "PNBX_DMAX_ERR_SOURCE0"
 #define busnum_CAVM_PNBX_DMAX_ERR_SOURCE0(a,b) (a)
 #define arguments_CAVM_PNBX_DMAX_ERR_SOURCE0(a,b) (a),(b),-1,-1
-
-/**
- * Register (RSL) pnb#_dma#_scratch
- *
- * INTERNAL: PNB Scratch Register
- *
- * A scratch CSR.
- */
-union cavm_pnbx_dmax_scratch
-{
-    uint64_t u;
-    struct cavm_pnbx_dmax_scratch_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_0_63         : 64;
-#else /* Word 0 - Little Endian */
-        uint64_t reserved_0_63         : 64;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_pnbx_dmax_scratch_s cn; */
-};
-typedef union cavm_pnbx_dmax_scratch cavm_pnbx_dmax_scratch_t;
-
-static inline uint64_t CAVM_PNBX_DMAX_SCRATCH(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PNBX_DMAX_SCRATCH(uint64_t a, uint64_t b)
-{
-    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
-        return 0x87e043900050ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
-        return 0x87e043900050ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
-        return 0x87e043900050ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e043900050ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
-    __cavm_csr_fatal("PNBX_DMAX_SCRATCH", 2, a, b, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_PNBX_DMAX_SCRATCH(a,b) cavm_pnbx_dmax_scratch_t
-#define bustype_CAVM_PNBX_DMAX_SCRATCH(a,b) CSR_TYPE_RSL
-#define basename_CAVM_PNBX_DMAX_SCRATCH(a,b) "PNBX_DMAX_SCRATCH"
-#define busnum_CAVM_PNBX_DMAX_SCRATCH(a,b) (a)
-#define arguments_CAVM_PNBX_DMAX_SCRATCH(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) pnb#_dma#_status

@@ -283,45 +283,6 @@ static inline uint64_t CAVM_SMI_X_CMD(uint64_t a)
 #define arguments_CAVM_SMI_X_CMD(a) (a),-1,-1,-1
 
 /**
- * Register (RSL) smi_#_eco
- *
- * INTERNAL: SMI ECO Register
- *
- * Reserved for ECOs.
- */
-union cavm_smi_x_eco
-{
-    uint64_t u;
-    struct cavm_smi_x_eco_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) ECO flops. */
-#else /* Word 0 - Little Endian */
-        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) ECO flops. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_smi_x_eco_s cn; */
-};
-typedef union cavm_smi_x_eco cavm_smi_x_eco_t;
-
-static inline uint64_t CAVM_SMI_X_ECO(uint64_t a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_X_ECO(uint64_t a)
-{
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1))
-        return 0x87e005003828ll + 0x80ll * ((a) & 0x1);
-    __cavm_csr_fatal("SMI_X_ECO", 1, a, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SMI_X_ECO(a) cavm_smi_x_eco_t
-#define bustype_CAVM_SMI_X_ECO(a) CSR_TYPE_RSL
-#define basename_CAVM_SMI_X_ECO(a) "SMI_X_ECO"
-#define device_bar_CAVM_SMI_X_ECO(a) 0x0 /* PF_BAR0 */
-#define busnum_CAVM_SMI_X_ECO(a) (a)
-#define arguments_CAVM_SMI_X_ECO(a) (a),-1,-1,-1
-
-/**
  * Register (RSL) smi_#_en
  *
  * SMI Enable Register
@@ -503,49 +464,5 @@ static inline uint64_t CAVM_SMI_DRV_CTL_FUNC(void)
 #define device_bar_CAVM_SMI_DRV_CTL 0x0 /* PF_BAR0 */
 #define busnum_CAVM_SMI_DRV_CTL 0
 #define arguments_CAVM_SMI_DRV_CTL -1,-1,-1,-1
-
-/**
- * Register (RSL) smi_drv_rsvd
- *
- * INTERNAL: SMI Drive Reserve Register
- *
- * Enables the SMI1 interface.
- */
-union cavm_smi_drv_rsvd
-{
-    uint64_t u;
-    struct cavm_smi_drv_rsvd_s
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_11_63        : 53;
-        uint64_t pctl                  : 3;  /**< [ 10:  8](R/W) Reserved. */
-        uint64_t reserved_3_7          : 5;
-        uint64_t nctl                  : 3;  /**< [  2:  0](R/W) Reserved. */
-#else /* Word 0 - Little Endian */
-        uint64_t nctl                  : 3;  /**< [  2:  0](R/W) Reserved. */
-        uint64_t reserved_3_7          : 5;
-        uint64_t pctl                  : 3;  /**< [ 10:  8](R/W) Reserved. */
-        uint64_t reserved_11_63        : 53;
-#endif /* Word 0 - End */
-    } s;
-    /* struct cavm_smi_drv_rsvd_s cn; */
-};
-typedef union cavm_smi_drv_rsvd cavm_smi_drv_rsvd_t;
-
-#define CAVM_SMI_DRV_RSVD CAVM_SMI_DRV_RSVD_FUNC()
-static inline uint64_t CAVM_SMI_DRV_RSVD_FUNC(void) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_DRV_RSVD_FUNC(void)
-{
-    if (cavm_is_model(OCTEONTX_CN8XXX))
-        return 0x87e0050038a8ll;
-    __cavm_csr_fatal("SMI_DRV_RSVD", 0, 0, 0, 0, 0, 0, 0);
-}
-
-#define typedef_CAVM_SMI_DRV_RSVD cavm_smi_drv_rsvd_t
-#define bustype_CAVM_SMI_DRV_RSVD CSR_TYPE_RSL
-#define basename_CAVM_SMI_DRV_RSVD "SMI_DRV_RSVD"
-#define device_bar_CAVM_SMI_DRV_RSVD 0x0 /* PF_BAR0 */
-#define busnum_CAVM_SMI_DRV_RSVD 0
-#define arguments_CAVM_SMI_DRV_RSVD -1,-1,-1,-1
 
 #endif /* __CAVM_CSRS_SMI_H__ */

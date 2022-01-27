@@ -51,13 +51,7 @@ union cavm_mrml_cmd_to
     struct cavm_mrml_cmd_to_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t ack_dis               : 1;  /**< [ 63: 63](SR/W) Disable short-circuiting the command timeout, see [TOVALUE]. For diagnostic use only.
-                                                                 Internal:
-                                                                 Some RSL addresses are decoded by multiple slaves, and only one of those slaves
-                                                                 returns an acknowledgement/response.
-                                                                 This response may be sent before all of the slaves have seen the transaction. If
-                                                                 set, insures that only one transaction
-                                                                 is in flight at any time, potentially working around issues related to the early slave response. */
+        uint64_t ack_dis               : 1;  /**< [ 63: 63](SR/W) Disable short-circuiting the command timeout, see [TOVALUE]. For diagnostic use only. */
         uint64_t reserved_32_62        : 31;
         uint64_t tovalue               : 32; /**< [ 31:  0](SR/W) Command timeout value, in coprocessor clocks. This can enable faster response
                                                                  handling when a request is to a non-existent RSL device, e.g. when doing PCC
@@ -99,14 +93,7 @@ union cavm_mrml_cmd_to
                                                                  timer keeps running until [TOVALUE] is reached, regardless if the slave
                                                                  responds.  The event that occurs last, timer expiring or slave responding, will
                                                                  end the transaction (sending either the received response or an error response)
-                                                                 and can start a new RML transaction.
-
-                                                                 Internal:
-                                                                 Typical value is pessimistic. It assumes roughly a worse case 100 rclks plus 100 sclks as follows:
-                                                                   _ rclk 100 ticks at 300 MHz  w/sclk=300  -\>  100+100 sclks.
-                                                                   _ rclk 100 ticks at 3000 MHz w/sclk=300  -\> 1000+100 sclks.
-                                                                   _ rclk 100 ticks at 300 MHz  w/sclk=1200 -\>   25+100 sclks.
-                                                                   _ rclk 100 ticks at 3000 MHz w/sclk=1200 -\>  250+100 sclks. */
+                                                                 and can start a new RML transaction. */
 #else /* Word 0 - Little Endian */
         uint64_t tovalue               : 32; /**< [ 31:  0](SR/W) Command timeout value, in coprocessor clocks. This can enable faster response
                                                                  handling when a request is to a non-existent RSL device, e.g. when doing PCC
@@ -148,22 +135,9 @@ union cavm_mrml_cmd_to
                                                                  timer keeps running until [TOVALUE] is reached, regardless if the slave
                                                                  responds.  The event that occurs last, timer expiring or slave responding, will
                                                                  end the transaction (sending either the received response or an error response)
-                                                                 and can start a new RML transaction.
-
-                                                                 Internal:
-                                                                 Typical value is pessimistic. It assumes roughly a worse case 100 rclks plus 100 sclks as follows:
-                                                                   _ rclk 100 ticks at 300 MHz  w/sclk=300  -\>  100+100 sclks.
-                                                                   _ rclk 100 ticks at 3000 MHz w/sclk=300  -\> 1000+100 sclks.
-                                                                   _ rclk 100 ticks at 300 MHz  w/sclk=1200 -\>   25+100 sclks.
-                                                                   _ rclk 100 ticks at 3000 MHz w/sclk=1200 -\>  250+100 sclks. */
+                                                                 and can start a new RML transaction. */
         uint64_t reserved_32_62        : 31;
-        uint64_t ack_dis               : 1;  /**< [ 63: 63](SR/W) Disable short-circuiting the command timeout, see [TOVALUE]. For diagnostic use only.
-                                                                 Internal:
-                                                                 Some RSL addresses are decoded by multiple slaves, and only one of those slaves
-                                                                 returns an acknowledgement/response.
-                                                                 This response may be sent before all of the slaves have seen the transaction. If
-                                                                 set, insures that only one transaction
-                                                                 is in flight at any time, potentially working around issues related to the early slave response. */
+        uint64_t ack_dis               : 1;  /**< [ 63: 63](SR/W) Disable short-circuiting the command timeout, see [TOVALUE]. For diagnostic use only. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_mrml_cmd_to_s cn; */
@@ -247,23 +221,7 @@ union cavm_mrml_int_ena_w1c
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mrml_int_ena_w1c_s cn8; */
-    struct cavm_mrml_int_ena_w1c_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t local_toe             : 1;  /**< [  1:  1](SR/W1C/H) Reads or clears enable for MRML_INT_SUM[LOCAL_TOE]. */
-        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1C/H) Reads or clears enable for MRML_INT_SUM[OCX_TOE].
-                                                                 Internal:
-                                                                 OCX timeout error. When set, an OCX timeout error has occurred. */
-#else /* Word 0 - Little Endian */
-        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1C/H) Reads or clears enable for MRML_INT_SUM[OCX_TOE].
-                                                                 Internal:
-                                                                 OCX timeout error. When set, an OCX timeout error has occurred. */
-        uint64_t local_toe             : 1;  /**< [  1:  1](SR/W1C/H) Reads or clears enable for MRML_INT_SUM[LOCAL_TOE]. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_mrml_int_ena_w1c_s cn; */
 };
 typedef union cavm_mrml_int_ena_w1c cavm_mrml_int_ena_w1c_t;
 
@@ -302,23 +260,7 @@ union cavm_mrml_int_ena_w1s
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mrml_int_ena_w1s_s cn8; */
-    struct cavm_mrml_int_ena_w1s_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t local_toe             : 1;  /**< [  1:  1](SR/W1S/H) Reads or sets enable for MRML_INT_SUM[LOCAL_TOE]. */
-        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1S/H) Reads or sets enable for MRML_INT_SUM[OCX_TOE].
-                                                                 Internal:
-                                                                 OCX timeout error. When set, an OCX timeout error has occurred. */
-#else /* Word 0 - Little Endian */
-        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1S/H) Reads or sets enable for MRML_INT_SUM[OCX_TOE].
-                                                                 Internal:
-                                                                 OCX timeout error. When set, an OCX timeout error has occurred. */
-        uint64_t local_toe             : 1;  /**< [  1:  1](SR/W1S/H) Reads or sets enable for MRML_INT_SUM[LOCAL_TOE]. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_mrml_int_ena_w1s_s cn; */
 };
 typedef union cavm_mrml_int_ena_w1s cavm_mrml_int_ena_w1s_t;
 
@@ -394,8 +336,7 @@ static inline uint64_t CAVM_MRML_INT_LOCAL_TO_FUNC(void)
 /**
  * Register (RSL) mrml_int_ocx_to
  *
- * INTERNAL: MRML OCX Timeout Register
- *
+ * MRML OCX Timeout Register
  * Configures remote node timeouts.
  */
 union cavm_mrml_int_ocx_to
@@ -411,21 +352,7 @@ union cavm_mrml_int_ocx_to
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mrml_int_ocx_to_s cn8; */
-    struct cavm_mrml_int_ocx_to_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_32_63        : 32;
-        uint64_t tovalue               : 32; /**< [ 31:  0](SR/W) OCX timeout value, in coprocessor clocks. A value of zero disables the timeout.
-                                                                 If nonzero, this timeout must be at least double MRML_INT_LOCAL_TO.
-                                                                 Ignored in non-CCPI systems. */
-#else /* Word 0 - Little Endian */
-        uint64_t tovalue               : 32; /**< [ 31:  0](SR/W) OCX timeout value, in coprocessor clocks. A value of zero disables the timeout.
-                                                                 If nonzero, this timeout must be at least double MRML_INT_LOCAL_TO.
-                                                                 Ignored in non-CCPI systems. */
-        uint64_t reserved_32_63        : 32;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_mrml_int_ocx_to_s cn; */
 };
 typedef union cavm_mrml_int_ocx_to cavm_mrml_int_ocx_to_t;
 
@@ -433,7 +360,9 @@ typedef union cavm_mrml_int_ocx_to cavm_mrml_int_ocx_to_t;
 static inline uint64_t CAVM_MRML_INT_OCX_TO_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_MRML_INT_OCX_TO_FUNC(void)
 {
-    return 0x87e0fc000808ll;
+    if (cavm_is_model(OCTEONTX_CN8XXX))
+        return 0x87e0fc000808ll;
+    __cavm_csr_fatal("MRML_INT_OCX_TO", 0, 0, 0, 0, 0, 0, 0);
 }
 
 #define typedef_CAVM_MRML_INT_OCX_TO cavm_mrml_int_ocx_to_t
@@ -470,13 +399,9 @@ union cavm_mrml_int_sum
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_2_63         : 62;
         uint64_t local_toe             : 1;  /**< [  1:  1](SR/W1C/H) Local timeout error. When set, a local timeout error has occurred. */
-        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 OCX timeout error. When set, an OCX timeout error has occurred. */
+        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1C/H) Reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1C/H) Reserved.
-                                                                 Internal:
-                                                                 OCX timeout error. When set, an OCX timeout error has occurred. */
+        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1C/H) Reserved. */
         uint64_t local_toe             : 1;  /**< [  1:  1](SR/W1C/H) Local timeout error. When set, a local timeout error has occurred. */
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
@@ -519,23 +444,7 @@ union cavm_mrml_int_sum_w1s
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mrml_int_sum_w1s_s cn8; */
-    struct cavm_mrml_int_sum_w1s_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_2_63         : 62;
-        uint64_t local_toe             : 1;  /**< [  1:  1](SR/W1S/H) Reads or sets MRML_INT_SUM[LOCAL_TOE]. */
-        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1S/H) Reads or sets MRML_INT_SUM[OCX_TOE].
-                                                                 Internal:
-                                                                 OCX timeout error. When set, an OCX timeout error has occurred. */
-#else /* Word 0 - Little Endian */
-        uint64_t ocx_toe               : 1;  /**< [  0:  0](SR/W1S/H) Reads or sets MRML_INT_SUM[OCX_TOE].
-                                                                 Internal:
-                                                                 OCX timeout error. When set, an OCX timeout error has occurred. */
-        uint64_t local_toe             : 1;  /**< [  1:  1](SR/W1S/H) Reads or sets MRML_INT_SUM[LOCAL_TOE]. */
-        uint64_t reserved_2_63         : 62;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_mrml_int_sum_w1s_s cn; */
 };
 typedef union cavm_mrml_int_sum_w1s cavm_mrml_int_sum_w1s_t;
 
