@@ -130,6 +130,8 @@ typedef union cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd cavm_gsercx_cm0_featu
 static inline uint64_t CAVM_GSERCX_CM0_FEATURE_PLL_CAL_EN_CFG1_RSVD(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GSERCX_CM0_FEATURE_PLL_CAL_EN_CFG1_RSVD(uint64_t a)
 {
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=4))
+        return 0x87e0a800e018ll + 0x1000000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=4))
         return 0x87e0a800e018ll + 0x1000000ll * ((a) & 0x7);
     __cavm_csr_fatal("GSERCX_CM0_FEATURE_PLL_CAL_EN_CFG1_RSVD", 1, a, 0, 0, 0, 0, 0);
@@ -12952,6 +12954,8 @@ typedef union cavm_gsercx_lnx_feature_spare_cfg0_rsvd cavm_gsercx_lnx_feature_sp
 static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=4))
+        return 0x87e0a8013680ll + 0x1000000ll * ((a) & 0x7) + 0x4000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=4) && (b<=1)))
         return 0x87e0a8013680ll + 0x1000000ll * ((a) & 0x7) + 0x4000ll * ((b) & 0x1);
     __cavm_csr_fatal("GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD", 2, a, b, 0, 0, 0, 0);
@@ -12989,6 +12993,8 @@ typedef union cavm_gsercx_lnx_feature_spare_cfg6_rsvd cavm_gsercx_lnx_feature_sp
 static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=4))
+        return 0x87e0a80136b0ll + 0x1000000ll * ((a) & 0x7) + 0x4000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=4) && (b<=1)))
         return 0x87e0a80136b0ll + 0x1000000ll * ((a) & 0x7) + 0x4000ll * ((b) & 0x1);
     __cavm_csr_fatal("GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD", 2, a, b, 0, 0, 0, 0);
