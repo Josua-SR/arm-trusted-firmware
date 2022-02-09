@@ -110,9 +110,8 @@ uint32_t plat_ic_acknowledge_interrupt(void)
 	defined(PLAT_t98) || defined(PLAT_f95mm) || defined(PLAT_t83) || \
 	defined(PLAT_f95o))
 #	define IAR_RETRIES 1
-#	define GIC_IDLE_PRIORITY 0xff
 	uint64_t icc_ap0r0_el1[2];
-	int intr_raw, intr_id, pri;
+	int intr_raw, intr_id;
 	int iar_cnt = 0;
 
 	assert(IS_IN_EL3());
@@ -120,17 +119,15 @@ uint32_t plat_ic_acknowledge_interrupt(void)
 	icc_ap0r0_el1[0] = read_icc_ap0r0_el1();
 ack_intr:
 	intr_raw = gicv3_acknowledge_interrupt();
-	icc_ap0r0_el1[1] = read_icc_ap0r0_el1();
 
 	/* Having acknowledged the interrupt, get the running priority */
-	pri = plat_ic_get_running_priority();
 	intr_id = intr_raw & INT_ID_MASK;
 	if (gicv3_is_intr_id_special_identifier(intr_id))
 		return intr_raw;
 
+	icc_ap0r0_el1[1] = read_icc_ap0r0_el1();
 	/* Workaround for bug; check for spurious intr condition. */
-	if ((pri == GIC_IDLE_PRIORITY) &&
-	    (icc_ap0r0_el1[1] == icc_ap0r0_el1[0])) {
+	if (icc_ap0r0_el1[1] == icc_ap0r0_el1[0]) {
 		/* After retry, return spurious indication */
 		if (++iar_cnt > IAR_RETRIES)
 			return GIC_SPURIOUS_INTERRUPT;

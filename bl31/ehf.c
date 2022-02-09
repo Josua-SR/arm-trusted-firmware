@@ -435,8 +435,8 @@ static uint64_t ehf_el3_interrupt_handler(uint32_t id, uint32_t flags,
 	handler = (ehf_handler_t) RAW_HANDLER(
 			exception_data.ehf_priorities[idx].ehf_handler);
 	if (handler == NULL) {
-		ERROR("No EL3 exception handler for priority 0x%x\n",
-				IDX_TO_PRI(idx));
+		ERROR("No EL3 exception handler for priority 0x%x RPR %d INTR %d\n",
+				IDX_TO_PRI(idx), pri, intr);
 		panic();
 	}
 
