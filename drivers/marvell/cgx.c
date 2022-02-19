@@ -2971,12 +2971,14 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 		 * As per HRM, these registers will be cleared
 		 * before start of the traning. Why to explicitly clear them?
 		 */
-		CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LD_CUP(cgx_id, lmac_id),
+		if (is_gsern) {
+			CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LD_CUP(cgx_id, lmac_id),
 					0);
-		CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LP_CUP(cgx_id, lmac_id),
+			CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LP_CUP(cgx_id, lmac_id),
 					0);
-		CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LP_REP(cgx_id, lmac_id),
+			CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LP_REP(cgx_id, lmac_id),
 					0);
+		}
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
 			CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
 			train_en, 1);
