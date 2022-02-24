@@ -448,9 +448,11 @@ union cavm_sso_af_aw_cfg
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_sso_af_aw_cfg_cn96xxp3 cn96xxp4; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 cn98xx; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp1 cnf95xxp1; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_aw_cfg_cn96xxp3 cnf95xxp3; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 f95mm; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 f95o; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 loki; */
@@ -664,6 +666,7 @@ union cavm_sso_af_aw_read_arb
 #endif /* Word 0 - End */
     } cn96xxp1_1;
     /* struct cavm_sso_af_aw_read_arb_cn96xxp1_1 cn96xxp3; */
+    /* struct cavm_sso_af_aw_read_arb_cn96xxp1_1 cn96xxp4; */
     struct cavm_sso_af_aw_read_arb_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1217,6 +1220,7 @@ union cavm_sso_af_const1
 #endif /* Word 0 - End */
     } cn96xxp1;
     /* struct cavm_sso_af_const1_s cn96xxp3; */
+    /* struct cavm_sso_af_const1_s cn96xxp4; */
     /* struct cavm_sso_af_const1_s cn98xx; */
     /* struct cavm_sso_af_const1_cn96xxp1 cnf95xx; */
     /* struct cavm_sso_af_const1_cn96xxp1 f95mm; */
@@ -1460,9 +1464,11 @@ union cavm_sso_af_err0
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_sso_af_err0_cn96xxp3 cn96xxp4; */
     /* struct cavm_sso_af_err0_cn96xxp3 cn98xx; */
     /* struct cavm_sso_af_err0_s cnf95xxp1; */
     /* struct cavm_sso_af_err0_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_err0_cn96xxp3 cnf95xxp3; */
     /* struct cavm_sso_af_err0_cn96xxp3 f95mm; */
     /* struct cavm_sso_af_err0_s f95o; */
     /* struct cavm_sso_af_err0_cn96xxp3 loki; */
@@ -2261,6 +2267,8 @@ static inline uint64_t CAVM_SSO_AF_GWS_INV_FUNC(void)
         return 0x840070001060ll;
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X))
         return 0x840070001060ll;
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X))
+        return 0x840070001060ll;
     if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x840070001060ll;
     if (cavm_is_model(OCTEONTX_CNF95XX))
@@ -2378,6 +2386,7 @@ union cavm_sso_af_hwgrpx_aw_cfg
 #endif /* Word 0 - End */
     } cn96xxp1;
     /* struct cavm_sso_af_hwgrpx_aw_cfg_s cn96xxp3; */
+    /* struct cavm_sso_af_hwgrpx_aw_cfg_s cn96xxp4; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_s cn98xx; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 cnf95xx; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 f95mm; */
@@ -2428,6 +2437,8 @@ static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_FWD(uint64_t a) __attribute__ ((pur
 static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_FWD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=255))
+        return 0x840070200030ll + 0x1000ll * ((a) & 0xff);
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X) && (a<=255))
         return 0x840070200030ll + 0x1000ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=255))
         return 0x840070200030ll + 0x1000ll * ((a) & 0xff);
@@ -5712,9 +5723,11 @@ union cavm_sso_af_ws_cfg
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_sso_af_ws_cfg_cn96xxp3 cn96xxp4; */
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 cn98xx; */
     /* struct cavm_sso_af_ws_cfg_s cnf95xxp1; */
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_ws_cfg_cn96xxp3 cnf95xxp3; */
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 f95mm; */
     struct cavm_sso_af_ws_cfg_f95o
     {

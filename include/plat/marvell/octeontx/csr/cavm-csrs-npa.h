@@ -1017,9 +1017,11 @@ union cavm_npa_aura_s
         uint64_t reserved_448_511      : 64;
 #endif /* Word 7 - End */
     } cn96xxp3;
+    /* struct cavm_npa_aura_s_cn96xxp3 cn96xxp4; */
     /* struct cavm_npa_aura_s_cn96xxp3 cn98xx; */
     /* struct cavm_npa_aura_s_s cnf95xxp1; */
     /* struct cavm_npa_aura_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npa_aura_s_cn96xxp3 cnf95xxp3; */
     /* struct cavm_npa_aura_s_cn96xxp3 f95mm; */
     /* struct cavm_npa_aura_s_cn96xxp3 f95o; */
     /* struct cavm_npa_aura_s_cn96xxp3 loki; */
@@ -2794,9 +2796,11 @@ union cavm_npa_af_gen_cfg
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npa_af_gen_cfg_cn96xxp3 cn96xxp4; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 cn98xx; */
     /* struct cavm_npa_af_gen_cfg_s cnf95xxp1; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npa_af_gen_cfg_cn96xxp3 cnf95xxp3; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 f95mm; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 f95o; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 loki; */
@@ -3267,6 +3271,7 @@ union cavm_npa_af_lfx_auras_cfg
 #endif /* Word 0 - End */
     } cn96xxp1;
     /* struct cavm_npa_af_lfx_auras_cfg_s cn96xxp3; */
+    /* struct cavm_npa_af_lfx_auras_cfg_s cn96xxp4; */
     /* struct cavm_npa_af_lfx_auras_cfg_s cn98xx; */
     /* struct cavm_npa_af_lfx_auras_cfg_s cnf95xx; */
     /* struct cavm_npa_af_lfx_auras_cfg_s f95mm; */

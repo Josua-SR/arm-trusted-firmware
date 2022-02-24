@@ -95,6 +95,7 @@ union cavm_vdec_common_cfg_s
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdec_common_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_vdec_common_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_vdec_common_cfg_s_cnf95xxp2 loki; */
 };
@@ -224,6 +225,7 @@ union cavm_vdec_lte_report_s
         uint64_t reserved_180_191      : 12;
 #endif /* Word 2 - End */
     } cnf95xxp2;
+    /* struct cavm_vdec_lte_report_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_vdec_lte_report_s_cnf95xxp2 f95o; */
     /* struct cavm_vdec_lte_report_s_cnf95xxp2 loki; */
 };
@@ -791,6 +793,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  This is the same as the number of words per thread. */
 #endif /* Word 4 - End */
     } cnf95xxp2;
+    /* struct cavm_vdec_lte_task_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_vdec_lte_task_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_vdec_lte_task_cfg_s_cnf95xxp2 loki; */
 };
@@ -1275,6 +1278,7 @@ union cavm_vdecx_tc_config_err_flags_reg
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdecx_tc_config_err_flags_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_vdecx_tc_config_err_flags_reg_cnf95xxp2 f95o; */
     /* struct cavm_vdecx_tc_config_err_flags_reg_cnf95xxp2 loki; */
 };
@@ -1449,6 +1453,7 @@ union cavm_vdecx_tc_error_reg
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdecx_tc_error_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_vdecx_tc_error_reg_cnf95xxp2 f95o; */
     /* struct cavm_vdecx_tc_error_reg_cnf95xxp2 loki; */
 };
@@ -1547,6 +1552,7 @@ union cavm_vdecx_tc_status0_reg
         uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdecx_tc_status0_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_vdecx_tc_status0_reg_cnf95xxp2 f95o; */
     /* struct cavm_vdecx_tc_status0_reg_cnf95xxp2 loki; */
 };

@@ -1133,6 +1133,7 @@ union cavm_ctix_ctidevarch
     } cn9;
     /* struct cavm_ctix_ctidevarch_cn9 cn96xxp1; */
     /* struct cavm_ctix_ctidevarch_s cn96xxp3; */
+    /* struct cavm_ctix_ctidevarch_s cn96xxp4; */
     /* struct cavm_ctix_ctidevarch_s cn98xx; */
     /* struct cavm_ctix_ctidevarch_s cnf95xx; */
     /* struct cavm_ctix_ctidevarch_s f95mm; */
@@ -2042,6 +2043,7 @@ union cavm_ctix_ctipidr1
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ctix_ctipidr1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ctix_ctipidr1_cn96xxp3 cn98xx; */
     /* struct cavm_ctix_ctipidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_ctix_ctipidr1_cn96xxp3 f95mm; */
@@ -2118,6 +2120,7 @@ union cavm_ctix_ctipidr2
     } cn9;
     /* struct cavm_ctix_ctipidr2_cn9 cn96xxp1; */
     /* struct cavm_ctix_ctipidr2_s cn96xxp3; */
+    /* struct cavm_ctix_ctipidr2_s cn96xxp4; */
     /* struct cavm_ctix_ctipidr2_s cn98xx; */
     struct cavm_ctix_ctipidr2_cnf95xxp1
     {
@@ -2134,6 +2137,7 @@ union cavm_ctix_ctipidr2
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_ctix_ctipidr2_s cnf95xxp2; */
+    /* struct cavm_ctix_ctipidr2_s cnf95xxp3; */
     /* struct cavm_ctix_ctipidr2_s f95mm; */
     /* struct cavm_ctix_ctipidr2_s f95o; */
     /* struct cavm_ctix_ctipidr2_s loki; */
@@ -2263,9 +2267,11 @@ union cavm_ctix_ctipidr4
     } cn9;
     /* struct cavm_ctix_ctipidr4_cn9 cn96xxp1; */
     /* struct cavm_ctix_ctipidr4_s cn96xxp3; */
+    /* struct cavm_ctix_ctipidr4_s cn96xxp4; */
     /* struct cavm_ctix_ctipidr4_s cn98xx; */
     /* struct cavm_ctix_ctipidr4_cn9 cnf95xxp1; */
     /* struct cavm_ctix_ctipidr4_s cnf95xxp2; */
+    /* struct cavm_ctix_ctipidr4_s cnf95xxp3; */
     /* struct cavm_ctix_ctipidr4_s f95mm; */
     /* struct cavm_ctix_ctipidr4_s f95o; */
     /* struct cavm_ctix_ctipidr4_s loki; */

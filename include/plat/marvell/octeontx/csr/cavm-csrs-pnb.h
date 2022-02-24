@@ -262,6 +262,8 @@ static inline uint64_t CAVM_PNBX_GHABX_RRSP_ARB_WT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=7)))
         return 0x87e041000180ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS3_X) && ((a<=1) && (b<=7)))
+        return 0x87e041000180ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=7)))
         return 0x87e041000180ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=7)))
@@ -414,6 +416,8 @@ static inline uint64_t CAVM_PNBX_GHAB_RRSP_BUSHOG_MAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && (a<=1))
         return 0x87e041000028ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS3_X) && (a<=1))
+        return 0x87e041000028ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
         return 0x87e041000028ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
@@ -523,6 +527,8 @@ static inline uint64_t CAVM_PNBX_MABX_RRSP_HP(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=63)))
         return 0x87e041000600ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS3_X) && ((a<=1) && (b<=63)))
+        return 0x87e041000600ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=63)))
         return 0x87e041000600ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=63)))
@@ -576,6 +582,7 @@ union cavm_pnbx_mabx_strid
         uint64_t reserved_8_63         : 56;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pnbx_mabx_strid_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pnbx_mabx_strid_cnf95xxp2 f95mm; */
     /* struct cavm_pnbx_mabx_strid_cnf95xxp2 f95o; */
     /* struct cavm_pnbx_mabx_strid_cnf95xxp2 loki; */

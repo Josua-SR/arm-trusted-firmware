@@ -1185,6 +1185,7 @@ union cavm_dmapx_jdx_cfg3
                                                                  operation in Q14 format. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_dmapx_jdx_cfg3_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_dmapx_jdx_cfg3_cnf95xxp2 f95o; */
     /* struct cavm_dmapx_jdx_cfg3_cnf95xxp2 loki; */
 };

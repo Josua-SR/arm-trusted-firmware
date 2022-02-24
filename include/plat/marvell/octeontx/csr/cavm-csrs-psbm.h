@@ -143,6 +143,7 @@ union cavm_psbm_apx_datax
                                                                  _ DATA(5) = PSBS_AP()_ACCUM(0)/PSBS_SYS()_ACCUM(3). */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_psbm_apx_datax_cn96xxp3 cn96xxp4; */
     /* struct cavm_psbm_apx_datax_cn96xxp3 cn98xx; */
     /* struct cavm_psbm_apx_datax_cn96xxp3 cnf95xx; */
     /* struct cavm_psbm_apx_datax_cn96xxp3 f95mm; */

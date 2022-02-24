@@ -932,6 +932,7 @@ union cavm_dbgx_dbgdtrtx_el0
     } cn9;
     /* struct cavm_dbgx_dbgdtrtx_el0_cn9 cn96xxp1; */
     /* struct cavm_dbgx_dbgdtrtx_el0_s cn96xxp3; */
+    /* struct cavm_dbgx_dbgdtrtx_el0_s cn96xxp4; */
     /* struct cavm_dbgx_dbgdtrtx_el0_s cn98xx; */
     /* struct cavm_dbgx_dbgdtrtx_el0_s cnf95xx; */
     /* struct cavm_dbgx_dbgdtrtx_el0_s f95mm; */
@@ -1800,6 +1801,7 @@ union cavm_dbgx_eddevarch
                                                                  Bits [27:21] are the JEP 106 ID code, 0x3B. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dbgx_eddevarch_cn96xxp3 cn96xxp4; */
     /* struct cavm_dbgx_eddevarch_cn96xxp3 cn98xx; */
     /* struct cavm_dbgx_eddevarch_cn96xxp3 cnf95xx; */
     /* struct cavm_dbgx_eddevarch_cn96xxp3 f95mm; */
@@ -2276,6 +2278,7 @@ union cavm_dbgx_eddfr
     } cn9;
     /* struct cavm_dbgx_eddfr_cn9 cn96xxp1; */
     /* struct cavm_dbgx_eddfr_s cn96xxp3; */
+    /* struct cavm_dbgx_eddfr_s cn96xxp4; */
     /* struct cavm_dbgx_eddfr_s cn98xx; */
     /* struct cavm_dbgx_eddfr_s cnf95xx; */
     /* struct cavm_dbgx_eddfr_s f95mm; */
@@ -3232,6 +3235,7 @@ union cavm_dbgx_edpidr1
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dbgx_edpidr1_cn96xxp3 cn96xxp4; */
     /* struct cavm_dbgx_edpidr1_cn96xxp3 cn98xx; */
     /* struct cavm_dbgx_edpidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_dbgx_edpidr1_cn96xxp3 f95mm; */
@@ -3308,9 +3312,11 @@ union cavm_dbgx_edpidr2
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dbgx_edpidr2_cn96xxp3 cn96xxp4; */
     /* struct cavm_dbgx_edpidr2_cn96xxp3 cn98xx; */
     /* struct cavm_dbgx_edpidr2_s cnf95xxp1; */
     /* struct cavm_dbgx_edpidr2_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_dbgx_edpidr2_cn96xxp3 cnf95xxp3; */
     /* struct cavm_dbgx_edpidr2_cn96xxp3 f95mm; */
     /* struct cavm_dbgx_edpidr2_cn96xxp3 f95o; */
     /* struct cavm_dbgx_edpidr2_cn96xxp3 loki; */
@@ -3444,9 +3450,11 @@ union cavm_dbgx_edpidr4
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dbgx_edpidr4_cn96xxp3 cn96xxp4; */
     /* struct cavm_dbgx_edpidr4_cn96xxp3 cn98xx; */
     /* struct cavm_dbgx_edpidr4_s cnf95xxp1; */
     /* struct cavm_dbgx_edpidr4_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_dbgx_edpidr4_cn96xxp3 cnf95xxp3; */
     /* struct cavm_dbgx_edpidr4_cn96xxp3 f95mm; */
     /* struct cavm_dbgx_edpidr4_cn96xxp3 f95o; */
     /* struct cavm_dbgx_edpidr4_cn96xxp3 loki; */
@@ -4798,6 +4806,7 @@ union cavm_dbgx_midr_el1
                                                                  \</pre\> */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dbgx_midr_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_dbgx_midr_el1_cn96xxp3 cn98xx; */
     /* struct cavm_dbgx_midr_el1_cn96xxp3 cnf95xx; */
     /* struct cavm_dbgx_midr_el1_cn96xxp3 f95mm; */

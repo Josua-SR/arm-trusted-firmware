@@ -223,6 +223,7 @@ union cavm_pcieepx_ack_timer
                                                                  for the correct value. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_ack_timer_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_ack_timer_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_ack_timer_cn96xxp3 cnf95xx; */
     /* struct cavm_pcieepx_ack_timer_cn96xxp3 f95o; */
@@ -420,6 +421,7 @@ union cavm_pcieepx_acs_cap_hdr
                                                                  by default. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_acs_cap_hdr_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_acs_cap_hdr_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_acs_cap_hdr_s cnf95xx; */
     /* struct cavm_pcieepx_acs_cap_hdr_cn96xxp3 f95o; */
@@ -999,6 +1001,7 @@ union cavm_pcieepx_bar2_maskl
         uint32_t lmask                 : 31; /**< [ 31:  1](WORSL/H) BAR mask low. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_bar2_maskl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_bar2_maskl_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_bar2_maskl_s cnf95xx; */
     /* struct cavm_pcieepx_bar2_maskl_s f95o; */
@@ -1170,6 +1173,7 @@ union cavm_pcieepx_bar2u
         uint32_t ubab                  : 32; /**< [ 31:  0](R/W) Contains the upper 32 bits of the BAR 2 base address. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_bar2u_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_bar2u_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_bar2u_s cnf95xx; */
     /* struct cavm_pcieepx_bar2u_s f95o; */
@@ -13517,6 +13521,7 @@ union cavm_pcieepx_dev_ctl2
         uint32_t reserved_16_31        : 16;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_dev_ctl2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_dev_ctl2_cn96xxp3 cn98xx; */
     struct cavm_pcieepx_dev_ctl2_cnf95xx
     {
@@ -14546,6 +14551,7 @@ union cavm_pcieepx_erom_mask
         uint32_t mask                  : 31; /**< [ 31:  1](WORSL/H) BAR mask low. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_erom_mask_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_erom_mask_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_erom_mask_s cnf95xx; */
     /* struct cavm_pcieepx_erom_mask_s f95o; */
@@ -14931,6 +14937,7 @@ union cavm_pcieepx_gen2_port
         uint32_t reserved_22_31        : 10;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_gen2_port_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_gen2_port_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_gen2_port_cn96xxp3 cnf95xx; */
     /* struct cavm_pcieepx_gen2_port_cn96xxp3 f95o; */
@@ -15310,6 +15317,7 @@ union cavm_pcieepx_gen4_lane_margining_1
         uint32_t reserved_30_31        : 2;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_gen4_lane_margining_1_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_gen4_lane_margining_1_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_gen4_lane_margining_1_s cnf95xx; */
     /* struct cavm_pcieepx_gen4_lane_margining_1_cn96xxp3 f95o; */
@@ -15409,6 +15417,7 @@ union cavm_pcieepx_gen4_lane_margining_2
         uint32_t reserved_29_31        : 3;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_gen4_lane_margining_2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_gen4_lane_margining_2_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_gen4_lane_margining_2_s cnf95xx; */
     /* struct cavm_pcieepx_gen4_lane_margining_2_cn96xxp3 f95o; */
@@ -15695,10 +15704,12 @@ typedef union cavm_pcieepx_hide_pf cavm_pcieepx_hide_pf_t;
 static inline uint64_t CAVM_PCIEEPX_HIDE_PF(uint64_t a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_PCIEEPX_HIDE_PF(uint64_t a)
 {
-    if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=3))
+    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=3))
         return 0x8a0ll + 0x100000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=4))
         return 0x8a0ll + 0x100000000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && (a==0))
+        return 0x8a0ll + 0x100000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x8a0 + 0 * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
@@ -15774,6 +15785,7 @@ union cavm_pcieepx_id
                                                                   _ \<7:0\> is typically set to PCC_DEV_IDL_E::PCIERC. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_id_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_id_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_id_cn96xxp3 cnf95xx; */
     /* struct cavm_pcieepx_id_cn96xxp3 f95o; */
@@ -16320,6 +16332,7 @@ union cavm_pcieepx_lane_skew
 #endif /* Word 0 - End */
     } cn96xxp1;
     /* struct cavm_pcieepx_lane_skew_s cn96xxp3; */
+    /* struct cavm_pcieepx_lane_skew_s cn96xxp4; */
     /* struct cavm_pcieepx_lane_skew_s cn98xx; */
     /* struct cavm_pcieepx_lane_skew_s cnf95xx; */
     /* struct cavm_pcieepx_lane_skew_s f95o; */
@@ -16567,6 +16580,7 @@ union cavm_pcieepx_link_cap2
         uint32_t reserved_25_31        : 7;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_link_cap2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_link_cap2_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_link_cap2_s cnf95xx; */
     /* struct cavm_pcieepx_link_cap2_s f95o; */
@@ -18329,6 +18343,7 @@ union cavm_pcieepx_msix_cap_cntrl
         uint32_t msixen                : 1;  /**< [ 31: 31](R/W) MSI-X enable. If MSI-X is enabled, MSI and INTx must be disabled. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_msix_cap_cntrl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_msix_cap_cntrl_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_msix_cap_cntrl_s cnf95xx; */
     /* struct cavm_pcieepx_msix_cap_cntrl_cn96xxp3 f95o; */
@@ -19445,6 +19460,7 @@ union cavm_pcieepx_phy_gen3_ctl
         uint32_t reserved_26_31        : 6;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_phy_gen3_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_phy_gen3_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_phy_gen3_ctl_s cnf95xx; */
     /* struct cavm_pcieepx_phy_gen3_ctl_cn96xxp3 f95o; */
@@ -19789,6 +19805,7 @@ union cavm_pcieepx_pl16g_eq_ctl0123
         uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_pl16g_eq_ctl0123_cn96xxp3 cn96xxp4; */
     struct cavm_pcieepx_pl16g_eq_ctl0123_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -19895,6 +19912,7 @@ union cavm_pcieepx_pl16g_eq_ctl12131415
         uint32_t l15utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_pl16g_eq_ctl12131415_cn96xxp3 cn96xxp4; */
     struct cavm_pcieepx_pl16g_eq_ctl12131415_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -20001,6 +20019,7 @@ union cavm_pcieepx_pl16g_eq_ctl4567
         uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_pl16g_eq_ctl4567_cn96xxp3 cn96xxp4; */
     struct cavm_pcieepx_pl16g_eq_ctl4567_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -20107,6 +20126,7 @@ union cavm_pcieepx_pl16g_eq_ctl891011
         uint32_t l11utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_pl16g_eq_ctl891011_cn96xxp3 cn96xxp4; */
     struct cavm_pcieepx_pl16g_eq_ctl891011_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -20395,6 +20415,7 @@ union cavm_pcieepx_pl16g_status
         uint32_t reserved_5_31         : 27;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_pl16g_status_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_pl16g_status_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_pl16g_status_s cnf95xx; */
     /* struct cavm_pcieepx_pl16g_status_s f95o; */
@@ -20836,6 +20857,7 @@ union cavm_pcieepx_port_ctl
         uint32_t reserved_28_31        : 4;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_port_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_port_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_port_ctl_s cnf95xx; */
     /* struct cavm_pcieepx_port_ctl_cn96xxp3 f95o; */
@@ -21169,6 +21191,7 @@ union cavm_pcieepx_ptm_cap_hdr
                                                                  Writable through PEM()_CFG_TBL(). */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_ptm_cap_hdr_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_ptm_cap_hdr_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_ptm_cap_hdr_s cnf95xx; */
     /* struct cavm_pcieepx_ptm_cap_hdr_cn96xxp3 f95o; */
@@ -21431,6 +21454,7 @@ union cavm_pcieepx_ptm_req_ctl
         uint32_t reserved_17_31        : 15;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_ptm_req_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_ptm_req_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_ptm_req_ctl_s cnf95xx; */
     /* struct cavm_pcieepx_ptm_req_ctl_cn96xxp3 f95o; */
@@ -24000,6 +24024,7 @@ union cavm_pcieepx_ras_einj_en
         uint32_t reserved_7_31         : 25;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_ras_einj_en_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_ras_einj_en_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_ras_einj_en_s cnf95xx; */
     /* struct cavm_pcieepx_ras_einj_en_cn96xxp3 f95o; */
@@ -24263,6 +24288,7 @@ union cavm_pcieepx_ras_sd_ctl1
         uint32_t reserved_24_31        : 8;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_ras_sd_ctl1_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_ras_sd_ctl1_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_ras_sd_ctl1_cn96xxp3 cnf95xx; */
     /* struct cavm_pcieepx_ras_sd_ctl1_cn96xxp3 f95o; */
@@ -25346,6 +25372,7 @@ union cavm_pcieepx_ras_sd_l1ltssm
                                                                  0x8-0xF = idle_to_rlock_transitioned. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_ras_sd_l1ltssm_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_ras_sd_l1ltssm_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_ras_sd_l1ltssm_s cnf95xx; */
     /* struct cavm_pcieepx_ras_sd_l1ltssm_cn96xxp3 f95o; */
@@ -25449,6 +25476,7 @@ union cavm_pcieepx_ras_sd_statusl2
         uint32_t reserved_28_31        : 4;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_ras_sd_statusl2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_ras_sd_statusl2_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_ras_sd_statusl2_s cnf95xx; */
     /* struct cavm_pcieepx_ras_sd_statusl2_cn96xxp3 f95o; */
@@ -26088,6 +26116,7 @@ union cavm_pcieepx_rasdp_cap_hdr
                                                                  For all other PFs, this field points to PTM Requester Capabilities by default. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_rasdp_cap_hdr_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_rasdp_cap_hdr_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_rasdp_cap_hdr_s cnf95xx; */
     /* struct cavm_pcieepx_rasdp_cap_hdr_cn96xxp3 f95o; */
@@ -27187,6 +27216,7 @@ union cavm_pcieepx_rbar_ctl
                                                                  The BAR is disabled at runtime by writing all zeros through PEM()_CFG_TBL() to this field. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_rbar_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_rbar_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_rbar_ctl_s cnf95xx; */
     /* struct cavm_pcieepx_rbar_ctl_s f95o; */
@@ -27274,6 +27304,7 @@ union cavm_pcieepx_rev
                                                                  0xB = Processor. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepx_rev_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepx_rev_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepx_rev_cn96xxp3 cnf95xx; */
     /* struct cavm_pcieepx_rev_cn96xxp3 f95o; */
@@ -30306,6 +30337,8 @@ static inline uint64_t CAVM_PCIEEPVFX_MSIX_CAP_CNTRL_SHADOW(uint64_t a) __attrib
 static inline uint64_t CAVM_PCIEEPVFX_MSIX_CAP_CNTRL_SHADOW(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=3))
+        return 0x100b0ll + 0x100000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X) && (a<=3))
         return 0x100b0ll + 0x100000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=4))
         return 0x100b0ll + 0x100000000ll * ((a) & 0x7);

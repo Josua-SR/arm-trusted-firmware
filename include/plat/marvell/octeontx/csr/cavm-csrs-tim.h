@@ -300,9 +300,11 @@ union cavm_tim_mem_bucket_s
         uint64_t pad                   : 64; /**< [255:192] Padding, not used by hardware. */
 #endif /* Word 3 - End */
     } cn96xxp3;
+    /* struct cavm_tim_mem_bucket_s_cn96xxp3 cn96xxp4; */
     /* struct cavm_tim_mem_bucket_s_cn96xxp3 cn98xx; */
     /* struct cavm_tim_mem_bucket_s_cn9 cnf95xxp1; */
     /* struct cavm_tim_mem_bucket_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_tim_mem_bucket_s_cn96xxp3 cnf95xxp3; */
     /* struct cavm_tim_mem_bucket_s_cn96xxp3 f95mm; */
     /* struct cavm_tim_mem_bucket_s_cn9 f95o; */
     /* struct cavm_tim_mem_bucket_s_cn96xxp3 loki; */
@@ -442,9 +444,13 @@ static inline uint64_t CAVM_TIM_AF_BAR2_ALIASX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=131071))
         return 0x840099100000ll + 8ll * ((a) & 0x1ffff);
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X) && (a<=131071))
+        return 0x840099100000ll + 8ll * ((a) & 0x1ffff);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=131071))
         return 0x840099100000ll + 8ll * ((a) & 0x1ffff);
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && (a<=131071))
+        return 0x840099100000ll + 8ll * ((a) & 0x1ffff);
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS3_X) && (a<=131071))
         return 0x840099100000ll + 8ll * ((a) & 0x1ffff);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=131071))
         return 0x840099100000ll + 8ll * ((a) & 0x1ffff);
@@ -495,9 +501,13 @@ static inline uint64_t CAVM_TIM_AF_BAR2_SEL_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X))
         return 0x840099000000ll;
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X))
+        return 0x840099000000ll;
     if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x840099000000ll;
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X))
+        return 0x840099000000ll;
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS3_X))
         return 0x840099000000ll;
     if (cavm_is_model(OCTEONTX_F95MM))
         return 0x840099000000ll;
@@ -1314,9 +1324,11 @@ union cavm_tim_af_ringx_ctl0
                                                                  setting or resetting TIM_AF_RING()_CTL1[ENA]. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 cn96xxp4; */
     /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 cn98xx; */
     /* struct cavm_tim_af_ringx_ctl0_s cnf95xxp1; */
     /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 cnf95xxp3; */
     /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 f95mm; */
     /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 f95o; */
     /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 loki; */
@@ -1691,6 +1703,7 @@ union cavm_tim_af_rvu_int
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_tim_af_rvu_int_cn96xxp3 cn96xxp4; */
     /* struct cavm_tim_af_rvu_int_cn96xxp3 cn98xx; */
     /* struct cavm_tim_af_rvu_int_cn96xxp3 cnf95xx; */
     /* struct cavm_tim_af_rvu_int_cn96xxp3 f95mm; */
@@ -3580,6 +3593,7 @@ union cavm_tim_lf_ring_rel
         uint64_t cur_bucket            : 20; /**< [ 63: 44](RO/H) Current bucket. Indicates the ring's current bucket. See TIM_AF_RING()_CTL1[BUCKET]. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_tim_lf_ring_rel_cn96xxp3 cn96xxp4; */
     /* struct cavm_tim_lf_ring_rel_cn96xxp3 cn98xx; */
     /* struct cavm_tim_lf_ring_rel_cn96xxp3 cnf95xx; */
     /* struct cavm_tim_lf_ring_rel_cn96xxp3 f95mm; */

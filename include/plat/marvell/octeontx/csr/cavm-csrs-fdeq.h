@@ -1087,6 +1087,7 @@ union cavm_fdeq_rdcfg_rb_params_jt0_s
         uint64_t reserved_127          : 1;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_rb_params_jt0_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_fdeq_rdcfg_rb_params_jt0_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2704,6 +2705,7 @@ union cavm_fdeq_rdcfg_rb_params_jt1_s
         uint64_t reserved_500_511      : 12;
 #endif /* Word 7 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_rb_params_jt1_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_fdeq_rdcfg_rb_params_jt1_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -3275,6 +3277,7 @@ union cavm_fdeq_rdcfg_twf_set_s
         uint64_t reserved_126_127      : 2;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_twf_set_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_fdeq_rdcfg_twf_set_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_twf_set_s_cnf95xxp2 loki; */
 };
@@ -4096,6 +4099,7 @@ union cavm_fdeq_rdcfg_ue_phase_16r_s
         uint64_t phase_antenna_15      : 16; /**< [255:240] Refer to [PHASE_ANTENNA_0]. */
 #endif /* Word 3 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_ue_phase_16r_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_fdeq_rdcfg_ue_phase_16r_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_ue_phase_16r_s_cnf95xxp2 loki; */
 };
@@ -4177,6 +4181,7 @@ union cavm_fdeq_rdcfg_ue_phase_8r_s
         uint64_t phase_antenna_7       : 16; /**< [127:112] Refer to [PHASE_ANTENNA_0]. */
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_ue_phase_8r_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_fdeq_rdcfg_ue_phase_8r_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_ue_phase_8r_s_cnf95xxp2 loki; */
 };
@@ -5082,6 +5087,7 @@ union cavm_fdeq_rdcfg_ue_phyc_params_s
         uint64_t reserved_246_255      : 10;
 #endif /* Word 3 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_ue_phyc_params_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_fdeq_rdcfg_ue_phyc_params_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_ue_phyc_params_s_cnf95xxp2 loki; */
 };
@@ -5251,6 +5257,7 @@ union cavm_fdeq_rdcfg_ue_tagc_s
         uint64_t reserved_125_127      : 3;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_ue_tagc_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_fdeq_rdcfg_ue_tagc_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_ue_tagc_s_cnf95xxp2 loki; */
 };
@@ -5939,6 +5946,7 @@ union cavm_fdeqx_jd_hrs_offset_per_ant
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeqx_jd_hrs_offset_per_ant_cnf95xxp2 cnf95xxp3; */
     struct cavm_fdeqx_jd_hrs_offset_per_ant_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -6169,6 +6177,7 @@ union cavm_fdeqx_jd_hrs_sym_idx_for_tdce
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeqx_jd_hrs_sym_idx_for_tdce_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_fdeqx_jd_hrs_sym_idx_for_tdce_cnf95xxp2 f95o; */
     /* struct cavm_fdeqx_jd_hrs_sym_idx_for_tdce_cnf95xxp2 loki; */
 };
@@ -6406,6 +6415,7 @@ union cavm_fdeqx_jd_job_type_rs_param
                                                                  Used only for [JOB_TYPE] = 0x1. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeqx_jd_job_type_rs_param_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_fdeqx_jd_job_type_rs_param_cnf95xxp2 f95o; */
     /* struct cavm_fdeqx_jd_job_type_rs_param_cnf95xxp2 loki; */
 };
@@ -6595,6 +6605,7 @@ union cavm_fdeqx_jd_rs_general_parameter
                                                                  are provided in job type 0. i.e. number of hrs per RB is 6. S */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeqx_jd_rs_general_parameter_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_fdeqx_jd_rs_general_parameter_cnf95xxp2 f95o; */
     /* struct cavm_fdeqx_jd_rs_general_parameter_cnf95xxp2 loki; */
 };

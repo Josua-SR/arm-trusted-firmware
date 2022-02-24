@@ -245,6 +245,7 @@ union cavm_mio_emm_calb
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mio_emm_calb_cn96xxp3 cn96xxp4; */
     /* struct cavm_mio_emm_calb_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_calb_cn96xxp3 cnf95xx; */
     /* struct cavm_mio_emm_calb_cn96xxp3 f95mm; */
@@ -547,6 +548,7 @@ union cavm_mio_emm_debug
 #endif /* Word 0 - End */
     } cn96xxp1;
     /* struct cavm_mio_emm_debug_s cn96xxp3; */
+    /* struct cavm_mio_emm_debug_s cn96xxp4; */
     /* struct cavm_mio_emm_debug_s cn98xx; */
     /* struct cavm_mio_emm_debug_cn96xxp1 cnf95xx; */
     struct cavm_mio_emm_debug_f95mm
@@ -1020,6 +1022,7 @@ union cavm_mio_emm_dma_arg
                                                                  used in conjunction with [ALT_CMD]. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mio_emm_dma_arg_cn96xxp3 cn96xxp4; */
     /* struct cavm_mio_emm_dma_arg_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_dma_arg_s cnf95xx; */
     /* struct cavm_mio_emm_dma_arg_s f95mm; */
@@ -1840,9 +1843,11 @@ union cavm_mio_emm_io_ctl
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mio_emm_io_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_io_ctl_s cnf95xxp1; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mio_emm_io_ctl_cn96xxp3 cnf95xxp3; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 f95mm; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 f95o; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 loki; */
@@ -2055,6 +2060,7 @@ union cavm_mio_emm_modex
 #endif /* Word 0 - End */
     } cn96xxp1;
     /* struct cavm_mio_emm_modex_s cn96xxp3; */
+    /* struct cavm_mio_emm_modex_s cn96xxp4; */
     /* struct cavm_mio_emm_modex_s cn98xx; */
     /* struct cavm_mio_emm_modex_s cnf95xx; */
     /* struct cavm_mio_emm_modex_s f95mm; */
@@ -2246,6 +2252,7 @@ union cavm_mio_emm_msix_vecx_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 f95mm; */
@@ -3071,6 +3078,7 @@ union cavm_mio_emm_switch
         uint64_t reserved_62_63        : 2;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mio_emm_switch_cn96xxp3 cn96xxp4; */
     /* struct cavm_mio_emm_switch_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_switch_cn96xxp3 cnf95xx; */
     /* struct cavm_mio_emm_switch_cn96xxp3 f95mm; */

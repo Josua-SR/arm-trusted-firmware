@@ -91,6 +91,7 @@ union cavm_tdec_common_cfg_s
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_tdec_common_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_tdec_common_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_tdec_common_cfg_s_cnf95xxp2 loki; */
 };
@@ -158,6 +159,7 @@ union cavm_tdec_harq_hdr_s
         uint64_t reserved_84_127       : 44;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_tdec_harq_hdr_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_tdec_harq_hdr_s_cnf95xxp2 f95o; */
     /* struct cavm_tdec_harq_hdr_s_cnf95xxp2 loki; */
 };
@@ -1243,6 +1245,7 @@ union cavm_tdec_lte_task_cfg_s
         uint64_t reserved_496_511      : 16;
 #endif /* Word 7 - End */
     } cnf95xxp2;
+    /* struct cavm_tdec_lte_task_cfg_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_tdec_lte_task_cfg_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2314,6 +2317,7 @@ union cavm_tdecx_tc_config_err_flags_reg
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_tdecx_tc_config_err_flags_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_tdecx_tc_config_err_flags_reg_cnf95xxp2 f95o; */
     /* struct cavm_tdecx_tc_config_err_flags_reg_cnf95xxp2 loki; */
 };
@@ -2508,6 +2512,7 @@ union cavm_tdecx_tc_error_reg
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_tdecx_tc_error_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_tdecx_tc_error_reg_cnf95xxp2 f95o; */
     /* struct cavm_tdecx_tc_error_reg_cnf95xxp2 loki; */
 };
@@ -2562,6 +2567,7 @@ union cavm_tdecx_tc_main_reset_reg
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_tdecx_tc_main_reset_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_tdecx_tc_main_reset_reg_cnf95xxp2 f95o; */
     /* struct cavm_tdecx_tc_main_reset_reg_cnf95xxp2 loki; */
 };
@@ -2620,6 +2626,7 @@ union cavm_tdecx_tc_status0_reg
         uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_tdecx_tc_status0_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_tdecx_tc_status0_reg_cnf95xxp2 f95o; */
     /* struct cavm_tdecx_tc_status0_reg_cnf95xxp2 loki; */
 };

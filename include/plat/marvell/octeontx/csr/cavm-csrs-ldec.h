@@ -259,6 +259,7 @@ union cavm_ldec_cb_cfg_s
         uint64_t reserved_176_191      : 16;
 #endif /* Word 2 - End */
     } cnf95xxp2;
+    /* struct cavm_ldec_cb_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldec_cb_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_ldec_cb_cfg_s_cnf95xxp2 loki; */
 };
@@ -337,6 +338,7 @@ union cavm_ldec_common_cfg_s
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ldec_common_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldec_common_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_ldec_common_cfg_s_cnf95xxp2 loki; */
 };
@@ -496,6 +498,7 @@ union cavm_ldec_opt_task_cfg_s
                                                                  Valid range [0x0, TB size]. */
 #endif /* Word 5 - End */
     } cnf95xxp2;
+    /* struct cavm_ldec_opt_task_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldec_opt_task_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_ldec_opt_task_cfg_s_cnf95xxp2 loki; */
 };
@@ -1744,6 +1747,7 @@ union cavm_ldec_task_cfg_s
         uint64_t num_wr3_dma_words     : 32; /**< [703:672] Number of 64-bit words written to Port3 output DMA. Valid range is [0x0, 0xEB20]. */
 #endif /* Word 10 - End */
     } cnf95xxp2;
+    /* struct cavm_ldec_task_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldec_task_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_ldec_task_cfg_s_cnf95xxp2 loki; */
 };
@@ -2027,6 +2031,7 @@ union cavm_ldecx_abx_hab_jcfg0_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG0 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ldecx_abx_hab_jcfg0_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldecx_abx_hab_jcfg0_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_ldecx_abx_hab_jcfg0_ramx_data_cnf95xxp2 loki; */
 };
@@ -2077,6 +2082,7 @@ union cavm_ldecx_abx_hab_jcfg1_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG1 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ldecx_abx_hab_jcfg1_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldecx_abx_hab_jcfg1_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_ldecx_abx_hab_jcfg1_ramx_data_cnf95xxp2 loki; */
 };
@@ -2127,6 +2133,7 @@ union cavm_ldecx_abx_hab_jcfg2_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG2 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ldecx_abx_hab_jcfg2_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldecx_abx_hab_jcfg2_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_ldecx_abx_hab_jcfg2_ramx_data_cnf95xxp2 loki; */
 };
@@ -2306,6 +2313,7 @@ union cavm_ldecx_abx_tc_control
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ldecx_abx_tc_control_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldecx_abx_tc_control_cnf95xxp2 f95o; */
     /* struct cavm_ldecx_abx_tc_control_cnf95xxp2 loki; */
 };
@@ -2384,6 +2392,7 @@ union cavm_ldecx_abx_tc_error
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ldecx_abx_tc_error_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldecx_abx_tc_error_cnf95xxp2 f95o; */
     /* struct cavm_ldecx_abx_tc_error_cnf95xxp2 loki; */
 };
@@ -2481,6 +2490,7 @@ union cavm_ldecx_abx_tc_main_reset
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ldecx_abx_tc_main_reset_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldecx_abx_tc_main_reset_cnf95xxp2 f95o; */
     /* struct cavm_ldecx_abx_tc_main_reset_cnf95xxp2 loki; */
 };
@@ -2539,6 +2549,7 @@ union cavm_ldecx_abx_tc_status
         uint64_t monitor_bus           : 32; /**< [ 63: 32](RO/H) core dependent */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ldecx_abx_tc_status_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ldecx_abx_tc_status_cnf95xxp2 f95o; */
     /* struct cavm_ldecx_abx_tc_status_cnf95xxp2 loki; */
 };

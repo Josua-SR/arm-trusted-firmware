@@ -622,9 +622,11 @@ union cavm_ap_ccsidr_el1
                                                                  For CNXXXX does not apply as hardware-managed coherence. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_ccsidr_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_ccsidr_el1_cn9 cnf95xxp1; */
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_ccsidr_el1_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 f95mm; */
     struct cavm_ap_ccsidr_el1_f95o
     {
@@ -4760,9 +4762,11 @@ union cavm_ap_cvm_erricache_el1
         uint64_t reserved_44_63        : 20;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_cvm_erricache_el1_cn9 cnf95xxp1; */
     /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 f95mm; */
     /* struct cavm_ap_cvm_erricache_el1_cn9 f95o; */
     /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 loki; */
@@ -5421,9 +5425,11 @@ union cavm_ap_cvm_statprofcmp_el1
                                                                  The compare mode is indicated by AP_CVM_STATPROFCTL_EL1[OC_PC]. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_cvm_statprofcmp_el1_s cnf95xxp1; */
     /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 f95mm; */
     /* struct cavm_ap_cvm_statprofcmp_el1_s f95o; */
     /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 loki; */
@@ -5543,9 +5549,11 @@ union cavm_ap_cvm_statprofctl_el1
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_cvm_statprofctl_el1_s cnf95xxp1; */
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 f95mm; */
     struct cavm_ap_cvm_statprofctl_el1_f95o
     {
@@ -5820,9 +5828,11 @@ union cavm_ap_cvm_trapctlx_el3
         uint64_t reserved_37_63        : 27;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 cn98xx; */
     /* struct cavm_ap_cvm_trapctlx_el3_s cnf95xxp1; */
     /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 f95mm; */
     /* struct cavm_ap_cvm_trapctlx_el3_s f95o; */
     /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 loki; */
@@ -6500,9 +6510,11 @@ union cavm_ap_cvmctl2_el1
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_cvmctl2_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp1 cnf95xxp1; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvmctl2_el1_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp3 f95mm; */
     /* struct cavm_ap_cvmctl2_el1_s f95o; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp3 loki; */
@@ -7193,6 +7205,7 @@ union cavm_ap_cvmctl_el1
                                                                  with later instructions. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_cvmctl_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_cvmctl_el1_cn96xxp3 cn98xx; */
     struct cavm_ap_cvmctl_el1_cnf95xxp1
     {
@@ -7309,6 +7322,7 @@ union cavm_ap_cvmctl_el1
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_ap_cvmctl_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvmctl_el1_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_cvmctl_el1_cn96xxp3 f95mm; */
     struct cavm_ap_cvmctl_el1_f95o
     {
@@ -8465,6 +8479,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t rsvd_58_63            : 6;  /**< [ 63: 58](R/W) Reserved. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_cvmmemctl1_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_cvmmemctl1_el1_cn96xxp3 cn98xx; */
     struct cavm_ap_cvmmemctl1_el1_cnf95xxp1
     {
@@ -8698,6 +8713,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t rsvd_59_63            : 5;  /**< [ 63: 59](R/W) Reserved. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ap_cvmmemctl1_el1_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_ap_cvmmemctl1_el1_cnf95xxp2 f95mm; */
     struct cavm_ap_cvmmemctl1_el1_f95o
     {
@@ -9087,9 +9103,11 @@ union cavm_ap_cvmmemctl2_el1
                                                                  cycles. For diagnostic use only. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_cvmmemctl2_el1_s cnf95xxp1; */
     /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 f95mm; */
     /* struct cavm_ap_cvmmemctl2_el1_s f95o; */
     /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 loki; */
@@ -10616,6 +10634,7 @@ union cavm_ap_dspsr_el0
     } cn96xxp1_0;
     /* struct cavm_ap_dspsr_el0_s cn96xxp1_1; */
     /* struct cavm_ap_dspsr_el0_s cn96xxp3; */
+    /* struct cavm_ap_dspsr_el0_s cn96xxp4; */
     /* struct cavm_ap_dspsr_el0_s cn98xx; */
     /* struct cavm_ap_dspsr_el0_s cnf95xx; */
     /* struct cavm_ap_dspsr_el0_s f95mm; */
@@ -18500,6 +18519,7 @@ union cavm_ap_id_aa64isar1_el1
     } cn96xxp1_0;
     /* struct cavm_ap_id_aa64isar1_el1_s cn96xxp1_1; */
     /* struct cavm_ap_id_aa64isar1_el1_s cn96xxp3; */
+    /* struct cavm_ap_id_aa64isar1_el1_s cn96xxp4; */
     /* struct cavm_ap_id_aa64isar1_el1_s cn98xx; */
     /* struct cavm_ap_id_aa64isar1_el1_s cnf95xx; */
     /* struct cavm_ap_id_aa64isar1_el1_s f95mm; */
@@ -19560,6 +19580,7 @@ union cavm_ap_id_aa64pfr1_el1
     /* struct cavm_ap_id_aa64pfr1_el1_cn8 cn96xxp1_0; */
     /* struct cavm_ap_id_aa64pfr1_el1_s cn96xxp1_1; */
     /* struct cavm_ap_id_aa64pfr1_el1_s cn96xxp3; */
+    /* struct cavm_ap_id_aa64pfr1_el1_s cn96xxp4; */
     /* struct cavm_ap_id_aa64pfr1_el1_s cn98xx; */
     struct cavm_ap_id_aa64pfr1_el1_cnf95xxp1
     {
@@ -19618,6 +19639,7 @@ union cavm_ap_id_aa64pfr1_el1
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_ap_id_aa64pfr1_el1_s cnf95xxp2; */
+    /* struct cavm_ap_id_aa64pfr1_el1_s cnf95xxp3; */
     /* struct cavm_ap_id_aa64pfr1_el1_s f95mm; */
     /* struct cavm_ap_id_aa64pfr1_el1_s f95o; */
     /* struct cavm_ap_id_aa64pfr1_el1_s loki; */
@@ -22984,9 +23006,11 @@ union cavm_ap_midr_el1
                                                                  For CNXXXX, 'C'. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_midr_el1_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_midr_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_midr_el1_cn9 cnf95xxp1; */
     /* struct cavm_ap_midr_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_midr_el1_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_midr_el1_cn96xxp3 f95mm; */
     /* struct cavm_ap_midr_el1_cn9 f95o; */
     /* struct cavm_ap_midr_el1_cn96xxp3 loki; */
@@ -28751,6 +28775,7 @@ union cavm_ap_sctlr_el1
 #endif /* Word 0 - End */
     } cn96xxp1_1;
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cn96xxp3; */
+    /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cn96xxp4; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cn98xx; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cnf95xx; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 f95mm; */
@@ -29399,6 +29424,7 @@ union cavm_ap_sctlr_el2
     } cn96xxp1_0;
     /* struct cavm_ap_sctlr_el2_s cn96xxp1_1; */
     /* struct cavm_ap_sctlr_el2_s cn96xxp3; */
+    /* struct cavm_ap_sctlr_el2_s cn96xxp4; */
     /* struct cavm_ap_sctlr_el2_s cn98xx; */
     /* struct cavm_ap_sctlr_el2_s cnf95xx; */
     /* struct cavm_ap_sctlr_el2_s f95mm; */
@@ -30952,6 +30978,7 @@ union cavm_ap_sctlr_el2_e2h
 #endif /* Word 0 - End */
     } cn96xxp1_1;
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cn96xxp3; */
+    /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cn96xxp4; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cn98xx; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cnf95xx; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 f95mm; */
@@ -31552,6 +31579,7 @@ union cavm_ap_sctlr_el3
     } cn96xxp1_0;
     /* struct cavm_ap_sctlr_el3_s cn96xxp1_1; */
     /* struct cavm_ap_sctlr_el3_s cn96xxp3; */
+    /* struct cavm_ap_sctlr_el3_s cn96xxp4; */
     /* struct cavm_ap_sctlr_el3_s cn98xx; */
     /* struct cavm_ap_sctlr_el3_s cnf95xx; */
     /* struct cavm_ap_sctlr_el3_s f95mm; */
@@ -32221,6 +32249,7 @@ union cavm_ap_spsr_elx
     } cn96xxp1_0;
     /* struct cavm_ap_spsr_elx_s cn96xxp1_1; */
     /* struct cavm_ap_spsr_elx_s cn96xxp3; */
+    /* struct cavm_ap_spsr_elx_s cn96xxp4; */
     /* struct cavm_ap_spsr_elx_s cn98xx; */
     /* struct cavm_ap_spsr_elx_s cnf95xx; */
     /* struct cavm_ap_spsr_elx_s f95mm; */
@@ -32442,6 +32471,8 @@ static inline uint64_t CAVM_AP_SSBS_FUNC(void)
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_1))
         return 0x30304020600ll;
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X))
+        return 0x30304020600ll;
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X))
         return 0x30304020600ll;
     if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x30304020600ll;
@@ -38171,9 +38202,11 @@ union cavm_ap_vpidr_el2
                                                                      used. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ap_vpidr_el2_cn96xxp3 cn96xxp4; */
     /* struct cavm_ap_vpidr_el2_cn96xxp3 cn98xx; */
     /* struct cavm_ap_vpidr_el2_cn9 cnf95xxp1; */
     /* struct cavm_ap_vpidr_el2_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_vpidr_el2_cn96xxp3 cnf95xxp3; */
     /* struct cavm_ap_vpidr_el2_cn96xxp3 f95mm; */
     /* struct cavm_ap_vpidr_el2_cn9 f95o; */
     /* struct cavm_ap_vpidr_el2_cn96xxp3 loki; */

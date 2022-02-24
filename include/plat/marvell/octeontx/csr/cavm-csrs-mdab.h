@@ -481,6 +481,7 @@ union cavm_mdabx_cfg_status
                                                                   available Job has been enqueued, at which point the JOB_TAG will be latched in. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_cfg_status_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_cfg_status_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_cfg_status_cnf95xxp2 f95o; */
 };
@@ -1023,6 +1024,7 @@ union cavm_mdabx_gpio_out
         uint32_t gpio_out              : 32; /**< [ 31:  0](RO/H) DSP GPIO output register, allows DSP to output data for other hosts. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_gpio_out_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_gpio_out_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_gpio_out_cnf95xxp2 f95o; */
 };
@@ -1166,6 +1168,7 @@ union cavm_mdabx_int_ena_w1c
         uint32_t reserved_13_31        : 19;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_int_ena_w1c_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_int_ena_w1c_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_int_ena_w1c_cnf95xxp2 f95o; */
 };
@@ -1300,6 +1303,7 @@ union cavm_mdabx_int_ena_w1s
         uint32_t reserved_13_31        : 19;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_int_ena_w1s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_int_ena_w1s_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_int_ena_w1s_cnf95xxp2 f95o; */
 };
@@ -1430,6 +1434,7 @@ union cavm_mdabx_int_sel
         uint32_t reserved_3_31         : 29;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_int_sel_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_int_sel_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_int_sel_cnf95xxp2 f95o; */
 };
@@ -1684,6 +1689,7 @@ union cavm_mdabx_int_sum_w1s
         uint32_t reserved_13_31        : 19;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_int_sum_w1s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_int_sum_w1s_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_int_sum_w1s_cnf95xxp2 f95o; */
 };
@@ -1886,6 +1892,7 @@ union cavm_mdabx_ipb_flush
         uint32_t reserved_2_31         : 30;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_ipb_flush_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_ipb_flush_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_ipb_flush_cnf95xxp2 f95o; */
 };
@@ -2403,6 +2410,7 @@ union cavm_mdabx_job_statusx
                                                                  Since MDAB hardware updates this register, its contents are unpredictable in software. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_job_statusx_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_job_statusx_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_job_statusx_cnf95xxp2 f95o; */
 };
@@ -2966,6 +2974,7 @@ union cavm_mdabx_proc_ctl
         uint32_t reserved_29_31        : 3;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_proc_ctl_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_proc_ctl_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_proc_ctl_cnf95xxp2 f95o; */
 };
@@ -3132,6 +3141,7 @@ union cavm_mdabx_psm_cmdx
                                                                  {MDAB()_PSM_CMD[3:0]} */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_psm_cmdx_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_psm_cmdx_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_psm_cmdx_cnf95xxp2 f95o; */
 };
@@ -3203,6 +3213,7 @@ union cavm_mdabx_psm_cmd_push
         uint32_t reserved_2_31         : 30;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_psm_cmd_push_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_psm_cmd_push_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_psm_cmd_push_cnf95xxp2 f95o; */
 };
@@ -3845,6 +3856,7 @@ union cavm_mdabx_rd_status
                                                                  available Job has been enqueued, at which point the JOB_TAG will be latched in. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_rd_status_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_rd_status_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_rd_status_cnf95xxp2 f95o; */
 };
@@ -4460,6 +4472,7 @@ union cavm_mdabx_wr_status
                                                                  available Job has been enqueued, at which point the JOB_TAG will be latched in. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdabx_wr_status_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdabx_wr_status_cnf95xxp2 f95mm; */
     /* struct cavm_mdabx_wr_status_cnf95xxp2 f95o; */
 };

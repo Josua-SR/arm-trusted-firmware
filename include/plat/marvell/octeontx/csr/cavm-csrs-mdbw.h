@@ -352,6 +352,7 @@ union cavm_mdbw_jd_dma_cfg_word_2_s
                                                                  MB.  The stride distance must be aligned to the DMA port width. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbw_jd_dma_cfg_word_2_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbw_jd_dma_cfg_word_2_s_cnf95xxp2 f95mm; */
     /* struct cavm_mdbw_jd_dma_cfg_word_2_s_cnf95xxp2 f95o; */
 };
@@ -543,6 +544,7 @@ union cavm_mdbw_jd_hdr_word_0_s
         uint64_t reserved_63           : 1;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbw_jd_hdr_word_0_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbw_jd_hdr_word_0_s_cnf95xxp2 f95mm; */
     /* struct cavm_mdbw_jd_hdr_word_0_s_cnf95xxp2 f95o; */
 };
@@ -2617,6 +2619,7 @@ union cavm_mdbwx_adr_err_int
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_adr_err_int_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_adr_err_int_cnf95xxp2 f95mm; */
     /* struct cavm_mdbwx_adr_err_int_cnf95xxp2 f95o; */
 };
@@ -2796,6 +2799,7 @@ union cavm_mdbwx_adr_error_jce_w0
         uint64_t ls_word               : 64; /**< [ 63:  0](R/W) The first word of the PSM command to send on an address error. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_adr_error_jce_w0_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_adr_error_jce_w0_s f95mm; */
     /* struct cavm_mdbwx_adr_error_jce_w0_cnf95xxp2 f95o; */
 };
@@ -2847,6 +2851,7 @@ union cavm_mdbwx_adr_error_jce_w1
         uint64_t ms_word               : 64; /**< [ 63:  0](R/W) The second word of the PSM command to send on an address error. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_adr_error_jce_w1_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_adr_error_jce_w1_s f95mm; */
     /* struct cavm_mdbwx_adr_error_jce_w1_cnf95xxp2 f95o; */
 };
@@ -3034,6 +3039,7 @@ union cavm_mdbwx_cfg
         uint64_t reserved_51_63        : 13;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_cfg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_cfg_cnf95xxp2 f95mm; */
     /* struct cavm_mdbwx_cfg_cnf95xxp2 f95o; */
 };
@@ -3210,6 +3216,7 @@ union cavm_mdbwx_err_stat1
         uint64_t adr_err_stat          : 32; /**< [ 63: 32](R/W/H) Count of address range errors. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_err_stat1_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_err_stat1_cnf95xxp2 f95mm; */
     /* struct cavm_mdbwx_err_stat1_cnf95xxp2 f95o; */
 };
@@ -3617,6 +3624,7 @@ union cavm_mdbwx_jd_cfg
         uint64_t addr_range_chk_ena    : 1;  /**< [ 63: 63](R/W) LLC/DRAM and SMEM address range check enable. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_jd_cfg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_jd_cfg_cnf95xxp2 f95mm; */
     /* struct cavm_mdbwx_jd_cfg_cnf95xxp2 f95o; */
 };
@@ -3940,6 +3948,7 @@ union cavm_mdbwx_phymem_range
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_phymem_range_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_phymem_range_cnf95xxp2 f95mm; */
     /* struct cavm_mdbwx_phymem_range_cnf95xxp2 f95o; */
 };
@@ -3994,6 +4003,7 @@ union cavm_mdbwx_sysmem_range_max
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_sysmem_range_max_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_sysmem_range_max_cnf95xxp2 f95mm; */
     /* struct cavm_mdbwx_sysmem_range_max_cnf95xxp2 f95o; */
 };
@@ -4048,6 +4058,7 @@ union cavm_mdbwx_sysmem_range_min
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_mdbwx_sysmem_range_min_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_mdbwx_sysmem_range_min_cnf95xxp2 f95mm; */
     /* struct cavm_mdbwx_sysmem_range_min_cnf95xxp2 f95o; */
 };

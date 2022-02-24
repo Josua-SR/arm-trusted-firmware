@@ -122,6 +122,7 @@ union cavm_prach_jd_cal_parm_s
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_prach_jd_cal_parm_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_prach_jd_cal_parm_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2114,6 +2115,7 @@ union cavm_prach_jd_prof_coh_comb_s
         uint64_t reserved_36_63        : 28;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_prach_jd_prof_coh_comb_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_prach_jd_prof_coh_comb_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */

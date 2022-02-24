@@ -279,9 +279,11 @@
 #define CAVM_PCC_DEV_IDL_E_SSO_VF (0x4b)
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CN96XX_P1(a) (0xf0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CN96XX_P3(a) (0xe0 + (a))
+#define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CN96XX_P4(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CN98XX(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CNF95XX_P1(a) (0xf0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CNF95XX_P2(a) (0xe0 + (a))
+#define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CNF95XX_P3(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_F95MM(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_F95O(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_LOKI(a) (0xe0 + (a))
@@ -670,9 +672,11 @@ union cavm_pcc_ea_entry_s
     } cn9;
     /* struct cavm_pcc_ea_entry_s_cn9 cn96xxp1; */
     /* struct cavm_pcc_ea_entry_s_s cn96xxp3; */
+    /* struct cavm_pcc_ea_entry_s_s cn96xxp4; */
     /* struct cavm_pcc_ea_entry_s_s cn98xx; */
     /* struct cavm_pcc_ea_entry_s_cn9 cnf95xxp1; */
     /* struct cavm_pcc_ea_entry_s_s cnf95xxp2; */
+    /* struct cavm_pcc_ea_entry_s_s cnf95xxp3; */
     /* struct cavm_pcc_ea_entry_s_s f95mm; */
     /* struct cavm_pcc_ea_entry_s_cn9 f95o; */
     /* struct cavm_pcc_ea_entry_s_s loki; */
@@ -1893,6 +1897,7 @@ union cavm_pccpf_xxx_ea_cap_hdr
         uint32_t reserved_22_31        : 10;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 cn96xxp4; */
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 cnf95xx; */
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 f95mm; */
@@ -1995,6 +2000,7 @@ union cavm_pccpf_xxx_id
         uint32_t devid                 : 16; /**< [ 31: 16](RO/H) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> enumerated by PCC_DEV_IDL_E. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pccpf_xxx_id_cn96xxp3 cn96xxp4; */
     /* struct cavm_pccpf_xxx_id_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_id_cn96xxp3 cnf95xx; */
     /* struct cavm_pccpf_xxx_id_cn96xxp3 f95mm; */
@@ -3153,6 +3159,7 @@ union cavm_pccpf_xxx_subid
         uint32_t ssid                  : 16; /**< [ 31: 16](RO) Subsystem ID. \<15:8\> enumerated by PCC_PROD_E. \<7:0\> = 0x0. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pccpf_xxx_subid_cn96xxp3 cn96xxp4; */
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 cnf95xx; */
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 f95mm; */
@@ -3906,9 +3913,11 @@ union cavm_pccpf_xxx_vsec_sctl
                                                                  devices. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_vsec_sctl_cn9 cnf95xxp1; */
     /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 cnf95xxp3; */
     /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 f95mm; */
     /* struct cavm_pccpf_xxx_vsec_sctl_cn9 f95o; */
     /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 loki; */

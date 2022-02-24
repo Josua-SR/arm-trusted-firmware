@@ -854,6 +854,7 @@ union cavm_pbus_msix_vecx_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pbus_msix_vecx_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_pbus_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_pbus_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_pbus_msix_vecx_addr_cn96xxp3 f95mm; */

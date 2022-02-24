@@ -681,6 +681,7 @@ union cavm_scr_write32_s
         uint64_t reserved_96_127       : 32;
 #endif /* Word 1 - End */
     } cn96xxp3;
+    /* struct cavm_scr_write32_s_cn96xxp3 cn96xxp4; */
     /* struct cavm_scr_write32_s_cn96xxp3 cn98xx; */
     /* struct cavm_scr_write32_s_s cnf95xxp1; */
     struct cavm_scr_write32_s_cnf95xxp2
@@ -824,6 +825,7 @@ union cavm_scr_write32_s
         uint64_t reserved_96_127       : 32;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_scr_write32_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_scr_write32_s_cnf95xxp2 f95mm; */
     /* struct cavm_scr_write32_s_cn96xxp3 f95o; */
     /* struct cavm_scr_write32_s_cn96xxp3 loki; */

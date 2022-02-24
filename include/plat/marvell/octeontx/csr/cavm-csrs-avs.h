@@ -385,9 +385,11 @@ union cavm_avs_io_ctl
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_avs_io_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_avs_io_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_avs_io_ctl_s cnf95xxp1; */
     /* struct cavm_avs_io_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_avs_io_ctl_cn96xxp3 cnf95xxp3; */
     /* struct cavm_avs_io_ctl_cn96xxp3 f95mm; */
     /* struct cavm_avs_io_ctl_cn96xxp3 f95o; */
     /* struct cavm_avs_io_ctl_cn96xxp3 loki; */
@@ -602,6 +604,7 @@ union cavm_avs_msix_vecx_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_avs_msix_vecx_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_avs_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_avs_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_avs_msix_vecx_addr_cn96xxp3 f95mm; */

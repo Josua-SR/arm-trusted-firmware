@@ -5913,6 +5913,7 @@ union cavm_trcx_trcpidr2
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_trcx_trcpidr2_s cnf95xxp2; */
+    /* struct cavm_trcx_trcpidr2_s cnf95xxp3; */
     /* struct cavm_trcx_trcpidr2_s f95mm; */
     /* struct cavm_trcx_trcpidr2_s f95o; */
     /* struct cavm_trcx_trcpidr2_s loki; */
@@ -6040,6 +6041,7 @@ union cavm_trcx_trcpidr4
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_trcx_trcpidr4_s cnf95xxp2; */
+    /* struct cavm_trcx_trcpidr4_s cnf95xxp3; */
     /* struct cavm_trcx_trcpidr4_s f95mm; */
     /* struct cavm_trcx_trcpidr4_s f95o; */
     /* struct cavm_trcx_trcpidr4_s loki; */

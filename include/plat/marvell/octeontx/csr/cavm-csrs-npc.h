@@ -561,6 +561,7 @@ union cavm_npc_result_s
         uint64_t reserved_360_383      : 24;
 #endif /* Word 5 - End */
     } cn96xxp3;
+    /* struct cavm_npc_result_s_cn96xxp3 cn96xxp4; */
     /* struct cavm_npc_result_s_cn96xxp3 cn98xx; */
     /* struct cavm_npc_result_s_cn96xxp3 cnf95xx; */
     /* struct cavm_npc_result_s_cn96xxp3 f95mm; */
@@ -765,6 +766,7 @@ union cavm_npc_af_const
         uint64_t match_stats           : 16; /**< [ 63: 48](RO) Number of NPC_AF_MATCH_STAT() base counters. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npc_af_const_cn96xxp3 cn96xxp4; */
     struct cavm_npc_af_const_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -801,6 +803,7 @@ union cavm_npc_af_const
     } cn98xx;
     /* struct cavm_npc_af_const_s cnf95xxp1; */
     /* struct cavm_npc_af_const_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npc_af_const_cn96xxp3 cnf95xxp3; */
     /* struct cavm_npc_af_const_cn96xxp3 f95mm; */
     /* struct cavm_npc_af_const_cn96xxp3 f95o; */
     /* struct cavm_npc_af_const_cn96xxp3 loki; */
@@ -1391,6 +1394,7 @@ union cavm_npc_af_ikpu_err_ctl
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npc_af_ikpu_err_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_npc_af_ikpu_err_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_npc_af_ikpu_err_ctl_cn96xxp3 cnf95xx; */
     /* struct cavm_npc_af_ikpu_err_ctl_cn96xxp3 f95mm; */
@@ -2046,6 +2050,7 @@ union cavm_npc_af_kpux_dbg
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npc_af_kpux_dbg_cn96xxp3 cn96xxp4; */
     /* struct cavm_npc_af_kpux_dbg_cn96xxp3 cn98xx; */
     /* struct cavm_npc_af_kpux_dbg_cn96xxp3 cnf95xx; */
     /* struct cavm_npc_af_kpux_dbg_cn96xxp3 f95mm; */
@@ -2311,9 +2316,11 @@ union cavm_npc_af_kpux_entryx_action0
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npc_af_kpux_entryx_action0_cn96xxp3 cn96xxp4; */
     /* struct cavm_npc_af_kpux_entryx_action0_cn96xxp3 cn98xx; */
     /* struct cavm_npc_af_kpux_entryx_action0_s cnf95xxp1; */
     /* struct cavm_npc_af_kpux_entryx_action0_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npc_af_kpux_entryx_action0_cn96xxp3 cnf95xxp3; */
     /* struct cavm_npc_af_kpux_entryx_action0_cn96xxp3 f95mm; */
     /* struct cavm_npc_af_kpux_entryx_action0_cn96xxp3 f95o; */
     /* struct cavm_npc_af_kpux_entryx_action0_cn96xxp3 loki; */
@@ -2647,6 +2654,7 @@ union cavm_npc_af_kpux_err_ctl
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npc_af_kpux_err_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_npc_af_kpux_err_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_npc_af_kpux_err_ctl_cn96xxp3 cnf95xx; */
     /* struct cavm_npc_af_kpux_err_ctl_cn96xxp3 f95mm; */
@@ -2709,6 +2717,8 @@ static inline uint64_t CAVM_NPC_AF_KPU_DIAG_FUNC(void) __attribute__ ((pure, alw
 static inline uint64_t CAVM_NPC_AF_KPU_DIAG_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X))
+        return 0x840063002000ll;
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X))
         return 0x840063002000ll;
     if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x840063002000ll;
@@ -2903,9 +2913,11 @@ union cavm_npc_af_lkup_resultx
                                                                  allowing another packet. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npc_af_lkup_resultx_cn96xxp3 cn96xxp4; */
     /* struct cavm_npc_af_lkup_resultx_cn96xxp3 cn98xx; */
     /* struct cavm_npc_af_lkup_resultx_s cnf95xxp1; */
     /* struct cavm_npc_af_lkup_resultx_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npc_af_lkup_resultx_cn96xxp3 cnf95xxp3; */
     /* struct cavm_npc_af_lkup_resultx_cn96xxp3 f95mm; */
     /* struct cavm_npc_af_lkup_resultx_s f95o; */
     /* struct cavm_npc_af_lkup_resultx_cn96xxp3 loki; */
@@ -4493,9 +4505,11 @@ union cavm_npc_af_pkindx_action0
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npc_af_pkindx_action0_cn96xxp3 cn96xxp4; */
     /* struct cavm_npc_af_pkindx_action0_cn96xxp3 cn98xx; */
     /* struct cavm_npc_af_pkindx_action0_s cnf95xxp1; */
     /* struct cavm_npc_af_pkindx_action0_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npc_af_pkindx_action0_cn96xxp3 cnf95xxp3; */
     /* struct cavm_npc_af_pkindx_action0_cn96xxp3 f95mm; */
     /* struct cavm_npc_af_pkindx_action0_cn96xxp3 f95o; */
     /* struct cavm_npc_af_pkindx_action0_cn96xxp3 loki; */
@@ -4688,6 +4702,7 @@ union cavm_npc_af_pkindx_cpi_defx
         uint64_t ena                   : 1;  /**< [ 63: 63](R/W) Enable. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_npc_af_pkindx_cpi_defx_cn96xxp3 cn96xxp4; */
     /* struct cavm_npc_af_pkindx_cpi_defx_cn96xxp3 cn98xx; */
     /* struct cavm_npc_af_pkindx_cpi_defx_cn96xxp3 cnf95xx; */
     /* struct cavm_npc_af_pkindx_cpi_defx_cn96xxp3 f95mm; */

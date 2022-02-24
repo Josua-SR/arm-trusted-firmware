@@ -1483,6 +1483,7 @@ union cavm_ulfe_normal_job_s
 #else /* Word 30 - Little Endian */
 #endif /* Word 30 - End */
     } cnf95xxp2;
+    /* struct cavm_ulfe_normal_job_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_ulfe_normal_job_s_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */

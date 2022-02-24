@@ -240,6 +240,7 @@ union cavm_lenc_cb_cfg_s
         uint64_t reserved_72_127       : 56;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_lenc_cb_cfg_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_lenc_cb_cfg_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -360,6 +361,7 @@ union cavm_lenc_common_cfg_s
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lenc_common_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lenc_common_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_lenc_common_cfg_s_cnf95xxp2 loki; */
 };
@@ -1281,6 +1283,7 @@ union cavm_lenc_task_cfg_s
         uint64_t num_wr0_wrds          : 32; /**< [511:480] Number of words to write to write DMA port 0 for this task. Valid range is [0x1, 0x1D640]. */
 #endif /* Word 7 - End */
     } cnf95xxp2;
+    /* struct cavm_lenc_task_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lenc_task_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_lenc_task_cfg_s_cnf95xxp2 loki; */
 };
@@ -1458,6 +1461,7 @@ union cavm_lencx_abx_hab_jcfg0_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG0 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_hab_jcfg0_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lencx_abx_hab_jcfg0_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_hab_jcfg0_ramx_data_cnf95xxp2 loki; */
 };
@@ -1508,6 +1512,7 @@ union cavm_lencx_abx_hab_jcfg1_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG1 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_hab_jcfg1_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lencx_abx_hab_jcfg1_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_hab_jcfg1_ramx_data_cnf95xxp2 loki; */
 };
@@ -1558,6 +1563,7 @@ union cavm_lencx_abx_hab_jcfg2_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG2 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_hab_jcfg2_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lencx_abx_hab_jcfg2_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_hab_jcfg2_ramx_data_cnf95xxp2 loki; */
 };
@@ -1752,6 +1758,7 @@ union cavm_lencx_abx_tc_config_err_flags
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_config_err_flags_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lencx_abx_tc_config_err_flags_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_config_err_flags_cnf95xxp2 loki; */
 };
@@ -1838,6 +1845,7 @@ union cavm_lencx_abx_tc_control
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_control_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lencx_abx_tc_control_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_control_cnf95xxp2 loki; */
 };
@@ -1916,6 +1924,7 @@ union cavm_lencx_abx_tc_error
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_error_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lencx_abx_tc_error_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_error_cnf95xxp2 loki; */
 };
@@ -2013,6 +2022,7 @@ union cavm_lencx_abx_tc_main_reset
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_main_reset_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lencx_abx_tc_main_reset_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_main_reset_cnf95xxp2 loki; */
 };
@@ -2071,6 +2081,7 @@ union cavm_lencx_abx_tc_status
         uint64_t monitor_bus           : 32; /**< [ 63: 32](RO/H) core dependent */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_status_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_lencx_abx_tc_status_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_status_cnf95xxp2 loki; */
 };

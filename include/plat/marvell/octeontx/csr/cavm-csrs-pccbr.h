@@ -603,6 +603,7 @@ union cavm_pccbr_xxx_id
         uint32_t devid                 : 16; /**< [ 31: 16](RO) Device ID. \<15:8\> is PCC_PROD_E::GEN. \<7:0\> is PCC_DEV_IDL_E::PCCBR. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pccbr_xxx_id_cn96xxp3 cn96xxp4; */
     /* struct cavm_pccbr_xxx_id_cn96xxp3 cn98xx; */
     /* struct cavm_pccbr_xxx_id_cn96xxp3 cnf95xx; */
     /* struct cavm_pccbr_xxx_id_cn96xxp3 f95mm; */

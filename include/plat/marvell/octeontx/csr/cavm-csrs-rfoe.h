@@ -472,6 +472,7 @@ union cavm_rfoe_fd_cstm_hdr_s
         uint64_t rfoe_timestamp        : 32; /**< [127: 96] Arrival timestamp, formatted according to RFOE_TIMESTAMP_S. */
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoe_fd_cstm_hdr_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_rfoe_fd_cstm_hdr_s_cnf95xxp2 f95mm; */
     /* struct cavm_rfoe_fd_cstm_hdr_s_cnf95xxp2 f95o; */
     /* struct cavm_rfoe_fd_cstm_hdr_s_cnf95xxp2 loki; */
@@ -737,6 +738,7 @@ union cavm_rfoe_packet_status_s
                                                                  For 0xfd subtype, it is sampled at SOP of the EOS packet. */
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoe_packet_status_s_cnf95xxp2 cnf95xxp3; */
 };
 
 /**
@@ -1470,6 +1472,7 @@ union cavm_rfoex_abx_slotx_configuration
         uint64_t reserved_63           : 1;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_abx_slotx_configuration_cnf95xxp2 cnf95xxp3; */
     struct cavm_rfoex_abx_slotx_configuration_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2012,9 +2015,9 @@ static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(uint64_t a, uint64_t b
         return 0x87e043d02000ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1) && (c<=2)))
         return 0x87e043d02000ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_F95O_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02000ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_LOKI_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02000ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     __cavm_csr_fatal("RFOEX_ABX_SLOTX_CONFIGURATION", 3, a, b, c, 0, 0, 0);
 }
@@ -2202,6 +2205,7 @@ union cavm_rfoex_abx_slotx_configuration1
                                                                  0x3 = Sets SoF=1 in the orderInfo timestamp field. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_abx_slotx_configuration1_cnf95xxp2 cnf95xxp3; */
     struct cavm_rfoex_abx_slotx_configuration1_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2375,9 +2379,9 @@ static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(uint64_t a, uint64_t 
         return 0x87e043d02008ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1) && (c<=2)))
         return 0x87e043d02008ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_F95O_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02008ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_LOKI_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02008ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     __cavm_csr_fatal("RFOEX_ABX_SLOTX_CONFIGURATION1", 3, a, b, c, 0, 0, 0);
 }
@@ -3086,6 +3090,7 @@ union cavm_rfoex_rx_cfg
         uint64_t reserved_21_63        : 43;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_rx_cfg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_rfoex_rx_cfg_cnf95xxp2 f95mm; */
     /* struct cavm_rfoex_rx_cfg_cnf95xxp2 f95o; */
     /* struct cavm_rfoex_rx_cfg_cnf95xxp2 loki; */
@@ -7929,6 +7934,7 @@ union cavm_rfoex_rx_status
         uint64_t reserved_50_63        : 14;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_rx_status_cnf95xxp2 cnf95xxp3; */
     struct cavm_rfoex_rx_status_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -8342,6 +8348,7 @@ union cavm_rfoex_tx_ctrl
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_tx_ctrl_cnf95xxp2 cnf95xxp3; */
     struct cavm_rfoex_tx_ctrl_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -9334,6 +9341,8 @@ static inline uint64_t CAVM_RFOEX_TX_LMAC_CFGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=3)))
         return 0x87e043d00f80ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS3_X) && ((a<=1) && (b<=3)))
+        return 0x87e043d00f80ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100000f80ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
@@ -9419,6 +9428,8 @@ static inline uint64_t CAVM_RFOEX_TX_PKT_DROP_STATX(uint64_t a, uint64_t b) __at
 static inline uint64_t CAVM_RFOEX_TX_PKT_DROP_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=3)))
+        return 0x87e043d00f60ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_CNF95XX_PASS3_X) && ((a<=1) && (b<=3)))
         return 0x87e043d00f60ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100000f60ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);

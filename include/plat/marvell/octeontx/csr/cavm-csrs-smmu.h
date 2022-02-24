@@ -5500,6 +5500,7 @@ union cavm_smmux_iidr
                                                                    \<27:20\> is enumerated by PCC_PROD_E. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_smmux_iidr_cn96xxp3 cn96xxp4; */
     /* struct cavm_smmux_iidr_cn96xxp3 cn98xx; */
     /* struct cavm_smmux_iidr_cn96xxp3 cnf95xx; */
     /* struct cavm_smmux_iidr_cn96xxp3 f95mm; */
@@ -7112,6 +7113,7 @@ union cavm_smmux_pidr1
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_smmux_pidr1_cn96xxp3 cn96xxp4; */
     /* struct cavm_smmux_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_smmux_pidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_smmux_pidr1_cn96xxp3 f95mm; */
@@ -7207,6 +7209,7 @@ union cavm_smmux_pidr2
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_smmux_pidr2_cn96xxp3 cn96xxp4; */
     /* struct cavm_smmux_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_smmux_pidr2_cn96xxp3 cnf95xx; */
     /* struct cavm_smmux_pidr2_cn96xxp3 f95mm; */
@@ -7314,6 +7317,7 @@ union cavm_smmux_pidr4
     } cn9;
     /* struct cavm_smmux_pidr4_cn9 cn96xxp1; */
     /* struct cavm_smmux_pidr4_s cn96xxp3; */
+    /* struct cavm_smmux_pidr4_s cn96xxp4; */
     /* struct cavm_smmux_pidr4_s cn98xx; */
     /* struct cavm_smmux_pidr4_s cnf95xx; */
     /* struct cavm_smmux_pidr4_s f95mm; */

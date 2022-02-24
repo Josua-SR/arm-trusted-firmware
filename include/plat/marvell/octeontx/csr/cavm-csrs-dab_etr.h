@@ -603,6 +603,7 @@ union cavm_etrx_devarch
                                                                  Bits [27:21] are the JEP 106 ID code, 0x3B. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_etrx_devarch_cn96xxp3 cn96xxp4; */
     /* struct cavm_etrx_devarch_cn96xxp3 cn98xx; */
     /* struct cavm_etrx_devarch_cn96xxp3 cnf95xx; */
     /* struct cavm_etrx_devarch_cn96xxp3 f95mm; */
@@ -1437,9 +1438,11 @@ union cavm_etrx_mode
         uint32_t reserved_7_31         : 25;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_etrx_mode_cn96xxp3 cn96xxp4; */
     /* struct cavm_etrx_mode_cn96xxp3 cn98xx; */
     /* struct cavm_etrx_mode_s cnf95xxp1; */
     /* struct cavm_etrx_mode_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_etrx_mode_cn96xxp3 cnf95xxp3; */
     /* struct cavm_etrx_mode_cn96xxp3 f95mm; */
     /* struct cavm_etrx_mode_s f95o; */
     /* struct cavm_etrx_mode_cn96xxp3 loki; */
@@ -1552,6 +1555,7 @@ union cavm_etrx_pidr1
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_etrx_pidr1_cn96xxp3 cn96xxp4; */
     /* struct cavm_etrx_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_etrx_pidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_etrx_pidr1_cn96xxp3 f95mm; */
@@ -1623,6 +1627,7 @@ union cavm_etrx_pidr2
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_etrx_pidr2_cn96xxp3 cn96xxp4; */
     /* struct cavm_etrx_pidr2_cn96xxp3 cn98xx; */
     struct cavm_etrx_pidr2_cnf95xxp1
     {
@@ -1639,6 +1644,7 @@ union cavm_etrx_pidr2
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_etrx_pidr2_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_etrx_pidr2_cn96xxp3 cnf95xxp3; */
     /* struct cavm_etrx_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_etrx_pidr2_cn96xxp3 f95o; */
     /* struct cavm_etrx_pidr2_cn96xxp3 loki; */
@@ -1759,9 +1765,11 @@ union cavm_etrx_pidr4
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_etrx_pidr4_cn96xxp3 cn96xxp4; */
     /* struct cavm_etrx_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_etrx_pidr4_s cnf95xxp1; */
     /* struct cavm_etrx_pidr4_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_etrx_pidr4_cn96xxp3 cnf95xxp3; */
     /* struct cavm_etrx_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_etrx_pidr4_cn96xxp3 f95o; */
     /* struct cavm_etrx_pidr4_cn96xxp3 loki; */

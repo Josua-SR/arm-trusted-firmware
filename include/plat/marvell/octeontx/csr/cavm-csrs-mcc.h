@@ -1463,6 +1463,7 @@ union cavm_mccx_lmcoex_ras_err00fr
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err00fr_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err00fr_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err00fr_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err00fr_cn96xxp3 f95mm; */
@@ -1995,6 +1996,7 @@ union cavm_mccx_lmcoex_ras_err00status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err00status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err00status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err00status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err00status_cn96xxp3 f95mm; */
@@ -2705,6 +2707,7 @@ union cavm_mccx_lmcoex_ras_err01status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err01status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err01status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err01status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err01status_cn96xxp3 f95mm; */
@@ -3393,6 +3396,7 @@ union cavm_mccx_lmcoex_ras_err02status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err02status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err02status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err02status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err02status_cn96xxp3 f95mm; */
@@ -4081,6 +4085,7 @@ union cavm_mccx_lmcoex_ras_err03status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err03status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err03status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err03status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err03status_cn96xxp3 f95mm; */
@@ -4791,6 +4796,7 @@ union cavm_mccx_lmcoex_ras_err04status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err04status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err04status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err04status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err04status_cn96xxp3 f95mm; */
@@ -5501,6 +5507,7 @@ union cavm_mccx_lmcoex_ras_err05status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err05status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err05status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err05status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err05status_cn96xxp3 f95mm; */
@@ -6189,6 +6196,7 @@ union cavm_mccx_lmcoex_ras_err06status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err06status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err06status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err06status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err06status_cn96xxp3 f95mm; */
@@ -6877,6 +6885,7 @@ union cavm_mccx_lmcoex_ras_err07status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_err07status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_err07status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_err07status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_err07status_cn96xxp3 f95mm; */
@@ -7224,6 +7233,7 @@ union cavm_mccx_lmcoex_ras_errdevarch
         uint32_t architect             : 11; /**< [ 31: 21](RO) Defines the architecture of the component. Indicates Arm. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_errdevarch_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_errdevarch_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_errdevarch_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_errdevarch_cn96xxp3 f95mm; */
@@ -7729,6 +7739,7 @@ union cavm_mccx_lmcoex_ras_errpidr1
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_errpidr1_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_errpidr1_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_errpidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_lmcoex_ras_errpidr1_cn96xxp3 f95mm; */
@@ -7801,9 +7812,11 @@ union cavm_mccx_lmcoex_ras_errpidr2
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_errpidr2_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_errpidr2_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_errpidr2_s cnf95xxp1; */
     /* struct cavm_mccx_lmcoex_ras_errpidr2_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mccx_lmcoex_ras_errpidr2_cn96xxp3 cnf95xxp3; */
     /* struct cavm_mccx_lmcoex_ras_errpidr2_cn96xxp3 f95mm; */
     /* struct cavm_mccx_lmcoex_ras_errpidr2_s f95o; */
     /* struct cavm_mccx_lmcoex_ras_errpidr2_cn96xxp3 loki; */
@@ -7926,9 +7939,11 @@ union cavm_mccx_lmcoex_ras_errpidr4
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_lmcoex_ras_errpidr4_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_lmcoex_ras_errpidr4_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_lmcoex_ras_errpidr4_s cnf95xxp1; */
     /* struct cavm_mccx_lmcoex_ras_errpidr4_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mccx_lmcoex_ras_errpidr4_cn96xxp3 cnf95xxp3; */
     /* struct cavm_mccx_lmcoex_ras_errpidr4_cn96xxp3 f95mm; */
     /* struct cavm_mccx_lmcoex_ras_errpidr4_s f95o; */
     /* struct cavm_mccx_lmcoex_ras_errpidr4_cn96xxp3 loki; */
@@ -9629,6 +9644,7 @@ union cavm_mccx_mcix_ras_err00fr
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_mcix_ras_err00fr_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_mcix_ras_err00fr_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_mcix_ras_err00fr_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_mcix_ras_err00fr_cn96xxp3 f95mm; */
@@ -10243,6 +10259,7 @@ union cavm_mccx_mcix_ras_err00status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_mcix_ras_err00status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_mcix_ras_err00status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_mcix_ras_err00status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_mcix_ras_err00status_cn96xxp3 f95mm; */
@@ -11114,6 +11131,7 @@ union cavm_mccx_mcix_ras_err01status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_mcix_ras_err01status_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_mcix_ras_err01status_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_mcix_ras_err01status_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_mcix_ras_err01status_cn96xxp3 f95mm; */
@@ -11461,6 +11479,7 @@ union cavm_mccx_mcix_ras_errdevarch
         uint32_t architect             : 11; /**< [ 31: 21](RO) Defines the architecture of the component. Indicates Arm. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_mcix_ras_errdevarch_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_mcix_ras_errdevarch_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_mcix_ras_errdevarch_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_mcix_ras_errdevarch_cn96xxp3 f95mm; */
@@ -11966,6 +11985,7 @@ union cavm_mccx_mcix_ras_errpidr1
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_mcix_ras_errpidr1_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_mcix_ras_errpidr1_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_mcix_ras_errpidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_mcix_ras_errpidr1_cn96xxp3 f95mm; */
@@ -12038,9 +12058,11 @@ union cavm_mccx_mcix_ras_errpidr2
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_mcix_ras_errpidr2_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_mcix_ras_errpidr2_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_mcix_ras_errpidr2_s cnf95xxp1; */
     /* struct cavm_mccx_mcix_ras_errpidr2_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mccx_mcix_ras_errpidr2_cn96xxp3 cnf95xxp3; */
     /* struct cavm_mccx_mcix_ras_errpidr2_cn96xxp3 f95mm; */
     /* struct cavm_mccx_mcix_ras_errpidr2_s f95o; */
     /* struct cavm_mccx_mcix_ras_errpidr2_cn96xxp3 loki; */
@@ -12163,9 +12185,11 @@ union cavm_mccx_mcix_ras_errpidr4
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_mcix_ras_errpidr4_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_mcix_ras_errpidr4_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_mcix_ras_errpidr4_s cnf95xxp1; */
     /* struct cavm_mccx_mcix_ras_errpidr4_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mccx_mcix_ras_errpidr4_cn96xxp3 cnf95xxp3; */
     /* struct cavm_mccx_mcix_ras_errpidr4_cn96xxp3 f95mm; */
     /* struct cavm_mccx_mcix_ras_errpidr4_s f95o; */
     /* struct cavm_mccx_mcix_ras_errpidr4_cn96xxp3 loki; */
@@ -12825,6 +12849,7 @@ union cavm_mccx_msix_vecx_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mccx_msix_vecx_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_mccx_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mccx_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_mccx_msix_vecx_addr_cn96xxp3 f95mm; */

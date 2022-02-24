@@ -1348,6 +1348,7 @@ union cavm_rom_csib_s
         uint64_t nonce3                : 64; /**< [2047:1984] Nonce, continued. */
 #endif /* Word 31 - End */
     } cn96xxp3;
+    /* struct cavm_rom_csib_s_cn96xxp3 cn96xxp4; */
     /* struct cavm_rom_csib_s_cn96xxp3 cn98xx; */
     /* struct cavm_rom_csib_s_cn96xxp3 cnf95xx; */
     /* struct cavm_rom_csib_s_cn96xxp3 f95mm; */

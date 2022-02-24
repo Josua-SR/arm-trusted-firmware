@@ -846,6 +846,8 @@ static inline uint64_t CAVM_RVU_AF_PFX_VF_BAR4_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=15))
         return 0x840000001000ll + 0x10ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X) && (a<=15))
+        return 0x840000001000ll + 0x10ll * ((a) & 0xf);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=23))
         return 0x840000001000ll + 0x10ll * ((a) & 0x1f);
     if (cavm_is_model(OCTEONTX_F95O) && (a<=15))
@@ -2780,6 +2782,7 @@ union cavm_rvu_pf_vf_bar4_addr
                                                                  (RVU_AF_PF()_VF_BAR4_ADDR is used instead). */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_rvu_pf_vf_bar4_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_rvu_pf_vf_bar4_addr_cn96xxp3 cn98xx; */
     /* struct cavm_rvu_pf_vf_bar4_addr_s cnf95xx; */
     /* struct cavm_rvu_pf_vf_bar4_addr_s f95mm; */
@@ -4259,6 +4262,7 @@ union cavm_rvu_priv_pfx_cfg
         uint64_t reserved_24_63        : 40;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_rvu_priv_pfx_cfg_cn96xxp3 cn96xxp4; */
     /* struct cavm_rvu_priv_pfx_cfg_cn96xxp3 cn98xx; */
     /* struct cavm_rvu_priv_pfx_cfg_cn96xxp1 cnf95xxp1; */
     struct cavm_rvu_priv_pfx_cfg_cnf95xxp2
@@ -4335,6 +4339,7 @@ union cavm_rvu_priv_pfx_cfg
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rvu_priv_pfx_cfg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_rvu_priv_pfx_cfg_cnf95xxp2 f95mm; */
     struct cavm_rvu_priv_pfx_cfg_f95o
     {

@@ -1142,6 +1142,7 @@ union cavm_gpio_clk_syncex
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_gpio_clk_syncex_cn96xxp3 cn96xxp4; */
     struct cavm_gpio_clk_syncex_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1203,6 +1204,7 @@ union cavm_gpio_clk_syncex
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_gpio_clk_syncex_cn98xx cnf95xxp2; */
+    /* struct cavm_gpio_clk_syncex_cn98xx cnf95xxp3; */
     struct cavm_gpio_clk_syncex_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1737,6 +1739,7 @@ union cavm_gpio_io_ctl
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_gpio_io_ctl_cn96xxp3 cn96xxp4; */
     struct cavm_gpio_io_ctl_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1819,6 +1822,7 @@ union cavm_gpio_io_ctl
     } cn98xx;
     /* struct cavm_gpio_io_ctl_cn96xxp1 cnf95xxp1; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_gpio_io_ctl_cn96xxp3 cnf95xxp3; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 f95mm; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 f95o; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 loki; */
@@ -1919,6 +1923,7 @@ union cavm_gpio_mc_intrx
         uint64_t reserved_24_63        : 40;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_gpio_mc_intrx_cn96xxp3 cn96xxp4; */
     struct cavm_gpio_mc_intrx_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2595,6 +2600,7 @@ union cavm_gpio_misc_supply
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_gpio_misc_supply_cn96xxp3 cn96xxp4; */
     struct cavm_gpio_misc_supply_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -3318,6 +3324,7 @@ union cavm_gpio_msix_vecx_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 f95mm; */
@@ -3677,6 +3684,7 @@ union cavm_gpio_pkg_ver
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_gpio_pkg_ver_cn96xxp3 cn96xxp4; */
     struct cavm_gpio_pkg_ver_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -3715,6 +3723,7 @@ union cavm_gpio_pkg_ver
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_gpio_pkg_ver_cnf95xxp2 cnf95xxp3; */
     struct cavm_gpio_pkg_ver_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -3823,6 +3832,7 @@ union cavm_gpio_pspi_ctl
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_gpio_pspi_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 cnf95xx; */
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 f95mm; */

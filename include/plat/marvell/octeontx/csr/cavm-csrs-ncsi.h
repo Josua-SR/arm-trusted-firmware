@@ -331,6 +331,7 @@ union cavm_ncsi_cmd_sw_processx
                                                                  the MCP code is loaded. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ncsi_cmd_sw_processx_cn96xxp3 cn96xxp4; */
     /* struct cavm_ncsi_cmd_sw_processx_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_cmd_sw_processx cavm_ncsi_cmd_sw_processx_t;
@@ -1756,6 +1757,7 @@ union cavm_ncsi_msix_vecx_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ncsi_msix_vecx_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_ncsi_msix_vecx_addr_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_msix_vecx_addr cavm_ncsi_msix_vecx_addr_t;
@@ -1885,6 +1887,7 @@ union cavm_ncsi_rx_frm_ctl
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ncsi_rx_frm_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_ncsi_rx_frm_ctl_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_rx_frm_ctl cavm_ncsi_rx_frm_ctl_t;
@@ -2054,6 +2057,7 @@ union cavm_ncsi_rx_min_pkt
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ncsi_rx_min_pkt_cn96xxp3 cn96xxp4; */
     /* struct cavm_ncsi_rx_min_pkt_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_rx_min_pkt cavm_ncsi_rx_min_pkt_t;
@@ -2368,6 +2372,7 @@ union cavm_ncsi_secure_config
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ncsi_secure_config_cn96xxp3 cn96xxp4; */
     /* struct cavm_ncsi_secure_config_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_secure_config cavm_ncsi_secure_config_t;

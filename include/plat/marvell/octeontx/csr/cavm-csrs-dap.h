@@ -392,6 +392,7 @@ union cavm_dap_imp_dar
         uint32_t reserved_30_31        : 2;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dap_imp_dar_cn96xxp3 cn96xxp4; */
     /* struct cavm_dap_imp_dar_cn96xxp3 cn98xx; */
     /* struct cavm_dap_imp_dar_cn96xxp3 cnf95xx; */
     /* struct cavm_dap_imp_dar_cn96xxp3 f95mm; */

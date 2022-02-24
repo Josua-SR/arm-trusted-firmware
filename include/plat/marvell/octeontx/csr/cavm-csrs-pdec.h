@@ -2148,6 +2148,7 @@ union cavm_pdec_report_s
         uint64_t reserved_2284_2303    : 20;
 #endif /* Word 35 - End */
     } cnf95xxp2;
+    /* struct cavm_pdec_report_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdec_report_s_cnf95xxp2 f95o; */
     /* struct cavm_pdec_report_s_cnf95xxp2 loki; */
 };
@@ -2937,6 +2938,7 @@ union cavm_pdec_task_cfg_s
                                                                  be 0x0 when [ENABLE_REENC] = 0. */
 #endif /* Word 8 - End */
     } cnf95xxp2;
+    /* struct cavm_pdec_task_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdec_task_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_pdec_task_cfg_s_cnf95xxp2 loki; */
 };
@@ -3208,6 +3210,7 @@ union cavm_pdecx_hab_jcfg0_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG0 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pdecx_hab_jcfg0_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdecx_hab_jcfg0_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_pdecx_hab_jcfg0_ramx_data_cnf95xxp2 loki; */
 };
@@ -3258,6 +3261,7 @@ union cavm_pdecx_hab_jcfg1_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG1 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pdecx_hab_jcfg1_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdecx_hab_jcfg1_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_pdecx_hab_jcfg1_ramx_data_cnf95xxp2 loki; */
 };
@@ -3308,6 +3312,7 @@ union cavm_pdecx_hab_jcfg2_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG2 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pdecx_hab_jcfg2_ramx_data_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdecx_hab_jcfg2_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_pdecx_hab_jcfg2_ramx_data_cnf95xxp2 loki; */
 };
@@ -3506,6 +3511,7 @@ union cavm_pdecx_tc_config_err_flags_reg
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pdecx_tc_config_err_flags_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdecx_tc_config_err_flags_reg_cnf95xxp2 f95o; */
     /* struct cavm_pdecx_tc_config_err_flags_reg_cnf95xxp2 loki; */
 };
@@ -3621,6 +3627,7 @@ union cavm_pdecx_tc_control_reg
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pdecx_tc_control_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdecx_tc_control_reg_cnf95xxp2 f95o; */
     /* struct cavm_pdecx_tc_control_reg_cnf95xxp2 loki; */
 };
@@ -3742,6 +3749,7 @@ union cavm_pdecx_tc_error_reg
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pdecx_tc_error_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdecx_tc_error_reg_cnf95xxp2 f95o; */
     /* struct cavm_pdecx_tc_error_reg_cnf95xxp2 loki; */
 };
@@ -3796,6 +3804,7 @@ union cavm_pdecx_tc_main_reset_reg
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pdecx_tc_main_reset_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdecx_tc_main_reset_reg_cnf95xxp2 f95o; */
     /* struct cavm_pdecx_tc_main_reset_reg_cnf95xxp2 loki; */
 };
@@ -3854,6 +3863,7 @@ union cavm_pdecx_tc_status_reg
         uint64_t monitor_bus           : 32; /**< [ 63: 32](RO/H) core dependent */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_pdecx_tc_status_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_pdecx_tc_status_reg_cnf95xxp2 f95o; */
     /* struct cavm_pdecx_tc_status_reg_cnf95xxp2 loki; */
 };

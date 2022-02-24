@@ -562,6 +562,7 @@ union cavm_rnm_ctl_status
         uint64_t reserved_15_63        : 49;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_rnm_ctl_status_cn96xxp3 cn96xxp4; */
     /* struct cavm_rnm_ctl_status_cn96xxp3 cn98xx; */
     /* struct cavm_rnm_ctl_status_cn96xxp1 cnf95xx; */
     /* struct cavm_rnm_ctl_status_cn96xxp1 f95mm; */
@@ -665,6 +666,8 @@ static inline uint64_t CAVM_RNM_HEALTH_STATUS_FUNC(void) __attribute__ ((pure, a
 static inline uint64_t CAVM_RNM_HEALTH_STATUS_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X))
+        return 0x87e00f000038ll;
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X))
         return 0x87e00f000038ll;
     if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x87e00f000038ll;

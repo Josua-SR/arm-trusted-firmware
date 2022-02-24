@@ -338,9 +338,11 @@ union cavm_mdn_bist_config
         uint32_t reserved_15_31        : 17;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mdn_bist_config_cn96xxp3 cn96xxp4; */
     /* struct cavm_mdn_bist_config_cn96xxp3 cn98xx; */
     /* struct cavm_mdn_bist_config_s cnf95xxp1; */
     /* struct cavm_mdn_bist_config_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mdn_bist_config_cn96xxp3 cnf95xxp3; */
     /* struct cavm_mdn_bist_config_cn96xxp3 f95mm; */
     /* struct cavm_mdn_bist_config_s f95o; */
     /* struct cavm_mdn_bist_config_cn96xxp3 loki; */
@@ -770,9 +772,11 @@ union cavm_mdn_debug_skid
                                                                  the clock-cycle of the halt plus 1, bit 1 = halt + 2 cycles, etc. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_mdn_debug_skid_cn96xxp3 cn96xxp4; */
     /* struct cavm_mdn_debug_skid_cn96xxp3 cn98xx; */
     /* struct cavm_mdn_debug_skid_s cnf95xxp1; */
     /* struct cavm_mdn_debug_skid_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mdn_debug_skid_cn96xxp3 cnf95xxp3; */
     /* struct cavm_mdn_debug_skid_cn96xxp3 f95mm; */
     /* struct cavm_mdn_debug_skid_s f95o; */
     /* struct cavm_mdn_debug_skid_cn96xxp3 loki; */

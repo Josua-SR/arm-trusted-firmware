@@ -860,6 +860,7 @@ union cavm_rmap_lte_mode_s
         uint64_t reserved_251_255      : 5;
 #endif /* Word 3 - End */
     } cnf95xxp2;
+    /* struct cavm_rmap_lte_mode_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_rmap_lte_mode_s_s f95o; */
     /* struct cavm_rmap_lte_mode_s_cnf95xxp2 loki; */
 };
@@ -1896,6 +1897,7 @@ union cavm_rmap_nr_mode_s
         uint64_t reserved_444_447      : 4;
 #endif /* Word 6 - End */
     } cnf95xxp2;
+    /* struct cavm_rmap_nr_mode_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_rmap_nr_mode_s_s f95o; */
     /* struct cavm_rmap_nr_mode_s_cnf95xxp2 loki; */
 };

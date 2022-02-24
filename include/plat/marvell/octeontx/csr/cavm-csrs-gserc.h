@@ -111,6 +111,22 @@ union cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_3_31         : 29;
+        uint32_t vco_dosc_temp_skew    : 1;  /**< [  2:  2](R/W/H) Reserved. */
+        uint32_t vco_freq3_en          : 1;  /**< [  1:  1](R/W/H) Reserved. */
+        uint32_t vco_freq2_en          : 1;  /**< [  0:  0](R/W/H) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t vco_freq2_en          : 1;  /**< [  0:  0](R/W/H) Reserved. */
+        uint32_t vco_freq3_en          : 1;  /**< [  1:  1](R/W/H) Reserved. */
+        uint32_t vco_dosc_temp_skew    : 1;  /**< [  2:  2](R/W/H) Reserved. */
+        uint32_t reserved_3_31         : 29;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd_s cn9; */
+    /* struct cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd_s f95o; */
+    struct cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_3_31         : 29;
         uint32_t vco_dosc_temp_skew    : 1;  /**< [  2:  2](R/W/H) VCO DOSC temperature skew control.
                                                                  Set to 1 to enable. */
         uint32_t vco_freq3_en          : 1;  /**< [  1:  1](R/W/H) Reserved. */
@@ -122,8 +138,7 @@ union cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd
                                                                  Set to 1 to enable. */
         uint32_t reserved_3_31         : 29;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd_s cn; */
+    } loki;
 };
 typedef union cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd_t;
 
@@ -12939,6 +12954,18 @@ union cavm_gsercx_lnx_feature_spare_cfg0_rsvd
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Reserved. */
+        uint32_t reserved_8_31         : 24;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_gsercx_lnx_feature_spare_cfg0_rsvd_s cn9; */
+    /* struct cavm_gsercx_lnx_feature_spare_cfg0_rsvd_s f95o; */
+    struct cavm_gsercx_lnx_feature_spare_cfg0_rsvd_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_8_31         : 24;
         uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Set bit 7 to enable continuous data-based HFG adaptation.
                                                                  Do not change any other bits in this register. */
 #else /* Word 0 - Little Endian */
@@ -12946,15 +12973,14 @@ union cavm_gsercx_lnx_feature_spare_cfg0_rsvd
                                                                  Do not change any other bits in this register. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsercx_lnx_feature_spare_cfg0_rsvd_s cn; */
+    } loki;
 };
 typedef union cavm_gsercx_lnx_feature_spare_cfg0_rsvd cavm_gsercx_lnx_feature_spare_cfg0_rsvd_t;
 
 static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=4))
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=4) && (b<=1)))
         return 0x87e0a8013680ll + 0x1000000ll * ((a) & 0x7) + 0x4000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=4) && (b<=1)))
         return 0x87e0a8013680ll + 0x1000000ll * ((a) & 0x7) + 0x4000ll * ((b) & 0x1);
@@ -12980,20 +13006,31 @@ union cavm_gsercx_lnx_feature_spare_cfg6_rsvd
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Reserved. */
+        uint32_t reserved_8_31         : 24;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_gsercx_lnx_feature_spare_cfg6_rsvd_s cn9; */
+    /* struct cavm_gsercx_lnx_feature_spare_cfg6_rsvd_s f95o; */
+    struct cavm_gsercx_lnx_feature_spare_cfg6_rsvd_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_8_31         : 24;
         uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Use only bit 5 for PHY Lane Rx CDR lock state machine reset. See GSERC Software Initialization. */
 #else /* Word 0 - Little Endian */
         uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Use only bit 5 for PHY Lane Rx CDR lock state machine reset. See GSERC Software Initialization. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsercx_lnx_feature_spare_cfg6_rsvd_s cn; */
+    } loki;
 };
 typedef union cavm_gsercx_lnx_feature_spare_cfg6_rsvd cavm_gsercx_lnx_feature_spare_cfg6_rsvd_t;
 
 static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(uint64_t a, uint64_t b)
 {
-    if (cavm_is_model(OCTEONTX_F95O) && (a<=4))
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=4) && (b<=1)))
         return 0x87e0a80136b0ll + 0x1000000ll * ((a) & 0x7) + 0x4000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=4) && (b<=1)))
         return 0x87e0a80136b0ll + 0x1000000ll * ((a) & 0x7) + 0x4000ll * ((b) & 0x1);

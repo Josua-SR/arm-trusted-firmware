@@ -215,6 +215,7 @@ union cavm_pciercx_ack_timer
                                                                  for the correct value. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_ack_timer_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_ack_timer_cn96xxp3 cn98xx; */
     struct cavm_pciercx_ack_timer_cnf95xx
     {
@@ -14803,6 +14804,7 @@ union cavm_pciercx_dev_cap
         uint32_t reserved_29_31        : 3;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_dev_cap_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_dev_cap_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_dev_cap_cn96xxp1 cnf95xx; */
     /* struct cavm_pciercx_dev_cap_cn96xxp1 f95o; */
@@ -15218,6 +15220,7 @@ union cavm_pciercx_dev_ctl2
         uint32_t reserved_16_31        : 16;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_dev_ctl2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_dev_ctl2_cn96xxp3 cn98xx; */
     struct cavm_pciercx_dev_ctl2_cnf95xx
     {
@@ -15350,6 +15353,7 @@ union cavm_pciercx_dl_feature_cap
         uint32_t dl_fex_en             : 1;  /**< [ 31: 31](RO/WRSL) Data link feature exchange enable. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_dl_feature_cap_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_dl_feature_cap_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_dl_feature_cap_s cnf95xx; */
     /* struct cavm_pciercx_dl_feature_cap_s f95o; */
@@ -16203,6 +16207,7 @@ union cavm_pciercx_eq_ctl23
         uint32_t reserved_31           : 1;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_eq_ctl23_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_eq_ctl23_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_eq_ctl23_s cnf95xx; */
     /* struct cavm_pciercx_eq_ctl23_s f95o; */
@@ -16824,6 +16829,7 @@ union cavm_pciercx_gen2_port
         uint32_t reserved_22_31        : 10;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_gen2_port_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_gen2_port_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_gen2_port_cn96xxp3 cnf95xx; */
     /* struct cavm_pciercx_gen2_port_cn96xxp3 f95o; */
@@ -17209,6 +17215,7 @@ union cavm_pciercx_gen4_lane_margining_1
         uint32_t reserved_30_31        : 2;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_gen4_lane_margining_1_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_gen4_lane_margining_1_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_gen4_lane_margining_1_s cnf95xx; */
     /* struct cavm_pciercx_gen4_lane_margining_1_cn96xxp3 f95o; */
@@ -17308,6 +17315,7 @@ union cavm_pciercx_gen4_lane_margining_2
         uint32_t reserved_29_31        : 3;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_gen4_lane_margining_2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_gen4_lane_margining_2_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_gen4_lane_margining_2_s cnf95xx; */
     /* struct cavm_pciercx_gen4_lane_margining_2_cn96xxp3 f95o; */
@@ -17749,6 +17757,7 @@ union cavm_pciercx_iobasel
         uint32_t dpe                   : 1;  /**< [ 31: 31](R/W1C/H) Detected parity error. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_iobasel_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_iobasel_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_iobasel_s cnf95xx; */
     /* struct cavm_pciercx_iobasel_s f95o; */
@@ -18219,6 +18228,7 @@ union cavm_pciercx_lane_skew
         uint32_t dlld                  : 1;  /**< [ 31: 31](R/W) Disable lane-to-lane deskew. Disables the internal lane-to-lane deskew logic. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_lane_skew_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_lane_skew_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_lane_skew_cn96xxp3 cnf95xx; */
     /* struct cavm_pciercx_lane_skew_cn96xxp3 f95o; */
@@ -18374,6 +18384,7 @@ union cavm_pciercx_link_cap
         uint32_t pnum                  : 8;  /**< [ 31: 24](RO/WRSL) Port number, writable through PEM()_CFG_TBL(). */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_link_cap_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_link_cap_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_link_cap_s cnf95xx; */
     /* struct cavm_pciercx_link_cap_cn96xxp3 f95o; */
@@ -18513,6 +18524,7 @@ union cavm_pciercx_link_cap2
         uint32_t reserved_25_31        : 7;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_link_cap2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_link_cap2_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_link_cap2_s cnf95xx; */
     /* struct cavm_pciercx_link_cap2_s f95o; */
@@ -21202,6 +21214,7 @@ union cavm_pciercx_phy_gen3_ctl
         uint32_t reserved_26_31        : 6;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_phy_gen3_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_phy_gen3_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_phy_gen3_ctl_s cnf95xx; */
     /* struct cavm_pciercx_phy_gen3_ctl_cn96xxp3 f95o; */
@@ -21586,6 +21599,7 @@ union cavm_pciercx_pl16g_eq_ctl0123
                                                                  during EQ PHASE 0/1. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_pl16g_eq_ctl0123_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_pl16g_eq_ctl0123_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_pl16g_eq_ctl0123_s cnf95xx; */
     /* struct cavm_pciercx_pl16g_eq_ctl0123_s f95o; */
@@ -21716,6 +21730,7 @@ union cavm_pciercx_pl16g_eq_ctl12131415
                                                                  during EQ PHASE 0/1. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_pl16g_eq_ctl12131415_cn96xxp3 cn96xxp4; */
     struct cavm_pciercx_pl16g_eq_ctl12131415_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -21875,6 +21890,7 @@ union cavm_pciercx_pl16g_eq_ctl4567
                                                                  during EQ PHASE 0/1. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_pl16g_eq_ctl4567_cn96xxp3 cn96xxp4; */
     struct cavm_pciercx_pl16g_eq_ctl4567_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -22034,6 +22050,7 @@ union cavm_pciercx_pl16g_eq_ctl891011
                                                                  during EQ PHASE 0/1. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_pl16g_eq_ctl891011_cn96xxp3 cn96xxp4; */
     struct cavm_pciercx_pl16g_eq_ctl891011_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -22322,6 +22339,7 @@ union cavm_pciercx_pl16g_status
         uint32_t reserved_5_31         : 27;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_pl16g_status_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_pl16g_status_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_pl16g_status_s cnf95xx; */
     /* struct cavm_pciercx_pl16g_status_s f95o; */
@@ -22831,6 +22849,7 @@ union cavm_pciercx_port_ctl
         uint32_t reserved_28_31        : 4;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_port_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_port_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_port_ctl_s cnf95xx; */
     /* struct cavm_pciercx_port_ctl_cn96xxp3 f95o; */
@@ -23178,6 +23197,7 @@ union cavm_pciercx_ptm_ctl
         uint32_t reserved_16_31        : 16;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_ptm_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_ptm_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_ptm_ctl_s cnf95xx; */
     /* struct cavm_pciercx_ptm_ctl_cn96xxp3 f95o; */
@@ -23377,6 +23397,7 @@ union cavm_pciercx_ptm_res_ctl
         uint32_t reserved_2_31         : 30;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_ptm_res_ctl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_ptm_res_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_ptm_res_ctl_s cnf95xx; */
     /* struct cavm_pciercx_ptm_res_ctl_cn96xxp3 f95o; */
@@ -25732,6 +25753,7 @@ union cavm_pciercx_ras_einj_en
         uint32_t reserved_7_31         : 25;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_ras_einj_en_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_ras_einj_en_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_ras_einj_en_s cnf95xx; */
     /* struct cavm_pciercx_ras_einj_en_cn96xxp3 f95o; */
@@ -25995,6 +26017,7 @@ union cavm_pciercx_ras_sd_ctl1
         uint32_t reserved_24_31        : 8;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_ras_sd_ctl1_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_ras_sd_ctl1_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_ras_sd_ctl1_cn96xxp3 cnf95xx; */
     /* struct cavm_pciercx_ras_sd_ctl1_cn96xxp3 f95o; */
@@ -27078,6 +27101,7 @@ union cavm_pciercx_ras_sd_l1ltssm
                                                                  0x8-0xF = idle_to_rlock_transitioned. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_ras_sd_l1ltssm_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_ras_sd_l1ltssm_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_ras_sd_l1ltssm_s cnf95xx; */
     /* struct cavm_pciercx_ras_sd_l1ltssm_cn96xxp3 f95o; */
@@ -27181,6 +27205,7 @@ union cavm_pciercx_ras_sd_statusl2
         uint32_t reserved_28_31        : 4;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_ras_sd_statusl2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_ras_sd_statusl2_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_ras_sd_statusl2_s cnf95xx; */
     /* struct cavm_pciercx_ras_sd_statusl2_cn96xxp3 f95o; */
@@ -28780,6 +28805,7 @@ union cavm_pciercx_rev
                                                                  0x6 = Bridge. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_rev_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_rev_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_rev_cn96xxp3 cnf95xx; */
     /* struct cavm_pciercx_rev_cn96xxp3 f95o; */
@@ -30298,6 +30324,7 @@ union cavm_pciercx_ucor_err_msk
         uint32_t reserved_26_31        : 6;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pciercx_ucor_err_msk_cn96xxp3 cn96xxp4; */
     /* struct cavm_pciercx_ucor_err_msk_cn96xxp3 cn98xx; */
     /* struct cavm_pciercx_ucor_err_msk_cn96xxp1 cnf95xx; */
     /* struct cavm_pciercx_ucor_err_msk_cn96xxp3 f95o; */

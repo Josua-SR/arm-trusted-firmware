@@ -1705,6 +1705,7 @@ union cavm_psm_djcntx_cfg
         uint64_t reserved_11_63        : 53;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_psm_djcntx_cfg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_psm_djcntx_cfg_cnf95xxp2 f95o; */
 };
 typedef union cavm_psm_djcntx_cfg cavm_psm_djcntx_cfg_t;
@@ -2169,6 +2170,7 @@ union cavm_psm_queuex_cfg
         uint64_t reserved_34_63        : 30;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_psm_queuex_cfg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_psm_queuex_cfg_s f95o; */
 };
 typedef union cavm_psm_queuex_cfg cavm_psm_queuex_cfg_t;

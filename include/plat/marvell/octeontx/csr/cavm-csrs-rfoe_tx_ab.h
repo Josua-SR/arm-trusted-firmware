@@ -558,6 +558,7 @@ union cavm_rfoex_abx_slotx_configuration
         uint64_t reserved_63           : 1;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_abx_slotx_configuration_cnf95xxp2 cnf95xxp3; */
     struct cavm_rfoex_abx_slotx_configuration_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1100,9 +1101,9 @@ static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(uint64_t a, uint64_t b
         return 0x87e043d02000ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1) && (c<=2)))
         return 0x87e043d02000ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_F95O_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02000ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_LOKI_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02000ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     __cavm_csr_fatal("RFOEX_ABX_SLOTX_CONFIGURATION", 3, a, b, c, 0, 0, 0);
 }
@@ -1290,6 +1291,7 @@ union cavm_rfoex_abx_slotx_configuration1
                                                                  0x3 = Sets SoF=1 in the orderInfo timestamp field. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_abx_slotx_configuration1_cnf95xxp2 cnf95xxp3; */
     struct cavm_rfoex_abx_slotx_configuration1_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1463,9 +1465,9 @@ static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(uint64_t a, uint64_t 
         return 0x87e043d02008ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1) && (c<=2)))
         return 0x87e043d02008ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_F95O_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02008ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_LOKI_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02008ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     __cavm_csr_fatal("RFOEX_ABX_SLOTX_CONFIGURATION1", 3, a, b, c, 0, 0, 0);
 }
@@ -1681,9 +1683,9 @@ static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION2(uint64_t a, uint64_t 
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1) && (c<=2)))
         return 0x87e043d02010ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_F95O_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02010ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1) && (c<=2)))
+    if (cavm_is_model(OCTEONTX_LOKI_PASS1_X) && ((a<=2) && (b<=1) && (c<=2)))
         return 0x87e043d02010ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
     __cavm_csr_fatal("RFOEX_ABX_SLOTX_CONFIGURATION2", 3, a, b, c, 0, 0, 0);
 }

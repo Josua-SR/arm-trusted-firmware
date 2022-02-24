@@ -323,6 +323,7 @@ union cavm_lbkx_const
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_lbkx_const_cn96xxp3 cn96xxp4; */
     struct cavm_lbkx_const_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -357,6 +358,7 @@ union cavm_lbkx_const
     } cn98xx;
     /* struct cavm_lbkx_const_cn9 cnf95xxp1; */
     /* struct cavm_lbkx_const_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_lbkx_const_cn96xxp3 cnf95xxp3; */
     /* struct cavm_lbkx_const_cn96xxp3 f95mm; */
     /* struct cavm_lbkx_const_cn96xxp3 f95o; */
     /* struct cavm_lbkx_const_cn96xxp3 loki; */

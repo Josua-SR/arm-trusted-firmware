@@ -255,6 +255,7 @@ union cavm_denc_common_cfg_s
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_denc_common_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_denc_common_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_denc_common_cfg_s_cnf95xxp2 loki; */
 };
@@ -543,6 +544,7 @@ union cavm_denc_epdcch_dci_cfg_s
         uint64_t ereg_w3               : 64; /**< [447:384] Bits [255:192] of EREG_indicator. See [EREG_W0]. */
 #endif /* Word 6 - End */
     } cnf95xxp2;
+    /* struct cavm_denc_epdcch_dci_cfg_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_denc_epdcch_dci_cfg_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -893,6 +895,7 @@ union cavm_denc_epdcch_gen_cfg_s
         uint64_t reserved_128_191      : 64;
 #endif /* Word 2 - End */
     } cnf95xxp2;
+    /* struct cavm_denc_epdcch_gen_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_denc_epdcch_gen_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_denc_epdcch_gen_cfg_s_cnf95xxp2 loki; */
 };
@@ -1440,6 +1443,7 @@ union cavm_denc_generic_task_cfg_s
         uint64_t reserved_376_383      : 8;
 #endif /* Word 5 - End */
     } cnf95xxp2;
+    /* struct cavm_denc_generic_task_cfg_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_denc_generic_task_cfg_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1856,6 +1860,7 @@ union cavm_denc_pdcch_dci_cfg_s
         uint64_t reserved_94_127       : 34;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_denc_pdcch_dci_cfg_s_cnf95xxp2 cnf95xxp3; */
     struct cavm_denc_pdcch_dci_cfg_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2245,6 +2250,7 @@ union cavm_denc_pdcch_gen_cfg_s
         uint64_t reserved_928_959      : 32;
 #endif /* Word 14 - End */
     } cnf95xxp2;
+    /* struct cavm_denc_pdcch_gen_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_denc_pdcch_gen_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_denc_pdcch_gen_cfg_s_cnf95xxp2 loki; */
 };
@@ -2926,6 +2932,7 @@ union cavm_denc_pdsch_task_cfg_s
         uint64_t reserved_462_511      : 50;
 #endif /* Word 7 - End */
     } cnf95xxp2;
+    /* struct cavm_denc_pdsch_task_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_denc_pdsch_task_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_denc_pdsch_task_cfg_s_cnf95xxp2 loki; */
 };
@@ -3041,6 +3048,7 @@ union cavm_denc_rpdcch_gen_cfg_s
         uint64_t reserved_122_127      : 6;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_denc_rpdcch_gen_cfg_s_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_denc_rpdcch_gen_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_denc_rpdcch_gen_cfg_s_cnf95xxp2 loki; */
 };
@@ -3677,6 +3685,7 @@ union cavm_dencx_tc_config_err_flags_reg
         uint64_t reserved_61_63        : 3;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_dencx_tc_config_err_flags_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_dencx_tc_config_err_flags_reg_cnf95xxp2 f95o; */
     /* struct cavm_dencx_tc_config_err_flags_reg_cnf95xxp2 loki; */
 };
@@ -3817,6 +3826,7 @@ union cavm_dencx_tc_error_mask_reg
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_dencx_tc_error_mask_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_dencx_tc_error_mask_reg_cnf95xxp2 f95o; */
     /* struct cavm_dencx_tc_error_mask_reg_cnf95xxp2 loki; */
 };
@@ -3919,6 +3929,7 @@ union cavm_dencx_tc_error_reg
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_dencx_tc_error_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_dencx_tc_error_reg_cnf95xxp2 f95o; */
     /* struct cavm_dencx_tc_error_reg_cnf95xxp2 loki; */
 };
@@ -4142,6 +4153,7 @@ union cavm_dencx_tc_status0_reg
         uint64_t core_stat             : 32; /**< [ 63: 32](RO/H) Reserved. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_dencx_tc_status0_reg_cnf95xxp2 cnf95xxp3; */
     /* struct cavm_dencx_tc_status0_reg_cnf95xxp2 f95o; */
     /* struct cavm_dencx_tc_status0_reg_cnf95xxp2 loki; */
 };

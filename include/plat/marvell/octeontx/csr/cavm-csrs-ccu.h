@@ -252,6 +252,7 @@ union cavm_ccux_msix_vecx_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_ccux_msix_vecx_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_ccux_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_ccux_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_ccux_msix_vecx_addr_cn96xxp3 f95mm; */
@@ -428,6 +429,8 @@ static inline uint64_t CAVM_CCUX_MSW_CRCLK_FORCE(uint64_t a) __attribute__ ((pur
 static inline uint64_t CAVM_CCUX_MSW_CRCLK_FORCE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=3))
+        return 0x87e050200020ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_CN96XX_PASS4_X) && (a<=3))
         return 0x87e050200020ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=5))
         return 0x87e050200020ll + 0x1000000ll * ((a) & 0x7);

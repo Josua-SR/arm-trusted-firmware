@@ -2025,6 +2025,7 @@ union cavm_dpi_dma_instr_hdr_s
         uint64_t reserved_192_255      : 64;
 #endif /* Word 3 - End */
     } cn96xxp3;
+    /* struct cavm_dpi_dma_instr_hdr_s_cn96xxp3 cn96xxp4; */
     struct cavm_dpi_dma_instr_hdr_s_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2370,6 +2371,7 @@ union cavm_dpi_dma_instr_hdr_s
     } cn98xx;
     /* struct cavm_dpi_dma_instr_hdr_s_cn96xxp1 cnf95xxp1; */
     /* struct cavm_dpi_dma_instr_hdr_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_dpi_dma_instr_hdr_s_cn96xxp3 cnf95xxp3; */
     /* struct cavm_dpi_dma_instr_hdr_s_cn96xxp3 f95mm; */
     /* struct cavm_dpi_dma_instr_hdr_s_cn96xxp1 f95o; */
     /* struct cavm_dpi_dma_instr_hdr_s_cn96xxp3 loki; */
@@ -2869,9 +2871,11 @@ union cavm_dpi_dma_ptr_s
                                                                  space pointer */
 #endif /* Word 1 - End */
     } cn96xxp3;
+    /* struct cavm_dpi_dma_ptr_s_cn96xxp3 cn96xxp4; */
     /* struct cavm_dpi_dma_ptr_s_cn96xxp3 cn98xx; */
     /* struct cavm_dpi_dma_ptr_s_s cnf95xxp1; */
     /* struct cavm_dpi_dma_ptr_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_dpi_dma_ptr_s_cn96xxp3 cnf95xxp3; */
     /* struct cavm_dpi_dma_ptr_s_cn96xxp3 f95mm; */
     /* struct cavm_dpi_dma_ptr_s_cn96xxp3 f95o; */
     /* struct cavm_dpi_dma_ptr_s_cn96xxp3 loki; */
@@ -4054,6 +4058,7 @@ union cavm_dpix_dmax_ids
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dpix_dmax_ids_cn96xxp3 cn96xxp4; */
     /* struct cavm_dpix_dmax_ids_cn96xxp3 cn98xx; */
     /* struct cavm_dpix_dmax_ids_cn96xxp3 cnf95xx; */
     /* struct cavm_dpix_dmax_ids_cn96xxp3 f95mm; */
@@ -5172,9 +5177,11 @@ union cavm_dpix_dma_control
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dpix_dma_control_cn96xxp3 cn96xxp4; */
     /* struct cavm_dpix_dma_control_cn96xxp3 cn98xx; */
     /* struct cavm_dpix_dma_control_cn9 cnf95xxp1; */
     /* struct cavm_dpix_dma_control_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_dpix_dma_control_cn96xxp3 cnf95xxp3; */
     /* struct cavm_dpix_dma_control_cn96xxp3 f95mm; */
     /* struct cavm_dpix_dma_control_cn9 f95o; */
     /* struct cavm_dpix_dma_control_cn96xxp3 loki; */
@@ -7272,6 +7279,7 @@ union cavm_dpix_pf_msix_vecx_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_dpix_pf_msix_vecx_addr_cn96xxp3 cn96xxp4; */
     /* struct cavm_dpix_pf_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_dpix_pf_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_dpix_pf_msix_vecx_addr_cn96xxp3 f95mm; */
@@ -13918,9 +13926,11 @@ union cavm_sdpx_lmac_const0x
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_sdpx_lmac_const0x_cn96xxp3 cn96xxp4; */
     /* struct cavm_sdpx_lmac_const0x_cn96xxp3 cn98xx; */
     /* struct cavm_sdpx_lmac_const0x_s cnf95xxp1; */
     /* struct cavm_sdpx_lmac_const0x_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sdpx_lmac_const0x_cn96xxp3 cnf95xxp3; */
     /* struct cavm_sdpx_lmac_const0x_cn96xxp3 f95mm; */
     /* struct cavm_sdpx_lmac_const0x_cn96xxp3 f95o; */
     /* struct cavm_sdpx_lmac_const0x_cn96xxp3 loki; */

@@ -2547,6 +2547,7 @@ union cavm_pcieepvfx_dev_ctl2
         uint32_t reserved_16_31        : 16;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepvfx_dev_ctl2_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepvfx_dev_ctl2_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepvfx_dev_ctl2_s cnf95xx; */
     /* struct cavm_pcieepvfx_dev_ctl2_s f95o; */
@@ -2718,6 +2719,7 @@ union cavm_pcieepvfx_ext_cap
                                                                  Writable through PEM()_CFG_WR. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepvfx_ext_cap_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepvfx_ext_cap_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepvfx_ext_cap_s cnf95xx; */
     /* struct cavm_pcieepvfx_ext_cap_s f95o; */
@@ -3211,6 +3213,7 @@ union cavm_pcieepvfx_msix_cap_cntrl
         uint32_t msixen                : 1;  /**< [ 31: 31](R/W) MSI-X enable. */
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepvfx_msix_cap_cntrl_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepvfx_msix_cap_cntrl_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepvfx_msix_cap_cntrl_s cnf95xx; */
     /* struct cavm_pcieepvfx_msix_cap_cntrl_s f95o; */
@@ -3536,6 +3539,7 @@ union cavm_pcieepvfx_tph_req_cap
         uint32_t reserved_27_31        : 5;
 #endif /* Word 0 - End */
     } cn96xxp3;
+    /* struct cavm_pcieepvfx_tph_req_cap_cn96xxp3 cn96xxp4; */
     /* struct cavm_pcieepvfx_tph_req_cap_cn96xxp3 cn98xx; */
     /* struct cavm_pcieepvfx_tph_req_cap_s cnf95xx; */
     /* struct cavm_pcieepvfx_tph_req_cap_cn96xxp3 f95o; */
