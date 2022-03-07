@@ -850,19 +850,31 @@ int qlm_gserc_ned_loopback(int module, int lane, bool enable)
 	{
 		case 0:
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CG_CTRL(module),
+				c.s.gcfsm = 1;
+				c.s.dfe = 1;
+				c.s.leq = 1;
 				c.s.clk_rx = enable);
 			break;
 		case 1:
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CG_CTRL(module),
+				c.s.gcfsm = 1;
+				c.s.dfe = 1;
+				c.s.leq = 1;
 				c.s.clk_rx = enable);
 			break;
 #if QUAD_LANE
 		case 2:
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CG_CTRL(module),
+				c.s.gcfsm = 1;
+				c.s.dfe = 1;
+				c.s.leq = 1;
 				c.s.clk_rx = enable);
 			break;
 		case 3:
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CG_CTRL(module),
+				c.s.gcfsm = 1;
+				c.s.dfe = 1;
+				c.s.leq = 1;
 				c.s.clk_rx = enable);
 			break;
 #endif
@@ -1556,19 +1568,31 @@ int qlm_gserc_nea_loopback(int module, int lane, bool enable)
 	{
 		case 0 :
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CG_CTRL(module),
+				c.s.gcfsm = 1;
+				c.s.dfe = 1;
+				c.s.leq = 1;
 				c.s.clk_rx = enable);
 			break;
 		case 1 :
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CG_CTRL(module),
+				c.s.gcfsm = 1;
+				c.s.dfe = 1;
+				c.s.leq = 1;
 				c.s.clk_rx = enable);
 			break;
 #if QUAD_LANE
 		case 2 :
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CG_CTRL(module),
+				c.s.gcfsm = 1;
+				c.s.dfe = 1;
+				c.s.leq = 1;
 				c.s.clk_rx = enable);
 			break;
 		case 3 :
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CG_CTRL(module),
+				c.s.gcfsm = 1;
+				c.s.dfe = 1;
+				c.s.leq = 1;
 				c.s.clk_rx = enable);
 			break;
 #endif
