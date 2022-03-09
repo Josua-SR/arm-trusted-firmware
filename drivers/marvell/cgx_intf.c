@@ -572,6 +572,10 @@ retry_link:
 				phy_fail_count = 0; /* reset the counter */
 				goto cgx_err; /* To poll for the link */
 			}
+
+			/* Append the line side FEC to link status in PHY case */
+			link.s.fec = lmac_cfg->line_fec;
+
 			cgx_set_link_state(cgx_id, lmac_id, &link, 0);
 		}
 
