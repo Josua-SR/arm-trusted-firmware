@@ -2214,7 +2214,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 	 */
 	scratchx0.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(cgx_id, lmac_id, 0));
 	err_type = cgx_get_error_type(cgx_id, lmac_id);
-	if (err_type & CGX_ERR_MASK)
+	if (err_type & CGX_ERR_MASK && (request_id != CGX_CMD_GET_LINK_STS))
 		scratchx0.s.evt_sts.stat = CGX_STAT_FAIL;
 	else
 		scratchx0.s.evt_sts.stat = CGX_STAT_SUCCESS;
