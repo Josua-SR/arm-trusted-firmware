@@ -1660,15 +1660,17 @@ anlt_fec_fail:
 int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 {
 	cgx_lmac_config_t *lmac_tmp;
-	cgx_lmac_config_t *lmac;
 	cgx_config_t *cgx;
+	cgx_lmac_context_t *lmac_ctx;
+	int gserx;
+	int link_mask = 0;
 
 	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
 		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
 		return 0;
 
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
+	gserx = (&cgx->lmac_cfg[lmac_id])->gserx;
 
 	if (cgx_to_reset == 0xf) {
 		printf("%s: Reset individual CGX at a time\n", __func__);
@@ -1680,7 +1682,9 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 	 */
 	for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
 		lmac_tmp = &cgx->lmac_cfg[lmac_idx];
-		if (lmac_tmp->gserx == lmac->gserx) {
+		lmac_ctx = &lmac_context[cgx_id][lmac_id];
+		if ((lmac_tmp->gserx == gserx) && lmac_ctx->s.link_enable) {
+			link_mask |= 1 << lmac_id;
 			/* Don't need to bring down CPRI links */
 			if (!plat_octeontx_bcfg->qlm_cfg[lmac_tmp->gserx].is_cpri) {
 				if (cgx_link_bringdown(cgx_id, lmac_idx)) {
@@ -1692,17 +1696,17 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 		}
 	}
 
-	debug_cgx_intf("%s: GSERX %d Completing CMU Reset\n",
-			__func__, lmac->gserx);
+	debug_cgx_intf("%s: GSERX %d Completing CMU Reset\n", __func__, gserx);
 
-	cgx->qlm_ops->qlm_cmu_reset(lmac->gserx);
+	cgx->qlm_ops->qlm_cmu_reset(gserx);
 
 	/* Bring back all Links connected to the same
 	 * GSERx as the CGX LMAC
 	 */
 	for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
 		lmac_tmp = &cgx->lmac_cfg[lmac_idx];
-		if (lmac_tmp->gserx == lmac->gserx) {
+		lmac_ctx = &lmac_context[cgx_id][lmac_id];
+		if ((lmac_tmp->gserx == gserx) && ((link_mask >> lmac_id) & 0x1)) {
 			/* Don't need to bring UP CPRI links */
 			if (!plat_octeontx_bcfg->qlm_cfg[lmac_tmp->gserx].is_cpri) {
 				cgx_lmac_init(cgx_id, lmac_idx);
