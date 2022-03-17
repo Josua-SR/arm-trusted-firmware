@@ -3931,6 +3931,7 @@ int qlm_gserr_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		if (!(lane_mask & (1 << lane)))
 			continue;
 		prev_state = qlm_gserr_get_state(module, lane);
+		break;
 	}
 
 	GSER_TRACE(QLM, "GSERR%d: lane_mask:%d, mode:%d, baud_mhz:%d, flags:%d\n",
