@@ -3483,8 +3483,10 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 							lmac_ctx->s.remote_fault = 1;
 						else
 							lmac_ctx->s.remote_fault = 0;
-					} else
+					} else {
 						cgx_serdes_tx_control(cgx_id, lmac_id, true);
+						lmac_ctx->s.remote_fault = 0;
+					}
 				}
 			}
 		} else {
