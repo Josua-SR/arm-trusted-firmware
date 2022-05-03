@@ -11,6 +11,7 @@
 #include <cpu_macros.S>
 #include <plat_macros.S>
 #include <context.h>
+#include "wa_cve_2022_23960_bhb_vector.S"
 
 #define OCTEONTX2_CN98XX_MIDR		0x430F0B10
 #define OCTEONTX2_CN96XX_MIDR		0x430F0B20
@@ -19,9 +20,25 @@
 #define OCTEONTX2_F95MM_MIDR		0x430F0B50
 #define OCTEONTX2_F95O_MIDR		0x430F0B60
 
+#define OCTEON_TX2_BHB_LOOP_COUNT	U(32)
+
+#if WORKAROUND_CVE_2022_23960
+	wa_cve_2022_23960_bhb_vector_table OCTEON_TX2_BHB_LOOP_COUNT, octeontx2
+#endif /* WORKAROUND_CVE_2022_23960 */
+
 #define EC_CAVIUM_IO_TRAP		U(0x1f)
 
 func octeontx2_reset_func
+#if IMAGE_BL31 && WORKAROUND_CVE_2022_23960
+	/*
+	 * The octeontx2 generic vectors are overridden to apply errata
+         * mitigation on exception entry from lower ELs.
+	 */
+	adr	x0, wa_cve_vbar_octeontx2
+	msr	vbar_el3, x0
+#endif /* IMAGE_BL31 && WORKAROUND_CVE_2022_23960 */
+
+	isb
 	ret
 endfunc octeontx2_reset_func
 
