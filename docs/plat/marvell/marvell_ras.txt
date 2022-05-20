@@ -56,3 +56,92 @@ The API details of this OCTEONTX_EDAC SMC are outlined in ATF's
 
 The ability to inject multi-bit errors compromises system integrity, so is
 disabled in the regular DEBUG=0 ATF builds.
+
+Device Tree sdei-ghes implementation notes
+==========================================
+ATF and Linux share a common memory block (ring buffer) several CPER format
+error entries can fit into ring buffer (currently 4 records). In current
+firmware first mode error identification interrupt (MDC/MCC/LMC) is delivered
+to ATF. ATF writes error record into ring buffer head and triggers SDEI
+event callback. SDEI callback Linux registered at boot time beforehand.
+sdei-ghes callback move error record from ring buffer tail into Error Status
+Block (estatus) memory area, ESB block allocated for one error entry for HEST.
+Generic GHES driver makes periodic polling on Error Status Block and if ESB
+contains error data handler provide error presence notification and error clear.
+BERT Error Status Block size should correspond to ring buffer size to fit all BED
+Boot Error Data.
+
+ACPI sdei-ghes implementation notes
+===================================
+Setup Linux bootarg acpi=on.
+GHES requires Sdei.asl table to enable SDEI events. Hest.asl describe
+corresponding table layout and initialization values like polling
+interval, Error Status Block address (8byte), actual Error Status Block, and
+Ring buffer memory block. Bert.asl describe memory region for ring buffer and
+ESB memory area which fits all errors from ring to notify at boot time.
+
+OcteonTX2 RAS GHES Error injection
+==================================
+
+Enable module config:
+ARCH=arm64 CROSS_COMPILE=aarch64-marvell-linux-gnu- make menuconfig
+OCTEONTX2_SDEI_GHES=y
+OCTEONTX2_SDEI_GHES_DEBUG=y
+OCTEONTX2_SDEI_GHES_BERT=y
+OCTEONTX2_EINJ=y
+
+SMC based interface for error injection:
+0x3     - SMC first parameter identify inject error interface (MDC-cache/LMC-dram)
+
+address - SMC second parameter identify 'physical address' inject error at specified address
+			Recommended to use addresses from ASC0 secure region
+			1,3,5,7 - spesial case addresses
+			1 - predefined kernel data vma virtual address
+			5 - predefined kernel code virtual address
+			3 - predefined EL3 code address
+			7 - predefined EL3 data address
+
+flags   - SMC third parameter describe control flags
+			bit 2..0	:  bit position to flip on poisoning write
+			bit 3		:  0 = SBE, 1 = DBE
+			bit 6..4	:  0 = DRAM, 1 = L1C, cache level to corrupt (L0 == DRAM)
+			bit 7		:  0 = D-cache,  1 = I-cache
+			bit 8		:  1 = read-back poisoned address in EL3
+			bit 9		:  1 = target address EL3-physical, not virtual
+
+
+	Injecting DRAM/LMC Single Bit Error (SBE) ECC at physical address 0x800000
+	and read-back poisoned content immediately:
+	echo 0x3,0x800000,0x300 > /sys/module/otx2_einj/parameters/smc_params
+
+	Injecting DRAM/LMC Double Bit Error (DBE) ECC at physical address 0x800000
+	and read-back poisoned address immediately:
+	echo 0x3,0x800000,0x308 > /sys/module/otx2_einj/parameters/smc_params
+
+	Injecting DRAM/LMC Single Bit Error (SBE) ECC at physical address 0x800000
+	do not read-back immediately, ECC irq will be triggered after outside 
+	read happened:
+	echo 0x3,0x800000,0x200 > /sys/module/otx2_einj/parameters/smc_params
+
+
+	Inject D1 Cache Single Bit Error (SBE) error at address 0x800000:
+	echo 0x3,0x800000,0x310 > /sys/module/otx2_einj/parameters/smc_params
+
+	Inject D1 Cache Double Bit Error (DBE) error at address 0x800000:
+	echo 0x3,0x800000,0x318 > /sys/module/otx2_einj/parameters/smc_params
+
+	Inject I1 Cache Single Bit Error (SBE) error at address 0x800000:
+	echo 0x3,0x800000,0x390 > /sys/module/otx2_einj/parameters/smc_params
+
+	Inject DRAM data SBE error at linux kernel predefined virtual address
+	echo 0x3,1,2 > /sys/module/otx2_einj/parameters/smc_params
+
+	Inject DRAM code SBE error at linux kernel predefined virtual address
+	echo 0x3,5,2 > /sys/module/otx2_einj/parameters/smc_params
+
+	Inject DRAM code SBE error at EL3 predefined address
+	echo 0x3,3,2 > /sys/module/otx2_einj/parameters/smc_params
+
+	Inject DRAM data SBE error at EL3 predefined address
+	echo 0x3,7,2 > /sys/module/otx2_einj/parameters/smc_params
+
