@@ -617,6 +617,12 @@ retry_link:
 						debug_cgx_intf("%s: %d:%d Signal Detect failed\n"
 							       , __func__, cgx_id, lmac_id);
 						goto cgx_err;
+					} else if (current_time >= total_link_timeout) {
+						/* Handles case where signal is detected but lost */
+						debug_cgx_intf("%s: %d:%d Signal Detected but lost \n",
+								__func__, cgx_id, lmac_id);
+						cgx_set_error_type(cgx_id, lmac_id, 0);
+						goto cgx_err;
 					} else {
 						debug_cgx_intf("%s: %d:%d Signal Detect failed,\t"
 							       "retrying link\n", __func__,
