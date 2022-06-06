@@ -612,7 +612,6 @@ retry_link:
 				if (cgx_get_error_type(cgx_id, lmac_id) ==
 				    CGX_ERR_SERDES_RX_NO_SIGNAL) {
 					if (!signal_detect &&
-					    (current_time >= total_link_timeout) &&
 					    (current_time >= rx_sig_timeout)) {
 						debug_cgx_intf("%s: %d:%d Signal Detect failed\n"
 							       , __func__, cgx_id, lmac_id);
