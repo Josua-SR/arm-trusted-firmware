@@ -2866,10 +2866,10 @@ static void octeontx2_fill_timer_ms(const void *fdt)
 				NULL));
 		if (reg) {
 			val = fdt32_to_cpu(*reg);
-			/* If the timer frequency is less than 200ms
+			/* If the timer frequency is less than 100ms
 			 * default to 1s.
 			 */
-			if (val >= 200)
+			if (val >= 100)
 				plat_octeontx_bcfg->timer1_ms = val;
 		}
 
@@ -2877,10 +2877,10 @@ static void octeontx2_fill_timer_ms(const void *fdt)
 				NULL));
 		if (reg) {
 			val = fdt32_to_cpu(*reg);
-			/* If the timer frequency is less than 200ms
+			/* If the timer frequency is less than 100ms
 			 * default to 1s.
 			 */
-			if (val >= 200)
+			if (val >= 100)
 				plat_octeontx_bcfg->timer2_ms = val;
 		}
 	} else
