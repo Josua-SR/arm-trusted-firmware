@@ -844,7 +844,7 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 		/* T98 has problem with MCCX_LMCOEX_CONST; use static config */
 		if (cavm_is_model(OCTEONTX_CN98XX)) {
 			/* Highlight problem with new chip revs. */
-			if (!cavm_is_model(OCTEONTX_CN98XX_PASS1_X))
+			if (!cavm_is_model(OCTEONTX_CN98XX))
 				ERROR("Software not configured for this chip.");
 			else {
 				plat_lmc_map[0] = (struct ras_dram_lmc_map) {
